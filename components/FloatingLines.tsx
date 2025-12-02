@@ -1,3 +1,4 @@
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -314,8 +315,10 @@ export default function FloatingLines({
     camera.position.z = 1;
 
     // Modified to support transparency
-    const renderer = new WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const renderer = new WebGLRenderer({ antialias: false, alpha: true, powerPreference: "high-performance" });
+    // OPTIMIZATION: Cap Pixel Ratio to 1 for performance on High DPI screens
+    // Using 1.0 ensures fluid 60fps even on Retina/4K screens with shaders
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1));
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
     containerRef.current.appendChild(renderer.domElement);
@@ -386,6 +389,7 @@ export default function FloatingLines({
       vertexShader,
       fragmentShader,
       transparent: true,
+      depthWrite: false, // Optimization: No need to write to depth buffer
     });
 
     const geometry = new PlaneGeometry(2, 2);
@@ -439,8 +443,9 @@ export default function FloatingLines({
 
     // We attach listeners to window for parallax/interaction because the canvas might be behind content
     if (interactive) {
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('pointerleave', handlePointerLeave);
+      // Use passive events for better scroll performance
+      window.addEventListener('pointermove', handlePointerMove, { passive: true });
+      window.addEventListener('pointerleave', handlePointerLeave, { passive: true });
     }
 
     let raf = 0;

@@ -360,9 +360,10 @@ const App: React.FC = () => {
         setShowIntro(false);
       }} />
     ) : (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans relative overflow-x-hidden animate-in fade-in duration-1000">
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans relative overflow-x-hidden animate-in fade-in duration-700">
       
       {/* 3D Background - Floating Lines */}
+      {/* Mounted but optimized. No prop changes needed as internal optimization handles DPR */}
       <FloatingLines 
         linesGradient={['#4f46e5', '#0891b2', '#7c3aed', '#ec4899']} 
         topWavePosition={{ x: 0, y: 1.0, rotate: 0 }}
@@ -652,6 +653,7 @@ const App: React.FC = () => {
                       src="https://media.licdn.com/dms/image/v2/D4E03AQFu2YX0Ge5iyA/profile-displayphoto-shrink_400_400/B4EZXK2izSH0Ak-/0/1742865052510?e=1766016000&v=beta&t=5rJlqgRwNNLNgY1ZXdh_gmAC0NUDk-b6c7yzCUltJIA" 
                       alt="Elias Eloumi"
                       className="w-full h-full rounded-full object-cover"
+                      loading="lazy"
                     />
                  </div>
                  <h3 className="text-xl font-bold text-white">Elias Eloumi</h3>
@@ -679,6 +681,7 @@ const App: React.FC = () => {
                       src="https://media.licdn.com/dms/image/v2/D4E03AQGiD7tFAd5ZEQ/profile-displayphoto-scale_400_400/B4EZlR5n58IoAg-/0/1758015687133?e=1766016000&v=beta&t=qN8jGGU0s11i-xq5pQyeaaDMB1GcrkJzcndvWyTfwas" 
                       alt="Noam Leclappart"
                       className="w-full h-full rounded-full object-cover"
+                      loading="lazy"
                     />
                  </div>
                  <h3 className="text-xl font-bold text-white">Noam Leclappart</h3>
@@ -706,6 +709,7 @@ const App: React.FC = () => {
                       src="https://media.licdn.com/dms/image/v2/D4E03AQGJO6nv360qcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1713713155263?e=1766016000&v=beta&t=HJrhGPpCM_85mG26jxOdD205Q53Xe8WaVpADE1GbWBk" 
                       alt="Charles Garbus"
                       className="w-full h-full rounded-full object-cover"
+                      loading="lazy"
                     />
                  </div>
                  <h3 className="text-xl font-bold text-white">Charles Garbus</h3>
@@ -897,6 +901,7 @@ const App: React.FC = () => {
                            src="https://media.licdn.com/dms/image/v2/D4E03AQGJO6nv360qcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1713713155263?e=1766016000&v=beta&t=HJrhGPpCM_85mG26jxOdD205Q53Xe8WaVpADE1GbWBk" 
                            alt="Charles Garbus"
                            className="w-full h-full rounded-full object-cover"
+                           loading="lazy"
                          />
                          <div className="absolute bottom-1 right-1 w-6 h-6 bg-green-500 border-4 border-indigo-900 rounded-full"></div>
                        </div>

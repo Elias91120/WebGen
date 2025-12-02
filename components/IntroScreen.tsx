@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, Globe } from 'lucide-react';
 import Logo from './Logo';
 
 interface IntroScreenProps {
@@ -15,9 +14,10 @@ const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete }) => {
   const [phase, setPhase] = useState(0); 
 
   useEffect(() => {
-    const timer1 = setTimeout(() => setPhase(1), 1200); 
-    const timer2 = setTimeout(() => setPhase(2), 4000); 
-    const timer3 = setTimeout(() => setPhase(3), 5500); 
+    // Optimized timing for a snappier launch experience
+    const timer1 = setTimeout(() => setPhase(1), 500); 
+    const timer2 = setTimeout(() => setPhase(2), 1500); 
+    const timer3 = setTimeout(() => setPhase(3), 2200); 
 
     return () => {
       clearTimeout(timer1);
@@ -40,12 +40,12 @@ const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete }) => {
       `}</style>
 
       {/* Background FX */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-950 to-black"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-950 to-black will-change-transform"></div>
       
       <div className="relative flex items-center justify-center">
         
         {/* Central Icon Animation */}
-        <div className={`relative transition-all duration-1000 ${phase >= 2 ? 'scale-100 opacity-100' : 'scale-75 opacity-0'}`}>
+        <div className={`relative transition-all duration-700 ease-out ${phase >= 2 ? 'scale-100 opacity-100' : 'scale-75 opacity-0'}`}>
            {/* Rings */}
            <div className="absolute inset-0 border-2 border-indigo-500/30 rounded-full animate-[pulse-ring_3s_linear_infinite]"></div>
            <div className="absolute inset-0 border-2 border-indigo-500/30 rounded-full animate-[pulse-ring_3s_linear_infinite_1s]"></div>
@@ -54,22 +54,11 @@ const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete }) => {
            <div className="relative w-32 h-32 bg-slate-900 border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl shadow-indigo-500/20 animate-[float_4s_ease-in-out_infinite]">
               <Logo className="w-20 h-20" />
            </div>
-
-           {/* Floating badges */}
-           <div className={`absolute -right-12 top-0 bg-slate-800/90 border border-white/10 p-3 rounded-xl shadow-lg flex items-center gap-2 transition-all duration-700 delay-500 ${phase >= 3 ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs font-bold text-slate-200">Online</span>
-           </div>
-
-           <div className={`absolute -left-12 bottom-0 bg-slate-800/90 border border-white/10 p-3 rounded-xl shadow-lg flex items-center gap-2 transition-all duration-700 delay-700 ${phase >= 3 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>
-              <TrendingUp className="w-4 h-4 text-orange-500" />
-              <span className="text-xs font-bold text-slate-200">+150% Traffic</span>
-           </div>
         </div>
       </div>
 
       {/* PHASE 3: UI REVEAL */}
-      <div className={`absolute bottom-20 flex flex-col items-center transition-all duration-1000 px-6 ${phase === 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+      <div className={`absolute bottom-20 flex flex-col items-center transition-all duration-700 px-6 ${phase === 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
          <h1 className="text-4xl md:text-6xl font-bold text-white mb-2 tracking-tight text-center drop-shadow-lg">
             Web<span className="text-indigo-500">Gen</span>
          </h1>
