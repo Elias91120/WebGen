@@ -1,0 +1,17 @@
+.floating-lines-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none; /* Let clicks pass through, but might block interactive param. */
+}
+
+/* If you want the lines to be interactive (mouse movement), 
+   we need pointer-events: auto on the canvas but z-index needs to be managed.
+   The canvas is background, so we set it to index 0 and content to index 10.
+*/
+.floating-lines-container canvas {
+  pointer-events: auto;
+}
