@@ -12,6 +12,7 @@ import SplitText from './components/SplitText';
 import BlurText from './components/BlurText';
 import BookingModal from './components/BookingModal';
 import AdminDashboard from './components/AdminDashboard';
+import Logo from './components/Logo';
 import { 
   ArrowRight, 
   Store, 
@@ -35,7 +36,8 @@ import {
   Zap,
   MessageCircle,
   ChevronDown,
-  Lock
+  Lock,
+  Layers
 } from 'lucide-react';
 import { ServiceType, ClientRequest } from './types';
 
@@ -131,14 +133,17 @@ const translations = {
       subtitle: "Tell us about your project. We analyze, we design, we code.",
       successTitle: "Received!",
       successDesc: "The WebGen team will be in touch shortly.",
+      successTip: "Check the option on the right to chat directly with Charles if it's urgent!",
       form: {
         name: "Full Name",
         email: "Email",
         type: "Business Type",
+        serviceInterest: "Solution Interest",
         message: "Message & Project Details",
         btn: "Send Request",
         sending: "Sending...",
-        types: ["Restaurant / Bar", "Retail / Shop", "Service / Craftsman", "Health / Medical", "Other"]
+        types: ["Restaurant / Bar", "Retail / Shop", "Service / Craftsman", "Health / Medical", "Other"],
+        serviceOptions: ["React Starter (€300)", "Full Stack Custom", "The Glow Up (Redesign)", "Maintenance Only", "Other / Not Sure"]
       },
       direct: {
         title: "Or contact Charles directly",
@@ -240,14 +245,17 @@ const translations = {
       subtitle: "Parlez-nous de votre projet. On analyse, on design, on code.",
       successTitle: "Bien reçu !",
       successDesc: "L'équipe WebGen vous recontacte très vite.",
+      successTip: "Regardez l'option à droite pour discuter directement avec Charles si c'est urgent !",
       form: {
         name: "Nom Complet",
         email: "Email",
         type: "Type de Business",
+        serviceInterest: "Solution Envisagée",
         message: "Message & Détails du Projet",
         btn: "Envoyer la demande",
         sending: "Envoi...",
-        types: ["Restauration / Bar", "Commerce / Boutique", "Artisan / Service", "Santé / Médical", "Autre"]
+        types: ["Restauration / Bar", "Commerce / Boutique", "Artisan / Service", "Santé / Médical", "Autre"],
+        serviceOptions: ["Pack React Starter (300€)", "Full Stack Custom", "Le Glow Up (Refonte)", "Maintenance Seule", "Autre / Je ne sais pas"]
       },
       direct: {
         title: "Ou contactez Charles directement",
@@ -296,7 +304,9 @@ const App: React.FC = () => {
     // Simulate API call
     setTimeout(() => {
       setFormStatus('success');
-      setTimeout(() => setFormStatus('idle'), 3000);
+      // NOTE: We do NOT reset formStatus to 'idle' automatically to prevent double submissions 
+      // and to encourage user to use direct contact if they need more info.
+      // setTimeout(() => setFormStatus('idle'), 3000); 
     }, 1500);
   };
 
@@ -312,10 +322,8 @@ const App: React.FC = () => {
     setRequests(prev => [...prev, newRequest]);
     setBookingModalOpen(false);
     
-    // Show global success feedback or scroll to success section?
-    // For now, let's just trigger the contact form success state for visual feedback
     setFormStatus('success');
-    setTimeout(() => setFormStatus('idle'), 3000);
+    // We let the success state persist to show the user their request is in.
     scrollToSection('contact');
   };
 
@@ -373,10 +381,8 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer group" onClick={() => window.scrollTo(0,0)}>
-              <div className="bg-indigo-600/90 group-hover:bg-indigo-500 p-2 rounded-lg text-white shadow-lg shadow-indigo-500/30 transition-all duration-300">
-                <Code2 className="w-6 h-6" />
-              </div>
+            <div className="flex-shrink-0 flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo(0,0)}>
+              <Logo className="w-10 h-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(129,140,248,0.3)]" />
               <span className="font-display font-bold text-xl md:text-2xl tracking-tight">
                 <GradientText colors={['#fff', '#818cf8', '#fff']} animationSpeed={6}>WebGen</GradientText>
               </span>
@@ -791,12 +797,15 @@ const App: React.FC = () => {
                     <p className="text-slate-300 mb-8 font-medium">{t.contact.subtitle}</p>
                     
                     {formStatus === 'success' ? (
-                       <div className="h-64 flex flex-col items-center justify-center text-center animate-in fade-in">
-                          <div className="w-16 h-16 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mb-4">
-                             <CheckCircle2 className="w-8 h-8" />
+                       <div className="h-full flex flex-col items-center justify-center text-center animate-in fade-in py-12">
+                          <div className="w-20 h-20 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mb-6 border border-green-500/30">
+                             <CheckCircle2 className="w-10 h-10" />
                           </div>
-                          <h3 className="text-xl font-bold text-white">{t.contact.successTitle}</h3>
-                          <p className="text-slate-300">{t.contact.successDesc}</p>
+                          <h3 className="text-2xl font-bold text-white mb-2">{t.contact.successTitle}</h3>
+                          <p className="text-slate-300 max-w-xs mb-8">{t.contact.successDesc}</p>
+                          <div className="p-4 bg-indigo-900/20 border border-indigo-500/20 rounded-xl text-sm text-indigo-200">
+                            {t.contact.successTip}
+                          </div>
                        </div>
                     ) : (
                        <form onSubmit={handleSubmit} className="space-y-6">
@@ -821,16 +830,31 @@ const App: React.FC = () => {
                              </div>
                           </div>
                           
-                          <div className="group">
-                             <label className="block text-sm font-semibold text-slate-300 mb-2">{t.contact.form.type}</label>
-                             <div className="relative">
-                               <select className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white appearance-none cursor-pointer shadow-inner">
-                                  {t.contact.form.types.map((type, i) => (
-                                      <option key={i} className="bg-slate-900 text-white py-2">{type}</option>
-                                  ))}
-                               </select>
-                               <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                             </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="group">
+                               <label className="block text-sm font-semibold text-slate-300 mb-2">{t.contact.form.type}</label>
+                               <div className="relative">
+                                 <select className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white appearance-none cursor-pointer shadow-inner">
+                                    {t.contact.form.types.map((type, i) => (
+                                        <option key={i} className="bg-slate-900 text-white py-2">{type}</option>
+                                    ))}
+                                 </select>
+                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                               </div>
+                            </div>
+
+                            {/* Service Selection Field */}
+                            <div className="group">
+                               <label className="block text-sm font-semibold text-slate-300 mb-2">{t.contact.form.serviceInterest}</label>
+                               <div className="relative">
+                                 <select className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white appearance-none cursor-pointer shadow-inner">
+                                    {t.contact.form.serviceOptions.map((opt, i) => (
+                                        <option key={i} className="bg-slate-900 text-white py-2">{opt}</option>
+                                    ))}
+                                 </select>
+                                 <Layers className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                               </div>
+                            </div>
                           </div>
                           
                           <div className="group">

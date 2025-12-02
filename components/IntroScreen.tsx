@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import React, { useState, useEffect } from 'react';
-import { Store, TrendingUp, Globe } from 'lucide-react';
+import { TrendingUp, Globe } from 'lucide-react';
+import Logo from './Logo';
 
 interface IntroScreenProps {
   onComplete: (lang: 'en' | 'fr') => void;
@@ -49,8 +50,9 @@ const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete }) => {
            <div className="absolute inset-0 border-2 border-indigo-500/30 rounded-full animate-[pulse-ring_3s_linear_infinite]"></div>
            <div className="absolute inset-0 border-2 border-indigo-500/30 rounded-full animate-[pulse-ring_3s_linear_infinite_1s]"></div>
            
-           <div className="relative w-32 h-32 bg-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-indigo-500/40 animate-[float_4s_ease-in-out_infinite]">
-              <Store className="w-16 h-16 text-white" />
+           {/* Logo Container - Dark background to make the White W and Purple G pop */}
+           <div className="relative w-32 h-32 bg-slate-900 border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl shadow-indigo-500/20 animate-[float_4s_ease-in-out_infinite]">
+              <Logo className="w-20 h-20" />
            </div>
 
            {/* Floating badges */}
