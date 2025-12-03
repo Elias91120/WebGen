@@ -207,7 +207,7 @@ const translations = {
         title: "Full Stack Custom",
         price: "Sur Devis",
         subPrice: "Selon complexité",
-        badge: "Best Seller",
+        badge: "Meilleure Vente",
         btn: "Nous Contacter",
         features: ['Systèmes de Réservation', 'E-commerce & Paiements', 'Gestion Utilisateurs & Data', 'Dashboard Admin Sur Mesure', 'Intégrations API Complexes']
       },
@@ -225,11 +225,11 @@ const translations = {
       title: "Les Fondateurs",
       subtitle: "Amis, Ingénieurs et Créateurs. Nous fusionnons nos compétences pour bâtir le web de demain.",
       roles: {
-        elias: "Creative Tech Lead",
+        elias: "Lead Tech Créatif",
         eliasDesc: "Le Virtuose React. Elias vit pour l'UI/UX et les animations. C'est lui qui crée l'effet 'Wow' qui retient vos clients sur le site.",
         noam: "Lead Backend & Data",
         noamDesc: "L'Architecte. Spécialiste Data & Robustesse, il construit la logique solide et les systèmes sécurisés derrière la belle interface.",
-        charles: "Head of Growth",
+        charles: "Responsable Croissance",
         charlesDesc: "Le Pont. Charles connecte l'humain à la tech. Il s'assure que nos lignes de code résolvent vos vrais problèmes business."
       }
     },
