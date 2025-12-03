@@ -3,9 +3,9 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState, useEffect } from 'react';
-import { X, Check, ShieldCheck, Calendar, ArrowRight, Loader2, Sparkles } from 'lucide-react';
-import { ServiceType, ClientRequest } from '../types';
+import { ArrowRight, Calendar, Check, Loader2, ShieldCheck, Sparkles, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ClientRequest, ServiceType } from '../types';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -15,12 +15,12 @@ interface BookingModalProps {
   translations: any;
 }
 
-const BookingModal: React.FC<BookingModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  selectedService, 
+const BookingModal: React.FC<BookingModalProps> = ({
+  isOpen,
+  onClose,
+  selectedService,
   onSubmit,
-  translations 
+  translations
 }) => {
   const [hasMaintenance, setHasMaintenance] = useState(false);
   const [step, setStep] = useState(1);
@@ -54,7 +54,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
   };
 
   const details = getServiceDetails();
-  
+
   const getTotalDisplay = () => {
     let text = "";
     if (details.isQuote) {
@@ -72,7 +72,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate network delay
     setTimeout(() => {
       onSubmit({
@@ -91,18 +91,18 @@ const BookingModal: React.FC<BookingModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 pt-20">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity" 
+      <div
+        className="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity"
         onClick={onClose}
       ></div>
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-2xl bg-slate-900/90 border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
-        
+      <div className="relative w-full max-w-2xl bg-slate-900/90 border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[75vh] animate-in zoom-in-95 duration-300">
+
         {/* Header */}
-        <div className="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
+        <div className="p-4 md:p-5 border-b border-white/5 flex justify-between items-center bg-white/5">
           <div>
              <h2 className="text-xl font-display font-bold text-white flex items-center gap-2">
                <Sparkles className="w-5 h-5 text-indigo-400" />
@@ -116,12 +116,12 @@ const BookingModal: React.FC<BookingModalProps> = ({
         </div>
 
         {/* Body */}
-        <div className="p-6 overflow-y-auto custom-scrollbar">
-          
+        <div className="p-3 md:p-4 overflow-y-auto custom-scrollbar">
+
           {step === 1 ? (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Selected Service Card */}
-              <div className="bg-indigo-900/20 border border-indigo-500/30 rounded-xl p-5 flex justify-between items-center">
+              <div className="bg-indigo-900/20 border border-indigo-500/30 rounded-xl p-4 flex justify-between items-center">
                  <div>
                     <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Selected Package</span>
                     <h3 className="text-lg font-bold text-white">{details.name}</h3>
@@ -132,8 +132,8 @@ const BookingModal: React.FC<BookingModalProps> = ({
               </div>
 
               {/* Maintenance Upsell */}
-              <div 
-                className={`border rounded-xl p-5 cursor-pointer transition-all duration-300 relative overflow-hidden group ${hasMaintenance ? 'bg-indigo-600/20 border-indigo-500' : 'bg-slate-800/50 border-white/5 hover:border-white/20'}`}
+              <div
+                className={`border rounded-xl p-4 cursor-pointer transition-all duration-300 relative overflow-hidden group ${hasMaintenance ? 'bg-indigo-600/20 border-indigo-500' : 'bg-slate-800/50 border-white/5 hover:border-white/20'}`}
                 onClick={() => setHasMaintenance(!hasMaintenance)}
               >
                  <div className="flex items-start gap-4 relative z-10">
@@ -153,12 +153,12 @@ const BookingModal: React.FC<BookingModalProps> = ({
                  </div>
               </div>
 
-              <div className="pt-4 border-t border-white/5 flex justify-between items-center">
+              <div className="pt-3 border-t border-white/5 flex justify-between items-center">
                  <div>
                     <span className="text-sm text-slate-400">Total Estimated</span>
                     <div className="text-2xl font-bold text-white">{getTotalDisplay()}</div>
                  </div>
-                 <button 
+                 <button
                    onClick={() => setStep(2)}
                    className="px-6 py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-indigo-50 transition-colors flex items-center gap-2"
                  >
@@ -167,39 +167,39 @@ const BookingModal: React.FC<BookingModalProps> = ({
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                  <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-300">Name</label>
-                    <input 
+                    <input
                       required
-                      type="text" 
+                      type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white transition-all"
+                      className="w-full px-3 py-2 md:py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white transition-all text-sm"
                       placeholder="John Doe"
                     />
                  </div>
                  <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-300">Email</label>
-                    <input 
+                    <input
                       required
-                      type="email" 
+                      type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white transition-all"
+                      className="w-full px-3 py-2 md:py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white transition-all text-sm"
                       placeholder="john@company.com"
                     />
                  </div>
               </div>
-              
+
               <div className="space-y-2">
                  <label className="text-sm font-medium text-slate-300">Company / Project Name</label>
-                 <input 
-                   type="text" 
+                 <input
+                   type="text"
                    value={formData.company}
                    onChange={(e) => setFormData({...formData, company: e.target.value})}
-                   className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white transition-all"
+                   className="w-full px-3 py-2 md:py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white transition-all text-sm"
                    placeholder="My Awesome Shop"
                  />
               </div>
@@ -207,11 +207,11 @@ const BookingModal: React.FC<BookingModalProps> = ({
               <div className="space-y-2">
                  <label className="text-sm font-medium text-slate-300">Preferred Date & Time (Optional)</label>
                  <div className="relative">
-                    <input 
-                      type="datetime-local" 
+                    <input
+                      type="datetime-local"
                       value={formData.date}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white transition-all appearance-none text-sm"
+                      className="w-full px-3 py-2 md:py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white transition-all appearance-none text-sm"
                     />
                     <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                  </div>
@@ -220,8 +220,8 @@ const BookingModal: React.FC<BookingModalProps> = ({
 
               <div className="space-y-2">
                  <label className="text-sm font-medium text-slate-300">Additional Details</label>
-                 <textarea 
-                   rows={3}
+                 <textarea
+                   rows={2}
                    value={formData.message}
                    onChange={(e) => setFormData({...formData, message: e.target.value})}
                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white transition-all resize-none"
@@ -229,15 +229,15 @@ const BookingModal: React.FC<BookingModalProps> = ({
                  ></textarea>
               </div>
 
-              <div className="pt-4 flex justify-between items-center">
-                 <button 
+              <div className="pt-3 flex justify-between items-center">
+                 <button
                    type="button"
                    onClick={() => setStep(1)}
                    className="text-slate-400 hover:text-white font-medium transition-colors"
                  >
                    Back
                  </button>
-                 <button 
+                 <button
                    type="submit"
                    disabled={isSubmitting}
                    className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-[1.02] flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"

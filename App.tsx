@@ -458,22 +458,24 @@ const App: React.FC = () => {
         setShowIntro(false);
       }} />
     ) : (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans relative overflow-x-hidden animate-in fade-in duration-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950/20 to-slate-950 text-slate-100 font-sans relative overflow-x-hidden animate-in fade-in duration-700">
 
       {/* 3D Background - Floating Lines */}
       {/* Mounted but optimized. No prop changes needed as internal optimization handles DPR */}
-      <FloatingLines
-        linesGradient={['#4f46e5', '#0891b2', '#7c3aed', '#ec4899']}
-        topWavePosition={{ x: 0, y: 1.0, rotate: 0 }}
-        middleWavePosition={{ x: 0, y: 0, rotate: 0 }}
-        bottomWavePosition={{ x: 0, y: -1.0, rotate: 0 }}
-        lineCount={[3, 5, 3]}
-        lineDistance={[4, 5, 4]}
-        animationSpeed={0.8}
-        interactive={true}
-        bendStrength={0.5}
-        parallaxStrength={0.1}
-      />
+      <div className="fixed inset-0 z-0">
+        <FloatingLines
+          linesGradient={['#4f46e5', '#0891b2', '#7c3aed', '#ec4899']}
+          topWavePosition={{ x: 0, y: 1.0, rotate: 0 }}
+          middleWavePosition={{ x: 0, y: 0, rotate: 0 }}
+          bottomWavePosition={{ x: 0, y: -1.0, rotate: 0 }}
+          lineCount={[3, 5, 3]}
+          lineDistance={[4, 5, 4]}
+          animationSpeed={0.8}
+          interactive={true}
+          bendStrength={0.5}
+          parallaxStrength={0.1}
+        />
+      </div>
 
       {/* Navbar - Glass */}
       <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 bg-slate-950/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl transition-all duration-300">
@@ -530,15 +532,15 @@ const App: React.FC = () => {
         )}
       </nav>
 
-      <main className="pt-20 relative z-10">
+      <main className="pt-24 md:pt-28 relative z-10">
 
         {/* HERO SECTION */}
-        <section className="relative pt-8 pb-16">
+        <section className="relative pt-12 md:pt-16 pb-16 md:pb-20">
            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-             <div className="glass-panel p-6 md:p-8 rounded-3xl backdrop-blur-xl border border-white/10 shadow-2xl max-w-4xl mx-auto">
-               <div className="text-center space-y-6">
+             <div className="glass-panel p-6 md:p-10 rounded-3xl backdrop-blur-xl border border-white/10 shadow-2xl max-w-4xl mx-auto">
+               <div className="text-center space-y-4 md:space-y-6">
 
-                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4 animate-in slide-in-from-bottom-4 fade-in duration-700 backdrop-blur-sm">
+                 <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-2 md:mb-4 animate-in slide-in-from-bottom-4 fade-in duration-700 backdrop-blur-sm">
                     <Rocket className="w-4 h-4 text-indigo-400" />
                     <TextType
                       text={["React Experts", "High Performance", "Mobile First", "WebGen Studio"]}
@@ -549,10 +551,10 @@ const App: React.FC = () => {
                     />
                  </div>
 
-                 <div className="text-4xl md:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-2xl">
+                 <div className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-2xl">
                    <SplitText
                      text={t.hero.titleStart}
-                     className="block mb-2"
+                     className="block mb-1 md:mb-2"
                      delay={50}
                    />
                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-indigo-400 animate-pulse block">
@@ -568,8 +570,8 @@ const App: React.FC = () => {
                    />
                  </div>
 
-                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-500">
-                   <button onClick={() => scrollToSection('contact')} className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-xl font-bold shadow-[0_0_20px_rgba(79,70,229,0.4)] transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 border border-white/10">
+                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-2 md:pt-4 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-500">
+                   <button onClick={() => scrollToSection('contact')} className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-xl font-bold shadow-[0_0_20px_rgba(79,70,229,0.4)] transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 border border-white/10 text-sm md:text-base">
                       {t.hero.ctaPrimary} <ArrowRight className="w-5 h-5" />
                    </button>
                  </div>
