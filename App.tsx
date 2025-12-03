@@ -53,8 +53,8 @@ const translations = {
     },
     hero: {
       badge: "Engineering x Design • React Experts",
-      titleStart: "From raw data to",
-      titleEnd: "digital excellence.",
+      titleStart: "Simple solutions to",
+      titleEnd: "skyrocket your business.",
       subtitle: "We are WebGen. A team of three young engineers & creatives bringing high-end tech to local businesses. Fast, animated, and built to perform.",
       ctaPrimary: "Launch Project",
     },
@@ -165,8 +165,8 @@ const translations = {
     },
     hero: {
       badge: "Ingénierie x Design • Experts React",
-      titleStart: "De la donnée brute à",
-      titleEnd: "l'excellence digitale.",
+      titleStart: "Des solutions simples pour",
+      titleEnd: "faire décoller votre commerce.",
       subtitle: "Nous sommes WebGen. Une équipe de trois jeunes ingénieurs & créatifs. Nous apportons la tech de pointe aux commerces locaux. Rapide, animé, performant.",
       ctaPrimary: "Lancer le Projet",
     },
@@ -493,7 +493,7 @@ const App: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                {/* Card 1 */}
-               <div className="glass-panel col-span-1 md:col-span-2 p-8 rounded-3xl hover:bg-slate-900/80 transition-colors group">
+               <div className="glass-panel col-span-1 md:col-span-2 p-8 rounded-3xl hover:bg-slate-900/80 transition-all duration-500 group hover:scale-[1.02] hover:shadow-2xl hover:shadow-indigo-500/10">
                   <div className="w-12 h-12 bg-indigo-500/20 border border-indigo-500/30 rounded-2xl flex items-center justify-center shadow-sm mb-6 text-indigo-400 group-hover:scale-110 transition-transform group-hover:text-indigo-300">
                      <Smartphone className="w-6 h-6" />
                   </div>
@@ -504,7 +504,7 @@ const App: React.FC = () => {
                </div>
 
                {/* Card 2 */}
-               <div className="bg-gradient-to-br from-indigo-900/70 to-slate-900/70 p-8 rounded-3xl border border-indigo-500/30 text-white relative overflow-hidden group backdrop-blur-2xl">
+               <div className="bg-gradient-to-br from-indigo-900/70 to-slate-900/70 p-8 rounded-3xl border border-indigo-500/30 text-white relative overflow-hidden group backdrop-blur-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-indigo-500/20">
                   <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-500 rounded-full blur-2xl opacity-40 group-hover:opacity-60 transition-opacity"></div>
                   <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center shadow-sm mb-6 text-indigo-300 backdrop-blur-sm relative z-10 border border-white/10">
                      <Database className="w-6 h-6" />
@@ -516,7 +516,7 @@ const App: React.FC = () => {
                </div>
 
                {/* Card 3 */}
-               <div className="glass-panel p-8 rounded-3xl hover:bg-slate-900/80 transition-colors group">
+               <div className="glass-panel p-8 rounded-3xl hover:bg-slate-900/80 transition-all duration-500 group hover:scale-[1.02] hover:shadow-2xl hover:shadow-orange-500/10">
                   <div className="w-12 h-12 bg-orange-500/20 border border-orange-500/30 rounded-2xl flex items-center justify-center shadow-sm mb-6 text-orange-400 group-hover:rotate-12 transition-transform">
                      <Store className="w-6 h-6" />
                   </div>
@@ -527,7 +527,7 @@ const App: React.FC = () => {
                </div>
 
                {/* Card 4 */}
-               <div className="col-span-1 md:col-span-2 glass-panel p-8 rounded-3xl hover:bg-slate-900/80 transition-colors">
+               <div className="col-span-1 md:col-span-2 glass-panel p-8 rounded-3xl hover:bg-slate-900/80 transition-all duration-500 group hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/10">
                   <div className="flex flex-col md:flex-row items-start gap-6">
                     <div className="w-12 h-12 bg-cyan-500/20 border border-cyan-500/30 rounded-2xl flex items-center justify-center shadow-sm text-cyan-400 flex-shrink-0">
                        <Users className="w-6 h-6" />
