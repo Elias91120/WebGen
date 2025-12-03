@@ -3,43 +3,42 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState, useEffect } from 'react';
-import IntroScreen from './components/IntroScreen';
-import FloatingLines from './components/FloatingLines';
-import GradientText from './components/GradientText';
-import TextType from './components/TextType';
-import SplitText from './components/SplitText';
-import BlurText from './components/BlurText';
-import BookingModal from './components/BookingModal';
-import AdminDashboard from './components/AdminDashboard';
-import Logo from './components/Logo';
-import { 
-  ArrowRight, 
-  Store, 
-  Smartphone, 
-  Rocket, 
-  CheckCircle2, 
-  Star, 
-  MapPin, 
-  Mail, 
-  Phone, 
-  Menu,
-  X,
-  Send,
-  Globe,
+import {
+  ArrowRight,
+  CheckCircle2,
+  ChevronDown,
   Code2,
   Database,
-  Users,
-  Sparkles,
-  ShieldCheck,
-  RefreshCw,
-  Zap,
-  MessageCircle,
-  ChevronDown,
+  Globe,
+  Layers,
   Lock,
-  Layers
+  Menu,
+  RefreshCw,
+  Rocket,
+  Send,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Star,
+  Store,
+  Users,
+  X,
+  Zap
 } from 'lucide-react';
-import { ServiceType, ClientRequest } from './types';
+import React, { useEffect, useState } from 'react';
+import AdminDashboard from './components/AdminDashboard';
+import BlurText from './components/BlurText';
+import BookingModal from './components/BookingModal';
+import CookieConsent from './components/CookieConsent';
+import FloatingLines from './components/FloatingLines';
+import GradientText from './components/GradientText';
+import IntroScreen from './components/IntroScreen';
+import LegalModals from './components/LegalModals';
+import Logo from './components/Logo';
+import SplitText from './components/SplitText';
+import TextType from './components/TextType';
+import { supabase } from './services/supabaseClient';
+import { ClientRequest, ServiceType } from './types';
 
 type Lang = 'en' | 'fr';
 
@@ -165,8 +164,8 @@ const translations = {
     },
     hero: {
       badge: "Ingénierie x Design • Experts React",
-      titleStart: "Des solutions simples pour",
-      titleEnd: "faire décoller votre commerce.",
+      titleStart: "Des solutions simples",
+      titleEnd: "pour faire décoller votre commerce.",
       subtitle: "Nous sommes WebGen. Une équipe de trois jeunes ingénieurs & créatifs. Nous apportons la tech de pointe aux commerces locaux. Rapide, animé, performant.",
       ctaPrimary: "Lancer le Projet",
     },
@@ -275,56 +274,131 @@ const App: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [lang, setLang] = useState<Lang>('en');
-  
+
   // Booking & Admin State
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<ServiceType>(null);
   const [adminOpen, setAdminOpen] = useState(false);
   const [requests, setRequests] = useState<ClientRequest[]>([]);
 
+  // GDPR State
+  const [legalModalOpen, setLegalModalOpen] = useState(false);
+  const [legalTab, setLegalTab] = useState<'privacy' | 'terms' | 'legal'>('legal');
+
+  const openLegal = (tab: 'privacy' | 'terms' | 'legal') => {
+    setLegalTab(tab);
+    setLegalModalOpen(true);
+  };
+
   const t = translations[lang];
 
-  // Load requests from local storage on mount
+  // Load requests from Supabase on mount
   useEffect(() => {
-    const saved = localStorage.getItem('webgen_requests');
-    if (saved) {
-      setRequests(JSON.parse(saved));
-    }
+    fetchRequests();
   }, []);
 
-  // Save requests when changed
-  useEffect(() => {
-    localStorage.setItem('webgen_requests', JSON.stringify(requests));
-  }, [requests]);
+  const fetchRequests = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('client_requests')
+        .select('*')
+        .order('date', { ascending: false });
+
+      if (error) throw error;
+
+      if (data) {
+        const mappedRequests: ClientRequest[] = data.map(item => ({
+          id: item.id,
+          date: item.date,
+          status: item.status,
+          serviceId: item.service_id as ServiceType,
+          serviceName: item.service_name,
+          hasMaintenance: item.has_maintenance,
+          totalEstimate: item.total_estimate,
+          clientName: item.client_name,
+          clientEmail: item.client_email,
+          clientCompany: item.client_company,
+          message: item.message,
+          preferredDate: item.preferred_date
+        }));
+        setRequests(mappedRequests);
+      }
+    } catch (error) {
+      console.error('Error fetching requests:', error);
+    }
+  };
 
   // Handle Contact Form Submit (Simple contact from bottom section)
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormStatus('submitting');
-    // Simulate API call
-    setTimeout(() => {
+
+    const formData = new FormData(e.currentTarget);
+    const newRequest = {
+      id: Math.random().toString(36).substr(2, 9),
+      date: new Date().toISOString(),
+      status: 'new',
+      service_id: null,
+      service_name: formData.get('service') as string || 'General Inquiry',
+      has_maintenance: false,
+      total_estimate: 'Contact Form',
+      client_name: formData.get('name') as string,
+      client_email: formData.get('email') as string,
+      client_company: formData.get('type') as string,
+      message: formData.get('message') as string,
+      preferred_date: null
+    };
+
+    try {
+      const { error } = await supabase
+        .from('client_requests')
+        .insert([newRequest]);
+
+      if (error) throw error;
+
+      // Refresh list
+      fetchRequests();
       setFormStatus('success');
-      // NOTE: We do NOT reset formStatus to 'idle' automatically to prevent double submissions 
-      // and to encourage user to use direct contact if they need more info.
-      // setTimeout(() => setFormStatus('idle'), 3000); 
-    }, 1500);
+    } catch (error) {
+      console.error('Error submitting request:', error);
+      alert('Error submitting request. Please try again.');
+      setFormStatus('idle');
+    }
   };
 
   // Handle Booking Submit (From Modal)
-  const handleBookingSubmit = (data: Omit<ClientRequest, 'id' | 'date' | 'status'>) => {
-    const newRequest: ClientRequest = {
-      ...data,
+  const handleBookingSubmit = async (data: Omit<ClientRequest, 'id' | 'date' | 'status'>) => {
+    const newRequest = {
       id: Math.random().toString(36).substr(2, 9),
       date: new Date().toISOString(),
-      status: 'new'
+      status: 'new',
+      service_id: data.serviceId,
+      service_name: data.serviceName,
+      has_maintenance: data.hasMaintenance,
+      total_estimate: data.totalEstimate,
+      client_name: data.clientName,
+      client_email: data.clientEmail,
+      client_company: data.clientCompany,
+      message: data.message,
+      preferred_date: data.preferredDate
     };
-    
-    setRequests(prev => [...prev, newRequest]);
-    setBookingModalOpen(false);
-    
-    setFormStatus('success');
-    // We let the success state persist to show the user their request is in.
-    scrollToSection('contact');
+
+    try {
+      const { error } = await supabase
+        .from('client_requests')
+        .insert([newRequest]);
+
+      if (error) throw error;
+
+      // Refresh list
+      fetchRequests();
+      setBookingModalOpen(false);
+      setFormStatus('success');
+      scrollToSection('contact');
+    } catch (error) {
+      console.error('Error submitting request:', error);
+      alert('Error submitting request. Please try again.');
+    }
   };
 
   const handleServiceSelect = (service: ServiceType) => {
@@ -332,12 +406,36 @@ const App: React.FC = () => {
     setBookingModalOpen(true);
   };
 
-  const handleAdminStatusUpdate = (id: string, status: ClientRequest['status']) => {
-    setRequests(requests.map(req => req.id === id ? { ...req, status } : req));
+  const handleAdminStatusUpdate = async (id: string, status: ClientRequest['status']) => {
+    try {
+      const { error } = await supabase
+        .from('client_requests')
+        .update({ status })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setRequests(requests.map(req => req.id === id ? { ...req, status } : req));
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
   };
 
-  const handleAdminDelete = (id: string) => {
-    setRequests(requests.filter(req => req.id !== id));
+  const handleAdminDelete = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this request?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('client_requests')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setRequests(requests.filter(req => req.id !== id));
+    } catch (error) {
+      console.error('Error deleting request:', error);
+    }
   };
 
   const scrollToSection = (id: string) => {
@@ -361,11 +459,11 @@ const App: React.FC = () => {
       }} />
     ) : (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans relative overflow-x-hidden animate-in fade-in duration-700">
-      
+
       {/* 3D Background - Floating Lines */}
       {/* Mounted but optimized. No prop changes needed as internal optimization handles DPR */}
-      <FloatingLines 
-        linesGradient={['#4f46e5', '#0891b2', '#7c3aed', '#ec4899']} 
+      <FloatingLines
+        linesGradient={['#4f46e5', '#0891b2', '#7c3aed', '#ec4899']}
         topWavePosition={{ x: 0, y: 1.0, rotate: 0 }}
         middleWavePosition={{ x: 0, y: 0, rotate: 0 }}
         bottomWavePosition={{ x: 0, y: -1.0, rotate: 0 }}
@@ -376,15 +474,15 @@ const App: React.FC = () => {
         bendStrength={0.5}
         parallaxStrength={0.1}
       />
-      
+
       {/* Navbar - Glass */}
-      <nav className="fixed w-full z-50 bg-slate-950/90 backdrop-blur-2xl border-b border-white/5 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 bg-slate-950/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl transition-all duration-300">
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 md:h-20">
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo(0,0)}>
-              <Logo className="w-10 h-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(129,140,248,0.3)]" />
-              <span className="font-display font-bold text-xl md:text-2xl tracking-tight">
+              <Logo className="w-8 h-8 md:w-10 md:h-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(129,140,248,0.3)]" />
+              <span className="font-display font-bold text-lg md:text-2xl tracking-tight">
                 <GradientText colors={['#fff', '#818cf8', '#fff']} animationSpeed={6}>WebGen</GradientText>
               </span>
             </div>
@@ -394,12 +492,12 @@ const App: React.FC = () => {
               <button onClick={() => scrollToSection('services')} className="text-sm font-medium text-slate-200 hover:text-white transition-colors">{t.nav.services}</button>
               <button onClick={() => scrollToSection('equipe')} className="text-sm font-medium text-slate-200 hover:text-white transition-colors">{t.nav.team}</button>
               <button onClick={() => scrollToSection('temoignages')} className="text-sm font-medium text-slate-200 hover:text-white transition-colors">{t.nav.reviews}</button>
-              
+
               <button onClick={toggleLang} className="flex items-center gap-1 text-slate-200 hover:text-white font-medium text-sm border border-white/10 bg-white/5 hover:bg-white/10 rounded-full px-3 py-1 transition-all">
                  <Globe className="w-3 h-3" /> {lang.toUpperCase()}
               </button>
 
-              <button 
+              <button
                 onClick={() => scrollToSection('contact')}
                 className="glass-button px-5 py-2.5 rounded-full text-white text-sm font-bold"
               >
@@ -421,39 +519,39 @@ const App: React.FC = () => {
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="md:hidden absolute top-20 left-0 w-full bg-slate-900/95 backdrop-blur-xl border-b border-white/10 p-4 shadow-xl animate-in slide-in-from-top-4">
+          <div className="md:hidden absolute top-full left-0 w-full mt-2 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl animate-in slide-in-from-top-2">
              <div className="flex flex-col space-y-4">
-              <button onClick={() => scrollToSection('services')} className="text-left font-medium text-slate-200 p-2">{t.nav.services}</button>
-              <button onClick={() => scrollToSection('equipe')} className="text-left font-medium text-slate-200 p-2">{t.nav.team}</button>
-              <button onClick={() => scrollToSection('temoignages')} className="text-left font-medium text-slate-200 p-2">{t.nav.reviews}</button>
-              <button onClick={() => scrollToSection('contact')} className="bg-indigo-600 text-white p-3 rounded-lg font-bold text-center">{t.nav.cta}</button>
+              <button onClick={() => scrollToSection('services')} className="text-left font-medium text-slate-200 p-2 hover:bg-white/5 rounded-lg transition-colors">{t.nav.services}</button>
+              <button onClick={() => scrollToSection('equipe')} className="text-left font-medium text-slate-200 p-2 hover:bg-white/5 rounded-lg transition-colors">{t.nav.team}</button>
+              <button onClick={() => scrollToSection('temoignages')} className="text-left font-medium text-slate-200 p-2 hover:bg-white/5 rounded-lg transition-colors">{t.nav.reviews}</button>
+              <button onClick={() => scrollToSection('contact')} className="bg-indigo-600 text-white p-3 rounded-lg font-bold text-center shadow-lg shadow-indigo-500/20">{t.nav.cta}</button>
              </div>
           </div>
         )}
       </nav>
 
       <main className="pt-20 relative z-10">
-        
+
         {/* HERO SECTION */}
-        <section className="relative pt-20 pb-32">
+        <section className="relative pt-8 pb-16">
            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-             <div className="glass-panel p-8 md:p-12 rounded-3xl backdrop-blur-xl border border-white/10 shadow-2xl max-w-4xl mx-auto">
-               <div className="text-center space-y-8">
-                 
+             <div className="glass-panel p-6 md:p-8 rounded-3xl backdrop-blur-xl border border-white/10 shadow-2xl max-w-4xl mx-auto">
+               <div className="text-center space-y-6">
+
                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4 animate-in slide-in-from-bottom-4 fade-in duration-700 backdrop-blur-sm">
                     <Rocket className="w-4 h-4 text-indigo-400" />
-                    <TextType 
-                      text={["React Experts", "High Performance", "Mobile First", "WebGen Studio"]} 
-                      typingSpeed={80} 
-                      deletingSpeed={40} 
-                      pauseDuration={2000} 
+                    <TextType
+                      text={["React Experts", "High Performance", "Mobile First", "WebGen Studio"]}
+                      typingSpeed={80}
+                      deletingSpeed={40}
+                      pauseDuration={2000}
                       loop={true}
                     />
                  </div>
-                 
-                 <div className="text-5xl md:text-7xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-2xl">
-                   <SplitText 
-                     text={t.hero.titleStart} 
+
+                 <div className="text-4xl md:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-2xl">
+                   <SplitText
+                     text={t.hero.titleStart}
                      className="block mb-2"
                      delay={50}
                    />
@@ -461,16 +559,16 @@ const App: React.FC = () => {
                      {t.hero.titleEnd}
                    </span>
                  </div>
-                 
+
                  <div className="max-w-2xl mx-auto">
-                   <BlurText 
+                   <BlurText
                       text={t.hero.subtitle}
-                      className="text-lg md:text-xl text-slate-100 leading-relaxed font-medium drop-shadow-md text-center justify-center"
+                      className="text-base md:text-lg text-slate-100 leading-relaxed font-medium drop-shadow-md text-center justify-center"
                       delay={30}
                    />
                  </div>
-                 
-                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-500">
+
+                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-500">
                    <button onClick={() => scrollToSection('contact')} className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-xl font-bold shadow-[0_0_20px_rgba(79,70,229,0.4)] transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 border border-white/10">
                       {t.hero.ctaPrimary} <ArrowRight className="w-5 h-5" />
                    </button>
@@ -481,11 +579,11 @@ const App: React.FC = () => {
         </section>
 
         {/* WHY US (Bento Grid) - Glass Panels */}
-        <section className="py-24 relative">
+        <section className="py-16 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Title Container - Glass Box */}
-            <div className="max-w-3xl mx-auto mb-16 bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-3xl text-center shadow-2xl">
-              <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+            <div className="max-w-3xl mx-auto mb-12 bg-slate-900/40 backdrop-blur-xl border border-white/5 p-6 rounded-3xl text-center shadow-2xl">
+              <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">
                  <GradientText colors={['#fff', '#a5b4fc', '#fff']} animationSpeed={8}>{t.whyUs.title}</GradientText>
               </h2>
               <p className="text-slate-300 font-medium">{t.whyUs.subtitle}</p>
@@ -545,10 +643,10 @@ const App: React.FC = () => {
         </section>
 
         {/* SERVICES */}
-        <section id="services" className="py-24 relative">
+        <section id="services" className="py-16 relative">
            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {/* Title Container - Glass Box */}
-              <div className="max-w-3xl mx-auto mb-16 bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-3xl text-center shadow-2xl">
+              <div className="max-w-3xl mx-auto mb-12 bg-slate-900/40 backdrop-blur-xl border border-white/5 p-6 rounded-3xl text-center shadow-2xl">
                  <span className="text-indigo-400 font-bold uppercase tracking-widest text-xs mb-2 block animate-pulse">{t.services.badge}</span>
                  <h2 className="text-3xl md:text-4xl font-display font-bold text-white">
                     <GradientText colors={['#818cf8', '#2dd4bf', '#818cf8']} animationSpeed={6}>{t.services.title}</GradientText>
@@ -612,7 +710,7 @@ const App: React.FC = () => {
               </div>
 
               {/* Maintenance & Support Add-on */}
-              <div 
+              <div
                 className="mt-12 max-w-2xl mx-auto glass-panel p-6 rounded-2xl border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-slate-900/80 transition-all duration-300 group hover:shadow-[0_10px_30px_-10px_rgba(99,102,241,0.3)] hover:-translate-y-1 cursor-pointer"
                 onClick={() => handleServiceSelect('maintenance_only')}
               >
@@ -645,12 +743,12 @@ const App: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              
+
               {/* Member 1: Elias (Front) */}
               <div className="glass-panel p-6 rounded-2xl hover:bg-slate-900/80 transition-all duration-300 group text-center flex flex-col items-center hover:scale-[1.02] hover:shadow-[0_20px_40px_-10px_rgba(99,102,241,0.4)]">
                  <div className="relative w-28 h-28 mb-6 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-indigo-500/50">
-                    <img 
-                      src="https://media.licdn.com/dms/image/v2/D4E03AQFu2YX0Ge5iyA/profile-displayphoto-shrink_400_400/B4EZXK2izSH0Ak-/0/1742865052510?e=1766016000&v=beta&t=5rJlqgRwNNLNgY1ZXdh_gmAC0NUDk-b6c7yzCUltJIA" 
+                    <img
+                      src="https://media.licdn.com/dms/image/v2/D4E03AQFu2YX0Ge5iyA/profile-displayphoto-shrink_400_400/B4EZXK2izSH0Ak-/0/1742865052510?e=1766016000&v=beta&t=5rJlqgRwNNLNgY1ZXdh_gmAC0NUDk-b6c7yzCUltJIA"
                       alt="Elias Eloumi"
                       className="w-full h-full rounded-full object-cover"
                       loading="lazy"
@@ -659,9 +757,9 @@ const App: React.FC = () => {
                  <h3 className="text-xl font-bold text-white">Elias Eloumi</h3>
                  <p className="text-indigo-400 font-medium text-sm mb-4 flex items-center gap-1 justify-center"><Sparkles className="w-3 h-3" />{t.team.roles.elias}</p>
                  <p className="text-slate-200 text-sm mb-6 max-w-xs leading-relaxed font-medium">{t.team.roles.eliasDesc}</p>
-                 <a 
-                   href="https://www.linkedin.com/in/elias-elloumi/" 
-                   target="_blank" 
+                 <a
+                   href="https://www.linkedin.com/in/elias-elloumi/"
+                   target="_blank"
                    rel="noopener noreferrer"
                    className="Btn-LinkedIn mt-auto"
                  >
@@ -677,8 +775,8 @@ const App: React.FC = () => {
               {/* Member 2: Noam (Back) */}
               <div className="glass-panel p-6 rounded-2xl hover:bg-slate-900/80 transition-all duration-300 group text-center flex flex-col items-center hover:scale-[1.02] hover:shadow-[0_20px_40px_-10px_rgba(99,102,241,0.4)]">
                  <div className="relative w-28 h-28 mb-6 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-indigo-500/50">
-                    <img 
-                      src="https://media.licdn.com/dms/image/v2/D4E03AQGiD7tFAd5ZEQ/profile-displayphoto-scale_400_400/B4EZlR5n58IoAg-/0/1758015687133?e=1766016000&v=beta&t=qN8jGGU0s11i-xq5pQyeaaDMB1GcrkJzcndvWyTfwas" 
+                    <img
+                      src="https://media.licdn.com/dms/image/v2/D4E03AQGiD7tFAd5ZEQ/profile-displayphoto-scale_400_400/B4EZlR5n58IoAg-/0/1758015687133?e=1766016000&v=beta&t=qN8jGGU0s11i-xq5pQyeaaDMB1GcrkJzcndvWyTfwas"
                       alt="Noam Leclappart"
                       className="w-full h-full rounded-full object-cover"
                       loading="lazy"
@@ -687,9 +785,9 @@ const App: React.FC = () => {
                  <h3 className="text-xl font-bold text-white">Noam Leclappart</h3>
                  <p className="text-slate-300 font-medium text-sm mb-4 flex items-center gap-1 justify-center"><Database className="w-3 h-3" />{t.team.roles.noam}</p>
                  <p className="text-slate-200 text-sm mb-6 max-w-xs leading-relaxed font-medium">{t.team.roles.noamDesc}</p>
-                 <a 
-                   href="https://www.linkedin.com/in/noam-leclapart-jublot/" 
-                   target="_blank" 
+                 <a
+                   href="https://www.linkedin.com/in/noam-leclapart-jublot/"
+                   target="_blank"
                    rel="noopener noreferrer"
                    className="Btn-LinkedIn mt-auto"
                  >
@@ -705,8 +803,8 @@ const App: React.FC = () => {
                {/* Member 3: Charles (Sales) */}
               <div className="glass-panel p-6 rounded-2xl hover:bg-slate-900/80 transition-all duration-300 group text-center flex flex-col items-center hover:scale-[1.02] hover:shadow-[0_20px_40px_-10px_rgba(249,115,22,0.4)]">
                  <div className="relative w-28 h-28 mb-6 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-orange-500/50">
-                    <img 
-                      src="https://media.licdn.com/dms/image/v2/D4E03AQGJO6nv360qcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1713713155263?e=1766016000&v=beta&t=HJrhGPpCM_85mG26jxOdD205Q53Xe8WaVpADE1GbWBk" 
+                    <img
+                      src="https://media.licdn.com/dms/image/v2/D4E03AQGJO6nv360qcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1713713155263?e=1766016000&v=beta&t=HJrhGPpCM_85mG26jxOdD205Q53Xe8WaVpADE1GbWBk"
                       alt="Charles Garbus"
                       className="w-full h-full rounded-full object-cover"
                       loading="lazy"
@@ -715,9 +813,9 @@ const App: React.FC = () => {
                  <h3 className="text-xl font-bold text-white">Charles Garbus</h3>
                  <p className="text-orange-400 font-medium text-sm mb-4 flex items-center gap-1 justify-center"><Users className="w-3 h-3" />{t.team.roles.charles}</p>
                  <p className="text-slate-200 text-sm mb-6 max-w-xs leading-relaxed font-medium">{t.team.roles.charlesDesc}</p>
-                 <a 
-                   href="https://www.linkedin.com/in/charlesgarbus/" 
-                   target="_blank" 
+                 <a
+                   href="https://www.linkedin.com/in/charlesgarbus/"
+                   target="_blank"
                    rel="noopener noreferrer"
                    className="Btn-LinkedIn mt-auto"
                  >
@@ -771,7 +869,7 @@ const App: React.FC = () => {
                        </div>
                     </div>
                  </div>
-                 
+
                  {/* Testimonial 3 */}
                  <div className="glass-panel p-6 rounded-2xl hidden lg:block">
                     <div className="flex gap-1 text-orange-400 mb-4">
@@ -794,12 +892,12 @@ const App: React.FC = () => {
         <section id="contact" className="py-24 relative">
            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="glass-panel rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row border border-white/10">
-                 
+
                  {/* Form Side */}
                  <div className="p-8 md:p-12 md:w-3/5 relative">
                     <h2 className="text-3xl font-display font-bold text-white mb-2">{t.contact.title}</h2>
                     <p className="text-slate-300 mb-8 font-medium">{t.contact.subtitle}</p>
-                    
+
                     {formStatus === 'success' ? (
                        <div className="h-full flex flex-col items-center justify-center text-center animate-in fade-in py-12">
                           <div className="w-20 h-20 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mb-6 border border-green-500/30">
@@ -816,31 +914,33 @@ const App: React.FC = () => {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                              <div className="group">
                                 <label className="block text-sm font-semibold text-slate-300 mb-2">{t.contact.form.name}</label>
-                                <input 
-                                   required 
-                                   type="text" 
-                                   placeholder="John Doe" 
-                                   className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white placeholder:text-slate-300 shadow-inner" 
+                                <input
+                                   name="name"
+                                   required
+                                   type="text"
+                                   placeholder="John Doe"
+                                   className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white placeholder:text-slate-300 shadow-inner"
                                 />
                              </div>
                              <div className="group">
                                 <label className="block text-sm font-semibold text-slate-300 mb-2">{t.contact.form.email}</label>
-                                <input 
-                                   required 
-                                   type="email" 
-                                   placeholder="john@example.com" 
-                                   className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white placeholder:text-slate-300 shadow-inner" 
+                                <input
+                                   name="email"
+                                   required
+                                   type="email"
+                                   placeholder="john@example.com"
+                                   className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white placeholder:text-slate-300 shadow-inner"
                                 />
                              </div>
                           </div>
-                          
+
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="group">
                                <label className="block text-sm font-semibold text-slate-300 mb-2">{t.contact.form.type}</label>
                                <div className="relative">
-                                 <select className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white appearance-none cursor-pointer shadow-inner">
+                                 <select name="type" className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white appearance-none cursor-pointer shadow-inner">
                                     {t.contact.form.types.map((type, i) => (
-                                        <option key={i} className="bg-slate-900 text-white py-2">{type}</option>
+                                        <option key={i} className="bg-slate-900 text-white py-2" value={type}>{type}</option>
                                     ))}
                                  </select>
                                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
@@ -851,28 +951,29 @@ const App: React.FC = () => {
                             <div className="group">
                                <label className="block text-sm font-semibold text-slate-300 mb-2">{t.contact.form.serviceInterest}</label>
                                <div className="relative">
-                                 <select className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white appearance-none cursor-pointer shadow-inner">
+                                 <select name="service" className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white appearance-none cursor-pointer shadow-inner">
                                     {t.contact.form.serviceOptions.map((opt, i) => (
-                                        <option key={i} className="bg-slate-900 text-white py-2">{opt}</option>
+                                        <option key={i} className="bg-slate-900 text-white py-2" value={opt}>{opt}</option>
                                     ))}
                                  </select>
                                  <Layers className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                                </div>
                             </div>
                           </div>
-                          
+
                           <div className="group">
                              <label className="block text-sm font-semibold text-slate-300 mb-2">{t.contact.form.message}</label>
-                             <textarea 
-                                required 
-                                rows={4} 
-                                placeholder="Tell us about your project..." 
+                             <textarea
+                                name="message"
+                                required
+                                rows={4}
+                                placeholder="Tell us about your project..."
                                 className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 backdrop-blur-md border border-white/10 focus:border-indigo-500 focus:bg-white/5 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all duration-300 text-white placeholder:text-slate-300 shadow-inner resize-none"
                              ></textarea>
                           </div>
-                          
-                          <button 
-                             type="submit" 
+
+                          <button
+                             type="submit"
                              disabled={formStatus === 'submitting'}
                              className="w-full py-4 mt-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 transition-all duration-300 transform hover:scale-[1.01] flex items-center justify-center gap-2 border border-white/10 disabled:opacity-70 disabled:cursor-not-allowed"
                           >
@@ -892,13 +993,13 @@ const App: React.FC = () => {
                  {/* Direct Contact Side (Charles) */}
                  <div className="bg-indigo-900/80 p-8 md:p-12 md:w-2/5 text-indigo-100 flex flex-col items-center justify-center text-center backdrop-blur-xl relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/50"></div>
-                    
+
                     <div className="relative z-10 flex flex-col items-center">
                        <h3 className="text-xl font-bold text-white mb-6">{t.contact.direct.title}</h3>
-                       
+
                        <div className="relative w-32 h-32 mb-6 p-1 rounded-full border-2 border-green-400/50 shadow-[0_0_20px_rgba(74,222,128,0.2)]">
-                         <img 
-                           src="https://media.licdn.com/dms/image/v2/D4E03AQGJO6nv360qcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1713713155263?e=1766016000&v=beta&t=HJrhGPpCM_85mG26jxOdD205Q53Xe8WaVpADE1GbWBk" 
+                         <img
+                           src="https://media.licdn.com/dms/image/v2/D4E03AQGJO6nv360qcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1713713155263?e=1766016000&v=beta&t=HJrhGPpCM_85mG26jxOdD205Q53Xe8WaVpADE1GbWBk"
                            alt="Charles Garbus"
                            className="w-full h-full rounded-full object-cover"
                            loading="lazy"
@@ -927,7 +1028,7 @@ const App: React.FC = () => {
         </section>
 
         {/* Booking Modal */}
-        <BookingModal 
+        <BookingModal
           isOpen={bookingModalOpen}
           onClose={() => setBookingModalOpen(false)}
           selectedService={selectedService}
@@ -937,13 +1038,25 @@ const App: React.FC = () => {
 
         {/* Admin Dashboard */}
         {adminOpen && (
-          <AdminDashboard 
+          <AdminDashboard
             requests={requests}
             onUpdateStatus={handleAdminStatusUpdate}
             onDelete={handleAdminDelete}
             onClose={() => setAdminOpen(false)}
           />
         )}
+
+        {/* GDPR Components */}
+        <CookieConsent
+          onAccept={() => console.log('Cookies accepted')}
+          onDecline={() => console.log('Cookies declined')}
+        />
+
+        <LegalModals
+          isOpen={legalModalOpen}
+          onClose={() => setLegalModalOpen(false)}
+          initialTab={legalTab}
+        />
 
       </main>
 
@@ -960,9 +1073,10 @@ const App: React.FC = () => {
                &copy; {new Date().getFullYear()} WebGen. {t.footer.rights}
             </div>
             <div className="flex gap-6 text-sm font-medium text-slate-300 items-center">
-               {t.footer.links.map((link, i) => (
-                  <a key={i} href="#" className="hover:text-indigo-400 transition-colors">{link}</a>
-               ))}
+               <button onClick={() => openLegal('legal')} className="hover:text-indigo-400 transition-colors">Mentions Légales</button>
+               <button onClick={() => openLegal('privacy')} className="hover:text-indigo-400 transition-colors">Confidentialité</button>
+               <button onClick={() => openLegal('terms')} className="hover:text-indigo-400 transition-colors">CGV</button>
+
                <button onClick={() => setAdminOpen(true)} className="text-slate-700 hover:text-slate-500 transition-colors" title="Admin Access">
                  <Lock className="w-3 h-3" />
                </button>

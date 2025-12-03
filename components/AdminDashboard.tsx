@@ -14,11 +14,11 @@ interface AdminDashboardProps {
   onClose: () => void;
 }
 
-const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
-  requests, 
-  onUpdateStatus, 
+const AdminDashboard: React.FC<AdminDashboardProps> = ({
+  requests,
+  onUpdateStatus,
   onDelete,
-  onClose 
+  onClose
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -46,7 +46,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const notifyCharles = (req: ClientRequest) => {
     const message = `🚀 *New Lead WebGen* 🚀%0A%0A👤 *Client:* ${req.clientName}%0A🏢 *Company:* ${req.clientCompany}%0A📧 *Email:* ${req.clientEmail}%0A%0A📦 *Package:* ${req.serviceName}%0A💰 *Est:* ${req.totalEstimate}%0A🛡 *Maint:* ${req.hasMaintenance ? 'YES' : 'NO'}%0A%0A📅 *Pref Date:* ${req.preferredDate ? new Date(req.preferredDate).toLocaleString() : 'Not specified'}%0A📝 *Message:* ${req.message}`;
-    
+
     // Charles's number from the prompt
     window.open(`https://wa.me/33671618119?text=${message}`, '_blank');
   };
@@ -65,12 +65,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <X className="w-5 h-5" />
                 </button>
             </div>
-            
+
             <form onSubmit={handleLogin} className="space-y-4">
                <div>
                   <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
-                  <input 
-                    type="password" 
+                  <input
+                    type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 bg-slate-800 border border-white/10 rounded-lg text-white focus:border-indigo-500 outline-none"
@@ -87,7 +87,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       </div>
     );
   }
-
+<br></br>
   return (
     <div className="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-7xl mx-auto p-4 sm:p-8">
@@ -99,13 +99,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <p className="text-slate-400">Manage incoming leads and local database.</p>
           </div>
           <div className="flex gap-3">
-            <button 
+            <button
               onClick={downloadDatabase}
               className="px-4 py-2 bg-slate-800 border border-white/10 rounded-lg text-white hover:bg-slate-700 transition-colors flex items-center gap-2"
             >
               <Download className="w-4 h-4" /> Export JSON
             </button>
-            <button 
+            <button
               onClick={onClose}
               className="px-4 py-2 bg-slate-800 border border-white/10 rounded-lg text-white hover:bg-slate-700 transition-colors"
             >
@@ -123,8 +123,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
           ) : (
             requests.slice().reverse().map((req) => (
-              <div 
-                key={req.id} 
+              <div
+                key={req.id}
                 className={`bg-slate-900 border rounded-xl p-6 transition-all ${
                     req.status === 'new' ? 'border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.1)] relative overflow-hidden' : 'border-white/10'
                 }`}
@@ -138,7 +138,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                    <div className="space-y-4 flex-1">
                       <div className="flex items-center gap-3">
                          <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                            req.status === 'new' ? 'bg-indigo-500/20 text-indigo-300' : 
+                            req.status === 'new' ? 'bg-indigo-500/20 text-indigo-300' :
                             req.status === 'contacted' ? 'bg-orange-500/20 text-orange-300' :
                             'bg-green-500/20 text-green-300'
                          }`}>
@@ -149,7 +149,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                          </span>
                          <span className="text-slate-500 text-xs font-mono">ID: {req.id}</span>
                       </div>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                            <h3 className="text-xl font-bold text-white">{req.clientName}</h3>
@@ -184,8 +184,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                    {/* Right: Actions */}
                    <div className="flex md:flex-col justify-between md:justify-start gap-3 md:border-l border-white/5 md:pl-6 md:w-48 flex-shrink-0">
-                      
-                      <button 
+
+                      <button
                         onClick={() => notifyCharles(req)}
                         className="w-full px-4 py-2 bg-[#00d757]/10 text-[#00d757] hover:bg-[#00d757]/20 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2 border border-[#00d757]/20"
                       >
@@ -195,7 +195,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <div className="h-px bg-white/5 my-1 hidden md:block"></div>
 
                       {req.status !== 'contacted' && (
-                        <button 
+                        <button
                             onClick={() => onUpdateStatus(req.id, 'contacted')}
                             className="w-full px-4 py-2 bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
                         >
@@ -204,15 +204,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       )}
 
                       {req.status !== 'signed' && (
-                        <button 
+                        <button
                             onClick={() => onUpdateStatus(req.id, 'signed')}
                             className="w-full px-4 py-2 bg-green-500/10 text-green-400 hover:bg-green-500/20 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
                         >
                             <CheckCircle className="w-4 h-4" /> Mark Signed
                         </button>
                       )}
-                      
-                      <button 
+
+                      <button
                         onClick={() => onDelete(req.id)}
                         className="w-full px-4 py-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 mt-auto"
                       >
