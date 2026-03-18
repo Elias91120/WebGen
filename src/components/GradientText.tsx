@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import './GradientText.css';
 
 interface GradientTextProps {
@@ -10,7 +10,7 @@ interface GradientTextProps {
   showBorder?: boolean;
 }
 
-export default function GradientText({
+export default memo(function GradientText({
   children,
   className = '',
   colors = ['#40ffaa', '#4079ff', '#40ffaa', '#4079ff', '#40ffaa'],
@@ -30,4 +30,4 @@ export default function GradientText({
       </div>
     </div>
   );
-}
+});

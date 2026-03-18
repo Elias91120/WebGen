@@ -2,11 +2,12 @@ import { Cookie, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 interface CookieConsentProps {
+  translations: any;
   onAccept: () => void;
   onDecline: () => void;
 }
 
-const CookieConsent: React.FC<CookieConsentProps> = ({ onAccept, onDecline }) => {
+const CookieConsent: React.FC<CookieConsentProps> = ({ translations, onAccept, onDecline }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -43,23 +44,22 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onAccept, onDecline }) =>
              <Cookie className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg mb-2">We use cookies</h3>
+            <h3 className="text-white font-bold text-lg mb-2">{translations.title}</h3>
             <p className="text-slate-300 text-sm leading-relaxed mb-4">
-              We use cookies to enhance your browsing experience and analyze our traffic.
-              By clicking "Accept", you consent to our use of cookies.
+              {translations.desc}
             </p>
             <div className="flex gap-3">
               <button
                 onClick={handleAccept}
                 className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-indigo-500/20"
               >
-                Accept
+                {translations.accept}
               </button>
               <button
                 onClick={handleDecline}
                 className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-bold rounded-lg transition-colors"
               >
-                Decline
+                {translations.decline}
               </button>
             </div>
           </div>

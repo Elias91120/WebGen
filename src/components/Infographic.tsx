@@ -48,6 +48,7 @@ const Infographic: React.FC<InfographicProps> = ({ image, onEdit, isEditing }) =
           src={image.data} 
           alt={image.prompt} 
           onClick={() => setIsFullscreen(true)}
+          loading="lazy"
           className="w-full h-auto object-contain max-h-[80vh] bg-checkered relative z-10 cursor-zoom-in"
         />
         
@@ -146,6 +147,7 @@ const Infographic: React.FC<InfographicProps> = ({ image, onEdit, isEditing }) =
                 <img 
                     src={image.data} 
                     alt={image.prompt}
+                    loading="lazy"
                     style={{ 
                         transform: `scale(${zoomLevel})`,
                         transition: 'transform 0.2s ease-out'

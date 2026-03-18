@@ -3,13 +3,13 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React from 'react';
+import React, { memo } from 'react';
 
 interface LogoProps {
   className?: string;
 }
 
-export default function Logo({ className = "w-10 h-10" }: LogoProps) {
+export default memo(function Logo({ className = "w-10 h-10" }: LogoProps) {
   return (
     <svg className={className} viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -40,4 +40,4 @@ export default function Logo({ className = "w-10 h-10" }: LogoProps) {
       />
     </svg>
   );
-}
+});

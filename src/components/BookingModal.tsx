@@ -99,7 +99,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
       ></div>
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-2xl bg-slate-900/90 border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[75vh] animate-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-2xl bg-slate-900/90 border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
 
         {/* Header */}
         <div className="p-4 md:p-5 border-b border-white/5 flex justify-between items-center bg-white/5">

@@ -25,12 +25,9 @@ import {
   X,
   Zap
 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-import AdminDashboard from './components/AdminDashboard';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import BlurText from './components/BlurText';
-import BookingModal from './components/BookingModal';
 import CookieConsent from './components/CookieConsent';
-import FloatingLines from './components/FloatingLines';
 import GradientText from './components/GradientText';
 import IntroScreen from './components/IntroScreen';
 import LegalModals from './components/LegalModals';
@@ -39,6 +36,18 @@ import SplitText from './components/SplitText';
 import TextType from './components/TextType';
 import { supabase } from './services/supabaseClient';
 import { ClientRequest, ServiceType } from './types';
+
+// Lazy-loaded components for performance optimization
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const BookingModal = lazy(() => import('./components/BookingModal'));
+const FloatingLines = lazy(() => import('./components/FloatingLines'));
+
+// Team Photos
+import eliasImg from './assets/images/Elias.jpeg';
+import noamImg from './assets/images/Noam.jpeg';
+import charlesImg from './assets/images/Charles.jpeg';
+import callKitchenImg from './assets/images/CallKitchen.jpeg';
+import divorceImg from './assets/images/divorce.png';
 
 type Lang = 'en' | 'fr';
 
@@ -56,6 +65,29 @@ const translations = {
       titleEnd: "skyrocket your business.",
       subtitle: "We are WebGen. A team of three young engineers & creatives bringing high-end tech to local businesses. Fast, animated, and built to perform.",
       ctaPrimary: "Launch Project",
+    },
+    projects: {
+      badge: "Our Work",
+      title: "Recent Projects",
+      subtitle: "See how we merge smart technology with beautiful UI.",
+      p1: {
+        title: "Express Divorce USA",
+        desc: "A technology platform designed to transform the U.S. divorce procedure into a smooth, purely digital experience. It automatically generates all legal documents for uncontested cases, saving users time and significant legal fees.",
+        link: "https://www.expressdivorceusa.co",
+        btn: "View Project"
+      },
+      p2: {
+        title: "CallKitchen",
+        desc: "An AI-powered phone reception agent specifically for restaurants. It uses advanced, natural-sounding voice AI to take orders, handle complex menus, and manage bookings 24/7 so the kitchen never misses a call during a rush.",
+        link: "https://call-kitchen-landing.vercel.app",
+        btn: "View Landing Page"
+      },
+      p3: {
+        title: "Two",
+        desc: "An all-in-one iOS app designed as a private digital cocoon for couples. It centralizes real-time location tracking, shared calendars, joint finances, secure document storage, and fun mini-games into one elegant interface.",
+        link: "https://apps.apple.com/fr/app/two/id6758867716",
+        btn: "App Store"
+      }
     },
     whyUs: {
       title: "Our DNA",
@@ -153,6 +185,73 @@ const translations = {
     footer: {
       rights: "All rights reserved.",
       links: ["Legal", "Privacy", "Terms"]
+    },
+    cookie: {
+      title: "We use cookies",
+      desc: "We use cookies to enhance your browsing experience and analyze our traffic. By clicking 'Accept', you consent to our use of cookies.",
+      accept: "Accept",
+      decline: "Decline"
+    },
+    legal: {
+      title: "Legal Information",
+      tabs: {
+        legal: "Legal Notice",
+        privacy: "Privacy Policy",
+        terms: "T&Cs"
+      },
+      content: {
+        legal: [
+          {
+            title: "1. Website Editor",
+            text: "The WebGen website is edited by the WebGen team.\nEmail: contact@webgen.com\nPhone: +33 6 71 61 81 19"
+          },
+          {
+            title: "2. Hosting",
+            text: "The website is hosted by Vercel Inc.\nAddress: 340 S Lemon Ave #4133 Walnut, CA 91789, USA"
+          },
+          {
+            title: "3. Intellectual Property",
+            text: "This entire site is subject to French and international legislation on copyright and intellectual property. All reproduction rights are reserved."
+          }
+        ],
+        privacy: [
+          {
+            title: "1. Data Collection",
+            text: "We collect the following information via our contact form:\n- First and Last Name\n- Email address\n- Company name\n- Project details"
+          },
+          {
+            title: "2. Data Usage",
+            text: "This data is used solely to:\n- Respond to your contact requests\n- Establish quotes\n- Contact you regarding commercial relations\n\nYour data is never sold to third parties."
+          },
+          {
+            title: "3. Your Rights",
+            text: "In accordance with the GDPR, you have the right to access, rectify, and delete your data. To exercise this right, contact us at contact@webgen.com."
+          },
+          {
+            title: "4. Cookies",
+            text: "This site uses essential cookies for operation and analytics cookies to improve your experience. You can manage your preferences via the consent banner."
+          }
+        ],
+        terms: [
+          {
+            title: "1. Purpose",
+            text: "These conditions govern the sales of web development services by WebGen."
+          },
+          {
+            title: "2. Price",
+            text: "The prices of our services are indicated in euros. WebGen reserves the right to modify its prices at any time, but the service will be billed based on the rate in effect at the time the quote is validated."
+          },
+          {
+            title: "3. Payment",
+            text: "Payment is due upon signing the quote (deposit) and upon delivery of the project (balance)."
+          },
+          {
+            title: "4. Delivery",
+            text: "Delivery times are given as an indication and may vary depending on the complexity of the project and the responsiveness of the client."
+          }
+        ]
+      },
+      close: "Close"
     }
   },
   fr: {
@@ -168,6 +267,29 @@ const translations = {
       titleEnd: "pour faire décoller votre commerce.",
       subtitle: "Nous sommes WebGen. Une équipe de trois jeunes ingénieurs & créatifs. Nous apportons la tech de pointe aux commerces locaux. Rapide, animé, performant.",
       ctaPrimary: "Lancer le Projet",
+    },
+    projects: {
+      badge: "Nos Réalisations",
+      title: "Projets Récents",
+      subtitle: "Voici comment nous allions technologies intelligentes et interfaces sublimes.",
+      p1: {
+        title: "Express Divorce USA",
+        desc: "Plateforme technologique conçue pour transformer la procédure de divorce (amialbe) aux États-Unis en une expérience 100% numérique, abordable et fluide. Génération automatique de documents juridiques sans frais d'avocats traditionnels.",
+        link: "https://www.expressdivorceusa.co",
+        btn: "Voir le Projet"
+      },
+      p2: {
+        title: "CallKitchen",
+        desc: "Agent d'accueil téléphonique automatisé par IA pour les restaurants. Avec une voix naturelle, il gère les commandes complexes et les réservations 24/7 pour que le staff ne rate plus jamais d'appels pendant le rush.",
+        link: "https://call-kitchen-landing.vercel.app",
+        btn: "Voir la Landing Page"
+      },
+      p3: {
+        title: "Two",
+        desc: "Cocon numérique iOS tout-en-un dédié aux couples. Centralise la communication, les agendas partagés, la gestion des dépenses communes (Tricount), et des mini-jeux (CinéMatch) dans une interface élégante et privée.",
+        link: "https://apps.apple.com/fr/app/two/id6758867716",
+        btn: "App Store"
+      }
     },
     whyUs: {
       title: "Notre ADN",
@@ -265,6 +387,73 @@ const translations = {
     footer: {
       rights: "Tous droits réservés.",
       links: ["Mentions Légales", "Confidentialité", "CGV"]
+    },
+    cookie: {
+      title: "Nous utilisons des cookies",
+      desc: "Nous utilisons des cookies pour améliorer votre expérience de navigation et analyser notre trafic. En cliquant sur \"Accepter\", vous consentez à notre utilisation des cookies.",
+      accept: "Accepter",
+      decline: "Refuser"
+    },
+    legal: {
+      title: "Informations Légales",
+      tabs: {
+        legal: "Mentions Légales",
+        privacy: "Politique de Confidentialité",
+        terms: "CGV"
+      },
+      content: {
+        legal: [
+          {
+            title: "1. Éditeur du site",
+            text: "Le site WebGen est édité par l'équipe WebGen.\nEmail : contact@webgen.com\nTéléphone : +33 6 71 61 81 19"
+          },
+          {
+            title: "2. Hébergement",
+            text: "Le site est hébergé par Vercel Inc.\nAdresse : 340 S Lemon Ave #4133 Walnut, CA 91789, USA"
+          },
+          {
+            title: "3. Propriété Intellectuelle",
+            text: "L'ensemble de ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés."
+          }
+        ],
+        privacy: [
+          {
+            title: "1. Collecte des données",
+            text: "Nous collectons les informations suivantes via notre formulaire de contact :\n- Nom et Prénom\n- Adresse email\n- Nom de l'entreprise\n- Détails du projet"
+          },
+          {
+            title: "2. Utilisation des données",
+            text: "Ces données sont utilisées uniquement pour :\n- Répondre à vos demandes de contact\n- Établir des devis\n- Vous contacter dans le cadre de la relation commerciale\n\nVos données ne sont jamais vendues à des tiers."
+          },
+          {
+            title: "3. Vos droits",
+            text: "Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ce droit, contactez-nous à contact@webgen.com."
+          },
+          {
+            title: "4. Cookies",
+            text: "Ce site utilise des cookies essentiels au fonctionnement et des cookies d'analyse pour améliorer votre expérience. Vous pouvez gérer vos préférences via la bannière de consentment."
+          }
+        ],
+        terms: [
+          {
+            title: "1. Objet",
+            text: "Les présentes conditions régissent les ventes de prestations de services de développement web par WebGen."
+          },
+          {
+            title: "2. Prix",
+            text: "Les prix de nos services sont indiqués en euros. WebGen se réserve le droit de modifier ses prix à tout moment, mais le service sera facturé sur la base du tarif en vigueur au moment de la validation du devis."
+          },
+          {
+            title: "3. Paiement",
+            text: "Le paiement est exigible à la signature du devis (acompte) et à la livraison du projet (solde)."
+          },
+          {
+            title: "4. Livraison",
+            text: "Les délais de livraison sont donnés à titre indicatif et peuvent varier selon la complexité du projet et la réactivité du client."
+          }
+        ]
+      },
+      close: "Fermer"
     }
   }
 };
@@ -463,18 +652,20 @@ const App: React.FC = () => {
       {/* 3D Background - Floating Lines */}
       {/* Mounted but optimized. No prop changes needed as internal optimization handles DPR */}
       <div className="fixed inset-0 z-0">
-        <FloatingLines
-          linesGradient={['#4f46e5', '#0891b2', '#7c3aed', '#ec4899']}
-          topWavePosition={{ x: 0, y: 1.0, rotate: 0 }}
-          middleWavePosition={{ x: 0, y: 0, rotate: 0 }}
-          bottomWavePosition={{ x: 0, y: -1.0, rotate: 0 }}
-          lineCount={[3, 5, 3]}
-          lineDistance={[4, 5, 4]}
-          animationSpeed={0.8}
-          interactive={true}
-          bendStrength={0.5}
-          parallaxStrength={0.1}
-        />
+        <Suspense fallback={<div className="fixed inset-0 bg-slate-950 -z-50" />}>
+          <FloatingLines
+            linesGradient={['#4f46e5', '#0891b2', '#7c3aed', '#ec4899']}
+            topWavePosition={{ x: 0, y: 1.0, rotate: 0 }}
+            middleWavePosition={{ x: 0, y: 0, rotate: 0 }}
+            bottomWavePosition={{ x: 0, y: -1.0, rotate: 0 }}
+            lineCount={[3, 5, 3]}
+            lineDistance={[4, 5, 4]}
+            animationSpeed={0.8}
+            interactive={true}
+            bendStrength={0.5}
+            parallaxStrength={0.1}
+          />
+        </Suspense>
       </div>
 
       {/* Navbar - Glass */}
@@ -492,6 +683,7 @@ const App: React.FC = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
               <button onClick={() => scrollToSection('services')} className="text-sm font-medium text-slate-200 hover:text-white transition-colors">{t.nav.services}</button>
+              <button onClick={() => scrollToSection('projets')} className="text-sm font-medium text-slate-200 hover:text-white transition-colors">Projets</button>
               <button onClick={() => scrollToSection('equipe')} className="text-sm font-medium text-slate-200 hover:text-white transition-colors">{t.nav.team}</button>
               <button onClick={() => scrollToSection('temoignages')} className="text-sm font-medium text-slate-200 hover:text-white transition-colors">{t.nav.reviews}</button>
 
@@ -524,6 +716,7 @@ const App: React.FC = () => {
           <div className="md:hidden absolute top-full left-0 w-full mt-2 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl animate-in slide-in-from-top-2">
              <div className="flex flex-col space-y-4">
               <button onClick={() => scrollToSection('services')} className="text-left font-medium text-slate-200 p-2 hover:bg-white/5 rounded-lg transition-colors">{t.nav.services}</button>
+              <button onClick={() => scrollToSection('projets')} className="text-left font-medium text-slate-200 p-2 hover:bg-white/5 rounded-lg transition-colors">Projets</button>
               <button onClick={() => scrollToSection('equipe')} className="text-left font-medium text-slate-200 p-2 hover:bg-white/5 rounded-lg transition-colors">{t.nav.team}</button>
               <button onClick={() => scrollToSection('temoignages')} className="text-left font-medium text-slate-200 p-2 hover:bg-white/5 rounded-lg transition-colors">{t.nav.reviews}</button>
               <button onClick={() => scrollToSection('contact')} className="bg-indigo-600 text-white p-3 rounded-lg font-bold text-center shadow-lg shadow-indigo-500/20">{t.nav.cta}</button>
@@ -734,6 +927,76 @@ const App: React.FC = () => {
            </div>
         </section>
 
+        {/* PROJECTS SECTION */}
+        <section id="projets" className="py-24 relative bg-slate-900/40">
+           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              {/* Title Container - Glass Box */}
+              <div className="max-w-3xl mx-auto mb-16 bg-slate-900/60 backdrop-blur-xl border border-white/5 p-8 rounded-3xl text-center shadow-2xl">
+                 <span className="text-indigo-400 font-bold uppercase tracking-widest text-xs mb-2 block animate-pulse">{t.projects.badge}</span>
+                 <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+                    <GradientText colors={['#fff', '#6366f1', '#fff']} animationSpeed={6}>{t.projects.title}</GradientText>
+                 </h2>
+                 <p className="text-slate-300 max-w-2xl mx-auto font-medium">{t.projects.subtitle}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                 {/* Project 1: Express Divorce USA */}
+                 <div className="glass-panel p-8 rounded-3xl hover:bg-slate-900/80 transition-all duration-300 group flex flex-col hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(99,102,241,0.4)] border border-white/10 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-indigo-500/30 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    <div className="w-16 h-16 bg-white/5 border border-indigo-500/30 rounded-2xl flex items-center justify-center shadow-lg mb-6 group-hover:scale-110 transition-transform relative z-10 overflow-hidden p-3 backdrop-blur-md">
+                       <img src={divorceImg} alt="Express Divorce App" loading="lazy" className="w-full h-full object-contain" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-3 relative z-10">{t.projects.p1.title}</h3>
+                    <p className="text-slate-300 leading-relaxed font-medium mb-8 flex-1 relative z-10">{t.projects.p1.desc}</p>
+                    <a
+                      href={t.projects.p1.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 w-full py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-bold text-white transition-all relative z-10 group/btn"
+                    >
+                       {t.projects.p1.btn} <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </a>
+                 </div>
+
+                 {/* Project 2: CallKitchen */}
+                 <div className="bg-gradient-to-br from-indigo-900/80 to-slate-900/80 backdrop-blur-2xl p-8 rounded-3xl border border-indigo-500/50 flex flex-col transform md:-translate-y-4 hover:md:-translate-y-6 hover:scale-[1.02] transition-all duration-500 shadow-[0_0_40px_rgba(79,70,229,0.15)] hover:shadow-[0_0_80px_rgba(79,70,229,0.4)] relative overflow-hidden z-10">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 w-32 h-32 bg-indigo-500/40 rounded-full blur-3xl opacity-50"></div>
+                    <div className="w-16 h-16 bg-white/20 border border-white/30 rounded-2xl flex items-center justify-center mb-6 relative z-10 shadow-xl overflow-hidden group-hover:scale-110 transition-transform p-1">
+                       <img src={callKitchenImg} alt="CallKitchen App" loading="lazy" className="w-full h-full object-cover rounded-xl" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-3 relative z-10">{t.projects.p2.title}</h3>
+                    <p className="text-indigo-100/90 leading-relaxed font-medium mb-8 flex-1 relative z-10">{t.projects.p2.desc}</p>
+                    <a
+                      href={t.projects.p2.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/30 rounded-xl font-bold text-white shadow-lg shadow-indigo-500/25 transition-all relative z-10 group/btn"
+                    >
+                       {t.projects.p2.btn} <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </a>
+                 </div>
+
+                 {/* Project 3: Two */}
+                 <div className="glass-panel p-8 rounded-3xl hover:bg-slate-900/80 transition-all duration-300 group flex flex-col hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(236,72,153,0.3)] border border-white/10 relative overflow-hidden">
+                    <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-32 h-32 bg-pink-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    <div className="w-16 h-16 bg-pink-500/10 border border-pink-500/30 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform relative z-10 overflow-hidden p-1">
+                       <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/8a/87/0f/8a870f74-5c66-359c-2901-e2fd674575f7/Placeholder.mill/400x400bb-75.webp" alt="Two App" loading="lazy" className="w-full h-full object-cover rounded-xl" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-3 relative z-10">{t.projects.p3.title}</h3>
+                    <p className="text-slate-300 leading-relaxed font-medium mb-8 flex-1 relative z-10">{t.projects.p3.desc}</p>
+                    <a
+                      href={t.projects.p3.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 w-full py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-bold text-white transition-all relative z-10 group/btn"
+                    >
+                       {t.projects.p3.btn} <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </a>
+                 </div>
+              </div>
+           </div>
+        </section>
+
         {/* TEAM SECTION */}
         <section id="equipe" className="py-24 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -750,7 +1013,7 @@ const App: React.FC = () => {
               <div className="glass-panel p-6 rounded-2xl hover:bg-slate-900/80 transition-all duration-300 group text-center flex flex-col items-center hover:scale-[1.02] hover:shadow-[0_20px_40px_-10px_rgba(99,102,241,0.4)]">
                  <div className="relative w-28 h-28 mb-6 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-indigo-500/50">
                     <img
-                      src="https://media.licdn.com/dms/image/v2/D4E03AQFu2YX0Ge5iyA/profile-displayphoto-shrink_400_400/B4EZXK2izSH0Ak-/0/1742865052510?e=1766016000&v=beta&t=5rJlqgRwNNLNgY1ZXdh_gmAC0NUDk-b6c7yzCUltJIA"
+                      src={eliasImg}
                       alt="Elias Eloumi"
                       className="w-full h-full rounded-full object-cover"
                       loading="lazy"
@@ -760,17 +1023,28 @@ const App: React.FC = () => {
                  <p className="text-indigo-400 font-medium text-sm mb-4 flex items-center gap-1 justify-center"><Sparkles className="w-3 h-3" />{t.team.roles.elias}</p>
                  <p className="text-slate-200 text-sm mb-6 max-w-xs leading-relaxed font-medium">{t.team.roles.eliasDesc}</p>
                  <a
-                   href="https://www.linkedin.com/in/elias-elloumi/"
+                   href="https://www.linkedin.com/in/elias-eloumi/"
                    target="_blank"
                    rel="noopener noreferrer"
-                   className="Btn-LinkedIn mt-auto"
+                   className="group mt-auto w-12 hover:w-44 h-12 hover:bg-sky-600 relative bg-sky-700 rounded-xl text-neutral-50 duration-700 before:duration-700 before:hover:500 font-bold flex justify-start gap-2 items-center p-2 pr-6 before:absolute before:-z-10 before:left-8 before:hover:left-40 before:w-6 before:h-6 before:bg-sky-700 before:hover:bg-sky-600 before:rotate-45"
                  >
-                    <div className="sign">
-                        <svg fill="white" className="svgIcon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                            <path d="M100.3 448H7.4V148.9h92.9zM53.8 108.1C24.1 108.1 0 83.5 0 53.8a53.8 53.8 0 0 1 107.6 0c0 29.7-24.1 54.3-53.8 54.3zM447.9 448h-92.7V302.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V448h-92.8V148.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V448z"></path>
-                        </svg>
-                    </div>
-                    <div className="text">LinkedIn</div>
+                   <svg
+                     y="0"
+                     xmlns="http://www.w3.org/2000/svg"
+                     x="0"
+                     width="100"
+                     viewBox="0 0 100 100"
+                     preserveAspectRatio="xMidYMid meet"
+                     height="100"
+                     className="w-8 h-8 shrink-0 fill-neutral-50"
+                   >
+                     <path
+                       d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,100,92.79V7.21A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z"
+                     ></path>
+                   </svg>
+                   <span className="origin-left inline-flex duration-100 group-hover:duration-300 group-hover:delay-500 opacity-0 group-hover:opacity-100 border-l-2 border-white/30 px-2 ml-1 transform scale-x-0 group-hover:scale-x-100 transition-all truncate text-sm">
+                     Elias Eloumi
+                   </span>
                  </a>
               </div>
 
@@ -778,7 +1052,7 @@ const App: React.FC = () => {
               <div className="glass-panel p-6 rounded-2xl hover:bg-slate-900/80 transition-all duration-300 group text-center flex flex-col items-center hover:scale-[1.02] hover:shadow-[0_20px_40px_-10px_rgba(99,102,241,0.4)]">
                  <div className="relative w-28 h-28 mb-6 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-indigo-500/50">
                     <img
-                      src="https://media.licdn.com/dms/image/v2/D4E03AQGiD7tFAd5ZEQ/profile-displayphoto-scale_400_400/B4EZlR5n58IoAg-/0/1758015687133?e=1766016000&v=beta&t=qN8jGGU0s11i-xq5pQyeaaDMB1GcrkJzcndvWyTfwas"
+                      src={noamImg}
                       alt="Noam Leclappart"
                       className="w-full h-full rounded-full object-cover"
                       loading="lazy"
@@ -791,14 +1065,25 @@ const App: React.FC = () => {
                    href="https://www.linkedin.com/in/noam-leclapart-jublot/"
                    target="_blank"
                    rel="noopener noreferrer"
-                   className="Btn-LinkedIn mt-auto"
+                   className="group mt-auto w-12 hover:w-44 h-12 hover:bg-sky-600 relative bg-sky-700 rounded-xl text-neutral-50 duration-700 before:duration-700 before:hover:500 font-bold flex justify-start gap-2 items-center p-2 pr-6 before:absolute before:-z-10 before:left-8 before:hover:left-40 before:w-6 before:h-6 before:bg-sky-700 before:hover:bg-sky-600 before:rotate-45"
                  >
-                    <div className="sign">
-                        <svg fill="white" className="svgIcon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                            <path d="M100.3 448H7.4V148.9h92.9zM53.8 108.1C24.1 108.1 0 83.5 0 53.8a53.8 53.8 0 0 1 107.6 0c0 29.7-24.1 54.3-53.8 54.3zM447.9 448h-92.7V302.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V448h-92.8V148.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V448z"></path>
-                        </svg>
-                    </div>
-                    <div className="text">LinkedIn</div>
+                   <svg
+                     y="0"
+                     xmlns="http://www.w3.org/2000/svg"
+                     x="0"
+                     width="100"
+                     viewBox="0 0 100 100"
+                     preserveAspectRatio="xMidYMid meet"
+                     height="100"
+                     className="w-8 h-8 shrink-0 fill-neutral-50"
+                   >
+                     <path
+                       d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,100,92.79V7.21A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z"
+                     ></path>
+                   </svg>
+                   <span className="origin-left inline-flex duration-100 group-hover:duration-300 group-hover:delay-500 opacity-0 group-hover:opacity-100 border-l-2 border-white/30 px-2 ml-1 transform scale-x-0 group-hover:scale-x-100 transition-all truncate text-sm">
+                     Noam Leclappart
+                   </span>
                  </a>
               </div>
 
@@ -806,7 +1091,7 @@ const App: React.FC = () => {
               <div className="glass-panel p-6 rounded-2xl hover:bg-slate-900/80 transition-all duration-300 group text-center flex flex-col items-center hover:scale-[1.02] hover:shadow-[0_20px_40px_-10px_rgba(249,115,22,0.4)]">
                  <div className="relative w-28 h-28 mb-6 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-orange-500/50">
                     <img
-                      src="https://media.licdn.com/dms/image/v2/D4E03AQGJO6nv360qcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1713713155263?e=1766016000&v=beta&t=HJrhGPpCM_85mG26jxOdD205Q53Xe8WaVpADE1GbWBk"
+                      src={charlesImg}
                       alt="Charles Garbus"
                       className="w-full h-full rounded-full object-cover"
                       loading="lazy"
@@ -819,14 +1104,25 @@ const App: React.FC = () => {
                    href="https://www.linkedin.com/in/charlesgarbus/"
                    target="_blank"
                    rel="noopener noreferrer"
-                   className="Btn-LinkedIn mt-auto"
+                   className="group mt-auto w-12 hover:w-44 h-12 hover:bg-sky-600 relative bg-sky-700 rounded-xl text-neutral-50 duration-700 before:duration-700 before:hover:500 font-bold flex justify-start gap-2 items-center p-2 pr-6 before:absolute before:-z-10 before:left-8 before:hover:left-40 before:w-6 before:h-6 before:bg-sky-700 before:hover:bg-sky-600 before:rotate-45"
                  >
-                    <div className="sign">
-                        <svg fill="white" className="svgIcon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                            <path d="M100.3 448H7.4V148.9h92.9zM53.8 108.1C24.1 108.1 0 83.5 0 53.8a53.8 53.8 0 0 1 107.6 0c0 29.7-24.1 54.3-53.8 54.3zM447.9 448h-92.7V302.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V448h-92.8V148.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V448z"></path>
-                        </svg>
-                    </div>
-                    <div className="text">LinkedIn</div>
+                   <svg
+                     y="0"
+                     xmlns="http://www.w3.org/2000/svg"
+                     x="0"
+                     width="100"
+                     viewBox="0 0 100 100"
+                     preserveAspectRatio="xMidYMid meet"
+                     height="100"
+                     className="w-8 h-8 shrink-0 fill-neutral-50"
+                   >
+                     <path
+                       d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,100,92.79V7.21A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z"
+                     ></path>
+                   </svg>
+                   <span className="origin-left inline-flex duration-100 group-hover:duration-300 group-hover:delay-500 opacity-0 group-hover:opacity-100 border-l-2 border-white/30 px-2 ml-1 transform scale-x-0 group-hover:scale-x-100 transition-all truncate text-sm">
+                     Charles Garbus
+                   </span>
                  </a>
               </div>
 
@@ -1001,7 +1297,7 @@ const App: React.FC = () => {
 
                        <div className="relative w-32 h-32 mb-6 p-1 rounded-full border-2 border-green-400/50 shadow-[0_0_20px_rgba(74,222,128,0.2)]">
                          <img
-                           src="https://media.licdn.com/dms/image/v2/D4E03AQGJO6nv360qcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1713713155263?e=1766016000&v=beta&t=HJrhGPpCM_85mG26jxOdD205Q53Xe8WaVpADE1GbWBk"
+                           src={charlesImg}
                            alt="Charles Garbus"
                            className="w-full h-full rounded-full object-cover"
                            loading="lazy"
@@ -1013,15 +1309,17 @@ const App: React.FC = () => {
                        <p className="text-indigo-100 text-sm font-medium mb-8">{t.contact.direct.subtitle}</p>
 
                        {/* Custom WhatsApp Button */}
-                       <a href="https://wa.me/33671618119" target="_blank" rel="noopener noreferrer" className="Btn text-decoration-none">
-                          <div className="sign">
-                            <svg className="socialSvg whatsappSvg" viewBox="0 0 16 16">
-                              <path
-                                d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"
-                              ></path>
-                            </svg>
-                          </div>
-                          <div className="text">WhatsApp</div>
+                       <a href="https://wa.me/33671618119" target="_blank" rel="noopener noreferrer" className="text-decoration-none">
+                          <button className="button2">
+                              WhatsApp
+                              <svg viewBox="0 0 48 48" y="0px" x="0px" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z" fill="#fff"></path>
+                                <path d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z" fill="#fff"></path>
+                                <path d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z" fill="#cfd8dc"></path>
+                                <path d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z" fill="#40c351"></path>
+                                <path clipRule="evenodd" d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z" fillRule="evenodd" fill="#fff"></path>
+                              </svg>
+                          </button>
                        </a>
                     </div>
                  </div>
@@ -1030,31 +1328,37 @@ const App: React.FC = () => {
         </section>
 
         {/* Booking Modal */}
-        <BookingModal
-          isOpen={bookingModalOpen}
-          onClose={() => setBookingModalOpen(false)}
-          selectedService={selectedService}
-          onSubmit={handleBookingSubmit}
-          translations={t}
-        />
+        <Suspense fallback={null}>
+          <BookingModal
+            isOpen={bookingModalOpen}
+            onClose={() => setBookingModalOpen(false)}
+            selectedService={selectedService}
+            onSubmit={handleBookingSubmit}
+            translations={t}
+          />
+        </Suspense>
 
         {/* Admin Dashboard */}
-        {adminOpen && (
-          <AdminDashboard
-            requests={requests}
-            onUpdateStatus={handleAdminStatusUpdate}
-            onDelete={handleAdminDelete}
-            onClose={() => setAdminOpen(false)}
-          />
-        )}
+        <Suspense fallback={null}>
+          {adminOpen && (
+            <AdminDashboard
+              requests={requests}
+              onUpdateStatus={handleAdminStatusUpdate}
+              onDelete={handleAdminDelete}
+              onClose={() => setAdminOpen(false)}
+            />
+          )}
+        </Suspense>
 
         {/* GDPR Components */}
         <CookieConsent
+          translations={t.cookie}
           onAccept={() => console.log('Cookies accepted')}
           onDecline={() => console.log('Cookies declined')}
         />
 
         <LegalModals
+          translations={t.legal}
           isOpen={legalModalOpen}
           onClose={() => setLegalModalOpen(false)}
           initialTab={legalTab}
@@ -1075,9 +1379,9 @@ const App: React.FC = () => {
                &copy; {new Date().getFullYear()} WebGen. {t.footer.rights}
             </div>
             <div className="flex gap-6 text-sm font-medium text-slate-300 items-center">
-               <button onClick={() => openLegal('legal')} className="hover:text-indigo-400 transition-colors">Mentions Légales</button>
-               <button onClick={() => openLegal('privacy')} className="hover:text-indigo-400 transition-colors">Confidentialité</button>
-               <button onClick={() => openLegal('terms')} className="hover:text-indigo-400 transition-colors">CGV</button>
+               <button onClick={() => openLegal('legal')} className="hover:text-indigo-400 transition-colors">{t.legal.tabs.legal}</button>
+               <button onClick={() => openLegal('privacy')} className="hover:text-indigo-400 transition-colors">{t.legal.tabs.privacy}</button>
+               <button onClick={() => openLegal('terms')} className="hover:text-indigo-400 transition-colors">{t.legal.tabs.terms}</button>
 
                <button onClick={() => setAdminOpen(true)} className="text-slate-700 hover:text-slate-500 transition-colors" title="Admin Access">
                  <Lock className="w-3 h-3" />

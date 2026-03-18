@@ -308,20 +308,32 @@ export default function FloatingLines({
 
   useEffect(() => {
     if (!containerRef.current) return;
+    
+    // Performance Optimization: Disable 3D canvas entirely on mobile screens (below 768px width)
+    // The WebGL calculations cause severe scroll jitter on phone browsing threads.
+    // By skipping rendering here, we let the container's CSS background take over as a fallback.
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      console.log("FloatingLines: Mobile device detected. Skipping WebGL rendering for performance.");
+      return; 
+    }
 
     const scene = new Scene();
 
     const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
     camera.position.z = 1;
 
-    // Modified to support transparency
-    const renderer = new WebGLRenderer({ antialias: false, alpha: true, powerPreference: "high-performance" });
-    // OPTIMIZATION: Cap Pixel Ratio to 1 for performance on High DPI screens
-    // Using 1.0 ensures fluid 60fps even on Retina/4K screens with shaders
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1));
-    renderer.domElement.style.width = '100%';
-    renderer.domElement.style.height = '100%';
-    containerRef.current.appendChild(renderer.domElement);
+    let renderer: WebGLRenderer;
+    try {
+      renderer = new WebGLRenderer({ antialias: false, alpha: true, powerPreference: "high-performance" });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1));
+      renderer.domElement.style.width = '100%';
+      renderer.domElement.style.height = '100%';
+      containerRef.current.appendChild(renderer.domElement);
+    } catch (e) {
+      console.warn("WebGL not supported or context creation failed:", e);
+      return; // Gracefully degrade by not rendering the 3D canvas
+    }
 
     const uniforms = {
       iTime: { value: 0 },
@@ -449,29 +461,45 @@ export default function FloatingLines({
     }
 
     let raf = 0;
+    let isVisible = true;
+
     const renderLoop = () => {
-      uniforms.iTime.value = clock.getElapsedTime();
+      if (isVisible) {
+        uniforms.iTime.value = clock.getElapsedTime();
 
-      if (interactive) {
-        currentMouseRef.current.lerp(targetMouseRef.current, mouseDamping);
-        uniforms.iMouse.value.copy(currentMouseRef.current);
+        if (interactive) {
+          currentMouseRef.current.lerp(targetMouseRef.current, mouseDamping);
+          uniforms.iMouse.value.copy(currentMouseRef.current);
 
-        currentInfluenceRef.current += (targetInfluenceRef.current - currentInfluenceRef.current) * mouseDamping;
-        uniforms.bendInfluence.value = currentInfluenceRef.current;
+          currentInfluenceRef.current += (targetInfluenceRef.current - currentInfluenceRef.current) * mouseDamping;
+          uniforms.bendInfluence.value = currentInfluenceRef.current;
+        }
+
+        if (parallax) {
+          currentParallaxRef.current.lerp(targetParallaxRef.current, mouseDamping);
+          uniforms.parallaxOffset.value.copy(currentParallaxRef.current);
+        }
+
+        renderer.render(scene, camera);
       }
-
-      if (parallax) {
-        currentParallaxRef.current.lerp(targetParallaxRef.current, mouseDamping);
-        uniforms.parallaxOffset.value.copy(currentParallaxRef.current);
-      }
-
-      renderer.render(scene, camera);
       raf = requestAnimationFrame(renderLoop);
     };
     renderLoop();
 
+    // Intersection Observer to stop rendering when out of view
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isVisible = entry.isIntersecting;
+      });
+    }, { threshold: 0 });
+
+    if (containerRef.current) {
+      io.observe(containerRef.current);
+    }
+
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       // eslint-disable-next-line react-hooks/exhaustive-deps
       if (ro && containerRef.current) {
         ro.disconnect();
