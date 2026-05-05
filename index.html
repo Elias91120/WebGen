@@ -7,8 +7,8 @@
     <meta name="theme-color" content="#08090d" />
     <meta name="color-scheme" content="dark" />
     <title>3geeks — Sites web et outils digitaux pour entreprises</title>
-    <meta name="description" content="3geeks crée des sites web, applications et outils digitaux clairs, rapides et soignés pour présenter votre activité et générer des contacts." />
-    <meta name="keywords" content="3geeks, agence web, création site internet, application web, refonte site, automatisation, Made in France, startup, commerce local" />
+    <meta name="description" content="3geeks — studio web français par trois fondateurs. Sites, applications et outils digitaux clairs, rapides et soignés pour présenter votre activité et générer des contacts." />
+    <meta name="keywords" content="3geeks, 3 geeks, trois fondateurs, studio web France, agence web, création site internet, application web, refonte site, Made in France" />
     <meta name="author" content="3geeks" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://3geeks.fr" />
@@ -19,7 +19,7 @@
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:locale:alternate" content="en_US" />
     <meta property="og:title" content="3geeks — Sites web et outils digitaux pour entreprises" />
-    <meta property="og:description" content="Sites web, applications et refontes soignés, pensés pour vos clients, vos objectifs et vos contraintes terrain." />
+    <meta property="og:description" content="Studio 3geeks : trois fondateurs, sites et outils digitaux soignés — pensés pour vos clients et vos objectifs." />
     <meta property="og:url" content="https://3geeks.fr" />
     <!-- Replace /og-cover.png with the final OG image (1200x630) once produced -->
     <meta property="og:image" content="https://3geeks.fr/og-cover.png" />
@@ -30,7 +30,7 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="3geeks — Sites web et outils digitaux pour entreprises" />
-    <meta name="twitter:description" content="Sites web, applications et refontes soignés, pensés pour vos clients, vos objectifs et vos contraintes terrain." />
+    <meta name="twitter:description" content="Studio 3geeks : trois fondateurs, sites et outils digitaux soignés — pensés pour vos clients et vos objectifs." />
     <meta name="twitter:image" content="https://3geeks.fr/og-cover.png" />
 
     <!-- JSON-LD Organization (helps Google brand recognition) -->
@@ -39,6 +39,7 @@
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "3geeks",
+        "alternateName": ["3 geeks", "trois geeks"],
         "url": "https://3geeks.fr",
         "logo": "https://3geeks.fr/og-cover.png",
         "description": "Agence web française qui crée des sites, applications et outils digitaux clairs, rapides et soignés.",
@@ -226,6 +227,21 @@
             border: 1px solid rgba(34, 211, 238, 0.18);
             transform: translateY(-3px);
             box-shadow: 0 22px 55px -18px rgba(34, 211, 238, 0.18);
+        }
+
+        /* Tactile : pas de “lift” ni halo au tap — rendu plus léger sur téléphone */
+        @media (hover: none) {
+          .glass-panel:hover,
+          .glass-panel:active {
+            transform: none;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+            background: rgba(13, 17, 23, 0.66);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+          }
+          .glass-panel:hover::before,
+          .glass-panel:active::before {
+            opacity: 0;
+          }
         }
 
         .glass-button {
