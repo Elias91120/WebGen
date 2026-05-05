@@ -73,9 +73,12 @@ const Logo = memo(function Logo({
   }
 
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`} aria-label="3geeks">
-      <Mark className="w-8 h-8 md:w-9 md:h-9 shrink-0" />
-      <span className="font-mono font-bold leading-none tracking-tight text-white text-xl md:text-2xl">
+    <span
+      className={`inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 min-w-0 max-w-full ${className}`}
+      aria-label="3geeks"
+    >
+      <Mark className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 shrink-0" />
+      <span className="font-mono font-bold leading-none tracking-tight text-white text-lg sm:text-xl md:text-2xl whitespace-nowrap">
         <span className="bg-gradient-to-r from-cyan-300 via-lime-300 to-cyan-300 bg-clip-text text-transparent">
           3
         </span>
