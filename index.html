@@ -1,19 +1,89 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WebGen - Next Gen Digital Agency</title>
-    <!-- Encoded SVG Favicon for "WG" logo (White W, Purple G) -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100' fill='none'%3E%3Cpath d='M10 25 L30 80 L50 25 L70 80 L90 25' stroke='white' stroke-width='12' stroke-linecap='round' stroke-linejoin='round' /%3E%3Cpath d='M110 35 C 110 35 100 20 85 20 C 65 20 55 40 55 55 C 55 75 70 85 85 85 H 110 V 55 H 85' stroke='%23818cf8' stroke-width='12' stroke-linecap='round' stroke-linejoin='round' /%3E%3C/svg%3E">
+    <meta name="theme-color" content="#08090d" />
+    <meta name="color-scheme" content="dark" />
+    <title>3geeks — Sites web et outils digitaux pour entreprises</title>
+    <meta name="description" content="3geeks crée des sites web, applications et outils digitaux clairs, rapides et soignés pour présenter votre activité et générer des contacts." />
+    <meta name="keywords" content="3geeks, agence web, création site internet, application web, refonte site, automatisation, Made in France, startup, commerce local" />
+    <meta name="author" content="3geeks" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://3geeks.fr" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="3geeks" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:title" content="3geeks — Sites web et outils digitaux pour entreprises" />
+    <meta property="og:description" content="Sites web, applications et refontes soignés, pensés pour vos clients, vos objectifs et vos contraintes terrain." />
+    <meta property="og:url" content="https://3geeks.fr" />
+    <!-- Replace /og-cover.png with the final OG image (1200x630) once produced -->
+    <meta property="og:image" content="https://3geeks.fr/og-cover.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="3geeks — Sites web et outils digitaux pour entreprises" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="3geeks — Sites web et outils digitaux pour entreprises" />
+    <meta name="twitter:description" content="Sites web, applications et refontes soignés, pensés pour vos clients, vos objectifs et vos contraintes terrain." />
+    <meta name="twitter:image" content="https://3geeks.fr/og-cover.png" />
+
+    <!-- JSON-LD Organization (helps Google brand recognition) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "3geeks",
+        "url": "https://3geeks.fr",
+        "logo": "https://3geeks.fr/og-cover.png",
+        "description": "Agence web française qui crée des sites, applications et outils digitaux clairs, rapides et soignés.",
+        "founders": [
+          { "@type": "Person", "name": "Elias Eloumi" },
+          { "@type": "Person", "name": "Noam Leclappart" },
+          { "@type": "Person", "name": "Charles Garbus" }
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "contact@3geeks.fr",
+          "telephone": "+33-6-71-61-81-19",
+          "contactType": "sales",
+          "areaServed": "FR",
+          "availableLanguage": ["French", "English"]
+        }
+      }
+    </script>
+
+    <!-- Favicon: {3} mark in cyan->lime gradient, mirrors src/components/Logo.tsx -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100' fill='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2322d3ee'/%3E%3Cstop offset='55%25' stop-color='%23a3e635'/%3E%3Cstop offset='100%25' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg stroke='url(%23g)' stroke-width='10' stroke-linecap='round' stroke-linejoin='round' fill='none'%3E%3Cpath d='M 32 14 C 22 14, 22 32, 22 38 C 22 44, 22 47, 12 50 C 22 53, 22 56, 22 62 C 22 68, 22 86, 32 86'/%3E%3Cpath d='M 50 24 H 78 L 60 50 H 65 C 80 50, 80 86, 60 86 C 48 86, 44 78, 44 72'/%3E%3Cpath d='M 88 14 C 98 14, 98 32, 98 38 C 98 44, 98 47, 108 50 C 98 53, 98 56, 98 62 C 98 68, 98 86, 88 86'/%3E%3C/g%3E%3C/svg%3E">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         darkMode: 'class',
         theme: {
           extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+              display: ['Inter', 'sans-serif'],
+            },
             colors: {
+              // Brand palette
+              brand: {
+                bg: '#08090d',
+                surface: '#0d1117',
+                muted: '#161b22',
+                line: '#1f2937',
+                cyan: '#22d3ee',
+                lime: '#a3e635',
+                violet: '#a78bfa',
+                magenta: '#f0abfc',
+              },
               indigo: {
                 50: '#eef2ff',
                 100: '#e0e7ff',
@@ -33,6 +103,10 @@
             animation: {
               'blob': 'blob 10s infinite',
               'tilt': 'tilt 10s infinite linear',
+              'caret-blink': 'caret-blink 1s steps(2, end) infinite',
+              'scan': 'scan 8s linear infinite',
+              'float-slow': 'float-slow 6s ease-in-out infinite',
+              'glitch': 'glitch 2.5s infinite',
             },
             keyframes: {
               blob: {
@@ -46,92 +120,200 @@
                 '25%': { transform: 'rotate(1deg)' },
                 '75%': { transform: 'rotate(-1deg)' },
               },
+              'caret-blink': {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0' },
+              },
+              scan: {
+                '0%': { transform: 'translateY(-100%)' },
+                '100%': { transform: 'translateY(100%)' },
+              },
+              'float-slow': {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-6px)' },
+              },
+              glitch: {
+                '0%, 92%, 100%': { transform: 'translate(0)', filter: 'none' },
+                '93%': { transform: 'translate(-1px, 1px)', filter: 'hue-rotate(20deg)' },
+                '95%': { transform: 'translate(1px, -1px)', filter: 'hue-rotate(-15deg)' },
+                '97%': { transform: 'translate(-1px, 0)', filter: 'none' },
+              },
             },
           }
         }
       }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+          --brand-bg: #08090d;
+          --brand-cyan: #22d3ee;
+          --brand-lime: #a3e635;
+          --brand-violet: #a78bfa;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #020617; /* Slate 950 */
+            background-color: var(--brand-bg);
             color: #f8fafc;
         }
-        .font-display {
-            font-family: 'Space Grotesk', sans-serif;
+        .font-mono {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-feature-settings: "calt" 1, "ss01" 1;
         }
+        .font-display {
+            font-family: 'Inter', sans-serif;
+            font-feature-settings: normal;
+        }
+
         /* Custom scrollbar */
         ::-webkit-scrollbar {
-          width: 8px;
+          width: 10px;
+          height: 10px;
         }
         ::-webkit-scrollbar-track {
-          background: #0f172a; 
+          background: #0d1117;
         }
         ::-webkit-scrollbar-thumb {
-          background: #334155; 
-          border-radius: 4px;
+          background: linear-gradient(180deg, #22d3ee33, #a3e63533);
+          border-radius: 6px;
+          border: 2px solid #0d1117;
         }
         ::-webkit-scrollbar-thumb:hover {
-          background: #475569; 
+          background: linear-gradient(180deg, #22d3ee66, #a3e63566);
         }
         html {
           scroll-behavior: smooth;
         }
-        
+
+        /* Glass panel */
         .glass-panel {
             position: relative;
-            background: rgba(2, 6, 23, 0.70);
+            background: rgba(13, 17, 23, 0.66);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden; /* Ensure overflow is hidden for inner blur effects */
-            isolation: isolate; /* Create new stacking context */
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            overflow: hidden;
+            isolation: isolate;
         }
 
-        /* Subtle Light Leak Blur Effect using filter: blur() */
         .glass-panel::before {
             content: '';
             position: absolute;
-            inset: -50%; /* Extend well beyond bounds for smooth diffusion */
+            inset: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 60%),
-                        radial-gradient(circle at bottom right, rgba(79, 70, 229, 0.1), transparent 50%);
+            background: radial-gradient(circle at center, rgba(34,211,238,0.045), transparent 60%),
+                        radial-gradient(circle at bottom right, rgba(163, 230, 53, 0.05), transparent 50%);
             transform: translate(-25%, -25%);
-            filter: blur(40px); /* Stronger blur for smoother gradient */
+            filter: blur(40px);
             opacity: 0;
             transition: opacity 0.6s ease;
             pointer-events: none;
-            z-index: -1; 
+            z-index: -1;
         }
-        
+
         .glass-panel:hover::before {
             opacity: 1;
         }
-        
+
         .glass-panel:hover {
-            background: rgba(2, 6, 23, 0.85);
-            backdrop-filter: blur(24px); /* Increased background blur */
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.3); /* Premium glow shadow */
+            background: rgba(13, 17, 23, 0.78);
+            border: 1px solid rgba(34, 211, 238, 0.18);
+            transform: translateY(-3px);
+            box-shadow: 0 22px 55px -18px rgba(34, 211, 238, 0.18);
         }
-        
+
         .glass-button {
-            background: rgba(79, 70, 229, 0.2);
+            background: rgba(34, 211, 238, 0.12);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(99, 102, 241, 0.4);
+            border: 1px solid rgba(34, 211, 238, 0.4);
             transition: all 0.3s ease;
         }
-        
+
         .glass-button:hover {
-            background: rgba(79, 70, 229, 0.4);
-            border-color: rgba(99, 102, 241, 0.8);
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            background: rgba(34, 211, 238, 0.25);
+            border-color: rgba(34, 211, 238, 0.8);
+            box-shadow: 0 0 24px rgba(34, 211, 238, 0.45);
+        }
+
+        /* IDE window-style card title bar */
+        .ide-bar {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 12px;
+          background: rgba(0, 0, 0, 0.35);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          font-family: 'JetBrains Mono', ui-monospace, monospace;
+          font-size: 11px;
+          color: #94a3b8;
+        }
+        .ide-bar .dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 999px;
+          display: inline-block;
+        }
+
+        /* Legacy scanline utility kept inactive by default */
+        .scanlines::before {
+          content: '';
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          background-image: repeating-linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.025) 0px,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px,
+            transparent 3px
+          );
+          z-index: 60;
+          mix-blend-mode: overlay;
+          opacity: 0;
+        }
+
+        /* Neon glow utilities */
+        .glow-cyan {
+          box-shadow: 0 0 24px rgba(34, 211, 238, 0.45), 0 0 1px rgba(34, 211, 238, 0.6);
+        }
+        .glow-lime {
+          box-shadow: 0 0 24px rgba(163, 230, 53, 0.4), 0 0 1px rgba(163, 230, 53, 0.6);
+        }
+        .text-glow-cyan {
+          text-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
+        }
+        .text-glow-lime {
+          text-shadow: 0 0 12px rgba(163, 230, 53, 0.55);
+        }
+
+        /* Blinking caret used in the wordmark logo / hero */
+        .caret {
+          display: inline-block;
+          width: 0.55ch;
+          height: 1em;
+          vertical-align: -0.12em;
+          background: var(--brand-lime);
+          margin-left: 2px;
+          animation: caret-blink 1s steps(2, end) infinite;
+        }
+        @keyframes caret-blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+
+        /* Subtle background grid */
+        .grid-dust {
+          background-image:
+            linear-gradient(rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.045) 1px, transparent 1px);
+          background-size: 64px 64px;
+          background-position: -1px -1px;
         }
     </style>
   <script type="importmap">
@@ -152,9 +334,8 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-slate-950 text-slate-50 antialiased selection:bg-indigo-500 selection:text-white">
+  <body class="bg-[#08090d] text-slate-50 antialiased selection:bg-cyan-400/30 selection:text-white">
     <div id="root"></div>
   <script type="module" src="/src/index.tsx"></script>
 </body>
