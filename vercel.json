@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://www.3geeks.fr/$1",
+      "permanent": true
+    }
+  ]
+}
