@@ -20,9 +20,9 @@ interface LogoProps {
 }
 
 function heightClass(compact: boolean, large: boolean): string {
-  if (large) return 'h-10 sm:h-12 md:h-16';
-  if (compact) return 'h-6 sm:h-7 md:h-8';
-  return 'h-7 sm:h-8 md:h-9';
+  if (large) return 'h-14 sm:h-16 md:h-20';
+  if (compact) return 'h-9 sm:h-10 md:h-11';
+  return 'h-10 sm:h-11 md:h-12';
 }
 
 function Mark({ className = '' }: { className?: string }) {
@@ -31,7 +31,7 @@ function Mark({ className = '' }: { className?: string }) {
       src="/logo-mark.png"
       alt=""
       aria-hidden="true"
-      className={`w-auto object-contain ${className}`}
+      className={`block w-auto object-contain ${className}`}
       draggable={false}
     />
   );
@@ -50,9 +50,9 @@ const Logo = memo(function Logo({
 
   if (variant === 'mark') {
     const markH = large
-      ? 'h-16 sm:h-20 md:h-24'
+      ? 'h-20 sm:h-24 md:h-28'
       : compact
-        ? 'h-8 sm:h-9 md:h-10'
+        ? 'h-10 sm:h-11 md:h-12'
         : 'h-10 sm:h-11 md:h-12';
     return <Mark className={className || markH} />;
   }
@@ -65,7 +65,7 @@ const Logo = memo(function Logo({
       <img
         src="/logo-wordmark.png"
         alt="3geeks"
-        className={`w-auto max-w-full object-contain ${h}`}
+        className={`block w-auto max-w-full object-contain ${h}`}
         draggable={false}
       />
     </span>
