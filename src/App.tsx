@@ -904,7 +904,7 @@ const App: React.FC = () => {
             {/* Logo */}
             <button
               type="button"
-              className="flex-shrink-0 flex items-center cursor-pointer group min-w-0 max-w-[58%]"
+              className="flex-shrink-0 flex items-center cursor-pointer group min-w-0 max-w-[70%]"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               aria-label="3geeks — back to top"
             >

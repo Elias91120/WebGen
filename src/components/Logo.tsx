@@ -19,10 +19,17 @@ interface LogoProps {
   className?: string;
 }
 
-function heightClass(compact: boolean, large: boolean): string {
-  if (large) return 'h-14 sm:h-16 md:h-20';
-  if (compact) return 'h-9 sm:h-10 md:h-11';
-  return 'h-10 sm:h-11 md:h-12';
+/** Wordmark is ~4.3:1 — height drives visible size once PNG padding is trimmed. */
+function wordmarkClass(compact: boolean, large: boolean): string {
+  if (large) return 'h-20 sm:h-24 md:h-28 lg:h-32 w-auto';
+  if (compact) return 'h-11 sm:h-12 md:h-14 w-auto';
+  return 'h-12 sm:h-14 md:h-16 w-auto';
+}
+
+function markClass(compact: boolean, large: boolean): string {
+  if (large) return 'h-24 sm:h-28 md:h-32 lg:h-36';
+  if (compact) return 'h-12 sm:h-14 md:h-16';
+  return 'h-14 sm:h-16 md:h-20';
 }
 
 function Mark({ className = '' }: { className?: string }) {
@@ -46,15 +53,10 @@ const Logo = memo(function Logo({
   large = false,
   className = '',
 }: LogoProps) {
-  const h = heightClass(compact, large);
+  const wordmarkSize = wordmarkClass(compact, large);
 
   if (variant === 'mark') {
-    const markH = large
-      ? 'h-20 sm:h-24 md:h-28'
-      : compact
-        ? 'h-10 sm:h-11 md:h-12'
-        : 'h-10 sm:h-11 md:h-12';
-    return <Mark className={className || markH} />;
+    return <Mark className={className || markClass(compact, large)} />;
   }
 
   return (
@@ -65,7 +67,7 @@ const Logo = memo(function Logo({
       <img
         src="/logo-wordmark.png"
         alt="3geeks"
-        className={`block w-auto max-w-full object-contain ${h}`}
+        className={`block max-w-full object-contain ${wordmarkSize}`}
         draggable={false}
       />
     </span>

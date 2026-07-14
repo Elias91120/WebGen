@@ -91,7 +91,7 @@ const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete }) => {
           phase >= 2 ? '' : 'hidden'
         }`}
       >
-        <div className="mb-6 w-full max-w-xs sm:max-w-sm flex justify-center px-1 min-w-0">
+        <div className="mb-8 w-full max-w-md sm:max-w-lg flex justify-center px-1 min-w-0">
           <Logo variant="wordmark" spaced large className="justify-center text-white" />
         </div>
 
