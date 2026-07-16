@@ -132,7 +132,7 @@ const translations = {
         point1: "Project phases and steps generated from an idea",
         point2: "Contextual prompts for coding assistants",
         point3: "Specialized AI agents and dependency graph in progress",
-        link: "https://prompt-hub-rose-xi.vercel.app/",
+        link: "https://prompt-hub.3geeks.fr/",
         btn: "Open the beta"
       }
     },
@@ -397,7 +397,7 @@ const translations = {
         point1: "Phases et étapes générées depuis une idée",
         point2: "Prompts contextualisés pour assistants de code",
         point3: "Agents IA spécialisés et graphe en développement",
-        link: "https://prompt-hub-rose-xi.vercel.app/",
+        link: "https://prompt-hub.3geeks.fr/",
         btn: "Ouvrir la beta"
       }
     },
@@ -1165,7 +1165,7 @@ const App: React.FC = () => {
                       <span className="h-2.5 w-2.5 rounded-full bg-amber-300/80" />
                       <span className="h-2.5 w-2.5 rounded-full bg-emerald-300/80" />
                     </div>
-                    <span className="hidden sm:inline text-xs font-mono text-slate-500">prompt-hub.app</span>
+                    <span className="hidden sm:inline text-xs font-mono text-slate-500">prompt-hub.3geeks.fr</span>
                   </div>
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/30 bg-emerald-300/[0.12] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-200">
                     <span className="relative flex h-1.5 w-1.5">
