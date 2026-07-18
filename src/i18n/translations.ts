@@ -1,0 +1,588 @@
+export type Lang = 'en' | 'fr';
+
+export const translations = {
+  en: {
+    nav: {
+      services: 'Services',
+      projects: 'Projects',
+      team: 'Team',
+      reviews: 'Reviews',
+      cta: "Let's talk",
+    },
+    hero: {
+      title: 'Websites and digital tools that make people contact you.',
+      subtitle: 'French studio. Clear design, reliable build, reply within 24h.',
+      ctaPrimary: "Let's talk",
+      ctaSecondary: 'See our work',
+      workTag: 'Featured project',
+      workTitle: 'CallKitchen',
+      workDesc: 'Landing for an AI phone assistant that captures missed restaurant calls.',
+      workLink: 'https://call-kitchen-landing.vercel.app',
+      workCta: 'Open project',
+    },
+    stats: {
+      founders: 'founders',
+      projects: 'public projects',
+      response: 'response',
+      french: 'Made in France',
+    },
+    projects: {
+      title: 'Real projects, already online',
+      subtitle: 'Public work that shows how we design, build and launch.',
+      featured: 'p2' as const,
+      p1: {
+        title: 'Express Divorce USA',
+        tag: 'Legal platform',
+        desc: 'A clear, reassuring journey through a sensitive legal process.',
+        result1: 'Clearer client journey',
+        result2: 'Reassuring steps before contact',
+        result3: 'Live online',
+        link: 'https://www.expressdivorceusa.co',
+        btn: 'Open project',
+      },
+      p2: {
+        title: 'CallKitchen',
+        tag: 'Restaurant voice AI',
+        desc: 'A practical landing for an AI phone assistant that captures missed calls.',
+        result1: 'Clear product story',
+        result2: 'Direct demo CTA',
+        result3: 'Live landing',
+        link: 'https://call-kitchen-landing.vercel.app',
+        btn: 'Open project',
+      },
+      p3: {
+        title: 'Two',
+        tag: 'iOS app',
+        desc: 'A polished mobile experience that feels simple from the first tap.',
+        result1: 'On the App Store',
+        result2: 'Clean mobile UI',
+        result3: 'Built for recurring use',
+        link: 'https://apps.apple.com/fr/app/two/id6758867716',
+        btn: 'App Store',
+      },
+    },
+    method: {
+      title: 'From first call to launch',
+      subtitle: 'You always know what happens next.',
+      steps: [
+        { title: 'Frame the need', desc: 'Goals, audience, constraints. We pick the simplest format.' },
+        { title: 'Design the path', desc: 'Clear pages and CTAs so visitors understand in seconds.' },
+        { title: 'Build and ship', desc: 'Solid foundations, then improve with real feedback.' },
+      ],
+    },
+    whyUs: {
+      title: 'A small team that ships useful products',
+      subtitle: 'Design sense, reliable tech, direct communication.',
+      cards: [
+        {
+          title: 'A first impression that sells',
+          desc: 'Pages that are easy to understand, pleasant to browse and credible from screen one.',
+        },
+        {
+          title: 'Solid foundations',
+          desc: 'Forms, automations and dashboards built clean so the product stays reliable after launch.',
+        },
+        {
+          title: 'You talk to people',
+          desc: 'Charles keeps decisions clear and translates business needs into concrete next steps.',
+        },
+      ],
+    },
+    openSource: {
+      title: 'Tools we build in public',
+      subtitle: 'AI experiments beside client work.',
+      p1: {
+        title: 'PromptOptim',
+        status: 'Live',
+        tag: 'Green IT',
+        desc: 'Prompt optimization with fewer tokens and CO2 estimates.',
+        link: 'https://frontend-prompt-optim.vercel.app/',
+        btn: 'Open',
+      },
+      p2: {
+        title: 'Prompt Hub',
+        status: 'Beta',
+        tag: 'AI planning',
+        desc: 'Turn a vague idea into a structured execution plan.',
+        link: 'https://prompt-hub.3geeks.fr/',
+        btn: 'Open beta',
+      },
+    },
+    services: {
+      title: 'Two clear ways to start',
+      maintenanceTitle: 'Peace-of-mind option',
+      maintenanceDesc: 'Monitoring, security updates and content edits for',
+      maintenancePrice: '€50/mo',
+      redesignNote: 'Need a full redesign?',
+      redesignCta: 'Request an audit',
+      s1: {
+        title: 'Starter website',
+        price: '€300',
+        subPrice: 'one-off',
+        badge: 'clear scope',
+        btn: 'Start now',
+        features: [
+          'One-page responsive site',
+          'Clear offer and contact CTA',
+          'Modern visual design',
+          'Contact form or WhatsApp',
+          'Mobile-first layout',
+        ],
+      },
+      s2: {
+        title: 'Custom web project',
+        price: 'Custom quote',
+        subPrice: 'based on scope',
+        badge: 'tailored',
+        btn: "Let's talk",
+        features: [
+          'Booking or request flows',
+          'E-commerce or payments if needed',
+          'Accounts and structured data',
+          'Custom admin dashboard',
+          'External tool integrations',
+        ],
+      },
+      s3: {
+        title: 'Complete redesign',
+        price: 'Custom quote',
+        subPrice: 'audit and overhaul',
+        badge: 'improve',
+        btn: 'Request audit',
+        features: [
+          'Visual and UX overhaul',
+          'Performance and structure audit',
+          'Modern front-end rebuild',
+          'Existing SEO considered',
+          'Cleaner conversion path',
+        ],
+      },
+    },
+    team: {
+      title: 'The founders',
+      subtitle: 'Three complementary profiles. One direct contact.',
+      roles: {
+        elias: 'Design and experience',
+        eliasDesc: 'Clear pages, smooth interactions, a polished feeling that helps visitors get the offer.',
+        noam: 'Systems and data',
+        noamDesc: 'Forms, dashboards, automations and clean data flows behind the interface.',
+        charles: 'Client relation',
+        charlesDesc: 'Keeps the project aligned with your business goals and every decision understandable.',
+      },
+    },
+    reviews: {
+      title: 'What clients say after delivery',
+      items: [
+        {
+          quote: 'Fast, structured and very clear. The platform made our client process much smoother.',
+          name: 'Adrien',
+          role: 'CallKitchen / Express Divorce',
+        },
+        {
+          quote: 'They turned our constraints into concrete decisions. We saw better traction within weeks.',
+          name: 'Henry F.',
+          role: 'Two App',
+        },
+        {
+          quote: 'Booking operations became far more reliable and easier to manage day to day.',
+          name: 'Pierre V.',
+          role: 'Concept Store',
+        },
+      ],
+    },
+    contact: {
+      title: 'Not sure which format fits?',
+      subtitle: 'Tell us what you want to sell, show or automate. We reply within 24h.',
+      successTitle: 'Received.',
+      successDesc: 'The 3geeks team will be in touch shortly.',
+      successTip: 'Urgent? Message Charles on WhatsApp.',
+      form: {
+        name: 'Full name',
+        email: 'Email',
+        type: 'Business type',
+        serviceInterest: 'Solution interest',
+        message: 'Message and project details',
+        btn: "Let's talk",
+        sending: 'Sending...',
+        types: ['Restaurant / Bar', 'Retail / Shop', 'Service / Craftsman', 'Health / Medical', 'Other'],
+        serviceOptions: [
+          'Starter website (€300)',
+          'Custom web project',
+          'Complete redesign',
+          'Maintenance only',
+          'Other / Not sure',
+        ],
+      },
+      direct: {
+        title: 'Or chat with Charles',
+        subtitle: 'Skip the form. Reply on WhatsApp.',
+        phone: '+33 6 71 61 81 19',
+      },
+    },
+    footer: {
+      rights: 'All rights reserved.',
+      tagline: 'Made in France',
+      links: ['Legal', 'Privacy', 'Terms'],
+    },
+    cookie: {
+      title: 'Cookies, please.',
+      desc: 'We use cookies to improve browsing and analyse traffic. Click Accept to consent.',
+      accept: 'Accept',
+      decline: 'Decline',
+    },
+    legal: {
+      title: 'Legal Information',
+      tabs: {
+        legal: 'Legal Notice',
+        privacy: 'Privacy Policy',
+        terms: 'T&Cs',
+      },
+      content: {
+        legal: [
+          {
+            title: '1. Website Editor',
+            text: 'This site is edited by 3geeks.\nCompany registration details and registered office must be added before commercial publication.\nEmail: contact@3geeks.fr\nPhone: +33 6 71 61 81 19',
+          },
+          {
+            title: '2. Hosting',
+            text: 'The website is hosted via Coolify on our infrastructure.\nContact: contact@3geeks.fr',
+          },
+          {
+            title: '3. Intellectual Property',
+            text: 'This entire site is subject to French and international copyright and intellectual property law. All reproduction rights reserved.',
+          },
+        ],
+        privacy: [
+          {
+            title: '1. Data Collection',
+            text: 'We collect the following information via our contact form:\n- First and last name\n- Email address\n- Company name\n- Project details',
+          },
+          {
+            title: '2. Data Usage',
+            text: 'This data is used solely to:\n- Respond to your contact requests\n- Establish quotes\n- Contact you regarding commercial relations\n\nYour data is never sold to third parties.',
+          },
+          {
+            title: '3. Your Rights',
+            text: 'Under the GDPR, you have the right to access, rectify, and delete your data. To exercise this right, contact us at contact@3geeks.fr.',
+          },
+          {
+            title: '4. Cookies',
+            text: 'This site uses essential cookies for operation and analytics cookies to improve your experience. You can manage preferences via the consent banner.',
+          },
+        ],
+        terms: [
+          {
+            title: '1. Purpose',
+            text: 'These conditions govern the sale of web development services by 3geeks.',
+          },
+          {
+            title: '2. Price',
+            text: 'Prices are listed in euros. 3geeks reserves the right to modify prices at any time, but any service is billed at the rate in effect when the quote is validated.',
+          },
+          {
+            title: '3. Payment',
+            text: 'Payment is due upon signing the quote (deposit) and upon delivery (balance).',
+          },
+          {
+            title: '4. Delivery',
+            text: 'Delivery times are indicative and may vary depending on project complexity and client responsiveness.',
+          },
+        ],
+      },
+      close: 'Close',
+    },
+  },
+  fr: {
+    nav: {
+      services: 'Services',
+      projects: 'Projets',
+      team: 'Equipe',
+      reviews: 'Avis',
+      cta: 'Parlons-en',
+    },
+    hero: {
+      title: 'Sites et outils digitaux qui font contacter.',
+      subtitle: 'Studio français. Design clair, build fiable, réponse sous 24h.',
+      ctaPrimary: 'Parlons-en',
+      ctaSecondary: 'Voir nos projets',
+      workTag: 'Projet mis en avant',
+      workTitle: 'CallKitchen',
+      workDesc: 'Landing pour un assistant téléphonique IA qui capte les appels manqués des restaurants.',
+      workLink: 'https://call-kitchen-landing.vercel.app',
+      workCta: 'Ouvrir le projet',
+    },
+    stats: {
+      founders: 'fondateurs',
+      projects: 'projets publics',
+      response: 'de réponse',
+      french: 'Made in France',
+    },
+    projects: {
+      title: 'Des projets réels, déjà en ligne',
+      subtitle: 'Du travail public qui montre comment on conçoit, construit et lance.',
+      featured: 'p2' as const,
+      p1: {
+        title: 'Express Divorce USA',
+        tag: 'Plateforme juridique',
+        desc: 'Un parcours clair et rassurant pour un processus juridique sensible.',
+        result1: 'Parcours client plus clair',
+        result2: 'Étapes rassurantes avant contact',
+        result3: 'En ligne',
+        link: 'https://www.expressdivorceusa.co',
+        btn: 'Ouvrir le projet',
+      },
+      p2: {
+        title: 'CallKitchen',
+        tag: 'IA vocale restauration',
+        desc: 'Landing concrète pour un assistant téléphonique qui capte les appels manqués.',
+        result1: 'Produit expliqué clairement',
+        result2: 'CTA direct vers la démo',
+        result3: 'Landing en ligne',
+        link: 'https://call-kitchen-landing.vercel.app',
+        btn: 'Ouvrir le projet',
+      },
+      p3: {
+        title: 'Two',
+        tag: 'App iOS',
+        desc: 'Une expérience mobile soignée, simple dès le premier geste.',
+        result1: 'Sur l’App Store',
+        result2: 'Interface mobile claire',
+        result3: 'Pensée pour un usage récurrent',
+        link: 'https://apps.apple.com/fr/app/two/id6758867716',
+        btn: 'App Store',
+      },
+    },
+    method: {
+      title: 'Du premier appel à la mise en ligne',
+      subtitle: 'Vous savez toujours où on va.',
+      steps: [
+        { title: 'Cadrer le besoin', desc: 'Objectifs, audience, contraintes. On choisit le format le plus simple.' },
+        { title: 'Designer le parcours', desc: 'Pages claires et CTA pour qu’un visiteur comprenne en quelques secondes.' },
+        { title: 'Construire et lancer', desc: 'Fondations solides, puis on améliore avec les retours réels.' },
+      ],
+    },
+    whyUs: {
+      title: 'Une petite équipe qui livre des produits utiles',
+      subtitle: 'Sens du design, technique fiable, communication directe.',
+      cards: [
+        {
+          title: 'Une première impression qui vend',
+          desc: 'Des pages faciles à comprendre, agréables à parcourir et crédibles dès le premier écran.',
+        },
+        {
+          title: 'Des fondations solides',
+          desc: 'Formulaires, automatisations et dashboards construits proprement pour rester fiables après le lancement.',
+        },
+        {
+          title: 'Vous parlez à des humains',
+          desc: 'Charles garde les décisions claires et traduit vos besoins en prochaines étapes concrètes.',
+        },
+      ],
+    },
+    openSource: {
+      title: 'Des outils construits en public',
+      subtitle: 'Expérimentations IA à côté des projets clients.',
+      p1: {
+        title: 'PromptOptim',
+        status: 'Live',
+        tag: 'Green IT',
+        desc: 'Optimisation de prompts, moins de tokens, estimation CO2.',
+        link: 'https://frontend-prompt-optim.vercel.app/',
+        btn: 'Ouvrir',
+      },
+      p2: {
+        title: 'Prompt Hub',
+        status: 'Beta',
+        tag: 'Planification IA',
+        desc: 'Transformer une idée floue en plan d’exécution structuré.',
+        link: 'https://prompt-hub.3geeks.fr/',
+        btn: 'Ouvrir la beta',
+      },
+    },
+    services: {
+      title: 'Deux façons claires de démarrer',
+      maintenanceTitle: 'Option Sérénité',
+      maintenanceDesc: 'Monitoring, mises à jour sécu et petits edits pour',
+      maintenancePrice: '50€/mois',
+      redesignNote: 'Besoin d’une refonte complète ?',
+      redesignCta: 'Demander un audit',
+      s1: {
+        title: 'Site Starter',
+        price: '300€',
+        subPrice: 'paiement unique',
+        badge: 'cadre clair',
+        btn: 'Démarrer',
+        features: [
+          'Site one-page responsive',
+          'Offre claire et appel à l’action',
+          'Design moderne et soigné',
+          'Formulaire ou lien WhatsApp',
+          'Pensé d’abord pour mobile',
+        ],
+      },
+      s2: {
+        title: 'Projet web sur mesure',
+        price: 'Sur devis',
+        subPrice: 'selon complexité',
+        badge: 'sur mesure',
+        btn: 'Parlons-en',
+        features: [
+          'Parcours de réservation ou demande',
+          'E-commerce ou paiements si besoin',
+          'Comptes et données structurées',
+          'Dashboard admin sur mesure',
+          'Intégrations avec vos outils',
+        ],
+      },
+      s3: {
+        title: 'Refonte complète',
+        price: 'Sur devis',
+        subPrice: 'audit et mise à niveau',
+        badge: 'amélioration',
+        btn: 'Demander un audit',
+        features: [
+          'Refonte visuelle et UX',
+          'Audit performance et structure',
+          'Reconstruction front-end moderne',
+          'SEO existant pris en compte',
+          'Parcours de contact plus clair',
+        ],
+      },
+    },
+    team: {
+      title: 'Les fondateurs',
+      subtitle: 'Trois profils complémentaires. Un contact direct.',
+      roles: {
+        elias: 'Design et expérience',
+        eliasDesc: 'Pages claires, interactions fluides, rendu soigné qui aide à comprendre l’offre.',
+        noam: 'Systèmes et data',
+        noamDesc: 'Formulaires, dashboards, automatisations et flux de données propres derrière l’interface.',
+        charles: 'Relation client',
+        charlesDesc: 'Garde le projet aligné avec vos objectifs et chaque décision compréhensible.',
+      },
+    },
+    reviews: {
+      title: 'Ce que nos clients disent après livraison',
+      items: [
+        {
+          quote: 'Équipe réactive, process très clair. Le nouveau site a fluidifié notre acquisition.',
+          name: 'Adrien',
+          role: 'CallKitchen / Express Divorce',
+        },
+        {
+          quote: 'Ils ont compris notre métier rapidement et proposé des choix utiles. Vraie progression.',
+          name: 'Henry F.',
+          role: 'Two App',
+        },
+        {
+          quote: 'Le système mis en place est robuste et simple à opérer. Notre quotidien est plus serein.',
+          name: 'Pierre V.',
+          role: 'Concept Store',
+        },
+      ],
+    },
+    contact: {
+      title: 'Vous hésitez entre starter et sur mesure ?',
+      subtitle: 'Expliquez ce que vous voulez vendre, présenter ou automatiser. On répond sous 24h.',
+      successTitle: 'Bien reçu.',
+      successDesc: 'L’équipe 3geeks vous recontacte très vite.',
+      successTip: 'Urgent ? Écrivez à Charles sur WhatsApp.',
+      form: {
+        name: 'Nom complet',
+        email: 'Email',
+        type: 'Type de business',
+        serviceInterest: 'Solution envisagée',
+        message: 'Message et détails du projet',
+        btn: 'Parlons-en',
+        sending: 'Envoi...',
+        types: ['Restauration / Bar', 'Commerce / Boutique', 'Artisan / Service', 'Santé / Médical', 'Autre'],
+        serviceOptions: [
+          'Site Starter (300€)',
+          'Projet web sur mesure',
+          'Refonte complète',
+          'Maintenance seule',
+          'Autre / Je ne sais pas',
+        ],
+      },
+      direct: {
+        title: 'Ou contactez Charles',
+        subtitle: 'Pas de formulaire. Réponse rapide sur WhatsApp.',
+        phone: '+33 6 71 61 81 19',
+      },
+    },
+    footer: {
+      rights: 'Tous droits réservés.',
+      tagline: 'Made in France',
+      links: ['Mentions Légales', 'Confidentialité', 'CGV'],
+    },
+    cookie: {
+      title: 'Cookies, s’il vous plaît.',
+      desc: 'Nous utilisons des cookies pour améliorer la navigation et analyser le trafic. Cliquez sur Accepter pour consentir.',
+      accept: 'Accepter',
+      decline: 'Refuser',
+    },
+    legal: {
+      title: 'Informations légales',
+      tabs: {
+        legal: 'Mentions Légales',
+        privacy: 'Politique de Confidentialité',
+        terms: 'CGV',
+      },
+      content: {
+        legal: [
+          {
+            title: '1. Éditeur du site',
+            text: 'Ce site est édité par 3geeks.\nLes informations d’immatriculation et de siège social doivent être ajoutées avant une publication commerciale définitive.\nEmail : contact@3geeks.fr\nTéléphone : +33 6 71 61 81 19',
+          },
+          {
+            title: '2. Hébergement',
+            text: 'Le site est hébergé via Coolify sur notre infrastructure.\nContact : contact@3geeks.fr',
+          },
+          {
+            title: '3. Propriété intellectuelle',
+            text: 'L’ensemble de ce site relève de la législation française et internationale sur le droit d’auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés.',
+          },
+        ],
+        privacy: [
+          {
+            title: '1. Collecte des données',
+            text: 'Nous collectons les informations suivantes via notre formulaire de contact :\n- Nom et prénom\n- Adresse email\n- Nom de l’entreprise\n- Détails du projet',
+          },
+          {
+            title: '2. Utilisation des données',
+            text: 'Ces données sont utilisées uniquement pour :\n- Répondre à vos demandes de contact\n- Établir des devis\n- Vous contacter dans le cadre de la relation commerciale\n\nVos données ne sont jamais vendues à des tiers.',
+          },
+          {
+            title: '3. Vos droits',
+            text: 'Conformément au RGPD, vous disposez d’un droit d’accès, de rectification et de suppression de vos données. Pour exercer ce droit, contactez-nous à contact@3geeks.fr.',
+          },
+          {
+            title: '4. Cookies',
+            text: 'Ce site utilise des cookies essentiels au fonctionnement et des cookies d’analyse pour améliorer votre expérience. Vous pouvez gérer vos préférences via la bannière de consentement.',
+          },
+        ],
+        terms: [
+          {
+            title: '1. Objet',
+            text: 'Les présentes conditions régissent les ventes de prestations de services de développement web par 3geeks.',
+          },
+          {
+            title: '2. Prix',
+            text: 'Les prix sont indiqués en euros. 3geeks se réserve le droit de modifier ses prix à tout moment, mais le service sera facturé sur la base du tarif en vigueur au moment de la validation du devis.',
+          },
+          {
+            title: '3. Paiement',
+            text: 'Le paiement est exigible à la signature du devis (acompte) et à la livraison du projet (solde).',
+          },
+          {
+            title: '4. Livraison',
+            text: 'Les délais de livraison sont donnés à titre indicatif et peuvent varier selon la complexité du projet et la réactivité du client.',
+          },
+        ],
+      },
+      close: 'Fermer',
+    },
+  },
+} as const;
+
+export type Translations = (typeof translations)[Lang];

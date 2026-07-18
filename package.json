@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "^5.2.9",
     "@google/genai": "^1.29.0",
     "@gsap/react": "2.1.0",
+    "@phosphor-icons/react": "^2.1.10",
     "@supabase/supabase-js": "^2.86.0",
     "dotenv": "^17.2.3",
     "gsap": "^3.13.0",

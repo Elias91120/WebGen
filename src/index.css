@@ -1,39 +1,21 @@
+@import '@fontsource-variable/geist';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .bg-checkered {
-    background-image:
-      linear-gradient(45deg, #cbd5e1 25%, transparent 25%),
-      linear-gradient(-45deg, #cbd5e1 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, #cbd5e1 75%),
-      linear-gradient(-45deg, transparent 75%, #cbd5e1 75%);
-    background-size: 20px 20px;
-    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-  }
-
-  .dark .bg-checkered {
-    background-image:
-      linear-gradient(45deg, #1e293b 25%, transparent 25%),
-      linear-gradient(-45deg, #1e293b 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, #1e293b 75%),
-      linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+@layer base {
+  html {
+    color-scheme: dark;
   }
 }
 
-/* Mask-image gradient used by the terminal "fade" effect on long lines */
-.fade-r {
-  -webkit-mask-image: linear-gradient(to right, black 60%, transparent);
-  mask-image: linear-gradient(to right, black 60%, transparent);
-}
-
-/* WhatsApp button — kept on purpose (WhatsApp green identity) */
+/* WhatsApp button identity */
 .button2 {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  transition: all 0.2s ease-in;
+  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background 200ms ease, color 200ms ease, border-color 200ms ease;
   position: relative;
   overflow: hidden;
   z-index: 1;
@@ -41,7 +23,7 @@
   padding: 0.72em 1.3em;
   font-size: 16px;
   font-weight: bold;
-  border-radius: 0.75em;
+  border-radius: 9999px;
   background: #e8e8e8;
   border: 1px solid #e8e8e8;
   box-shadow: 0 10px 24px rgba(17, 24, 39, 0.35);
@@ -55,8 +37,7 @@
 }
 
 .button2:active {
-  color: #666;
-  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+  transform: scale(0.97);
 }
 
 .button2:before {
@@ -106,24 +87,6 @@
   transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
-/* Legacy LinkedIn utility class */
-.Btn-LinkedIn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 45px;
-  height: 45px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition-duration: 0.3s;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
-  background-color: #0a66c2;
-  text-decoration: none;
-}
-
 @media (max-width: 640px) {
   .button2 {
     width: 100%;
@@ -131,54 +94,4 @@
     font-size: 15px;
     padding: 0.75em 1em;
   }
-}
-
-.Btn-LinkedIn .sign {
-  width: 100%;
-  transition-duration: 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.Btn-LinkedIn .sign svg {
-  width: 18px;
-}
-
-.Btn-LinkedIn .sign svg path {
-  fill: white;
-}
-
-.Btn-LinkedIn .text {
-  position: absolute;
-  right: 0%;
-  width: 0%;
-  opacity: 0;
-  color: white;
-  font-size: 1.2em;
-  font-weight: 600;
-  transition-duration: 0.3s;
-}
-
-.Btn-LinkedIn:hover {
-  width: 135px;
-  border-radius: 40px;
-  transition-duration: 0.3s;
-}
-
-.Btn-LinkedIn:hover .sign {
-  width: 30%;
-  transition-duration: 0.3s;
-  padding-left: 10px;
-}
-
-.Btn-LinkedIn:hover .text {
-  opacity: 1;
-  width: 70%;
-  transition-duration: 0.3s;
-  padding-right: 10px;
-}
-
-.Btn-LinkedIn:active {
-  transform: translate(2px, 2px);
 }
