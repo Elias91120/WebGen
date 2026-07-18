@@ -26,7 +26,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import CookieConsent from './components/CookieConsent';
 import GradientText from './components/GradientText';
 import IntroScreen from './components/IntroScreen';
@@ -171,10 +171,15 @@ const translations = {
       badge: "SOLUTIONS",
       title: "Two clear ways to start your project",
       maintenanceTitle: "Peace-of-mind option",
-      maintenanceDesc: "Add monitoring, security updates and small content edits to any plan for",
+      maintenanceDesc: "Keep your site monitored, secure and lightly updated after launch.",
       maintenancePrice: "€50/mo",
       maintenanceCta: "+ add option",
       maintenanceHighlight: "Recommended",
+      maintenanceBenefits: [
+        "Uptime monitoring",
+        "Security updates",
+        "Small content edits each month",
+      ],
       s1: {
         title: "Starter website",
         price: "€300",
@@ -221,14 +226,15 @@ const translations = {
       }
     },
     booking: {
+      title: "Confirm your request",
       stepOf: "Step {step} of 2",
       selectedOffer: "Selected offer",
-      quote: "Quote",
+      quote: "Custom quote",
       estimatedTotal: "Estimated total",
       continue: "Continue",
       back: "Back",
       confirm: "Confirm",
-      processing: "Processing...",
+      processing: "Sending...",
       name: "Name",
       email: "Email",
       company: "Company / project",
@@ -478,10 +484,15 @@ const translations = {
       badge: "SOLUTIONS",
       title: "Deux façons claires de démarrer votre projet",
       maintenanceTitle: "Option Sérénité",
-      maintenanceDesc: "Ajoutez monitoring, mises à jour sécu et petits edits à n'importe quelle offre pour",
+      maintenanceDesc: "Gardez votre site surveillé, sécurisé et légèrement mis à jour après la mise en ligne.",
       maintenancePrice: "50€/mois",
       maintenanceCta: "+ ajouter l'option",
       maintenanceHighlight: "Recommandé",
+      maintenanceBenefits: [
+        "Monitoring de disponibilité",
+        "Mises à jour de sécurité",
+        "Petits edits de contenu chaque mois",
+      ],
       s1: {
         title: "Site Starter",
         price: "300€",
@@ -528,6 +539,7 @@ const translations = {
       },
     },
     booking: {
+      title: "Confirmer votre demande",
       stepOf: "Étape {step} sur 2",
       selectedOffer: "Offre sélectionnée",
       quote: "Sur devis",
@@ -709,7 +721,13 @@ const PromptHubMark: React.FC<{ className?: string }> = ({ className = '' }) => 
 );
 
 const App: React.FC = () => {
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(() => {
+    try {
+      return sessionStorage.getItem('3geeks-intro-done') !== '1';
+    } catch {
+      return true;
+    }
+  });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [lang, setLang] = useState<Lang>('fr');
@@ -719,25 +737,48 @@ const App: React.FC = () => {
   const [selectedService, setSelectedService] = useState<ServiceType>(null);
   const [adminOpen, setAdminOpen] = useState(false);
   const [requests, setRequests] = useState<ClientRequest[]>([]);
+  const [preferReducedMotion, setPreferReducedMotion] = useState(false);
 
   // GDPR State
   const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [legalTab, setLegalTab] = useState<'privacy' | 'terms' | 'legal'>('legal');
 
-  // Mouse parallax (normalised -1..1 from screen center)
-  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  // Mouse parallax via CSS vars — avoids re-rendering the whole App on every move
+  const gridParallaxRef = useRef<HTMLDivElement>(null);
+  const haloParallaxRef = useRef<HTMLDivElement>(null);
+  const haloBlobRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => setPreferReducedMotion(mq.matches);
+    sync();
+    mq.addEventListener?.('change', sync);
+    return () => mq.removeEventListener?.('change', sync);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (window.matchMedia('(pointer: coarse)').matches) return;
+    if (preferReducedMotion) return;
 
     let frame = 0;
     const handleMove = (event: MouseEvent) => {
+      if (bookingModalOpen || adminOpen || legalModalOpen) return;
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const x = (event.clientX / window.innerWidth) * 2 - 1;
         const y = (event.clientY / window.innerHeight) * 2 - 1;
-        setMouseOffset({ x, y });
+        if (gridParallaxRef.current) {
+          gridParallaxRef.current.style.transform = `translate3d(${x * -12}px, ${y * -12}px, 0)`;
+        }
+        if (haloParallaxRef.current) {
+          haloParallaxRef.current.style.transform = `translate3d(${x * 30}px, ${y * 30}px, 0)`;
+        }
+        if (haloBlobRef.current) {
+          haloBlobRef.current.style.left = `calc(${(x + 1) * 50}% - 260px)`;
+          haloBlobRef.current.style.top = `calc(${(y + 1) * 50}% - 260px)`;
+        }
       });
     };
 
@@ -746,7 +787,7 @@ const App: React.FC = () => {
       cancelAnimationFrame(frame);
       window.removeEventListener('mousemove', handleMove);
     };
-  }, []);
+  }, [preferReducedMotion, bookingModalOpen, adminOpen, legalModalOpen]);
 
   const openLegal = (tab: 'privacy' | 'terms' | 'legal') => {
     setLegalTab(tab);
@@ -756,8 +797,8 @@ const App: React.FC = () => {
   const t = translations[lang];
 
   useEffect(() => {
-    fetchRequests();
-  }, []);
+    if (adminOpen) fetchRequests();
+  }, [adminOpen]);
 
   const fetchRequests = async () => {
     if (!supabase) return;
@@ -936,46 +977,55 @@ const App: React.FC = () => {
     {showIntro ? (
       <IntroScreen onComplete={(selectedLang) => {
         setLang(selectedLang);
+        try {
+          sessionStorage.setItem('3geeks-intro-done', '1');
+        } catch {
+          /* ignore */
+        }
         setShowIntro(false);
       }} />
     ) : (
     <div className="min-h-screen bg-[#08090d] text-slate-100 font-sans relative overflow-x-hidden animate-in fade-in duration-700">
 
-      {/* 3D Background — re-tinted to brand cyan/lime/violet */}
-      <div className="fixed inset-0 z-0 hidden md:block">
-        <Suspense fallback={<div className="fixed inset-0 bg-[#08090d] -z-50" />}>
-          <FloatingLines
-            linesGradient={['#22d3ee', '#a3e635', '#a78bfa', '#22d3ee']}
-            topWavePosition={{ x: 0, y: 1.0, rotate: 0 }}
-            middleWavePosition={{ x: 0, y: 0, rotate: 0 }}
-            bottomWavePosition={{ x: 0, y: -1.0, rotate: 0 }}
-            lineCount={[3, 5, 3]}
-            lineDistance={[4, 5, 4]}
-            animationSpeed={0.7}
-            interactive={true}
-            bendStrength={0.5}
-            parallaxStrength={0.1}
-          />
-        </Suspense>
-      </div>
+      {/* 3D Background — paused while modals are open to avoid jank */}
+      {!preferReducedMotion && (
+        <div className="fixed inset-0 z-0 hidden md:block">
+          <Suspense fallback={null}>
+            <FloatingLines
+              linesGradient={['#22d3ee', '#a3e635', '#a78bfa', '#22d3ee']}
+              topWavePosition={{ x: 0, y: 1.0, rotate: 0 }}
+              middleWavePosition={{ x: 0, y: 0, rotate: 0 }}
+              bottomWavePosition={{ x: 0, y: -1.0, rotate: 0 }}
+              lineCount={[3, 5, 3]}
+              lineDistance={[4, 5, 4]}
+              animationSpeed={0.55}
+              interactive={true}
+              bendStrength={0.5}
+              parallaxStrength={0.1}
+              paused={bookingModalOpen || adminOpen || legalModalOpen}
+            />
+          </Suspense>
+        </div>
+      )}
 
-      {/* Subtle code-grid overlay (parallax-driven) */}
+      {/* Subtle code-grid overlay (parallax-driven via refs) */}
       <div
-        className="fixed inset-0 z-0 grid-dust opacity-[0.18] md:opacity-[0.25] pointer-events-none transition-transform duration-300 ease-out"
-        style={{ transform: `translate3d(${mouseOffset.x * -12}px, ${mouseOffset.y * -12}px, 0)` }}
+        ref={gridParallaxRef}
+        className="fixed inset-0 z-0 grid-dust opacity-[0.18] md:opacity-[0.25] pointer-events-none will-change-transform"
       />
 
       {/* Parallax light halo following the cursor */}
       <div
-        className="fixed inset-0 z-0 pointer-events-none hidden md:block transition-transform duration-500 ease-out"
-        style={{ transform: `translate3d(${mouseOffset.x * 30}px, ${mouseOffset.y * 30}px, 0)` }}
+        ref={haloParallaxRef}
+        className="fixed inset-0 z-0 pointer-events-none hidden md:block will-change-transform"
         aria-hidden="true"
       >
         <div
+          ref={haloBlobRef}
           className="absolute h-[520px] w-[520px] rounded-full blur-[120px] opacity-50"
           style={{
-            left: `calc(${(mouseOffset.x + 1) * 50}% - 260px)`,
-            top: `calc(${(mouseOffset.y + 1) * 50}% - 260px)`,
+            left: 'calc(50% - 260px)',
+            top: 'calc(50% - 260px)',
             background: 'radial-gradient(circle, rgba(34,211,238,0.18), rgba(163,230,53,0.08) 45%, transparent 70%)',
           }}
         />
@@ -1543,7 +1593,8 @@ const App: React.FC = () => {
                          </span>
                        </div>
                        <p className="text-slate-300 text-sm md:text-base max-w-md mt-0.5 leading-relaxed">
-                          {t.services.maintenanceDesc} <span className="text-lime-300 font-bold font-mono">{t.services.maintenancePrice}</span>.
+                          {t.services.maintenanceDesc}{' '}
+                          <span className="text-lime-300 font-bold font-mono">{t.services.maintenancePrice}</span>
                        </p>
                     </div>
                  </div>

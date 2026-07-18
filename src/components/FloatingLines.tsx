@@ -257,6 +257,7 @@ interface FloatingLinesProps {
   parallax?: boolean;
   parallaxStrength?: number;
   mixBlendMode?: any;
+  paused?: boolean;
 }
 
 export default function FloatingLines({
@@ -274,9 +275,12 @@ export default function FloatingLines({
   mouseDamping = 0.05,
   parallax = true,
   parallaxStrength = 0.2,
-  mixBlendMode = 'normal'
+  mixBlendMode = 'normal',
+  paused = false
 }: FloatingLinesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
   const targetMouseRef = useRef(new Vector2(-1000, -1000));
   const currentMouseRef = useRef(new Vector2(-1000, -1000));
   const targetInfluenceRef = useRef(0);
@@ -309,14 +313,8 @@ export default function FloatingLines({
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Performance Optimization: Disable 3D canvas entirely on mobile screens (below 768px width)
-    // The WebGL calculations cause severe scroll jitter on phone browsing threads.
-    // By skipping rendering here, we let the container's CSS background take over as a fallback.
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      console.log("FloatingLines: Mobile device detected. Skipping WebGL rendering for performance.");
-      return; 
-    }
+    // Skip WebGL on small screens — CSS background is enough and avoids scroll jank.
+    if (window.innerWidth < 768) return;
 
     const scene = new Scene();
 
@@ -462,9 +460,11 @@ export default function FloatingLines({
 
     let raf = 0;
     let isVisible = true;
+    let pageVisible = !document.hidden;
 
     const renderLoop = () => {
-      if (isVisible) {
+      const shouldRender = isVisible && pageVisible && !pausedRef.current;
+      if (shouldRender) {
         uniforms.iTime.value = clock.getElapsedTime();
 
         if (interactive) {
@@ -486,7 +486,6 @@ export default function FloatingLines({
     };
     renderLoop();
 
-    // Intersection Observer to stop rendering when out of view
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         isVisible = entry.isIntersecting;
@@ -497,9 +496,15 @@ export default function FloatingLines({
       io.observe(containerRef.current);
     }
 
+    const onVisibility = () => {
+      pageVisible = !document.hidden;
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
+      document.removeEventListener('visibilitychange', onVisibility);
       // eslint-disable-next-line react-hooks/exhaustive-deps
       if (ro && containerRef.current) {
         ro.disconnect();
