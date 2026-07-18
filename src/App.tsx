@@ -171,15 +171,23 @@ const translations = {
       badge: "SOLUTIONS",
       title: "Two clear ways to start your project",
       maintenanceTitle: "Peace-of-mind option",
-      maintenanceDesc: "Add monitoring, security updates and content edits to any plan for just",
+      maintenanceDesc: "Add monitoring, security updates and small content edits to any plan for",
       maintenancePrice: "€50/mo",
+      maintenanceCta: "+ add option",
+      maintenanceHighlight: "Recommended",
       s1: {
         title: "Starter website",
         price: "€300",
         subPrice: "one-off payment",
         badge: "clear scope",
         btn: "Start now",
-        features: ['One-page responsive website', 'Clear offer and contact CTA', 'Modern visual design', 'Contact form or WhatsApp link', 'Mobile-first layout']
+        features: [
+          { text: 'One-page responsive website', checked: true },
+          { text: 'Clear offer and contact CTA', checked: true },
+          { text: 'Modern visual design', checked: true },
+          { text: 'Contact form or WhatsApp link', checked: false },
+          { text: 'Mobile-first layout', checked: false },
+        ]
       },
       s2: {
         title: "Custom web project",
@@ -187,7 +195,14 @@ const translations = {
         subPrice: "based on complexity",
         badge: "tailored",
         btn: "Talk to us",
-        features: ['Booking or request flows', 'E-commerce or payments if needed', 'Accounts and structured data', 'Custom admin dashboard', 'External tool integrations']
+        features: [
+          { text: 'Everything in Starter, adapted to your offer', checked: true },
+          { text: 'Booking or request flows', checked: true },
+          { text: 'E-commerce or payments if needed', checked: true },
+          { text: 'Accounts and structured data', checked: true },
+          { text: 'Custom admin dashboard', checked: true },
+          { text: 'External tool integrations', checked: true },
+        ]
       },
       s3: {
         title: "Complete redesign",
@@ -195,8 +210,35 @@ const translations = {
         subPrice: "audit & overhaul",
         badge: "improve",
         btn: "Request audit",
-        features: ['Visual and UX overhaul', 'Performance and structure audit', 'Modern front-end rebuild', 'Existing SEO considered', 'Cleaner conversion path']
+        features: [
+          { text: 'Visual and UX overhaul', checked: true },
+          { text: 'Performance and structure audit', checked: true },
+          { text: 'Modern front-end rebuild', checked: true },
+          { text: 'Existing SEO considered', checked: true },
+          { text: 'Cleaner conversion path', checked: true },
+          { text: 'Safer launch plan with your current site', checked: true },
+        ]
       }
+    },
+    booking: {
+      stepOf: "Step {step} of 2",
+      selectedOffer: "Selected offer",
+      quote: "Quote",
+      estimatedTotal: "Estimated total",
+      continue: "Continue",
+      back: "Back",
+      confirm: "Confirm",
+      processing: "Processing...",
+      name: "Name",
+      email: "Email",
+      company: "Company / project",
+      preferredDate: "Preferred date (optional)",
+      dateHint: "Leave blank to schedule later",
+      details: "Additional details",
+      namePlaceholder: "John Doe",
+      emailPlaceholder: "john@company.com",
+      companyPlaceholder: "My Awesome Shop",
+      detailsPlaceholder: "Anything else we should know?",
     },
     team: {
       path: "Founding team",
@@ -438,13 +480,21 @@ const translations = {
       maintenanceTitle: "Option Sérénité",
       maintenanceDesc: "Ajoutez monitoring, mises à jour sécu et petits edits à n'importe quelle offre pour",
       maintenancePrice: "50€/mois",
+      maintenanceCta: "+ ajouter l'option",
+      maintenanceHighlight: "Recommandé",
       s1: {
         title: "Site Starter",
         price: "300€",
         subPrice: "paiement unique",
         badge: "cadre clair",
         btn: "Démarrer",
-        features: ['Site one-page responsive', 'Offre claire et appel à l’action', 'Design moderne et soigné', 'Formulaire ou lien WhatsApp', 'Pensé d’abord pour mobile']
+        features: [
+          { text: 'Site one-page responsive', checked: true },
+          { text: 'Offre claire et appel à l’action', checked: true },
+          { text: 'Design moderne et soigné', checked: true },
+          { text: 'Formulaire ou lien WhatsApp', checked: false },
+          { text: 'Pensé d’abord pour mobile', checked: false },
+        ]
       },
       s2: {
         title: "Projet web sur mesure",
@@ -452,7 +502,14 @@ const translations = {
         subPrice: "selon complexité",
         badge: "sur mesure",
         btn: "Nous parler",
-        features: ['Parcours de réservation ou demande', 'E-commerce ou paiements si besoin', 'Comptes et données structurées', 'Dashboard admin sur mesure', 'Intégrations avec vos outils']
+        features: [
+          { text: 'Tout le Starter, adapté à votre offre', checked: true },
+          { text: 'Parcours de réservation ou demande', checked: true },
+          { text: 'E-commerce ou paiements si besoin', checked: true },
+          { text: 'Comptes et données structurées', checked: true },
+          { text: 'Dashboard admin sur mesure', checked: true },
+          { text: 'Intégrations avec vos outils', checked: true },
+        ]
       },
       s3: {
         title: "Refonte complète",
@@ -460,8 +517,35 @@ const translations = {
         subPrice: "audit & mise à niveau",
         badge: "amélioration",
         btn: "Demander un audit",
-        features: ['Refonte visuelle et UX', 'Audit performance et structure', 'Reconstruction front-end moderne', 'SEO existant pris en compte', 'Parcours de contact plus clair']
+        features: [
+          { text: 'Refonte visuelle et UX', checked: true },
+          { text: 'Audit performance et structure', checked: true },
+          { text: 'Reconstruction front-end moderne', checked: true },
+          { text: 'SEO existant pris en compte', checked: true },
+          { text: 'Parcours de contact plus clair', checked: true },
+          { text: 'Plan de mise en ligne sans coupure brutale', checked: true },
+        ]
       },
+    },
+    booking: {
+      stepOf: "Étape {step} sur 2",
+      selectedOffer: "Offre sélectionnée",
+      quote: "Sur devis",
+      estimatedTotal: "Total estimé",
+      continue: "Continuer",
+      back: "Retour",
+      confirm: "Confirmer",
+      processing: "Envoi...",
+      name: "Nom",
+      email: "Email",
+      company: "Entreprise / projet",
+      preferredDate: "Date souhaitée (optionnel)",
+      dateHint: "Laissez vide pour planifier plus tard",
+      details: "Détails supplémentaires",
+      namePlaceholder: "Jean Dupont",
+      emailPlaceholder: "jean@entreprise.com",
+      companyPlaceholder: "Ma boutique",
+      detailsPlaceholder: "Autre chose à savoir ?",
     },
     team: {
       path: "Equipe fondatrice",
@@ -1343,16 +1427,16 @@ const App: React.FC = () => {
         {/* STACK SECTION (NEW) */}
         <section className="py-8 md:py-16 relative bg-[#0d1117]/25">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-5 md:mb-8">
-              <div className="text-[10px] md:text-xs font-mono text-cyan-300/80 mb-1 md:mb-2">{t.stack.path}</div>
-              <h3 className="text-lg md:text-2xl font-display font-bold text-white leading-snug">{t.stack.title}</h3>
-              <p className="text-slate-500 text-xs md:text-sm mt-1.5 md:mt-2 font-mono max-w-2xl mx-auto leading-relaxed">{t.stack.subtitle}</p>
+            <div className="text-center mb-6 md:mb-10 max-w-3xl mx-auto">
+              <div className="text-xs md:text-sm font-mono text-cyan-300 mb-2 md:mb-3 tracking-wide">{t.stack.path}</div>
+              <h3 className="text-xl md:text-3xl font-display font-bold text-white leading-snug">{t.stack.title}</h3>
+              <p className="text-slate-300 text-sm md:text-base mt-3 md:mt-4 max-w-2xl mx-auto leading-relaxed">{t.stack.subtitle}</p>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-2.5 md:gap-3">
               {stackChips.map((chip, i) => (
                 <div
                   key={i}
-                  className="group flex items-center gap-1.5 md:gap-2 px-2.5 py-1 md:px-4 md:py-2 rounded-full bg-[#0d1117]/70 border border-white/10 backdrop-blur-md font-mono text-[11px] md:text-sm text-slate-300 md:text-slate-200 hover:border-cyan-400/50 hover:text-cyan-300 md:hover:shadow-[0_0_20px_rgba(34,211,238,0.2)] transition-all"
+                  className="group flex items-center gap-2 md:gap-2.5 px-3 py-1.5 md:px-4 md:py-2.5 rounded-full bg-[#0d1117]/80 border border-white/15 backdrop-blur-md font-mono text-xs md:text-sm text-slate-200 hover:border-cyan-400/50 hover:text-cyan-300 md:hover:shadow-[0_0_20px_rgba(34,211,238,0.2)] transition-all"
                 >
                   <span className="text-lime-300 group-hover:text-cyan-300 transition-colors">{chip.icon}</span>
                   <span>{chip.label}</span>
@@ -1386,7 +1470,12 @@ const App: React.FC = () => {
                       <ul className="space-y-2 md:space-y-3 mb-5 md:mb-8 flex-1">
                          {t.services.s1.features.map((item, i) => (
                            <li key={i} className="flex items-center gap-2 md:gap-3 text-slate-300 md:text-slate-200 text-xs md:text-sm">
-                              <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-cyan-300 flex-shrink-0 group-hover:text-lime-300 transition-colors" /> {item}
+                              {item.checked ? (
+                                <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-lime-300 flex-shrink-0" />
+                              ) : (
+                                <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-cyan-300 flex-shrink-0" />
+                              )}
+                              {item.text}
                            </li>
                          ))}
                       </ul>
@@ -1406,7 +1495,7 @@ const App: React.FC = () => {
                       <ul className="space-y-2 md:space-y-3 mb-5 md:mb-8 flex-1">
                          {t.services.s2.features.map((item, i) => (
                            <li key={i} className="flex items-center gap-2 md:gap-3 text-slate-200 md:text-slate-100 text-xs md:text-sm">
-                              <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-lime-300 flex-shrink-0" /> {item}
+                              <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-lime-300 flex-shrink-0" /> {item.text}
                            </li>
                          ))}
                       </ul>
@@ -1427,7 +1516,7 @@ const App: React.FC = () => {
                       <ul className="space-y-2 md:space-y-3 mb-5 md:mb-8 flex-1">
                          {t.services.s3.features.map((item, i) => (
                            <li key={i} className="flex items-center gap-2 md:gap-3 text-slate-300 md:text-slate-200 text-xs md:text-sm">
-                              <RefreshCw className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-300 flex-shrink-0 group-hover:rotate-180 transition-transform duration-500" /> {item}
+                              <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-lime-300 flex-shrink-0" /> {item.text}
                            </li>
                          ))}
                       </ul>
@@ -1438,22 +1527,28 @@ const App: React.FC = () => {
 
               {/* Maintenance Add-on */}
               <div
-                className="mt-8 md:mt-12 max-w-2xl mx-auto glass-panel p-4 md:p-6 rounded-xl md:rounded-2xl border border-cyan-400/30 flex flex-col sm:flex-row items-center justify-between gap-4 md:gap-6 hover:bg-[#0d1117]/85 transition-all duration-300 group md:hover:shadow-[0_10px_30px_-10px_rgba(34,211,238,0.35)] md:hover:-translate-y-1 cursor-pointer"
+                className="mt-8 md:mt-12 max-w-3xl mx-auto relative overflow-hidden rounded-xl md:rounded-2xl border border-lime-400/40 bg-gradient-to-r from-lime-400/10 via-[#0d1117]/85 to-cyan-400/10 p-5 md:p-7 flex flex-col sm:flex-row items-center justify-between gap-4 md:gap-6 hover:border-lime-400/60 transition-all duration-300 group md:hover:shadow-[0_10px_40px_-10px_rgba(163,230,53,0.35)] md:hover:-translate-y-1 cursor-pointer"
                 onClick={() => handleServiceSelect('maintenance_only')}
               >
-                 <div className="flex items-start gap-3 md:gap-4 w-full sm:w-auto">
-                    <div className="p-2 md:p-3 bg-cyan-400/15 rounded-lg md:rounded-xl text-cyan-300 md:group-hover:scale-110 transition-transform shrink-0">
+                 <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_20%_50%,rgba(163,230,53,0.12),transparent_55%)]" />
+                 <div className="flex items-start gap-3 md:gap-4 w-full sm:w-auto relative z-10">
+                    <div className="p-2.5 md:p-3.5 bg-lime-400/20 border border-lime-400/40 rounded-lg md:rounded-xl text-lime-300 md:group-hover:scale-110 transition-transform shrink-0">
                        <ShieldCheck className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
                     <div className="min-w-0">
-                       <h4 className="text-white font-bold text-base md:text-lg font-mono">{t.services.maintenanceTitle}</h4>
-                       <p className="text-slate-400 md:text-slate-300 text-xs md:text-sm max-w-sm mt-0.5 leading-relaxed">
+                       <div className="flex flex-wrap items-center gap-2 mb-1">
+                         <h4 className="text-white font-bold text-base md:text-xl font-mono">{t.services.maintenanceTitle}</h4>
+                         <span className="text-[10px] md:text-[11px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-lime-400/20 text-lime-300 border border-lime-400/30">
+                           {t.services.maintenanceHighlight}
+                         </span>
+                       </div>
+                       <p className="text-slate-300 text-sm md:text-base max-w-md mt-0.5 leading-relaxed">
                           {t.services.maintenanceDesc} <span className="text-lime-300 font-bold font-mono">{t.services.maintenancePrice}</span>.
                        </p>
                     </div>
                  </div>
-                 <button type="button" className="whitespace-nowrap w-full sm:w-auto px-4 md:px-6 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-full text-xs md:text-sm font-mono font-bold text-white transition-all">
-                    + add option
+                 <button type="button" className="relative z-10 whitespace-nowrap w-full sm:w-auto px-5 md:px-6 py-2.5 md:py-3 bg-lime-400/15 border border-lime-400/40 hover:bg-lime-400/25 rounded-full text-xs md:text-sm font-mono font-bold text-lime-200 transition-all">
+                    {t.services.maintenanceCta}
                  </button>
               </div>
            </div>
