@@ -1,78 +1,70 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
-*/
 import React, { memo } from 'react';
 
 type LogoVariant = 'mark' | 'wordmark' | 'full';
 
 interface LogoProps {
   variant?: LogoVariant;
-  withCursor?: boolean;
-  withTagline?: boolean;
-  /** Kept for API compatibility — spacing is baked into the wordmark PNG. */
-  spaced?: boolean;
-  /** Taille réduite (barre de navigation, footers denses). */
   compact?: boolean;
-  /** Taille plus grande (écran d’intro, héros). */
   large?: boolean;
+  spaced?: boolean;
   className?: string;
 }
 
-/** Wordmark is ~4.3:1 — height drives visible size once PNG padding is trimmed. */
-function wordmarkClass(compact: boolean, large: boolean): string {
-  if (large) return 'h-20 sm:h-24 md:h-28 lg:h-32 w-auto';
-  if (compact) return 'h-11 sm:h-12 md:h-14 w-auto';
-  return 'h-12 sm:h-14 md:h-16 w-auto';
-}
-
-function markClass(compact: boolean, large: boolean): string {
-  if (large) return 'h-24 sm:h-28 md:h-32 lg:h-36';
-  if (compact) return 'h-12 sm:h-14 md:h-16';
-  return 'h-14 sm:h-16 md:h-20';
-}
-
-function Mark({ className = '' }: { className?: string }) {
-  return (
-    <img
-      src="/logo-mark.png"
-      alt=""
-      aria-hidden="true"
-      className={`block w-auto object-contain ${className}`}
-      draggable={false}
+/**
+ * Razor-sharp SVG Vector Mark for 3geeks.
+ * Smooth gradient cyan-to-lime '3' symbol.
+ */
+export const Mark: React.FC<{ className?: string }> = ({ className = 'h-10 w-auto' }) => (
+  <svg
+    viewBox="0 0 100 100"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={`block shrink-0 ${className}`}
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id="markGradient3g" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#a3e635" />
+        <stop offset="50%" stopColor="#22d3ee" />
+        <stop offset="100%" stopColor="#818cf8" />
+      </linearGradient>
+      <filter id="markGlow3g" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#22d3ee" floodOpacity="0.35" />
+      </filter>
+    </defs>
+    {/* Stylized ribbon '3' */}
+    <path
+      d="M20 22 C35 14, 75 14, 80 28 C85 40, 55 48, 42 48 C60 48, 86 54, 82 74 C77 92, 30 90, 18 80"
+      stroke="url(#markGradient3g)"
+      strokeWidth="14"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      filter="url(#markGlow3g)"
     />
-  );
-}
+  </svg>
+);
 
 const Logo = memo(function Logo({
-  variant = 'mark',
-  spaced: _spaced = false,
-  withCursor: _withCursor = false,
-  withTagline: _withTagline = false,
+  variant = 'wordmark',
   compact = false,
   large = false,
   className = '',
 }: LogoProps) {
-  const wordmarkSize = wordmarkClass(compact, large);
+  const markSize = large ? 'h-12 w-12 sm:h-16 sm:w-16' : compact ? 'h-7 w-7 sm:h-8 sm:w-8' : 'h-9 w-9 sm:h-10 sm:w-10';
+  const textSize = large ? 'text-3xl sm:text-5xl' : compact ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-3xl';
 
   if (variant === 'mark') {
-    return <Mark className={className || markClass(compact, large)} />;
+    return <Mark className={`${markSize} ${className}`} />;
   }
 
   return (
-    <span
-      className={`inline-flex items-center min-w-0 max-w-full ${className}`}
-      aria-label="3geeks, trois fondateurs"
-    >
-      <img
-        src="/logo-wordmark.png"
-        alt="3geeks"
-        className={`block max-w-full object-contain ${wordmarkSize}`}
-        draggable={false}
-      />
+    <span className={`inline-flex items-center gap-2.5 font-display font-black tracking-tight select-none ${className}`}>
+      <Mark className={markSize} />
+      <span className={`bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-300 ${textSize} leading-none`}>
+        3geeks
+      </span>
     </span>
   );
 });
 
 export default Logo;
-export { Mark };

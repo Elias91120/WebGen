@@ -33,6 +33,9 @@ import IntroScreen from './components/IntroScreen';
 import LegalModals from './components/LegalModals';
 import Logo from './components/Logo';
 import SplitText from './components/SplitText';
+import AiAgentWidget from './components/AiAgentWidget';
+import ProjectsShowcase from './components/ProjectsShowcase';
+import SkillsRadar from './components/SkillsRadar';
 import { supabase } from './services/supabaseClient';
 import { ClientRequest, ServiceType } from './types';
 
@@ -55,6 +58,8 @@ const translations = {
     nav: {
       services: "Services",
       projects: "Projects",
+      skills: "Stack & AI",
+      story: "Story",
       team: "Team",
       reviews: "Reviews",
       cta: "Let's talk",
@@ -368,7 +373,9 @@ const translations = {
     nav: {
       services: "Services",
       projects: "Projets",
-      team: "Equipe",
+      skills: "Stack & IA",
+      story: "Parcours",
+      team: "Équipe",
       reviews: "Avis",
       cta: "Nous contacter",
     },
@@ -758,6 +765,18 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
+  useEffect(() => {
     if (typeof window === 'undefined') return;
     if (window.matchMedia('(pointer: coarse)').matches) return;
     if (preferReducedMotion) return;
@@ -1051,49 +1070,107 @@ const App: React.FC = () => {
             </button>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-7">
-              <button onClick={() => scrollToSection('services')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors">{t.nav.services}</button>
-              <button onClick={() => scrollToSection('projets')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors">{t.nav.projects}</button>
-              <button onClick={() => scrollToSection('equipe')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors">{t.nav.team}</button>
-              <button onClick={() => scrollToSection('temoignages')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors">{t.nav.reviews}</button>
+            <div className="hidden lg:flex items-center space-x-6">
+              <button onClick={() => scrollToSection('projets')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.projects}</button>
+              <button onClick={() => scrollToSection('services')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.services}</button>
+              <button onClick={() => scrollToSection('skills')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.skills}</button>
+              <button onClick={() => scrollToSection('equipe')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.team}</button>
+              <button onClick={() => scrollToSection('temoignages')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.reviews}</button>
 
-              <button onClick={toggleLang} className="flex items-center gap-1 text-slate-200 hover:text-white text-xs border border-white/10 bg-white/5 hover:bg-white/10 rounded-full px-3 py-1 transition-all">
-                 <Globe className="w-3 h-3" /> {lang.toUpperCase()}
+              <button onClick={toggleLang} className="flex items-center gap-1.5 text-slate-200 hover:text-white text-xs font-mono border border-white/10 bg-white/5 hover:bg-white/10 rounded-full px-3 py-1 transition-all">
+                 <Globe className="w-3 h-3 text-cyan-300" /> {lang.toUpperCase()}
               </button>
 
               <button
                 onClick={() => scrollToSection('contact')}
-                className="glass-button px-5 py-2.5 rounded-full text-white text-sm font-semibold"
+                className="glass-button px-5 py-2 rounded-full text-white text-sm font-semibold hover:scale-105 transition-transform"
               >
                 {t.nav.cta}
               </button>
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center gap-4">
-              <button onClick={toggleLang} className="text-slate-200 font-mono text-xs">
+            <div className="lg:hidden flex items-center gap-3">
+              <button onClick={toggleLang} className="text-slate-200 font-mono text-xs border border-white/10 bg-white/5 px-2.5 py-1 rounded-full">
                  {lang.toUpperCase()}
               </button>
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white p-2" aria-label="menu">
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-white p-2 rounded-xl bg-white/5 border border-white/10 active:scale-95 transition-transform"
+                aria-label="Toggle mobile menu"
+              >
+                {isMenuOpen ? <X className="w-5 h-5 text-cyan-300" /> : <Menu className="w-5 h-5 text-slate-100" />}
               </button>
             </div>
           </div>
         </div>
-
-        {/* Mobile Menu Dropdown */}
-        {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full mt-2 bg-[#0d1117]/95 backdrop-blur-xl border border-white/10 rounded-xl p-3 shadow-xl animate-in slide-in-from-top-2">
-             <div className="flex flex-col space-y-1">
-              <button onClick={() => scrollToSection('services')} className="text-left text-slate-200 text-sm py-2.5 px-2 hover:bg-white/5 hover:text-cyan-300 rounded-lg transition-colors">{t.nav.services}</button>
-              <button onClick={() => scrollToSection('projets')} className="text-left text-slate-200 text-sm py-2.5 px-2 hover:bg-white/5 hover:text-cyan-300 rounded-lg transition-colors">{t.nav.projects}</button>
-              <button onClick={() => scrollToSection('equipe')} className="text-left text-slate-200 text-sm py-2.5 px-2 hover:bg-white/5 hover:text-cyan-300 rounded-lg transition-colors">{t.nav.team}</button>
-              <button onClick={() => scrollToSection('temoignages')} className="text-left text-slate-200 text-sm py-2.5 px-2 hover:bg-white/5 hover:text-cyan-300 rounded-lg transition-colors">{t.nav.reviews}</button>
-              <button onClick={() => scrollToSection('contact')} className="bg-cyan-500 text-slate-950 py-2.5 rounded-lg text-sm font-bold text-center shadow-md shadow-cyan-500/25">{t.nav.cta}</button>
-             </div>
-          </div>
-        )}
       </nav>
+
+      {/* Mobile Navigation Drawer Fullscreen */}
+      {isMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-[#08090d]/96 backdrop-blur-2xl flex flex-col justify-between p-5 pt-6 animate-in fade-in slide-in-from-top-3 duration-250">
+          <div>
+            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+              <Logo variant="wordmark" spaced compact />
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 active:scale-95 transition-all"
+                aria-label="Close menu"
+              >
+                <X className="w-6 h-6 text-cyan-300" />
+              </button>
+            </div>
+
+            <nav className="flex flex-col space-y-2 font-mono">
+              <button onClick={() => scrollToSection('projets')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
+                <span>{t.nav.projects}</span>
+                <ArrowRight className="w-4 h-4 text-cyan-400" />
+              </button>
+              <button onClick={() => scrollToSection('services')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
+                <span>{t.nav.services}</span>
+                <ArrowRight className="w-4 h-4 text-cyan-400" />
+              </button>
+              <button onClick={() => scrollToSection('skills')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
+                <span>{t.nav.skills}</span>
+                <ArrowRight className="w-4 h-4 text-lime-300" />
+              </button>
+              <button onClick={() => scrollToSection('equipe')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
+                <span>{t.nav.team}</span>
+                <ArrowRight className="w-4 h-4 text-slate-400" />
+              </button>
+              <button onClick={() => scrollToSection('temoignages')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
+                <span>{t.nav.reviews}</span>
+                <ArrowRight className="w-4 h-4 text-slate-400" />
+              </button>
+            </nav>
+          </div>
+
+          <div className="space-y-3 pt-4 border-t border-white/10 pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-slate-400 font-mono">Select Language / Langue</span>
+              <button onClick={toggleLang} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-cyan-400/40 bg-cyan-400/10 text-cyan-200 text-xs font-mono font-bold">
+                <Globe className="w-3.5 h-3.5" /> {lang.toUpperCase()}
+              </button>
+            </div>
+
+            <button
+              onClick={() => scrollToSection('contact')}
+              className="w-full py-3.5 bg-gradient-to-r from-cyan-400 to-lime-400 text-slate-950 rounded-xl font-bold font-mono text-center shadow-lg shadow-cyan-400/25 active:scale-98 transition-transform"
+            >
+              {t.nav.cta}
+            </button>
+
+            <a
+              href="https://wa.me/33671618119"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl border border-emerald-400/40 bg-emerald-400/10 text-emerald-200 text-xs font-mono font-bold"
+            >
+              <span>WhatsApp Direct (+33 6 71 61 81 19)</span>
+            </a>
+          </div>
+        </div>
+      )}
 
       <main className="pt-20 md:pt-28 pb-20 md:pb-0 relative z-10">
 
@@ -1169,98 +1246,11 @@ const App: React.FC = () => {
            </div>
         </section>
 
-        {/* PROJECTS SECTION */}
-        <section id="projets" className="py-9 md:py-20 relative bg-[#0d1117]/25">
-           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-             <div className="max-w-3xl mx-auto mb-6 md:mb-14 rounded-2xl md:rounded-3xl text-center">
-                <div className="text-[10px] md:text-xs text-cyan-300/80 mb-2 md:mb-3 uppercase tracking-wide">{t.projects.path}</div>
-                 <h2 className="text-xl md:text-4xl font-display font-bold text-white mb-2 md:mb-4 leading-snug">
-                    <GradientText colors={['#fff', '#22d3ee', '#fff']} animationSpeed={6}>{t.projects.title}</GradientText>
-                 </h2>
-                 <p className="text-sm md:text-base text-slate-400 md:text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed">{t.projects.subtitle}</p>
-              </div>
+        {/* ALL 8 3GEEKS PROJECTS SHOWCASE */}
+        <ProjectsShowcase lang={lang} />
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-7">
-                 {/* Project 1 */}
-                 <div className="glass-panel rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col border border-white/10 relative">
-                   <IdeBar filename={t.projects.p1.tag} variant="window" />
-                    <div className="p-4 md:p-7 relative flex flex-col flex-1">
-                      <div className="absolute top-4 right-4 -mt-2 -mr-2 w-32 h-32 bg-cyan-500/15 rounded-full blur-3xl opacity-70 transition-opacity duration-700"></div>
-                      <div className="w-12 h-12 md:w-16 md:h-16 bg-white/5 border border-cyan-400/25 rounded-xl md:rounded-2xl flex items-center justify-center shadow-md md:shadow-lg mb-3 md:mb-5 relative z-10 overflow-hidden p-2 md:p-3 backdrop-blur-md">
-                         <img src={divorceImg} alt="Express Divorce USA" loading="lazy" className="w-full h-full object-contain" />
-                      </div>
-                      <h3 className="text-lg md:text-2xl font-bold text-white mb-2 md:mb-3 relative z-10">{t.projects.p1.title}</h3>
-                      <p className="text-sm text-slate-400 md:text-slate-300 leading-relaxed mb-4 md:mb-5 relative z-10">{t.projects.p1.desc}</p>
-                      <ul className="space-y-1.5 md:space-y-2 mb-5 md:mb-8 relative z-10 flex-1">
-                        <li className="text-xs md:text-sm text-slate-200 flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 text-lime-300 flex-shrink-0" /> {t.projects.p1.result1}</li>
-                        <li className="text-xs md:text-sm text-slate-200 flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 text-lime-300 flex-shrink-0" /> {t.projects.p1.result2}</li>
-                        <li className="text-xs md:text-sm text-slate-200 flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 text-lime-300 flex-shrink-0" /> {t.projects.p1.result3}</li>
-                      </ul>
-                      <a
-                        href={t.projects.p1.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 w-full py-2.5 md:py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-cyan-400/40 rounded-lg md:rounded-xl text-sm font-semibold text-white transition-all relative z-10 group/btn"
-                      >
-                         {t.projects.p1.btn} <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                      </a>
-                    </div>
-                 </div>
-
-                 {/* Project 2 */}
-                 <div className="rounded-3xl overflow-hidden bg-gradient-to-br from-cyan-500/12 via-[#0d1117]/88 to-lime-500/10 backdrop-blur-2xl border border-cyan-400/35 flex flex-col transition-all duration-500 shadow-[0_18px_50px_-25px_rgba(34,211,238,0.45)] relative z-10">
-                    <IdeBar filename={t.projects.p2.tag} accent="lime" variant="window" />
-                    <div className="p-4 md:p-7 relative flex flex-col flex-1">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 w-32 h-32 bg-lime-400/20 rounded-full blur-3xl opacity-60"></div>
-                      <div className="w-12 h-12 md:w-16 md:h-16 bg-white/15 border border-white/25 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-5 relative z-10 shadow-lg md:shadow-xl overflow-hidden p-1">
-                         <img src={callKitchenImg} alt="CallKitchen" loading="lazy" className="w-full h-full object-cover rounded-lg md:rounded-xl" />
-                      </div>
-                      <h3 className="text-lg md:text-2xl font-bold text-white mb-2 md:mb-3 relative z-10">{t.projects.p2.title}</h3>
-                      <p className="text-sm text-slate-300 md:text-slate-200 leading-relaxed mb-4 md:mb-5 relative z-10">{t.projects.p2.desc}</p>
-                      <ul className="space-y-1.5 md:space-y-2 mb-5 md:mb-8 relative z-10 flex-1">
-                        <li className="text-xs md:text-sm text-slate-100 flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 text-lime-300 flex-shrink-0" /> {t.projects.p2.result1}</li>
-                        <li className="text-xs md:text-sm text-slate-100 flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 text-lime-300 flex-shrink-0" /> {t.projects.p2.result2}</li>
-                        <li className="text-xs md:text-sm text-slate-100 flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 text-lime-300 flex-shrink-0" /> {t.projects.p2.result3}</li>
-                      </ul>
-                      <a
-                        href={t.projects.p2.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 w-full py-2.5 md:py-3.5 bg-cyan-400 hover:bg-cyan-300 text-slate-950 rounded-lg md:rounded-xl text-sm font-semibold shadow-md md:shadow-lg shadow-cyan-500/25 transition-all relative z-10 group/btn"
-                      >
-                         {t.projects.p2.btn} <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                      </a>
-                    </div>
-                 </div>
-
-                 {/* Project 3 */}
-                 <div className="glass-panel rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col border border-white/10 relative">
-                    <IdeBar filename={t.projects.p3.tag} variant="window" />
-                    <div className="p-4 md:p-7 relative flex flex-col flex-1">
-                      <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-32 h-32 bg-violet-500/15 rounded-full blur-3xl opacity-70 transition-opacity duration-700"></div>
-                      <div className="w-12 h-12 md:w-16 md:h-16 bg-violet-500/10 border border-violet-400/25 rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm mb-3 md:mb-5 relative z-10 overflow-hidden p-1">
-                         <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/8a/87/0f/8a870f74-5c66-359c-2901-e2fd674575f7/Placeholder.mill/400x400bb-75.webp" alt="Two App" loading="lazy" className="w-full h-full object-cover rounded-lg md:rounded-xl" />
-                      </div>
-                      <h3 className="text-lg md:text-2xl font-bold text-white mb-2 md:mb-3 relative z-10">{t.projects.p3.title}</h3>
-                      <p className="text-sm text-slate-400 md:text-slate-300 leading-relaxed mb-4 md:mb-5 relative z-10">{t.projects.p3.desc}</p>
-                      <ul className="space-y-1.5 md:space-y-2 mb-5 md:mb-8 relative z-10 flex-1">
-                        <li className="text-xs md:text-sm text-slate-200 flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 text-lime-300 flex-shrink-0" /> {t.projects.p3.result1}</li>
-                        <li className="text-xs md:text-sm text-slate-200 flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 text-lime-300 flex-shrink-0" /> {t.projects.p3.result2}</li>
-                        <li className="text-xs md:text-sm text-slate-200 flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 text-lime-300 flex-shrink-0" /> {t.projects.p3.result3}</li>
-                      </ul>
-                      <a
-                        href={t.projects.p3.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 w-full py-2.5 md:py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-violet-400/40 rounded-lg md:rounded-xl text-sm font-semibold text-white transition-all relative z-10 group/btn"
-                      >
-                         {t.projects.p3.btn} <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                      </a>
-                    </div>
-                 </div>
-              </div>
-           </div>
-        </section>
+        {/* SKILLS & STACK MATRIX */}
+        <SkillsRadar lang={lang} />
 
         {/* OPEN SOURCE PROJECTS */}
         <section className="py-10 md:py-24 relative bg-[#0d1117]/25">
@@ -1605,80 +1595,96 @@ const App: React.FC = () => {
            </div>
         </section>
 
-        {/* TEAM SECTION */}
-        <section id="equipe" className="py-10 md:py-20 relative bg-[#0d1117]/25">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto mb-8 md:mb-16 bg-[#0d1117]/40 backdrop-blur-xl border border-white/5 p-5 md:p-8 rounded-2xl md:rounded-3xl text-center shadow-lg md:shadow-2xl">
-              <div className="text-[10px] md:text-xs font-mono text-cyan-300/80 mb-1 md:mb-2">{t.team.path}</div>
-              <h2 className="text-xl md:text-4xl font-display font-bold text-white mb-2 md:mb-4 leading-snug">{t.team.title}</h2>
-              <p className="text-sm text-slate-400 md:text-slate-300 max-w-2xl mx-auto leading-relaxed">{t.team.subtitle}</p>
+        {/* TEAM SECTION (TRIO SYNERGY) */}
+        <section id="equipe" className="py-10 md:py-24 relative bg-[#0d1117]/50 border-t border-white/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="max-w-3xl mx-auto mb-8 md:mb-16 bg-[#0d1117]/60 backdrop-blur-xl border border-white/10 p-6 md:p-8 rounded-3xl text-center shadow-2xl">
+              <div className="text-[10px] md:text-xs font-mono text-cyan-300 mb-2 uppercase tracking-widest">{t.team.path}</div>
+              <h2 className="text-2xl md:text-4xl font-display font-bold text-white mb-3 leading-snug">{t.team.title}</h2>
+              <p className="text-sm md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-medium">
+                {lang === 'fr'
+                  ? 'Trois fondateurs associés, une complémentarité idéale : Design produit d’exception, Ingénierie Cloud/IA certifiée AWS et Relation client directe.'
+                  : 'Three co-founders, perfect synergy: Premium product design, AWS-certified Cloud/AI engineering, and direct client execution.'}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
 
               {/* Member 1: Elias */}
-              <div className="glass-panel rounded-xl md:rounded-2xl overflow-hidden hover:bg-[#0d1117]/85 transition-all duration-300 group text-center flex flex-col md:hover:scale-[1.02] md:hover:shadow-[0_20px_40px_-10px_rgba(34,211,238,0.4)]">
-                 <IdeBar filename={t.team.roles.elias} />
-                 <div className="p-4 md:p-6 flex flex-col items-center">
-                   <div className="relative w-24 h-24 md:w-28 md:h-28 mb-4 md:mb-6 md:group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-cyan-400/50 shadow-md md:shadow-[0_0_20px_rgba(34,211,238,0.3)]">
+              <div className="glass-panel rounded-3xl overflow-hidden hover:border-cyan-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-cyan-500/10">
+                 <IdeBar filename="Elias Elloumi · Design & UI/UX" accent="cyan" />
+                 <div className="p-6 md:p-8 flex flex-col items-center flex-1">
+                   <div className="relative w-28 h-28 md:w-32 md:h-32 mb-5 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-cyan-400/50 shadow-xl shadow-cyan-500/20">
                       <img
                         src={eliasImg}
-                        alt="Elias Eloumi"
+                        alt="Elias Elloumi"
                         className="w-full h-full rounded-full object-cover"
                         loading="lazy"
                       />
                    </div>
-                  <h3 className="text-lg md:text-xl font-bold text-white">Elias Eloumi</h3>
-                  <p className="text-cyan-300 text-[10px] md:text-xs mb-3 md:mb-4 flex items-center gap-1 justify-center"><Sparkles className="w-3 h-3 shrink-0" />{t.team.roles.elias}</p>
-                   <p className="text-slate-400 md:text-slate-300 text-xs md:text-sm mb-4 md:mb-6 max-w-xs leading-relaxed">{t.team.roles.eliasDesc}</p>
+                   <h3 className="text-xl font-bold text-white mb-1">Elias Elloumi</h3>
+                   <span className="text-cyan-300 text-xs font-mono mb-3 inline-flex items-center gap-1">
+                     <Sparkles className="w-3.5 h-3.5" /> Lead Product & Experience
+                   </span>
+                   <p className="text-slate-300 text-xs md:text-sm mb-6 leading-relaxed flex-1">
+                     {lang === 'fr'
+                       ? 'Spécialiste UI/UX et front-end réactif (ECE Paris). Il transforme des concepts complexes en interfaces claires, rapides et intuitives qui convertissent vos visiteurs.'
+                       : 'Product Design & React specialist (ECE Paris). He transforms complex ideas into clean, fast, and high-converting user interfaces.'}
+                   </p>
                    <a
                      href="https://www.linkedin.com/in/elias-eloumi/"
                      target="_blank"
                      rel="noopener noreferrer"
-                    className="mt-auto inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-sky-600 hover:bg-sky-500 rounded-lg md:rounded-xl text-white text-xs md:text-sm font-semibold transition-colors"
+                     className="mt-auto inline-flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-500 rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
                    >
-                    <svg viewBox="0 0 100 100" className="w-5 h-5 shrink-0 fill-neutral-50">
+                    <svg viewBox="0 0 100 100" className="w-4 h-4 shrink-0 fill-neutral-50">
                        <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,100,92.79V7.21A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
                      </svg>
-                    <span>Elias Eloumi</span>
+                    <span>Profil LinkedIn</span>
                    </a>
                  </div>
               </div>
 
               {/* Member 2: Noam */}
-              <div className="glass-panel rounded-xl md:rounded-2xl overflow-hidden hover:bg-[#0d1117]/85 transition-all duration-300 group text-center flex flex-col md:hover:scale-[1.02] md:hover:shadow-[0_20px_40px_-10px_rgba(163,230,53,0.4)]">
-                 <IdeBar filename={t.team.roles.noam} accent="lime" />
-                 <div className="p-4 md:p-6 flex flex-col items-center">
-                   <div className="relative w-24 h-24 md:w-28 md:h-28 mb-4 md:mb-6 md:group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-lime-400/50 shadow-md md:shadow-[0_0_20px_rgba(163,230,53,0.3)]">
+              <div className="glass-panel rounded-3xl overflow-hidden hover:border-lime-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-lime-500/10">
+                 <IdeBar filename="Noam Leclapart · Cloud & GenAI" accent="lime" />
+                 <div className="p-6 md:p-8 flex flex-col items-center flex-1">
+                   <div className="relative w-28 h-28 md:w-32 md:h-32 mb-5 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-lime-400/50 shadow-xl shadow-lime-500/20">
                       <img
                         src={noamImg}
-                        alt="Noam Leclappart"
+                        alt="Noam Leclapart-Jublot"
                         className="w-full h-full rounded-full object-cover"
                         loading="lazy"
                       />
                    </div>
-                  <h3 className="text-lg md:text-xl font-bold text-white">Noam Leclappart</h3>
-                  <p className="text-lime-300 text-[10px] md:text-xs mb-3 md:mb-4 flex items-center gap-1 justify-center"><Database className="w-3 h-3 shrink-0" />{t.team.roles.noam}</p>
-                   <p className="text-slate-400 md:text-slate-300 text-xs md:text-sm mb-4 md:mb-6 max-w-xs leading-relaxed">{t.team.roles.noamDesc}</p>
+                   <h3 className="text-xl font-bold text-white mb-1">Noam Leclapart-Jublot</h3>
+                   <span className="text-lime-300 text-xs font-mono mb-3 inline-flex items-center gap-1">
+                     <Database className="w-3.5 h-3.5" /> Lead Cloud & IA (Certifié AWS)
+                   </span>
+                   <p className="text-slate-300 text-xs md:text-sm mb-6 leading-relaxed flex-1">
+                     {lang === 'fr'
+                       ? 'Ingénieur en IA générative chez Thales et diplômé certifié AWS Cloud (ECE Paris). Il conçoit des infrastructures hautement sécurisées, des bases de données et des automatisations IA.'
+                       : 'Generative AI Engineer at Thales & AWS Certified Cloud Graduate (ECE Paris). He architects secure cloud infrastructures, database pipelines, and AI automations.'}
+                   </p>
                    <a
                      href="https://www.linkedin.com/in/noam-leclapart-jublot/"
                      target="_blank"
                      rel="noopener noreferrer"
-                    className="mt-auto inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-sky-600 hover:bg-sky-500 rounded-lg md:rounded-xl text-white text-xs md:text-sm font-semibold transition-colors"
+                     className="mt-auto inline-flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-500 rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
                    >
-                    <svg viewBox="0 0 100 100" className="w-5 h-5 shrink-0 fill-neutral-50">
+                    <svg viewBox="0 0 100 100" className="w-4 h-4 shrink-0 fill-neutral-50">
                        <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,100,92.79V7.21A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
                      </svg>
-                    <span>Noam Leclappart</span>
+                    <span>Profil LinkedIn</span>
                    </a>
                  </div>
               </div>
 
                {/* Member 3: Charles */}
-              <div className="glass-panel rounded-xl md:rounded-2xl overflow-hidden hover:bg-[#0d1117]/85 transition-all duration-300 group text-center flex flex-col md:hover:scale-[1.02] md:hover:shadow-[0_20px_40px_-10px_rgba(167,139,250,0.4)]">
-                 <IdeBar filename={t.team.roles.charles} />
-                 <div className="p-4 md:p-6 flex flex-col items-center">
-                   <div className="relative w-24 h-24 md:w-28 md:h-28 mb-4 md:mb-6 md:group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-violet-400/50 shadow-md md:shadow-[0_0_20px_rgba(167,139,250,0.3)]">
+              <div className="glass-panel rounded-3xl overflow-hidden hover:border-violet-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-violet-500/10">
+                 <IdeBar filename="Charles Garbus · Business & Ops" accent="cyan" />
+                 <div className="p-6 md:p-8 flex flex-col items-center flex-1">
+                   <div className="relative w-28 h-28 md:w-32 md:h-32 mb-5 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-violet-400/50 shadow-xl shadow-violet-500/20">
                       <img
                         src={charlesImg}
                         alt="Charles Garbus"
@@ -1686,19 +1692,25 @@ const App: React.FC = () => {
                         loading="lazy"
                       />
                    </div>
-                  <h3 className="text-lg md:text-xl font-bold text-white">Charles Garbus</h3>
-                  <p className="text-violet-300 text-[10px] md:text-xs mb-3 md:mb-4 flex items-center gap-1 justify-center"><Users className="w-3 h-3 shrink-0" />{t.team.roles.charles}</p>
-                   <p className="text-slate-400 md:text-slate-300 text-xs md:text-sm mb-4 md:mb-6 max-w-xs leading-relaxed">{t.team.roles.charlesDesc}</p>
+                   <h3 className="text-xl font-bold text-white mb-1">Charles Garbus</h3>
+                   <span className="text-violet-300 text-xs font-mono mb-3 inline-flex items-center gap-1">
+                     <Users className="w-3.5 h-3.5" /> Business & Relation Client
+                   </span>
+                   <p className="text-slate-300 text-xs md:text-sm mb-6 leading-relaxed flex-1">
+                     {lang === 'fr'
+                       ? 'Tech Entrepreneur bilingue Anglais/Français (ECE Paris & CFBL Londres). Il gère la relation client directe, le cadrage des projets et s\'assure du respect des livrables sous 24h.'
+                       : 'Bilingual Tech Entrepreneur (ECE Paris & CFBL London). He leads client relations, business framing, and ensures 24h rapid response for every project.'}
+                   </p>
                    <a
                      href="https://www.linkedin.com/in/charlesgarbus/"
                      target="_blank"
                      rel="noopener noreferrer"
-                    className="mt-auto inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-sky-600 hover:bg-sky-500 rounded-lg md:rounded-xl text-white text-xs md:text-sm font-semibold transition-colors"
+                     className="mt-auto inline-flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-500 rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
                    >
-                    <svg viewBox="0 0 100 100" className="w-5 h-5 shrink-0 fill-neutral-50">
+                    <svg viewBox="0 0 100 100" className="w-4 h-4 shrink-0 fill-neutral-50">
                        <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,100,92.79V7.21A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
                      </svg>
-                    <span>Charles Garbus</span>
+                    <span>Profil LinkedIn</span>
                    </a>
                  </div>
               </div>
@@ -1923,14 +1935,19 @@ const App: React.FC = () => {
            </div>
         </section>
 
-        <div className="md:hidden fixed bottom-3 left-3 right-3 z-40 pb-[env(safe-area-inset-bottom)]">
+        {/* Sleek Mobile Floating Action Bar */}
+        <div className="lg:hidden fixed bottom-4 left-4 z-40">
           <button
             onClick={() => scrollToSection('contact')}
-            className="w-full py-2.5 text-sm bg-cyan-400 text-slate-950 rounded-lg font-semibold shadow-md shadow-cyan-500/25"
+            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-cyan-400 to-lime-400 text-slate-950 rounded-full text-xs font-mono font-bold shadow-xl shadow-cyan-500/20 backdrop-blur-md border border-cyan-300/40 active:scale-95 transition-all"
           >
-            {t.nav.cta}
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>{t.nav.cta}</span>
           </button>
         </div>
+
+        {/* AI Agent Assistant */}
+        <AiAgentWidget lang={lang} onNavigateSection={scrollToSection} />
 
         {/* Booking Modal */}
         <Suspense fallback={null}>
