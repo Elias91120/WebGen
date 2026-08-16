@@ -1596,25 +1596,25 @@ const App: React.FC = () => {
         </section>
 
         {/* TEAM SECTION (TRIO SYNERGY) */}
-        <section id="equipe" className="py-10 md:py-24 relative bg-[#0d1117]/50 border-t border-white/5">
+        <section id="equipe" className="py-8 md:py-24 relative bg-[#0d1117]/50 border-t border-white/5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="max-w-3xl mx-auto mb-8 md:mb-16 bg-[#0d1117]/60 backdrop-blur-xl border border-white/10 p-6 md:p-8 rounded-3xl text-center shadow-2xl">
-              <div className="text-[10px] md:text-xs font-mono text-cyan-300 mb-2 uppercase tracking-widest">{t.team.path}</div>
-              <h2 className="text-2xl md:text-4xl font-display font-bold text-white mb-3 leading-snug">{t.team.title}</h2>
-              <p className="text-sm md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-medium">
+            <div className="max-w-3xl mx-auto mb-6 md:mb-16 bg-[#0d1117]/60 backdrop-blur-xl border border-white/10 p-4 md:p-8 rounded-2xl md:rounded-3xl text-center shadow-2xl">
+              <div className="text-[10px] md:text-xs font-mono text-cyan-300 mb-1 md:mb-2 uppercase tracking-widest">{t.team.path}</div>
+              <h2 className="text-xl md:text-4xl font-display font-bold text-white mb-2 md:mb-3 leading-snug">{t.team.title}</h2>
+              <p className="text-xs md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-medium">
                 {lang === 'fr'
-                  ? 'Trois fondateurs associés, une complémentarité idéale : Design produit d’exception, Ingénierie Cloud/IA certifiée AWS et Relation client directe.'
-                  : 'Three co-founders, perfect synergy: Premium product design, AWS-certified Cloud/AI engineering, and direct client execution.'}
+                  ? 'Trois fondateurs associés : Design produit d’exception, Ingénierie Cloud/IA certifiée AWS et Relation client directe.'
+                  : 'Three co-founders: Premium product design, AWS-certified Cloud/AI engineering, and direct client execution.'}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
 
               {/* Member 1: Elias */}
-              <div className="glass-panel rounded-3xl overflow-hidden hover:border-cyan-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-cyan-500/10">
+              <div className="glass-panel rounded-2xl md:rounded-3xl overflow-hidden hover:border-cyan-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-cyan-500/10">
                  <IdeBar filename="Elias Elloumi · Design & UI/UX" accent="cyan" />
-                 <div className="p-6 md:p-8 flex flex-col items-center flex-1">
-                   <div className="relative w-28 h-28 md:w-32 md:h-32 mb-5 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-cyan-400/50 shadow-xl shadow-cyan-500/20">
+                 <div className="p-4 md:p-8 flex flex-col items-center flex-1">
+                   <div className="relative w-20 h-20 md:w-32 md:h-32 mb-3 md:mb-5 group-hover:scale-105 transition-transform p-0.5 md:p-1 rounded-full border-2 border-cyan-400/50 shadow-lg md:shadow-xl shadow-cyan-500/20">
                       <img
                         src={eliasImg}
                         alt="Elias Elloumi"
@@ -1622,34 +1622,34 @@ const App: React.FC = () => {
                         loading="lazy"
                       />
                    </div>
-                   <h3 className="text-xl font-bold text-white mb-1">Elias Elloumi</h3>
-                   <span className="text-cyan-300 text-xs font-mono mb-3 inline-flex items-center gap-1">
-                     <Sparkles className="w-3.5 h-3.5" /> Lead Product & Experience
+                   <h3 className="text-lg md:text-xl font-bold text-white mb-0.5 md:mb-1">Elias Elloumi</h3>
+                   <span className="text-cyan-300 text-[11px] md:text-xs font-mono mb-2 md:mb-3 inline-flex items-center gap-1">
+                     <Sparkles className="w-3 h-3 md:w-3.5 md:h-3.5" /> Lead Product & Experience
                    </span>
-                   <p className="text-slate-300 text-xs md:text-sm mb-6 leading-relaxed flex-1">
+                   <p className="text-slate-300 text-xs md:text-sm mb-4 md:mb-6 leading-relaxed flex-1">
                      {lang === 'fr'
-                       ? 'Spécialiste UI/UX et front-end réactif (ECE Paris). Il transforme des concepts complexes en interfaces claires, rapides et intuitives qui convertissent vos visiteurs.'
+                       ? 'Spécialiste UI/UX et front-end réactif (ECE Paris). Il transforme des concepts complexes en interfaces claires et rapides qui convertissent.'
                        : 'Product Design & React specialist (ECE Paris). He transforms complex ideas into clean, fast, and high-converting user interfaces.'}
                    </p>
                    <a
                      href="https://www.linkedin.com/in/elias-eloumi/"
                      target="_blank"
                      rel="noopener noreferrer"
-                     className="mt-auto inline-flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-500 rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
+                     className="mt-auto inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-sky-600 hover:bg-sky-500 rounded-lg md:rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
                    >
-                    <svg viewBox="0 0 100 100" className="w-4 h-4 shrink-0 fill-neutral-50">
-                       <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,100,92.79V7.21A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
+                    <svg viewBox="0 0 100 100" className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 fill-neutral-50">
+                       <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
                      </svg>
-                    <span>Profil LinkedIn</span>
+                    <span>LinkedIn</span>
                    </a>
                  </div>
               </div>
 
               {/* Member 2: Noam */}
-              <div className="glass-panel rounded-3xl overflow-hidden hover:border-lime-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-lime-500/10">
+              <div className="glass-panel rounded-2xl md:rounded-3xl overflow-hidden hover:border-lime-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-lime-500/10">
                  <IdeBar filename="Noam Leclapart · Cloud & GenAI" accent="lime" />
-                 <div className="p-6 md:p-8 flex flex-col items-center flex-1">
-                   <div className="relative w-28 h-28 md:w-32 md:h-32 mb-5 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-lime-400/50 shadow-xl shadow-lime-500/20">
+                 <div className="p-4 md:p-8 flex flex-col items-center flex-1">
+                   <div className="relative w-20 h-20 md:w-32 md:h-32 mb-3 md:mb-5 group-hover:scale-105 transition-transform p-0.5 md:p-1 rounded-full border-2 border-lime-400/50 shadow-lg md:shadow-xl shadow-lime-500/20">
                       <img
                         src={noamImg}
                         alt="Noam Leclapart-Jublot"
@@ -1657,34 +1657,34 @@ const App: React.FC = () => {
                         loading="lazy"
                       />
                    </div>
-                   <h3 className="text-xl font-bold text-white mb-1">Noam Leclapart-Jublot</h3>
-                   <span className="text-lime-300 text-xs font-mono mb-3 inline-flex items-center gap-1">
-                     <Database className="w-3.5 h-3.5" /> Lead Cloud & IA (Certifié AWS)
+                   <h3 className="text-lg md:text-xl font-bold text-white mb-0.5 md:mb-1">Noam Leclapart-Jublot</h3>
+                   <span className="text-lime-300 text-[11px] md:text-xs font-mono mb-2 md:mb-3 inline-flex items-center gap-1">
+                     <Database className="w-3 h-3 md:w-3.5 md:h-3.5" /> Lead Cloud & IA (Certifié AWS)
                    </span>
-                   <p className="text-slate-300 text-xs md:text-sm mb-6 leading-relaxed flex-1">
+                   <p className="text-slate-300 text-xs md:text-sm mb-4 md:mb-6 leading-relaxed flex-1">
                      {lang === 'fr'
-                       ? 'Ingénieur en IA générative chez Thales et diplômé certifié AWS Cloud (ECE Paris). Il conçoit des infrastructures hautement sécurisées, des bases de données et des automatisations IA.'
-                       : 'Generative AI Engineer at Thales & AWS Certified Cloud Graduate (ECE Paris). He architects secure cloud infrastructures, database pipelines, and AI automations.'}
+                       ? 'Ingénieur en IA générative chez Thales et diplômé certifié AWS Cloud (ECE Paris). Il conçoit des infrastructures sécurisées et automatisations IA.'
+                       : 'Generative AI Engineer at Thales & AWS Certified Cloud Graduate (ECE Paris). He architects secure cloud infrastructures and AI automations.'}
                    </p>
                    <a
                      href="https://www.linkedin.com/in/noam-leclapart-jublot/"
                      target="_blank"
                      rel="noopener noreferrer"
-                     className="mt-auto inline-flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-500 rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
+                     className="mt-auto inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-sky-600 hover:bg-sky-500 rounded-lg md:rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
                    >
-                    <svg viewBox="0 0 100 100" className="w-4 h-4 shrink-0 fill-neutral-50">
-                       <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,100,92.79V7.21A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
+                    <svg viewBox="0 0 100 100" className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 fill-neutral-50">
+                       <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
                      </svg>
-                    <span>Profil LinkedIn</span>
+                    <span>LinkedIn</span>
                    </a>
                  </div>
               </div>
 
                {/* Member 3: Charles */}
-              <div className="glass-panel rounded-3xl overflow-hidden hover:border-violet-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-violet-500/10">
+              <div className="glass-panel rounded-2xl md:rounded-3xl overflow-hidden hover:border-violet-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-violet-500/10">
                  <IdeBar filename="Charles Garbus · Business & Ops" accent="cyan" />
-                 <div className="p-6 md:p-8 flex flex-col items-center flex-1">
-                   <div className="relative w-28 h-28 md:w-32 md:h-32 mb-5 group-hover:scale-105 transition-transform p-1 rounded-full border-2 border-violet-400/50 shadow-xl shadow-violet-500/20">
+                 <div className="p-4 md:p-8 flex flex-col items-center flex-1">
+                   <div className="relative w-20 h-20 md:w-32 md:h-32 mb-3 md:mb-5 group-hover:scale-105 transition-transform p-0.5 md:p-1 rounded-full border-2 border-violet-400/50 shadow-lg md:shadow-xl shadow-violet-500/20">
                       <img
                         src={charlesImg}
                         alt="Charles Garbus"
@@ -1692,25 +1692,25 @@ const App: React.FC = () => {
                         loading="lazy"
                       />
                    </div>
-                   <h3 className="text-xl font-bold text-white mb-1">Charles Garbus</h3>
-                   <span className="text-violet-300 text-xs font-mono mb-3 inline-flex items-center gap-1">
-                     <Users className="w-3.5 h-3.5" /> Business & Relation Client
+                   <h3 className="text-lg md:text-xl font-bold text-white mb-0.5 md:mb-1">Charles Garbus</h3>
+                   <span className="text-violet-300 text-[11px] md:text-xs font-mono mb-2 md:mb-3 inline-flex items-center gap-1">
+                     <Users className="w-3 h-3 md:w-3.5 md:h-3.5" /> Business & Relation Client
                    </span>
-                   <p className="text-slate-300 text-xs md:text-sm mb-6 leading-relaxed flex-1">
+                   <p className="text-slate-300 text-xs md:text-sm mb-4 md:mb-6 leading-relaxed flex-1">
                      {lang === 'fr'
-                       ? 'Tech Entrepreneur bilingue Anglais/Français (ECE Paris & CFBL Londres). Il gère la relation client directe, le cadrage des projets et s\'assure du respect des livrables sous 24h.'
-                       : 'Bilingual Tech Entrepreneur (ECE Paris & CFBL London). He leads client relations, business framing, and ensures 24h rapid response for every project.'}
+                       ? 'Tech Entrepreneur bilingue Anglais/Français (ECE Paris & CFBL Londres). Il gère la relation client directe et s\'assure du respect des livrables sous 24h.'
+                       : 'Bilingual Tech Entrepreneur (ECE Paris & CFBL London). He leads client relations and ensures 24h rapid response for every project.'}
                    </p>
                    <a
                      href="https://www.linkedin.com/in/charlesgarbus/"
                      target="_blank"
                      rel="noopener noreferrer"
-                     className="mt-auto inline-flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-500 rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
+                     className="mt-auto inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-sky-600 hover:bg-sky-500 rounded-lg md:rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
                    >
-                    <svg viewBox="0 0 100 100" className="w-4 h-4 shrink-0 fill-neutral-50">
-                       <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,100,92.79V7.21A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
+                    <svg viewBox="0 0 100 100" className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 fill-neutral-50">
+                       <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
                      </svg>
-                    <span>Profil LinkedIn</span>
+                    <span>LinkedIn</span>
                    </a>
                  </div>
               </div>
