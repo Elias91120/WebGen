@@ -50,6 +50,8 @@ import noamImg from './assets/images/Noam.jpeg';
 import charlesImg from './assets/images/Charles.jpeg';
 import callKitchenImg from './assets/images/CallKitchen.jpeg';
 import divorceImg from './assets/images/divorce.png';
+import promptHubImg from './assets/images/prompt-hub.png';
+import promptOptimImg from './assets/images/prompt-optim.png';
 
 type Lang = 'en' | 'fr';
 
@@ -126,7 +128,7 @@ const translations = {
         point1: "More precise prompts with fewer tokens",
         point2: "CO2 impact estimation per request",
         point3: "European models and GDPR-first positioning",
-        link: "https://frontend-prompt-optim.vercel.app/",
+        link: "https://prompt-optim.3geeks.fr/",
         btn: "Open PromptOptim"
       },
       p2: {
@@ -441,7 +443,7 @@ const translations = {
         point1: "Prompts plus précis avec moins de tokens",
         point2: "Estimation CO2 par requête",
         point3: "Positionnement modèles européens et RGPD",
-        link: "https://frontend-prompt-optim.vercel.app/",
+        link: "https://prompt-optim.3geeks.fr/",
         btn: "Ouvrir PromptOptim"
       },
       p2: {
@@ -721,10 +723,11 @@ const IdeBar: React.FC<{ filename: string; accent?: string; variant?: 'badge' | 
 };
 
 const PromptHubMark: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <div className={`relative flex items-center justify-center rounded-[1.35rem] border border-emerald-200/35 bg-gradient-to-br from-emerald-300 via-emerald-400 to-emerald-600 text-[#06110b] shadow-[0_18px_45px_-20px_rgba(52,211,153,0.9)] ${className}`}>
-    <Sparkles className="h-8 w-8 stroke-[2.4]" />
-    <span className="absolute right-4 top-4 text-lg font-black leading-none">+</span>
-  </div>
+  <img
+    src={promptHubImg}
+    alt="Prompt Hub"
+    className={`rounded-[1.35rem] object-contain shadow-[0_18px_45px_-20px_rgba(52,211,153,0.9)] ${className}`}
+  />
 );
 
 const App: React.FC = () => {
@@ -1233,7 +1236,7 @@ const App: React.FC = () => {
              <div className="max-w-5xl mx-auto mt-4 md:mt-8 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
                {[
                  { n: '03', l: t.stats.founders },
-                 { n: '03', l: t.stats.projects },
+                 { n: '05', l: t.stats.projects },
                  { n: '24h', l: t.stats.response },
                  { n: '100%', l: t.stats.french },
                ].map((s, i) => (
@@ -1349,7 +1352,7 @@ const App: React.FC = () => {
                       <span className="h-2.5 w-2.5 rounded-full bg-amber-300/65" />
                       <span className="h-2.5 w-2.5 rounded-full bg-emerald-300/65" />
                     </div>
-                    <span className="hidden sm:inline text-xs font-mono text-slate-500">promptoptim.app</span>
+                    <span className="hidden sm:inline text-xs font-mono text-slate-500">prompt-optim.3geeks.fr</span>
                   </div>
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/20 bg-emerald-300/[0.06] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-200/85">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-300/80" />
@@ -1359,9 +1362,11 @@ const App: React.FC = () => {
 
                 <div className="flex flex-1 flex-col p-4 md:p-7">
                   <div className="mb-4 md:mb-5 flex items-center gap-3 md:gap-4">
-                    <div className="relative flex h-11 w-11 md:h-14 md:w-14 shrink-0 items-center justify-center rounded-xl md:rounded-2xl border border-emerald-300/30 bg-gradient-to-br from-emerald-300/20 to-emerald-500/10 text-emerald-200 shadow-md md:shadow-[0_8px_24px_-12px_rgba(52,211,153,0.6)]">
-                      <Leaf className="h-5 w-5 md:h-6 md:w-6" />
-                    </div>
+                    <img
+                      src={promptOptimImg}
+                      alt="PromptOptim"
+                      className="h-11 w-11 md:h-14 md:w-14 shrink-0 rounded-xl md:rounded-2xl object-contain shadow-md md:shadow-[0_8px_24px_-12px_rgba(52,211,153,0.6)]"
+                    />
                     <div className="min-w-0">
                       <div className="mb-0.5 md:mb-1 text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300/80">
                         {t.openSource.p1.tag}

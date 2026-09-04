@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useId } from 'react';
 
 type LogoVariant = 'mark' | 'wordmark' | 'full';
 
@@ -14,35 +14,40 @@ interface LogoProps {
  * Razor-sharp SVG Vector Mark for 3geeks.
  * Smooth gradient cyan-to-lime '3' symbol.
  */
-export const Mark: React.FC<{ className?: string }> = ({ className = 'h-10 w-auto' }) => (
-  <svg
-    viewBox="0 0 100 100"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={`block shrink-0 ${className}`}
-    aria-hidden="true"
-  >
-    <defs>
-      <linearGradient id="markGradient3g" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#a3e635" />
-        <stop offset="50%" stopColor="#22d3ee" />
-        <stop offset="100%" stopColor="#818cf8" />
-      </linearGradient>
-      <filter id="markGlow3g" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#22d3ee" floodOpacity="0.35" />
-      </filter>
-    </defs>
-    {/* Stylized ribbon '3' */}
-    <path
-      d="M20 22 C35 14, 75 14, 80 28 C85 40, 55 48, 42 48 C60 48, 86 54, 82 74 C77 92, 30 90, 18 80"
-      stroke="url(#markGradient3g)"
-      strokeWidth="14"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      filter="url(#markGlow3g)"
-    />
-  </svg>
-);
+export const Mark: React.FC<{ className?: string }> = ({ className = 'h-10 w-auto' }) => {
+  const uid = useId().replace(/:/g, '');
+  const gradId = `${uid}Gradient`;
+  const glowId = `${uid}Glow`;
+
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`block shrink-0 ${className}`}
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#a3e635" />
+          <stop offset="50%" stopColor="#22d3ee" />
+          <stop offset="100%" stopColor="#818cf8" />
+        </linearGradient>
+        <filter id={glowId} x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#22d3ee" floodOpacity="0.35" />
+        </filter>
+      </defs>
+      <path
+        d="M20 22 C35 14, 75 14, 80 28 C85 40, 55 48, 42 48 C60 48, 86 54, 82 74 C77 92, 30 90, 18 80"
+        stroke={`url(#${gradId})`}
+        strokeWidth="14"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        filter={`url(#${glowId})`}
+      />
+    </svg>
+  );
+};
 
 const Logo = memo(function Logo({
   variant = 'wordmark',

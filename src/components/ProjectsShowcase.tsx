@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { ExternalLink, CheckCircle2, Layers } from 'lucide-react';
 import GradientText from './GradientText';
+import { Mark } from './Logo';
 
 import callKitchenImg from '../assets/images/CallKitchen.jpeg';
 import divorceImg from '../assets/images/divorce.png';
+import vipagenceImg from '../assets/images/vipagence.jpg';
+import greenJardinImg from '../assets/images/green-jardin.png';
+import promptHubImg from '../assets/images/prompt-hub.png';
+import promptOptimImg from '../assets/images/prompt-optim.png';
 
 interface ProjectsShowcaseProps {
   lang: 'en' | 'fr';
@@ -24,6 +29,9 @@ export interface ProjectItem {
   btnText: { fr: string; en: string };
   statsBadge?: string;
   image?: string;
+  imageFit?: 'cover' | 'contain';
+  imageBg?: 'light' | 'dark';
+  useStudioMark?: boolean;
 }
 
 export const PROJECTS_DATA: ProjectItem[] = [
@@ -46,6 +54,26 @@ export const PROJECTS_DATA: ProjectItem[] = [
     btnText: { fr: 'Ouvrir le projet', en: 'Open project' },
     statsBadge: 'Live in prod',
     image: divorceImg
+  },
+  {
+    id: 'vipagence',
+    category: 'client',
+    title: 'Vipagence',
+    subtitle: 'vipagence.net',
+    badge: 'Plateforme web · 3geeks',
+    description: {
+      fr: 'Site vitrine et parcours d’inscription pour une agence qui relie créateurs UGC, clippers et marques. Conçu et développé par 3geeks — le site, pas le casting.',
+      en: 'Marketing site and sign-up flows for an agency connecting UGC creators, clippers and brands. Designed and built by 3geeks — the website, not the roster.'
+    },
+    highlights: {
+      fr: ['Vitrine + parcours créateur / clipper', 'Inscriptions distinctes selon le profil', 'Site livré et en ligne'],
+      en: ['Landing + creator / clipper journeys', 'Separate sign-up paths by profile', 'Shipped and live']
+    },
+    tags: ['React', 'Product site', 'Marketplace'],
+    link: 'https://www.vipagence.net/',
+    btnText: { fr: 'Ouvrir le projet', en: 'Open project' },
+    statsBadge: 'Live in prod',
+    image: vipagenceImg
   },
   {
     id: 'callkitchen',
@@ -104,44 +132,29 @@ export const PROJECTS_DATA: ProjectItem[] = [
     tags: ['Shopify', 'GraphQL', 'Firebase', 'POS'],
     link: 'https://green-jardin.fr',
     btnText: { fr: 'Voir le projet', en: 'View project' },
-    statsBadge: '3 channels synced'
-  },
-  {
-    id: '3geeks-studio',
-    category: 'studio',
-    title: '3geeks Studio',
-    subtitle: 'www.3geeks.fr',
-    badge: 'Générateur web IA · 3geeks',
-    description: {
-      fr: 'Moteur de génération de sites web depuis un simple brief textuel (intent-to-website) et vitrine officielle du studio 3geeks.',
-      en: 'Intent-to-website generator and studio landing on www.3geeks.fr: a text brief becomes a fully laid-out site.'
-    },
-    highlights: {
-      fr: ['1 brief → site complet généré', 'Moteur GenUI + Next.js', 'Vitrine flagship du studio'],
-      en: ['1 brief → full site', 'GenUI engine + Next.js', 'Flagship studio app']
-    },
-    tags: ['GenUI', 'LLM Engine', 'Next.js', '3geeks'],
-    link: 'https://www.3geeks.fr',
-    btnText: { fr: 'Visiter 3geeks', en: 'Open studio' },
-    statsBadge: 'Flagship Studio'
+    statsBadge: '3 channels synced',
+    image: greenJardinImg,
+    imageFit: 'contain',
+    imageBg: 'light'
   },
   {
     id: '3geeks-infra',
     category: 'studio',
     title: '3geeks Infra',
-    subtitle: 'Production auto-hébergée',
-    badge: 'Infra autonome · 3geeks',
+    subtitle: 'Production privée',
+    badge: 'Infra studio · privée',
     description: {
-      fr: 'Hébergement autonome de l\'ensemble des services *.3geeks.fr sur 3 serveurs Mac Mini (Coolify + Traefik + Cloudflare Tunnel) avec déploiement continu depuis GitHub.',
-      en: 'Consolidated every *.3geeks.fr service on 3 Mac Minis (Coolify + Traefik + Cloudflare Tunnel) with golden-path deploy from GitHub and PostgreSQL.'
+      fr: 'On héberge et opère nos produits sur une infra studio. Les outils internes restent internes — pas de détail public.',
+      en: 'We host and operate our products on studio infrastructure. Internal tools stay internal — no public detail.'
     },
     highlights: {
-      fr: ['8+ applications en ligne sur Coolify', '5 domaines publics hébergés', '3 serveurs Mac Mini autonomes'],
-      en: ['8+ apps live on Coolify', '5 public domains', '3 Mac Mini servers']
+      fr: ['Hébergement autonome', 'Déploiements maîtrisés', 'Outils internes non détaillés'],
+      en: ['Self-hosted production', 'Controlled deployments', 'Internal tools undisclosed']
     },
-    tags: ['Coolify', 'Traefik', 'Docker', 'Cloudflare Tunnels'],
-    btnText: { fr: 'Hébergement studio', en: 'View infra' },
-    statsBadge: '8+ apps on Coolify'
+    tags: ['Hosting', 'CI/CD', 'Private'],
+    btnText: { fr: 'Hébergement studio', en: 'Studio hosting' },
+    statsBadge: 'Private',
+    useStudioMark: true
   },
   {
     id: 'prompt-hub',
@@ -160,7 +173,9 @@ export const PROJECTS_DATA: ProjectItem[] = [
     tags: ['Multi-agent', 'AI planning', 'Beta', 'Green IT'],
     link: 'https://prompt-hub.3geeks.fr/',
     btnText: { fr: 'Ouvrir la beta', en: 'Open the beta' },
-    statsBadge: 'Beta Live'
+    statsBadge: 'Beta Live',
+    image: promptHubImg,
+    imageFit: 'contain'
   },
   {
     id: 'prompt-optim',
@@ -177,14 +192,20 @@ export const PROJECTS_DATA: ProjectItem[] = [
       en: ['Precision over padding', 'CO2 estimation per request', 'European models + GDPR']
     },
     tags: ['Green IT', 'Sobriété IA', 'Open tool', '3geeks'],
-    link: 'https://frontend-prompt-optim.vercel.app/',
+    link: 'https://prompt-optim.3geeks.fr/',
     btnText: { fr: 'Ouvrir PromptOptim', en: 'Open PromptOptim' },
-    statsBadge: 'Open tool'
+    statsBadge: 'Open tool',
+    image: promptOptimImg,
+    imageFit: 'contain'
   }
 ];
 
 export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang }) => {
   const [activeCategory, setActiveCategory] = useState<FilterCategory>('all');
+
+  const clientCount = PROJECTS_DATA.filter((p) => p.category === 'client').length;
+  const studioCount = PROJECTS_DATA.filter((p) => p.category === 'studio').length;
+  const allCount = PROJECTS_DATA.length;
 
   const filteredProjects = PROJECTS_DATA.filter((p) => {
     if (activeCategory === 'all') return true;
@@ -215,9 +236,9 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang }) => {
         {/* Filter Pills */}
         <div className="flex flex-wrap items-center justify-center gap-2 mb-8 md:mb-12">
           {[
-            { id: 'all', labelFr: 'Tous les projets (8)', labelEn: 'All projects (8)' },
-            { id: 'client', labelFr: 'Projets Clients & SaaS (4)', labelEn: 'Client & SaaS (4)' },
-            { id: 'studio', labelFr: '3Geeks Lab & Infra (4)', labelEn: '3Geeks Lab & Infra (4)' }
+            { id: 'all', labelFr: `Tous les projets (${allCount})`, labelEn: `All projects (${allCount})` },
+            { id: 'client', labelFr: `Projets Clients & SaaS (${clientCount})`, labelEn: `Client & SaaS (${clientCount})` },
+            { id: 'studio', labelFr: `3Geeks Lab & Infra (${studioCount})`, labelEn: `3Geeks Lab & Infra (${studioCount})` }
           ].map((cat) => (
             <button
               key={cat.id}
@@ -266,13 +287,17 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang }) => {
                 </div>
 
                 <div className="flex items-start gap-3.5 mb-3">
-                  {project.image ? (
-                    <div className="h-12 w-12 shrink-0 rounded-xl border border-white/20 bg-white/10 p-1 overflow-hidden shadow-md">
+                  {project.useStudioMark ? (
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-cyan-400/30 bg-[#0d1117] p-1.5 shadow-md">
+                      <Mark className="h-9 w-9" />
+                    </div>
+                  ) : project.image ? (
+                    <div className={`h-12 w-12 shrink-0 rounded-xl border border-white/20 overflow-hidden shadow-md ${project.imageBg === 'light' ? 'bg-white p-1' : 'bg-white/10 p-0.5'}`}>
                       <img
                         src={project.image}
                         alt={project.title}
                         loading="lazy"
-                        className="h-full w-full object-cover rounded-lg"
+                        className={`h-full w-full rounded-lg ${project.imageFit === 'contain' ? 'object-contain' : 'object-cover'}`}
                       />
                     </div>
                   ) : (

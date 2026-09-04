@@ -1,20 +1,32 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 3geeks.fr — vitrine studio
 
-# Run and deploy your AI Studio app
+Landing du studio **3geeks** : sites et produits digitaux, faits en France.
 
-This contains everything you need to run your app locally.
+- Prod : [https://www.3geeks.fr](https://www.3geeks.fr) (Coolify + Traefik, pas Vercel)
+- Repo : [Elias91120/WebGen](https://github.com/Elias91120/WebGen)
+- Ancien domaine Vercel (`web-gen-lyart.vercel.app`) : redirect permanent vers `www.3geeks.fr` (`vercel.json`)
 
-View your app in AI Studio: https://ai.studio/apps/drive/1yET78nPaWNIuPewa_uS_ClkwAdZ7odbH
+## Vitrine projets
 
-## Run Locally
+Source unique : `src/components/ProjectsShowcase.tsx`.
 
-**Prerequisites:**  Node.js
+**Clients** — Express Divorce USA, Vipagence ([vipagence.net](https://www.vipagence.net/) : le site seulement), CallKitchen, Two, Green Jardin.
 
+**Studio public** — Prompt Hub, PromptOptim, une carte Infra volontairement floue (pas de lien, pas de stack, pas d’outils internes).
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Hors vitrine : Workspace, API Hub, trading, Filament, Harmony, VIPA / api-vipa, chat.
+
+## Local
+
+```bash
+npm install
+npm run dev
+```
+
+Build : `npm run build` (Docker prod fait `npm ci` puis ce build).
+
+Variables optionnelles : voir `.env.example` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, clé Gemini pour le widget).
+
+## Deploy
+
+Push `main` → Coolify app `3geeks-landing` (`hziiyov76znpv4lmokz16brb`) → health `https://www.3geeks.fr/health`.

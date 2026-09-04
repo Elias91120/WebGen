@@ -249,8 +249,8 @@ function generateAnswer(
     return {
       sender: 'ai',
       text: lang === 'fr'
-        ? "Parmi nos projets réels en ligne :\n- Express Divorce USA (SaaS juridique multi-états)\n- CallKitchen (Agent vocal IA 24/7 pour restaurants)\n- Two App (Application iOS grand public sur l'App Store)\n- Green Jardin (Shopify CBD + caisse POS & menu TV)\n- Prompt Hub & PromptOptim (outils IA Green IT)"
-        : "Our live production products include:\n- Express Divorce USA (Legal-tech SaaS)\n- CallKitchen (Restaurant 24/7 AI voice reception)\n- Two App (Consumer iOS app on the App Store)\n- Green Jardin (Omnichannel CBD store + POS + TV menu)\n- Prompt Hub & PromptOptim (Green IT open tools)",
+        ? "Parmi nos projets réels en ligne :\n- Express Divorce USA (SaaS juridique multi-états)\n- Vipagence (site vitrine pour une agence créateurs)\n- CallKitchen (Agent vocal IA 24/7 pour restaurants)\n- Two App (Application iOS grand public sur l'App Store)\n- Green Jardin (Shopify CBD + caisse POS & menu TV)\n- Prompt Hub & PromptOptim (outils IA Green IT)"
+        : "Our live production products include:\n- Express Divorce USA (Legal-tech SaaS)\n- Vipagence (marketing site for a creator agency)\n- CallKitchen (Restaurant 24/7 AI voice reception)\n- Two App (Consumer iOS app on the App Store)\n- Green Jardin (Omnichannel CBD store + POS + TV menu)\n- Prompt Hub & PromptOptim (Green IT open tools)",
       actions: onNavigateSection
         ? [{ label: lang === 'fr' ? 'Parcourir les projets' : 'Browse projects', action: () => onNavigateSection('projets') }]
         : []
