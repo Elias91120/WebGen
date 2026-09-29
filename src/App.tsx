@@ -36,7 +36,7 @@ import SplitText from './components/SplitText';
 import AiAgentWidget from './components/AiAgentWidget';
 import ProjectsShowcase from './components/ProjectsShowcase';
 import SkillsRadar from './components/SkillsRadar';
-import { supabase } from './services/supabaseClient';
+import { getSupabase } from './services/supabaseClient';
 import { ClientRequest, ServiceType } from './types';
 
 // Lazy-loaded components for performance optimization
@@ -748,6 +748,8 @@ const App: React.FC = () => {
   const [adminOpen, setAdminOpen] = useState(false);
   const [requests, setRequests] = useState<ClientRequest[]>([]);
   const [preferReducedMotion, setPreferReducedMotion] = useState(false);
+  // 3D background (three.js, ~460 kB) is desktop-only: don't even download it on phones.
+  const [showBackground3D, setShowBackground3D] = useState(false);
 
   // GDPR State
   const [legalModalOpen, setLegalModalOpen] = useState(false);
@@ -765,6 +767,30 @@ const App: React.FC = () => {
     sync();
     mq.addEventListener?.('change', sync);
     return () => mq.removeEventListener?.('change', sync);
+  }, []);
+
+  // Enable the 3D background on md+ screens only, once the browser is idle.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(min-width: 768px)');
+    let idleId: number | undefined;
+    let timeoutId: number | undefined;
+    const sync = () => {
+      if (!mq.matches) {
+        setShowBackground3D(false);
+        return;
+      }
+      const enable = () => setShowBackground3D(true);
+      if (typeof window.requestIdleCallback === 'function') idleId = window.requestIdleCallback(enable, { timeout: 2000 });
+      else timeoutId = window.setTimeout(enable, 600);
+    };
+    sync();
+    mq.addEventListener?.('change', sync);
+    return () => {
+      mq.removeEventListener?.('change', sync);
+      if (idleId !== undefined) window.cancelIdleCallback?.(idleId);
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
@@ -823,6 +849,7 @@ const App: React.FC = () => {
   }, [adminOpen]);
 
   const fetchRequests = async () => {
+    const supabase = await getSupabase();
     if (!supabase) return;
     try {
       const { data, error } = await supabase
@@ -874,6 +901,7 @@ const App: React.FC = () => {
       preferred_date: null
     };
 
+    const supabase = await getSupabase();
     if (!supabase) {
       // Backend offline: still confirm to the user instead of failing silently.
       setFormStatus('success');
@@ -911,6 +939,7 @@ const App: React.FC = () => {
       preferred_date: data.preferredDate
     };
 
+    const supabase = await getSupabase();
     if (!supabase) {
       setBookingModalOpen(false);
       setFormStatus('success');
@@ -940,6 +969,7 @@ const App: React.FC = () => {
   };
 
   const handleAdminStatusUpdate = async (id: string, status: ClientRequest['status']) => {
+    const supabase = await getSupabase();
     if (!supabase) return;
     try {
       const { error } = await supabase
@@ -956,6 +986,7 @@ const App: React.FC = () => {
   };
 
   const handleAdminDelete = async (id: string) => {
+    const supabase = await getSupabase();
     if (!supabase) return;
     if (!window.confirm('Are you sure you want to delete this request?')) return;
 
@@ -1010,7 +1041,7 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-[#08090d] text-slate-100 font-sans relative overflow-x-hidden animate-in fade-in duration-700">
 
       {/* 3D Background — paused while modals are open to avoid jank */}
-      {!preferReducedMotion && (
+      {!preferReducedMotion && showBackground3D && (
         <div className="fixed inset-0 z-0 hidden md:block">
           <Suspense fallback={null}>
             <FloatingLines
