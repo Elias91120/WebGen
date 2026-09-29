@@ -8,10 +8,8 @@ import {
   CheckCircle2,
   ChevronDown,
   Database,
-  Github,
   Globe,
   Layers,
-  Leaf,
   Lock,
   Menu,
   RefreshCw,
@@ -50,8 +48,6 @@ import noamImg from './assets/images/Noam.jpeg';
 import charlesImg from './assets/images/Charles.jpeg';
 import callKitchenImg from './assets/images/CallKitchen.jpeg';
 import divorceImg from './assets/images/divorce.png';
-import promptHubImg from './assets/images/prompt-hub.png';
-import promptOptimImg from './assets/images/prompt-optim.png';
 
 type Lang = 'en' | 'fr';
 
@@ -114,33 +110,6 @@ const translations = {
         result3: "Built for recurring usage",
         link: "https://apps.apple.com/fr/app/two/id6758867716",
         btn: "Open on App Store"
-      }
-    },
-    openSource: {
-      path: "Open source lab by 3geeks",
-      title: "Side projects we build in public",
-      subtitle: "Alongside client work, we experiment with useful AI tools around digital sobriety, project planning and developer workflows.",
-      p1: {
-        title: "PromptOptim",
-        status: "Live open source project",
-        tag: "Green IT & Digital Sovereignty",
-        desc: "An AI prompt optimization tool designed to reduce token usage, estimate CO2 impact and encourage more sober AI usage.",
-        point1: "More precise prompts with fewer tokens",
-        point2: "CO2 impact estimation per request",
-        point3: "European models and GDPR-first positioning",
-        link: "https://prompt-optim.3geeks.fr/",
-        btn: "Open PromptOptim"
-      },
-      p2: {
-        title: "Prompt Hub",
-        status: "Accessible beta, still in development",
-        tag: "AI project planning",
-        desc: "The logical continuation of PromptOptim: a beta tool that turns a vague idea into a structured execution plan with contextual prompts.",
-        point1: "Project phases and steps generated from an idea",
-        point2: "Contextual prompts for coding assistants",
-        point3: "Specialized AI agents and dependency graph in progress",
-        link: "https://prompt-hub.3geeks.fr/",
-        btn: "Open the beta"
       }
     },
     whyUs: {
@@ -431,33 +400,6 @@ const translations = {
         btn: "App Store"
       }
     },
-    openSource: {
-      path: "Open source lab by 3geeks",
-      title: "Des projets que l'on construit en public",
-      subtitle: "À côté des projets clients, nous développons des outils IA utiles autour de la sobriété numérique, de la planification projet et des workflows développeurs.",
-      p1: {
-        title: "PromptOptim",
-        status: "Projet open source en ligne",
-        tag: "Green IT & Souveraineté numérique",
-        desc: "Un outil d'optimisation de prompts IA pensé pour réduire la consommation de tokens, estimer l'impact CO2 et encourager un usage plus sobre de l'IA.",
-        point1: "Prompts plus précis avec moins de tokens",
-        point2: "Estimation CO2 par requête",
-        point3: "Positionnement modèles européens et RGPD",
-        link: "https://prompt-optim.3geeks.fr/",
-        btn: "Ouvrir PromptOptim"
-      },
-      p2: {
-        title: "Prompt Hub",
-        status: "Beta accessible, encore en développement",
-        tag: "Planification projet par IA",
-        desc: "La suite logique de PromptOptim : un outil beta qui transforme une idée floue en plan d'exécution structuré avec des prompts contextualisés.",
-        point1: "Phases et étapes générées depuis une idée",
-        point2: "Prompts contextualisés pour assistants de code",
-        point3: "Agents IA spécialisés et graphe en développement",
-        link: "https://prompt-hub.3geeks.fr/",
-        btn: "Ouvrir la beta"
-      }
-    },
     whyUs: {
       path: "Pourquoi travailler avec nous",
       title: "Une petite équipe qui transforme vos idées en produits utiles",
@@ -721,14 +663,6 @@ const IdeBar: React.FC<{ filename: string; accent?: string; variant?: 'badge' | 
     </div>
   );
 };
-
-const PromptHubMark: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <img
-    src={promptHubImg}
-    alt="Prompt Hub"
-    className={`rounded-[1.35rem] object-contain shadow-[0_18px_45px_-20px_rgba(52,211,153,0.9)] ${className}`}
-  />
-);
 
 const App: React.FC = () => {
   const [showIntro, setShowIntro] = useState(() => {
@@ -1285,152 +1219,6 @@ const App: React.FC = () => {
 
         {/* SKILLS & STACK MATRIX */}
         <SkillsRadar lang={lang} />
-
-        {/* OPEN SOURCE PROJECTS */}
-        <section className="py-10 md:py-24 relative bg-[#0d1117]/25">
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/[0.07] blur-[120px]" />
-            <div className="absolute left-[15%] top-[10%] h-72 w-72 rounded-full bg-emerald-400/10 blur-3xl" />
-            <div className="absolute right-[10%] bottom-[10%] h-80 w-80 rounded-full bg-cyan-400/[0.08] blur-3xl" />
-          </div>
-
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-6 md:mb-14 flex flex-col items-center text-center px-1">
-              <div className="mb-3 md:mb-4 inline-flex flex-wrap justify-center items-center gap-1.5 md:gap-2 rounded-full border border-emerald-300/30 bg-emerald-300/[0.08] px-3 py-1 md:px-4 md:py-1.5 text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.12em] md:tracking-[0.18em] text-emerald-200 backdrop-blur-sm max-w-full">
-                <Github className="h-3.5 w-3.5" />
-                {t.openSource.path}
-                <span className="h-1 w-1 rounded-full bg-emerald-300/50" aria-hidden="true" />
-                <Leaf className="h-3.5 w-3.5" />
-                <span>Green stack</span>
-              </div>
-              <h2 className="text-xl md:text-5xl font-display font-bold text-white tracking-tight leading-snug">
-                {t.openSource.title}
-              </h2>
-              <p className="mt-2 md:mt-4 max-w-2xl text-sm md:text-lg text-slate-400 md:text-slate-300 leading-relaxed">{t.openSource.subtitle}</p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-5">
-              {/* Prompt Hub — featured */}
-              <article className="relative overflow-hidden rounded-[2rem] border border-emerald-300/30 bg-gradient-to-br from-[#08130e] via-[#06110d] to-[#04140e] shadow-[0_30px_90px_-35px_rgba(52,211,153,0.55)] lg:col-span-3">
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/80 to-transparent" />
-                <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-emerald-400/20 blur-3xl" />
-                <div className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl" />
-
-                <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-white/[0.04] px-5 py-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex items-center gap-1.5" aria-hidden="true">
-                      <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
-                      <span className="h-2.5 w-2.5 rounded-full bg-amber-300/80" />
-                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-300/80" />
-                    </div>
-                    <span className="hidden sm:inline text-xs font-mono text-slate-500">prompt-hub.3geeks.fr</span>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/30 bg-emerald-300/[0.12] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-200">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300/60" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-300" />
-                    </span>
-                    Beta
-                  </span>
-                </div>
-
-                <div className="relative z-10 flex h-full flex-col p-4 md:p-9">
-                  <div className="mb-4 md:mb-6 flex flex-col gap-3 md:gap-5 sm:flex-row sm:items-center">
-                    <PromptHubMark className="h-14 w-14 md:h-24 md:w-24 shrink-0 mx-auto sm:mx-0" />
-                    <div className="text-center sm:text-left">
-                      <div className="mb-1 md:mb-2 text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300/85">
-                        {t.openSource.p2.tag}
-                      </div>
-                      <h3 className="text-2xl md:text-5xl font-bold tracking-tight text-white leading-tight">{t.openSource.p2.title}</h3>
-                      <div className="mt-1 md:mt-2 text-[10px] md:text-xs text-emerald-200/70">{t.openSource.p2.status}</div>
-                    </div>
-                  </div>
-
-                  <p className="mb-5 md:mb-7 max-w-2xl text-sm md:text-lg leading-relaxed text-slate-300 md:text-slate-200">{t.openSource.p2.desc}</p>
-
-                  <div className="mb-5 md:mb-8 grid grid-cols-1 gap-2 md:gap-3 sm:grid-cols-3">
-                    {[t.openSource.p2.point1, t.openSource.p2.point2, t.openSource.p2.point3].map((point) => (
-                      <div
-                        key={point}
-                        className="rounded-xl md:rounded-2xl border border-emerald-300/15 bg-emerald-300/[0.04] p-3 md:p-4 text-xs md:text-sm text-slate-200 transition-colors hover:border-emerald-300/30 hover:bg-emerald-300/[0.07]"
-                      >
-                        <CheckCircle2 className="mb-2 md:mb-3 h-3.5 w-3.5 md:h-4 md:w-4 text-emerald-300" />
-                        {point}
-                      </div>
-                    ))}
-                  </div>
-
-                  <a
-                    href={t.openSource.p2.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex w-full sm:w-fit items-center justify-center gap-2 rounded-xl md:rounded-2xl bg-emerald-400 px-5 py-2.5 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-[#06110d] shadow-md md:shadow-[0_22px_50px_-20px_rgba(52,211,153,0.8)] transition-all hover:bg-emerald-300 md:hover:shadow-[0_22px_60px_-15px_rgba(52,211,153,1)] group/link"
-                  >
-                    {t.openSource.p2.btn}
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
-                  </a>
-                </div>
-              </article>
-
-              {/* PromptOptim — secondary */}
-              <article className="relative flex flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#06110d]/85 backdrop-blur-xl transition-all hover:border-emerald-300/25 lg:col-span-2">
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/30 to-transparent" />
-
-                <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-white/[0.03] px-5 py-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex items-center gap-1.5" aria-hidden="true">
-                      <span className="h-2.5 w-2.5 rounded-full bg-rose-400/65" />
-                      <span className="h-2.5 w-2.5 rounded-full bg-amber-300/65" />
-                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-300/65" />
-                    </div>
-                    <span className="hidden sm:inline text-xs font-mono text-slate-500">prompt-optim.3geeks.fr</span>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/20 bg-emerald-300/[0.06] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-200/85">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-300/80" />
-                    Live
-                  </span>
-                </div>
-
-                <div className="flex flex-1 flex-col p-4 md:p-7">
-                  <div className="mb-4 md:mb-5 flex items-center gap-3 md:gap-4">
-                    <img
-                      src={promptOptimImg}
-                      alt="PromptOptim"
-                      className="h-11 w-11 md:h-14 md:w-14 shrink-0 rounded-xl md:rounded-2xl object-contain shadow-md md:shadow-[0_8px_24px_-12px_rgba(52,211,153,0.6)]"
-                    />
-                    <div className="min-w-0">
-                      <div className="mb-0.5 md:mb-1 text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300/80">
-                        {t.openSource.p1.tag}
-                      </div>
-                      <h3 className="text-lg md:text-2xl font-bold text-white leading-snug">{t.openSource.p1.title}</h3>
-                    </div>
-                  </div>
-
-                  <p className="mb-4 md:mb-6 text-sm leading-relaxed text-slate-400 md:text-slate-300">{t.openSource.p1.desc}</p>
-
-                  <ul className="mb-5 md:mb-7 flex-1 space-y-2 md:space-y-2.5">
-                    {[t.openSource.p1.point1, t.openSource.p1.point2, t.openSource.p1.point3].map((point) => (
-                      <li key={point} className="flex items-start gap-2 text-xs md:text-sm text-slate-200">
-                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 md:h-4 md:w-4 flex-shrink-0 text-emerald-300" />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <a
-                    href={t.openSource.p1.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl md:rounded-2xl border border-emerald-300/30 bg-emerald-300/[0.08] py-2.5 md:py-3.5 text-sm font-semibold text-emerald-100 transition-all hover:border-emerald-300/50 hover:bg-emerald-300/[0.14] group/link"
-                  >
-                    {t.openSource.p1.btn}
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
-                  </a>
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
 
         {/* WHY US (Bento Grid) */}
         <section className="py-9 md:py-16 relative bg-[#0d1117]/25">
