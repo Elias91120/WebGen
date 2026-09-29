@@ -9,13 +9,14 @@ interface HeroVideoProps {
  * - Une version par langue (la boucle démarre et finit sur du noir : la reprise ne se voit pas).
  * - Occupe la moitié droite du hero (la vidéo contient son propre slogan : il ne doit pas
  *   se superposer au titre de la page) avec un fondu vers la gauche.
- * - Sur mobile/tablette, l'image d'attente remplit tout le hero (recadrée, centrée sur le logo).
- * - Chargée uniquement sur grand écran, sans « réduire les animations » ni économiseur de données.
- *   Ailleurs, l'image d'attente (poster) prend le relais.
+ * - Sur mobile/tablette, la vidéo (version verticale allégée, ~1,2 Mo) remplit tout le hero.
+ * - Désactivée avec « réduire les animations » ou l'économiseur de données : l'image d'attente
+ *   (poster, recadrée pour remplir le hero) prend alors le relais, comme si l'autoplay est refusé.
  * - Mise en pause dès que le hero sort de l'écran.
  */
 const HeroVideo: React.FC<HeroVideoProps> = ({ lang }) => {
   const [allowed, setAllowed] = useState(false);
+  const [compact, setCompact] = useState(false);
   const [ready, setReady] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -25,7 +26,10 @@ const HeroVideo: React.FC<HeroVideoProps> = ({ lang }) => {
     const wide = window.matchMedia('(min-width: 1024px)');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const sync = () => setAllowed(wide.matches && !reduce.matches && !connection?.saveData);
+    const sync = () => {
+      setAllowed(!reduce.matches && !connection?.saveData);
+      setCompact(!wide.matches);
+    };
     sync();
     wide.addEventListener?.('change', sync);
     reduce.addEventListener?.('change', sync);
@@ -49,7 +53,7 @@ const HeroVideo: React.FC<HeroVideoProps> = ({ lang }) => {
     });
     observer.observe(wrap);
     return () => observer.disconnect();
-  }, [allowed, lang]);
+  }, [allowed, compact, lang]);
 
   return (
     <div ref={wrapRef} className="hero-media absolute inset-y-0 right-0 w-full overflow-hidden lg:-right-[3%] lg:w-[60%]" aria-hidden="true">
@@ -64,10 +68,10 @@ const HeroVideo: React.FC<HeroVideoProps> = ({ lang }) => {
       />
       {allowed && (
         <video
-          key={lang}
+          key={`${lang}-${compact ? 'm' : 'd'}`}
           ref={videoRef}
-          className={`absolute inset-0 h-full w-full object-contain object-center transition-opacity duration-1000 ${
-            ready ? 'opacity-90' : 'opacity-0'
+          className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-1000 lg:object-contain ${
+            ready ? 'opacity-60 lg:opacity-90' : 'opacity-0'
           }`}
           autoPlay
           muted
@@ -77,8 +81,14 @@ const HeroVideo: React.FC<HeroVideoProps> = ({ lang }) => {
           poster="/videos/hero-poster.jpg"
           onPlaying={() => setReady(true)}
         >
-          <source src={`/videos/hero-${lang}.mp4`} type="video/mp4" />
-          <source src={`/videos/hero-${lang}.webm`} type="video/webm" />
+          {compact ? (
+            <source src={`/videos/hero-${lang}-m.mp4`} type="video/mp4" />
+          ) : (
+            <>
+              <source src={`/videos/hero-${lang}.mp4`} type="video/mp4" />
+              <source src={`/videos/hero-${lang}.webm`} type="video/webm" />
+            </>
+          )}
         </video>
       )}
     </div>

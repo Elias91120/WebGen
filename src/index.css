@@ -259,13 +259,25 @@ body {
 
 /* Fond de lignes : discret, fondu en haut et en bas de la section */
 .section-lines {
-  opacity: 0.5;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  opacity: 0.8;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 68%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 68%, transparent 100%);
 }
 
 @media (min-width: 1024px) {
-  .section-lines { opacity: 0.42; }
+  .section-lines {
+    opacity: 0.42;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  }
+}
+
+/* Textes des sections habillées par les lignes : halo sombre pour rester lisibles sur les vagues */
+.section-lines ~ * :is(p, h2, h3, li, label) {
+  text-shadow: 0 0 14px rgba(8, 9, 13, 0.95), 0 1px 3px rgba(8, 9, 13, 0.7);
+}
+.section-lines ~ * p {
+  color: #b6c2d1;
 }
 
 @keyframes hero-rise {

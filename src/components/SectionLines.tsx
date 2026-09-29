@@ -19,13 +19,13 @@ const BRAND_GRADIENT = ['#0aefbb', '#c3fb05', '#0aefbb'];
 // Constantes : FloatingLines réinitialise WebGL si ces tableaux changent d'identité.
 const LINES_DESKTOP = [3, 5, 3];
 const DISTANCE_DESKTOP = [4, 5, 4];
-const LINES_COMPACT = [2, 3, 2];
-const DISTANCE_COMPACT = [5, 6, 5];
+const LINES_COMPACT = [3, 4, 3];
+const DISTANCE_COMPACT = [4, 5, 4];
 
 /**
  * Fond de lignes animées, aux couleurs de la marque, pour habiller une section.
  * - Grand écran : couvre toute la section, réagit à la souris.
- * - Mobile/tablette : simple bandeau en haut de section, moins de lignes, sans interaction.
+ * - Mobile/tablette : simple bandeau en haut de section, sans interaction.
  * - Jamais avec « réduire les animations ».
  */
 const SectionLines: React.FC<SectionLinesProps> = ({ variant = 'a', className = '' }) => {
@@ -71,7 +71,7 @@ const SectionLines: React.FC<SectionLinesProps> = ({ variant = 'a', className = 
   return (
     <div
       ref={ref}
-      className={`section-lines pointer-events-none absolute inset-x-0 top-0 h-[460px] overflow-hidden lg:inset-0 lg:h-auto ${className}`}
+      className={`section-lines pointer-events-none absolute inset-x-0 top-0 h-[640px] overflow-hidden lg:inset-0 lg:h-auto ${className}`}
       aria-hidden="true"
     >
       {enabled && near && (
@@ -84,7 +84,7 @@ const SectionLines: React.FC<SectionLinesProps> = ({ variant = 'a', className = 
             bottomWavePosition={v.bottom}
             lineCount={compact ? LINES_COMPACT : LINES_DESKTOP}
             lineDistance={compact ? DISTANCE_COMPACT : DISTANCE_DESKTOP}
-            animationSpeed={0.5}
+            animationSpeed={compact ? 0.85 : 0.5}
             interactive={!compact}
             parallax={!compact}
             bendStrength={0.5}
