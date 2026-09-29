@@ -9,6 +9,7 @@ interface HeroVideoProps {
  * - Une version par langue (la boucle démarre et finit sur du noir : la reprise ne se voit pas).
  * - Occupe la moitié droite du hero (la vidéo contient son propre slogan : il ne doit pas
  *   se superposer au titre de la page) avec un fondu vers la gauche.
+ * - Sur mobile/tablette, l'image d'attente remplit tout le hero (recadrée, centrée sur le logo).
  * - Chargée uniquement sur grand écran, sans « réduire les animations » ni économiseur de données.
  *   Ailleurs, l'image d'attente (poster) prend le relais.
  * - Mise en pause dès que le hero sort de l'écran.
@@ -59,7 +60,7 @@ const HeroVideo: React.FC<HeroVideoProps> = ({ lang }) => {
         height={720}
         fetchPriority="high"
         decoding="async"
-        className="absolute inset-0 h-full w-full object-contain object-center opacity-60"
+        className="absolute inset-0 h-full w-full object-cover object-[62%_50%] opacity-80 lg:object-contain lg:object-center lg:opacity-60"
       />
       {allowed && (
         <video

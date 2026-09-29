@@ -259,9 +259,13 @@ body {
 
 /* Fond de lignes : discret, fondu en haut et en bas de la section */
 .section-lines {
-  opacity: 0.42;
+  opacity: 0.5;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+}
+
+@media (min-width: 1024px) {
+  .section-lines { opacity: 0.42; }
 }
 
 @keyframes hero-rise {

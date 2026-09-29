@@ -313,8 +313,7 @@ export default function FloatingLines({
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Skip WebGL on small screens — CSS background is enough and avoids scroll jank.
-    if (window.innerWidth < 768) return;
+    // Le choix mobile/desktop est fait par le parent (SectionLines : version allégée sur petit écran).
 
     const scene = new Scene();
 

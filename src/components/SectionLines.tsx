@@ -16,20 +16,31 @@ const VARIANTS = {
 } as const;
 
 const BRAND_GRADIENT = ['#0aefbb', '#c3fb05', '#0aefbb'];
+// Constantes : FloatingLines réinitialise WebGL si ces tableaux changent d'identité.
+const LINES_DESKTOP = [3, 5, 3];
+const DISTANCE_DESKTOP = [4, 5, 4];
+const LINES_COMPACT = [2, 3, 2];
+const DISTANCE_COMPACT = [5, 6, 5];
 
 /**
  * Fond de lignes animées, aux couleurs de la marque, pour habiller une section.
- * Grand écran uniquement, jamais avec « réduire les animations ».
+ * - Grand écran : couvre toute la section, réagit à la souris.
+ * - Mobile/tablette : simple bandeau en haut de section, moins de lignes, sans interaction.
+ * - Jamais avec « réduire les animations ».
  */
 const SectionLines: React.FC<SectionLinesProps> = ({ variant = 'a', className = '' }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(false);
+  const [compact, setCompact] = useState(false);
   const [near, setNear] = useState(false);
 
   useEffect(() => {
     const wide = window.matchMedia('(min-width: 1024px)');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setEnabled(wide.matches && !reduce.matches);
+    const sync = () => {
+      setEnabled(!reduce.matches);
+      setCompact(!wide.matches);
+    };
     sync();
     wide.addEventListener?.('change', sync);
     reduce.addEventListener?.('change', sync);
@@ -60,20 +71,22 @@ const SectionLines: React.FC<SectionLinesProps> = ({ variant = 'a', className = 
   return (
     <div
       ref={ref}
-      className={`section-lines pointer-events-none absolute inset-0 overflow-hidden ${className}`}
+      className={`section-lines pointer-events-none absolute inset-x-0 top-0 h-[460px] overflow-hidden lg:inset-0 lg:h-auto ${className}`}
       aria-hidden="true"
     >
       {enabled && near && (
         <Suspense fallback={null}>
           <FloatingLines
+            key={compact ? 'compact' : 'full'}
             linesGradient={BRAND_GRADIENT}
             topWavePosition={v.top}
             middleWavePosition={v.middle}
             bottomWavePosition={v.bottom}
-            lineCount={[3, 5, 3]}
-            lineDistance={[4, 5, 4]}
+            lineCount={compact ? LINES_COMPACT : LINES_DESKTOP}
+            lineDistance={compact ? DISTANCE_COMPACT : DISTANCE_DESKTOP}
             animationSpeed={0.5}
-            interactive
+            interactive={!compact}
+            parallax={!compact}
             bendStrength={0.5}
             parallaxStrength={0.1}
           />

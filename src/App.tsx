@@ -449,7 +449,7 @@ const App: React.FC = () => {
               </h1>
 
               <p
-                className="hero-rise mt-7 max-w-xl text-base leading-relaxed text-slate-300 md:text-lg"
+                className="hero-rise mt-7 max-w-xl text-base leading-relaxed text-slate-200 md:text-lg lg:text-slate-300"
                 style={{ ['--rise-delay' as string]: '360ms' }}
               >
                 {t.hero.comment}
