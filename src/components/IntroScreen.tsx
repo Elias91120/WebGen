@@ -74,7 +74,7 @@ const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete }) => {
           <div className="absolute inset-0 border border-cyan-400/30 rounded-3xl animate-[pulse-ring_3s_linear_infinite]" />
           <div className="absolute inset-0 border border-lime-300/30 rounded-3xl animate-[pulse-ring_3s_linear_infinite_1s]" />
           <div className="relative w-28 h-28 sm:w-32 sm:h-32 bg-[#0d1117] border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl shadow-cyan-500/25">
-            <Mark className="w-[4.5rem] h-[4.5rem] sm:w-20 sm:h-20" />
+            <Mark glow className="w-[4.5rem] h-[4.5rem] sm:w-20 sm:h-20" />
           </div>
           <style>{`
            @keyframes pulse-ring {

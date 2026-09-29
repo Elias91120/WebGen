@@ -1,73 +1,90 @@
-import React, { memo, useId } from 'react';
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+import React, { memo } from 'react';
 
 type LogoVariant = 'mark' | 'wordmark' | 'full';
 
 interface LogoProps {
   variant?: LogoVariant;
-  compact?: boolean;
-  large?: boolean;
+  withCursor?: boolean;
+  withTagline?: boolean;
+  /** Kept for API compatibility — spacing is baked into the wordmark PNG. */
   spaced?: boolean;
+  /** Taille réduite (barre de navigation, footers denses). */
+  compact?: boolean;
+  /** Taille plus grande (écran d’intro, héros). */
+  large?: boolean;
+  /** Halo lumineux lime/turquoise derrière le logo (désactivé sur fond clair). */
+  glow?: boolean;
   className?: string;
 }
 
-/**
- * Razor-sharp SVG Vector Mark for 3geeks.
- * Smooth gradient cyan-to-lime '3' symbol.
- */
-export const Mark: React.FC<{ className?: string }> = ({ className = 'h-10 w-auto' }) => {
-  const uid = useId().replace(/:/g, '');
-  const gradId = `${uid}Gradient`;
-  const glowId = `${uid}Glow`;
+/** Intrinsic ratios of the PNG assets — width/height attributes avoid layout shift. */
+const WORDMARK = { src: '/logo-wordmark.png', width: 1000, height: 244 };
+const MARK = { src: '/logo-mark.png', width: 480, height: 422 };
 
+/** Wordmark is ~4.1:1 — height drives visible size. */
+function wordmarkClass(compact: boolean, large: boolean): string {
+  if (large) return 'h-16 sm:h-20 md:h-24 lg:h-28 w-auto';
+  if (compact) return 'h-9 sm:h-10 md:h-12 w-auto';
+  return 'h-10 sm:h-12 md:h-14 w-auto';
+}
+
+function markClass(compact: boolean, large: boolean): string {
+  if (large) return 'h-20 sm:h-24 md:h-28';
+  if (compact) return 'h-9 sm:h-10 md:h-12';
+  return 'h-11 sm:h-12 md:h-14';
+}
+
+/** The « 3 » ribbon on its own (intro animation, project cards, favicons in UI). */
+export function Mark({ className = '', glow = false }: { className?: string; glow?: boolean }) {
+  // Height-only sizing needs w-auto; if the caller sets a width, let it win.
+  const hasWidth = /(^|\s)(?:[a-z]+:)*w-/.test(className);
   return (
-    <svg
-      viewBox="0 0 100 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={`block shrink-0 ${className}`}
+    <img
+      src={MARK.src}
+      width={MARK.width}
+      height={MARK.height}
+      alt=""
       aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#a3e635" />
-          <stop offset="50%" stopColor="#22d3ee" />
-          <stop offset="100%" stopColor="#818cf8" />
-        </linearGradient>
-        <filter id={glowId} x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#22d3ee" floodOpacity="0.35" />
-        </filter>
-      </defs>
-      <path
-        d="M20 22 C35 14, 75 14, 80 28 C85 40, 55 48, 42 48 C60 48, 86 54, 82 74 C77 92, 30 90, 18 80"
-        stroke={`url(#${gradId})`}
-        strokeWidth="14"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        filter={`url(#${glowId})`}
-      />
-    </svg>
+      decoding="async"
+      className={`block ${hasWidth ? '' : 'w-auto'} object-contain select-none ${glow ? 'logo-glow' : ''} ${className}`}
+      draggable={false}
+    />
   );
-};
+}
 
 const Logo = memo(function Logo({
-  variant = 'wordmark',
+  variant = 'mark',
+  spaced: _spaced = false,
+  withCursor: _withCursor = false,
+  withTagline: _withTagline = false,
   compact = false,
   large = false,
+  glow = true,
   className = '',
 }: LogoProps) {
-  const markSize = large ? 'h-12 w-12 sm:h-16 sm:w-16' : compact ? 'h-7 w-7 sm:h-8 sm:w-8' : 'h-9 w-9 sm:h-10 sm:w-10';
-  const textSize = large ? 'text-3xl sm:text-5xl' : compact ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-3xl';
-
   if (variant === 'mark') {
-    return <Mark className={`${markSize} ${className}`} />;
+    return <Mark glow={glow} className={className || markClass(compact, large)} />;
   }
 
   return (
-    <span className={`inline-flex items-center gap-2.5 font-display font-black tracking-tight select-none ${className}`}>
-      <Mark className={markSize} />
-      <span className={`bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-300 ${textSize} leading-none`}>
-        3geeks
-      </span>
+    <span
+      className={`inline-flex items-center min-w-0 max-w-full ${className}`}
+      aria-label="3geeks, trois fondateurs"
+    >
+      <img
+        src={WORDMARK.src}
+        width={WORDMARK.width}
+        height={WORDMARK.height}
+        alt="3geeks"
+        decoding="async"
+        fetchPriority={large ? 'high' : undefined}
+        className={`block max-w-full object-contain select-none ${glow ? 'logo-glow' : ''} ${wordmarkClass(compact, large)}`}
+        draggable={false}
+      />
     </span>
   );
 });

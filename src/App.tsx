@@ -388,7 +388,7 @@ const translations = {
       titleEnd: "qui donnent envie de vous contacter.",
       comment: "Démarrez avec un site ciblé à 300€ ou un projet web sur mesure. On vous aide à choisir le format le plus simple pour votre objectif.",
       ctaPrimary: "Parler de mon projet",
-      ctaSecondary: "Voir nos realisations",
+      ctaSecondary: "Voir nos réalisations",
     },
     stats: {
       founders: "fondateurs",
@@ -583,10 +583,10 @@ const translations = {
     },
     reviews: {
       path: "Retours clients",
-      title: "Ce que nos clients disent apres livraison",
-      r1: "Equipe reactive, process tres clair et execution propre. Le nouveau site a fluidifie notre acquisition.",
-      r2: "Ils ont compris notre metier rapidement et propose des choix utiles. On a vu une vraie progression.",
-      r3: "Le systeme mis en place est robuste et simple a operer. Notre quotidien est plus serein."
+      title: "Ce que nos clients disent après livraison",
+      r1: "Équipe réactive, process très clair et exécution propre. Le nouveau site a fluidifié notre acquisition.",
+      r2: "Ils ont compris notre métier rapidement et proposé des choix utiles. On a vu une vraie progression.",
+      r3: "Le système mis en place est robuste et simple à opérer. Notre quotidien est plus serein."
     },
     contact: {
       path: "Discutons de votre projet",
@@ -1236,7 +1236,7 @@ const App: React.FC = () => {
              <div className="max-w-5xl mx-auto mt-4 md:mt-8 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
                {[
                  { n: '03', l: t.stats.founders },
-                 { n: '05', l: t.stats.projects },
+                 { n: '08', l: t.stats.projects },
                  { n: '24h', l: t.stats.response },
                  { n: '100%', l: t.stats.french },
                ].map((s, i) => (

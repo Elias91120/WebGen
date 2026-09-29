@@ -240,8 +240,8 @@ function generateAnswer(
     return {
       sender: 'ai',
       text: lang === 'fr'
-        ? "3geeks est un studio web & produit digital français fondé par trois associés complémentaires : Elias Elloumi (Design & Expérience visuelle), Noam Leclappart (Systèmes & Data) et Charles Garbus (Relation client & Business). Nous créons des sites et outils digitaux clairs, rapides et soignés."
-        : "3geeks is a French web & digital product studio co-founded by three friends: Elias Elloumi (Design & Visual Experience), Noam Leclappart (Systems & Data), and Charles Garbus (Client Relations & Business). We build clean, fast, and polished web products."
+        ? "3geeks est un studio web & produit digital français fondé par trois associés complémentaires : Elias Elloumi (Design & Expérience visuelle), Noam Leclapart-Jublot (Systèmes & Data) et Charles Garbus (Relation client & Business). Nous créons des sites et outils digitaux clairs, rapides et soignés."
+        : "3geeks is a French web & digital product studio co-founded by three friends: Elias Elloumi (Design & Visual Experience), Noam Leclapart-Jublot (Systems & Data), and Charles Garbus (Client Relations & Business). We build clean, fast, and polished web products."
     };
   }
 

@@ -170,3 +170,16 @@ body {
   }
 }
 
+
+/* Logo : halo lime/turquoise discret, qui s'intensifie au survol du parent (.group) */
+.logo-glow {
+  filter: drop-shadow(0 0 10px rgba(163, 230, 53, 0.22)) drop-shadow(0 2px 14px rgba(34, 211, 238, 0.14));
+  transition: filter 0.35s ease;
+}
+.group:hover .logo-glow,
+.logo-glow:hover {
+  filter: drop-shadow(0 0 14px rgba(163, 230, 53, 0.42)) drop-shadow(0 2px 20px rgba(34, 211, 238, 0.28));
+}
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .logo-glow { transition: none; }
+}
