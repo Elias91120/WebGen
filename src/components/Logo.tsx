@@ -73,7 +73,7 @@ const Logo = memo(function Logo({
   return (
     <span
       className={`inline-flex items-center min-w-0 max-w-full ${className}`}
-      aria-label="3geeks, trois fondateurs"
+      aria-label="3geeks"
     >
       <img
         src={WORDMARK.src}

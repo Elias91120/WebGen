@@ -5,771 +5,107 @@
 */
 import {
   ArrowRight,
-  CheckCircle2,
+  Check,
   ChevronDown,
-  Database,
   Globe,
-  Layers,
   Lock,
+  Mail,
   Menu,
-  RefreshCw,
-  Rocket,
+  MessageCircle,
   Send,
   ShieldCheck,
   Smartphone,
-  Sparkles,
   Star,
   Store,
   Users,
   X,
-  Zap,
 } from 'lucide-react';
-import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
+import AiAgentWidget from './components/AiAgentWidget';
 import CookieConsent from './components/CookieConsent';
-import GradientText from './components/GradientText';
-import IntroScreen from './components/IntroScreen';
+import HeroVideo from './components/HeroVideo';
 import LegalModals from './components/LegalModals';
 import Logo from './components/Logo';
-import SplitText from './components/SplitText';
-import AiAgentWidget from './components/AiAgentWidget';
-import ProjectsShowcase from './components/ProjectsShowcase';
+import ProjectsShowcase, { PROJECTS_DATA } from './components/ProjectsShowcase';
+import Reveal from './components/Reveal';
+import SectionLines from './components/SectionLines';
 import SkillsRadar from './components/SkillsRadar';
+import { Lang, translations } from './i18n';
 import { getSupabase } from './services/supabaseClient';
 import { ClientRequest, ServiceType } from './types';
 
 // Lazy-loaded components for performance optimization
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 const BookingModal = lazy(() => import('./components/BookingModal'));
-const FloatingLines = lazy(() => import('./components/FloatingLines'));
 
-// Team Photos
-import eliasImg from './assets/images/Elias.jpeg';
-import noamImg from './assets/images/Noam.jpeg';
-import charlesImg from './assets/images/Charles.jpeg';
-import callKitchenImg from './assets/images/CallKitchen.jpeg';
-import divorceImg from './assets/images/divorce.png';
+const LANG_STORAGE_KEY = '3geeks-lang';
 
-type Lang = 'en' | 'fr';
-
-const translations = {
-  en: {
-    nav: {
-      services: "Services",
-      projects: "Projects",
-      skills: "Stack & AI",
-      story: "Story",
-      team: "Team",
-      reviews: "Reviews",
-      cta: "Let's talk",
-    },
-    hero: {
-      badge: "Websites clients understand instantly",
-      brandSubtitle: "Three founders, one studio — the brand is 3geeks. Web & digital products, made in France.",
-      titleStart: "Websites and digital tools",
-      titleEnd: "that make people contact you.",
-      comment: "Start with a focused €300 website or a custom web project. We help you choose the simplest format for your goal.",
-      ctaPrimary: "Talk about my project",
-      ctaSecondary: "See our projects",
-    },
-    stats: {
-      founders: "founders",
-      projects: "public projects",
-      response: "response",
-      french: "Made in France",
-    },
-    projects: {
-      path: "Recent work",
-      title: "Real projects, already online",
-      subtitle: "Three public projects that show the type of web and app experiences we can design, build and launch.",
-      p1: {
-        title: "Express Divorce USA",
-        tag: "Legal service platform",
-        desc: "A reassuring web platform that guides users through a sensitive legal process with clarity.",
-        result1: "Clearer client journey",
-        result2: "Reassuring steps before contact",
-        result3: "Public project available online",
-        link: "https://www.expressdivorceusa.co",
-        btn: "Open the project"
-      },
-      p2: {
-        title: "CallKitchen",
-        tag: "Restaurant voice automation",
-        desc: "A practical landing page for an AI phone assistant that helps restaurants capture missed calls.",
-        result1: "Clear product explanation",
-        result2: "Direct call-to-action for demos",
-        result3: "Public landing page available online",
-        link: "https://call-kitchen-landing.vercel.app",
-        btn: "Open the project"
-      },
-      p3: {
-        title: "Two",
-        tag: "Consumer mobile app",
-        desc: "A polished iOS experience designed to feel simple and useful from the first interaction.",
-        result1: "Public app available on the App Store",
-        result2: "Clean mobile interface",
-        result3: "Built for recurring usage",
-        link: "https://apps.apple.com/fr/app/two/id6758867716",
-        btn: "Open on App Store"
-      }
-    },
-    whyUs: {
-      path: "Why clients choose us",
-      title: "A small team that turns ideas into useful products",
-      subtitle: "We combine design sense, technical reliability and direct communication so your project moves fast without becoming messy.",
-      card1: {
-        file: "Design that sells",
-        title: "A first impression that helps you sell",
-        desc: "We design pages that make the offer easy to understand, pleasant to browse and credible from the first screen."
-      },
-      card2: {
-        file: "Reliable build",
-        title: "Solid foundations behind the interface",
-        desc: "Forms, automations, dashboards and integrations are built cleanly so your site stays reliable after launch."
-      },
-      card3: {
-        file: "Business focus",
-        title: "Built around your real activity",
-        desc: "Restaurants, shops, service businesses or startups: we adapt the product to how your clients actually decide."
-      },
-      card4: {
-        file: "Direct contact",
-        title: "You speak with people, not a ticket system",
-        desc: "Charles keeps the project clear, translates business needs into concrete decisions and makes sure every step stays understandable."
-      },
-    },
-    stack: {
-      path: "Simple method",
-      title: "From first call to launch, you always know what happens next",
-      subtitle: "Understand the need, design the experience, build the product, then improve it with real feedback.",
-    },
-    services: {
-      path: "Service plans",
-      badge: "SOLUTIONS",
-      title: "Two clear ways to start your project",
-      maintenanceTitle: "Peace-of-mind option",
-      maintenanceDesc: "Keep your site monitored, secure and lightly updated after launch.",
-      maintenancePrice: "€50/mo",
-      maintenanceCta: "+ add option",
-      maintenanceHighlight: "Recommended",
-      maintenanceBenefits: [
-        "Uptime monitoring",
-        "Security updates",
-        "Small content edits each month",
-      ],
-      s1: {
-        title: "Starter website",
-        price: "€300",
-        subPrice: "one-off payment",
-        badge: "clear scope",
-        btn: "Start now",
-        features: [
-          { text: 'One-page responsive website', checked: true },
-          { text: 'Clear offer and contact CTA', checked: true },
-          { text: 'Modern visual design', checked: true },
-          { text: 'Contact form or WhatsApp link', checked: false },
-          { text: 'Mobile-first layout', checked: false },
-        ]
-      },
-      s2: {
-        title: "Custom web project",
-        price: "Custom quote",
-        subPrice: "based on complexity",
-        badge: "tailored",
-        btn: "Talk to us",
-        features: [
-          { text: 'Everything in Starter, adapted to your offer', checked: true },
-          { text: 'Booking or request flows', checked: true },
-          { text: 'E-commerce or payments if needed', checked: true },
-          { text: 'Accounts and structured data', checked: true },
-          { text: 'Custom admin dashboard', checked: true },
-          { text: 'External tool integrations', checked: true },
-        ]
-      },
-      s3: {
-        title: "Complete redesign",
-        price: "Custom quote",
-        subPrice: "audit & overhaul",
-        badge: "improve",
-        btn: "Request audit",
-        features: [
-          { text: 'Visual and UX overhaul', checked: true },
-          { text: 'Performance and structure audit', checked: true },
-          { text: 'Modern front-end rebuild', checked: true },
-          { text: 'Existing SEO considered', checked: true },
-          { text: 'Cleaner conversion path', checked: true },
-          { text: 'Safer launch plan with your current site', checked: true },
-        ]
-      }
-    },
-    booking: {
-      title: "Confirm your request",
-      stepOf: "Step {step} of 2",
-      selectedOffer: "Selected offer",
-      quote: "Custom quote",
-      estimatedTotal: "Estimated total",
-      continue: "Continue",
-      back: "Back",
-      confirm: "Confirm",
-      processing: "Sending...",
-      name: "Name",
-      email: "Email",
-      company: "Company / project",
-      preferredDate: "Preferred date (optional)",
-      dateHint: "Leave blank to schedule later",
-      details: "Additional details",
-      namePlaceholder: "John Doe",
-      emailPlaceholder: "john@company.com",
-      companyPlaceholder: "My Awesome Shop",
-      detailsPlaceholder: "Anything else we should know?",
-    },
-    team: {
-      path: "Founding team",
-      title: "Meet the founders",
-      subtitle: "Three complementary profiles, one direct point of contact, and a shared goal: ship useful products clients enjoy using.",
-      roles: {
-        elias: "Design & experience",
-        eliasDesc: "Elias shapes the visual experience: clear pages, smooth interactions and a polished feeling that helps visitors understand the offer.",
-        noam: "Systems & data",
-        noamDesc: "Noam builds the reliable logic behind the product: forms, dashboards, automations and clean data flows.",
-        charles: "Client relation",
-        charlesDesc: "Charles keeps the project aligned with your business goals and makes sure every decision remains clear."
-      }
-    },
-    reviews: {
-      path: "Client feedback",
-      title: "What clients say after delivery",
-      r1: "Fast, structured and very clear communication. The final platform made our client process much smoother.",
-      r2: "The team translated our constraints into concrete decisions. We saw better traction within weeks.",
-      r3: "Our booking operations became far more reliable and easier to manage day to day."
-    },
-    contact: {
-      path: "Let's discuss your project",
-      title: "Not sure whether you need a starter site or custom project?",
-      subtitle: "Tell us what you want to sell, show or automate. We reply within 24h with the simplest next step.",
-      successTitle: "Received.",
-      successDesc: "The 3geeks team will be in touch shortly.",
-      successTip: "Need it urgent? Ping Charles directly on the right.",
-      form: {
-        name: "Full name",
-        email: "Email",
-        type: "Business type",
-        serviceInterest: "Solution interest",
-        message: "Message & project details",
-        btn: "Send request",
-        sending: "Sending...",
-        types: ["Restaurant / Bar", "Retail / Shop", "Service / Craftsman", "Health / Medical", "Other"],
-        serviceOptions: ["Starter website (€300)", "Custom web project", "Complete redesign", "Maintenance only", "Other / Not sure"]
-      },
-      direct: {
-        title: "Or chat with Charles",
-        subtitle: "Skip the form. Reply on WhatsApp.",
-        phone: "+33 6 71 61 81 19"
-      }
-    },
-    footer: {
-      eof: "End",
-      rights: "All rights reserved.",
-      tagline: "Made in France",
-      links: ["Legal", "Privacy", "Terms"]
-    },
-    cookie: {
-      title: "Cookies, please.",
-      desc: "We use cookies to improve your browsing experience and analyse our traffic. Click \"Accept\" to consent.",
-      accept: "Accept",
-      decline: "Decline"
-    },
-    legal: {
-      title: "Legal Information",
-      tabs: {
-        legal: "Legal Notice",
-        privacy: "Privacy Policy",
-        terms: "T&Cs"
-      },
-      content: {
-        legal: [
-          {
-            title: "1. Website Editor",
-            text: "This site is edited by 3geeks.\nCompany registration details and registered office must be added before commercial publication.\nEmail: contact@3geeks.fr\nPhone: +33 6 71 61 81 19"
-          },
-          {
-            title: "2. Hosting",
-            text: "The website is hosted by Vercel Inc.\nAddress: 340 S Lemon Ave #4133 Walnut, CA 91789, USA"
-          },
-          {
-            title: "3. Intellectual Property",
-            text: "This entire site is subject to French and international copyright and intellectual property law. All reproduction rights reserved."
-          }
-        ],
-        privacy: [
-          {
-            title: "1. Data Collection",
-            text: "We collect the following information via our contact form:\n- First and last name\n- Email address\n- Company name\n- Project details"
-          },
-          {
-            title: "2. Data Usage",
-            text: "This data is used solely to:\n- Respond to your contact requests\n- Establish quotes\n- Contact you regarding commercial relations\n\nYour data is never sold to third parties."
-          },
-          {
-            title: "3. Your Rights",
-            text: "Under the GDPR, you have the right to access, rectify, and delete your data. To exercise this right, contact us at contact@3geeks.fr."
-          },
-          {
-            title: "4. Cookies",
-            text: "This site uses essential cookies for operation and analytics cookies to improve your experience. You can manage preferences via the consent banner."
-          }
-        ],
-        terms: [
-          {
-            title: "1. Purpose",
-            text: "These conditions govern the sale of web development services by 3geeks."
-          },
-          {
-            title: "2. Price",
-            text: "Prices are listed in euros. 3geeks reserves the right to modify prices at any time, but any service is billed at the rate in effect when the quote is validated."
-          },
-          {
-            title: "3. Payment",
-            text: "Payment is due upon signing the quote (deposit) and upon delivery (balance)."
-          },
-          {
-            title: "4. Delivery",
-            text: "Delivery times are indicative and may vary depending on project complexity and client responsiveness."
-          }
-        ]
-      },
-      close: "Close"
-    }
-  },
-  fr: {
-    nav: {
-      services: "Services",
-      projects: "Projets",
-      skills: "Stack & IA",
-      story: "Parcours",
-      team: "Équipe",
-      reviews: "Avis",
-      cta: "Nous contacter",
-    },
-    hero: {
-      badge: "Des sites compris en quelques secondes",
-      brandSubtitle: "Trois associés, un studio — la marque s’écrit 3geeks. Sites & produits digitaux, faits en France.",
-      titleStart: "Des sites et outils web",
-      titleEnd: "qui donnent envie de vous contacter.",
-      comment: "Démarrez avec un site ciblé à 300€ ou un projet web sur mesure. On vous aide à choisir le format le plus simple pour votre objectif.",
-      ctaPrimary: "Parler de mon projet",
-      ctaSecondary: "Voir nos réalisations",
-    },
-    stats: {
-      founders: "fondateurs",
-      projects: "projets publics",
-      response: "de réponse",
-      french: "Made in France",
-    },
-    projects: {
-      path: "Réalisations récentes",
-      title: "Des projets réels, déjà en ligne",
-      subtitle: "Trois projets publics qui montrent le type d'expériences web et app que nous pouvons concevoir, développer et lancer.",
-      p1: {
-        title: "Express Divorce USA",
-        tag: "Plateforme de services juridiques",
-        desc: "Une plateforme rassurante qui guide les utilisateurs dans un parcours juridique sensible avec clarté.",
-        result1: "Parcours client plus clair",
-        result2: "Étapes rassurantes avant contact",
-        result3: "Projet public consultable en ligne",
-        link: "https://www.expressdivorceusa.co",
-        btn: "Ouvrir le projet"
-      },
-      p2: {
-        title: "CallKitchen",
-        tag: "Automatisation telephonique restauration",
-        desc: "Une landing page concrète pour un assistant téléphonique IA qui aide les restaurants à capter les appels manqués.",
-        result1: "Produit expliqué clairement",
-        result2: "Appel à l'action direct vers la démo",
-        result3: "Landing page publique en ligne",
-        link: "https://call-kitchen-landing.vercel.app",
-        btn: "Ouvrir le projet"
-      },
-      p3: {
-        title: "Two",
-        tag: "Application mobile grand public",
-        desc: "Une expérience iOS soignée, pensée pour être simple et utile dès la première interaction.",
-        result1: "Application publique sur l'App Store",
-        result2: "Interface mobile claire",
-        result3: "Pensée pour un usage récurrent",
-        link: "https://apps.apple.com/fr/app/two/id6758867716",
-        btn: "App Store"
-      }
-    },
-    whyUs: {
-      path: "Pourquoi travailler avec nous",
-      title: "Une petite équipe qui transforme vos idées en produits utiles",
-      subtitle: "On combine sens du design, fiabilité technique et communication directe pour faire avancer votre projet sans complexité inutile.",
-      card1: {
-        file: "Design qui vend",
-        title: "Une première impression qui aide à vendre",
-        desc: "On conçoit des pages faciles à comprendre, agréables à parcourir et crédibles dès le premier écran."
-      },
-      card2: {
-        file: "Base fiable",
-        title: "Des fondations solides derrière l'interface",
-        desc: "Formulaires, automatisations, dashboards et intégrations sont construits proprement pour rester fiables après la mise en ligne."
-      },
-      card3: {
-        file: "Objectifs business",
-        title: "Pensé autour de votre activité réelle",
-        desc: "Restaurant, boutique, service ou startup : on adapte le produit à la façon dont vos clients décident vraiment."
-      },
-      card4: {
-        file: "Contact direct",
-        title: "Vous parlez à des humains, pas à un ticket",
-        desc: "Charles garde le projet clair, traduit vos besoins terrain en décisions concrètes et vous évite le jargon inutile."
-      }
-    },
-    stack: {
-      path: "Méthode simple",
-      title: "Du premier appel à la mise en ligne, vous savez toujours où on va",
-      subtitle: "Comprendre le besoin, designer l'expérience, construire le produit, puis l'améliorer avec les retours réels.",
-    },
-    services: {
-      path: "Nos offres",
-      badge: "SOLUTIONS",
-      title: "Deux façons claires de démarrer votre projet",
-      maintenanceTitle: "Option Sérénité",
-      maintenanceDesc: "Gardez votre site surveillé, sécurisé et légèrement mis à jour après la mise en ligne.",
-      maintenancePrice: "50€/mois",
-      maintenanceCta: "+ ajouter l'option",
-      maintenanceHighlight: "Recommandé",
-      maintenanceBenefits: [
-        "Monitoring de disponibilité",
-        "Mises à jour de sécurité",
-        "Petits edits de contenu chaque mois",
-      ],
-      s1: {
-        title: "Site Starter",
-        price: "300€",
-        subPrice: "paiement unique",
-        badge: "cadre clair",
-        btn: "Démarrer",
-        features: [
-          { text: 'Site one-page responsive', checked: true },
-          { text: 'Offre claire et appel à l’action', checked: true },
-          { text: 'Design moderne et soigné', checked: true },
-          { text: 'Formulaire ou lien WhatsApp', checked: false },
-          { text: 'Pensé d’abord pour mobile', checked: false },
-        ]
-      },
-      s2: {
-        title: "Projet web sur mesure",
-        price: "Sur devis",
-        subPrice: "selon complexité",
-        badge: "sur mesure",
-        btn: "Nous parler",
-        features: [
-          { text: 'Tout le Starter, adapté à votre offre', checked: true },
-          { text: 'Parcours de réservation ou demande', checked: true },
-          { text: 'E-commerce ou paiements si besoin', checked: true },
-          { text: 'Comptes et données structurées', checked: true },
-          { text: 'Dashboard admin sur mesure', checked: true },
-          { text: 'Intégrations avec vos outils', checked: true },
-        ]
-      },
-      s3: {
-        title: "Refonte complète",
-        price: "Sur devis",
-        subPrice: "audit & mise à niveau",
-        badge: "amélioration",
-        btn: "Demander un audit",
-        features: [
-          { text: 'Refonte visuelle et UX', checked: true },
-          { text: 'Audit performance et structure', checked: true },
-          { text: 'Reconstruction front-end moderne', checked: true },
-          { text: 'SEO existant pris en compte', checked: true },
-          { text: 'Parcours de contact plus clair', checked: true },
-          { text: 'Plan de mise en ligne sans coupure brutale', checked: true },
-        ]
-      },
-    },
-    booking: {
-      title: "Confirmer votre demande",
-      stepOf: "Étape {step} sur 2",
-      selectedOffer: "Offre sélectionnée",
-      quote: "Sur devis",
-      estimatedTotal: "Total estimé",
-      continue: "Continuer",
-      back: "Retour",
-      confirm: "Confirmer",
-      processing: "Envoi...",
-      name: "Nom",
-      email: "Email",
-      company: "Entreprise / projet",
-      preferredDate: "Date souhaitée (optionnel)",
-      dateHint: "Laissez vide pour planifier plus tard",
-      details: "Détails supplémentaires",
-      namePlaceholder: "Jean Dupont",
-      emailPlaceholder: "jean@entreprise.com",
-      companyPlaceholder: "Ma boutique",
-      detailsPlaceholder: "Autre chose à savoir ?",
-    },
-    team: {
-      path: "Equipe fondatrice",
-      title: "Les fondateurs",
-      subtitle: "Trois profils complémentaires, un contact direct et le même objectif : livrer des produits utiles que vos clients aiment utiliser.",
-      roles: {
-        elias: "Design & expérience",
-        eliasDesc: "Elias façonne l'expérience visuelle : pages claires, interactions fluides et rendu soigné qui aide à comprendre l'offre.",
-        noam: "Systèmes & data",
-        noamDesc: "Noam construit la logique fiable derrière le produit : formulaires, dashboards, automatisations et flux de données propres.",
-        charles: "Relation client",
-        charlesDesc: "Charles garde le projet aligné avec vos objectifs business et s'assure que chaque décision reste claire."
-      }
-    },
-    reviews: {
-      path: "Retours clients",
-      title: "Ce que nos clients disent après livraison",
-      r1: "Équipe réactive, process très clair et exécution propre. Le nouveau site a fluidifié notre acquisition.",
-      r2: "Ils ont compris notre métier rapidement et proposé des choix utiles. On a vu une vraie progression.",
-      r3: "Le système mis en place est robuste et simple à opérer. Notre quotidien est plus serein."
-    },
-    contact: {
-      path: "Discutons de votre projet",
-      title: "Vous hésitez entre site starter et projet sur mesure ?",
-      subtitle: "Expliquez ce que vous voulez vendre, présenter ou automatiser. On répond sous 24h avec la prochaine étape la plus simple.",
-      successTitle: "Bien reçu.",
-      successDesc: "L'équipe 3geeks vous recontacte très vite.",
-      successTip: "Urgent ? Pinguez Charles directement sur la droite.",
-      form: {
-        name: "Nom complet",
-        email: "Email",
-        type: "Type de business",
-        serviceInterest: "Solution envisagée",
-        message: "Message & détails du projet",
-        btn: "Envoyer la demande",
-        sending: "Envoi...",
-        types: ["Restauration / Bar", "Commerce / Boutique", "Artisan / Service", "Santé / Médical", "Autre"],
-        serviceOptions: ["Site Starter (300€)", "Projet web sur mesure", "Refonte complète", "Maintenance seule", "Autre / Je ne sais pas"]
-      },
-      direct: {
-        title: "Ou contactez Charles",
-        subtitle: "Pas de formulaire. Réponse rapide sur WhatsApp.",
-        phone: "+33 6 71 61 81 19"
-      }
-    },
-    footer: {
-      eof: "Fin",
-      rights: "Tous droits réservés.",
-      tagline: "Made in France",
-      links: ["Mentions Légales", "Confidentialité", "CGV"]
-    },
-    cookie: {
-      title: "Cookies, s'il vous plaît.",
-      desc: "Nous utilisons des cookies pour améliorer votre navigation et analyser notre trafic. Cliquez sur \"Accepter\" pour consentir.",
-      accept: "Accepter",
-      decline: "Refuser"
-    },
-    legal: {
-      title: "Informations légales",
-      tabs: {
-        legal: "Mentions Légales",
-        privacy: "Politique de Confidentialité",
-        terms: "CGV"
-      },
-      content: {
-        legal: [
-          {
-            title: "1. Éditeur du site",
-            text: "Ce site est édité par 3geeks.\nLes informations d'immatriculation et de siège social doivent être ajoutées avant une publication commerciale définitive.\nEmail : contact@3geeks.fr\nTéléphone : +33 6 71 61 81 19"
-          },
-          {
-            title: "2. Hébergement",
-            text: "Le site est hébergé par Vercel Inc.\nAdresse : 340 S Lemon Ave #4133 Walnut, CA 91789, USA"
-          },
-          {
-            title: "3. Propriété intellectuelle",
-            text: "L'ensemble de ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés."
-          }
-        ],
-        privacy: [
-          {
-            title: "1. Collecte des données",
-            text: "Nous collectons les informations suivantes via notre formulaire de contact :\n- Nom et prénom\n- Adresse email\n- Nom de l'entreprise\n- Détails du projet"
-          },
-          {
-            title: "2. Utilisation des données",
-            text: "Ces données sont utilisées uniquement pour :\n- Répondre à vos demandes de contact\n- Établir des devis\n- Vous contacter dans le cadre de la relation commerciale\n\nVos données ne sont jamais vendues à des tiers."
-          },
-          {
-            title: "3. Vos droits",
-            text: "Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ce droit, contactez-nous à contact@3geeks.fr."
-          },
-          {
-            title: "4. Cookies",
-            text: "Ce site utilise des cookies essentiels au fonctionnement et des cookies d'analyse pour améliorer votre expérience. Vous pouvez gérer vos préférences via la bannière de consentement."
-          }
-        ],
-        terms: [
-          {
-            title: "1. Objet",
-            text: "Les présentes conditions régissent les ventes de prestations de services de développement web par 3geeks."
-          },
-          {
-            title: "2. Prix",
-            text: "Les prix sont indiqués en euros. 3geeks se réserve le droit de modifier ses prix à tout moment, mais le service sera facturé sur la base du tarif en vigueur au moment de la validation du devis."
-          },
-          {
-            title: "3. Paiement",
-            text: "Le paiement est exigible à la signature du devis (acompte) et à la livraison du projet (solde)."
-          },
-          {
-            title: "4. Livraison",
-            text: "Les délais de livraison sont donnés à titre indicatif et peuvent varier selon la complexité du projet et la réactivité du client."
-          }
-        ]
-      },
-      close: "Fermer"
-    }
+/** Langue mémorisée, sinon celle du navigateur (français par défaut pour la France). */
+function detectLang(): Lang {
+  try {
+    const saved = localStorage.getItem(LANG_STORAGE_KEY);
+    if (saved === 'fr' || saved === 'en') return saved;
+  } catch {
+    /* stockage indisponible */
   }
-};
-
-// Reusable card label. The window variant is used sparingly for project showcases.
-const IdeBar: React.FC<{ filename: string; accent?: string; variant?: 'badge' | 'window' }> = ({
-  filename,
-  accent = 'cyan',
-  variant = 'badge',
-}) => {
-  const accentClass = accent === 'lime'
-    ? 'border-lime-300/25 bg-lime-300/10 text-lime-200'
-    : 'border-cyan-300/25 bg-cyan-300/10 text-cyan-200';
-
-  if (variant === 'window') {
-    return (
-      <div className="flex items-center gap-2 md:gap-3 border-b border-white/10 bg-white/[0.045] px-3 py-2 md:px-5 md:py-3">
-        <div className="flex items-center gap-1.5 shrink-0" aria-hidden="true">
-          <span className="h-2 w-2 md:h-2.5 md:w-2.5 rounded-full bg-rose-400/80" />
-          <span className="h-2 w-2 md:h-2.5 md:w-2.5 rounded-full bg-amber-300/80" />
-          <span className="h-2 w-2 md:h-2.5 md:w-2.5 rounded-full bg-lime-300/80" />
-        </div>
-        <span className={`min-w-0 truncate rounded-full border px-2 py-0.5 md:px-3 md:py-1 text-[10px] md:text-[11px] font-semibold uppercase tracking-wide ${accentClass}`}>
-          {filename}
-        </span>
-      </div>
-    );
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    return navigator.language.toLowerCase().startsWith('fr') ? 'fr' : 'en';
   }
+  return 'fr';
+}
 
-  return (
-    <div className="px-4 pt-3 pb-1 md:px-5 md:pt-5">
-      <span className={`inline-flex rounded-full border px-2.5 py-0.5 md:px-3 md:py-1 text-[10px] md:text-[11px] font-semibold uppercase tracking-wide ${accentClass}`}>
-        {filename}
-      </span>
-    </div>
-  );
-};
+const NAV_LINKS: Array<{ id: string; key: 'services' | 'method' | 'projects' | 'expertise' | 'reviews' }> = [
+  { id: 'services', key: 'services' },
+  { id: 'methode', key: 'method' },
+  { id: 'projets', key: 'projects' },
+  { id: 'skills', key: 'expertise' },
+  { id: 'temoignages', key: 'reviews' },
+];
+
+const WHATSAPP_URL = 'https://wa.me/33671618119';
+
+const inputClass =
+  'w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-brand-mint/70 focus:bg-white/[0.05] focus:ring-4 focus:ring-brand-mint/10';
+const labelClass = 'mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-400';
 
 const App: React.FC = () => {
-  const [showIntro, setShowIntro] = useState(() => {
-    try {
-      return sessionStorage.getItem('3geeks-intro-done') !== '1';
-    } catch {
-      return true;
-    }
-  });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
-  const [lang, setLang] = useState<Lang>('fr');
+  const [lang, setLang] = useState<Lang>(detectLang);
+  const [scrolled, setScrolled] = useState(false);
 
   // Booking & Admin State
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<ServiceType>(null);
   const [adminOpen, setAdminOpen] = useState(false);
   const [requests, setRequests] = useState<ClientRequest[]>([]);
-  const [preferReducedMotion, setPreferReducedMotion] = useState(false);
-  // 3D background (three.js, ~460 kB) is desktop-only: don't even download it on phones.
-  const [showBackground3D, setShowBackground3D] = useState(false);
 
   // GDPR State
   const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [legalTab, setLegalTab] = useState<'privacy' | 'terms' | 'legal'>('legal');
 
-  // Mouse parallax via CSS vars — avoids re-rendering the whole App on every move
-  const gridParallaxRef = useRef<HTMLDivElement>(null);
-  const haloParallaxRef = useRef<HTMLDivElement>(null);
-  const haloBlobRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setPreferReducedMotion(mq.matches);
-    sync();
-    mq.addEventListener?.('change', sync);
-    return () => mq.removeEventListener?.('change', sync);
-  }, []);
-
-  // Enable the 3D background on md+ screens only, once the browser is idle.
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mq = window.matchMedia('(min-width: 768px)');
-    let idleId: number | undefined;
-    let timeoutId: number | undefined;
-    const sync = () => {
-      if (!mq.matches) {
-        setShowBackground3D(false);
-        return;
-      }
-      const enable = () => setShowBackground3D(true);
-      if (typeof window.requestIdleCallback === 'function') idleId = window.requestIdleCallback(enable, { timeout: 2000 });
-      else timeoutId = window.setTimeout(enable, 600);
-    };
-    sync();
-    mq.addEventListener?.('change', sync);
-    return () => {
-      mq.removeEventListener?.('change', sync);
-      if (idleId !== undefined) window.cancelIdleCallback?.(idleId);
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+    document.documentElement.lang = lang;
+    try {
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch {
+      /* ignore */
     }
+  }, [lang]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
   }, [isMenuOpen]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    if (preferReducedMotion) return;
-
-    let frame = 0;
-    const handleMove = (event: MouseEvent) => {
-      if (bookingModalOpen || adminOpen || legalModalOpen) return;
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const x = (event.clientX / window.innerWidth) * 2 - 1;
-        const y = (event.clientY / window.innerHeight) * 2 - 1;
-        if (gridParallaxRef.current) {
-          gridParallaxRef.current.style.transform = `translate3d(${x * -12}px, ${y * -12}px, 0)`;
-        }
-        if (haloParallaxRef.current) {
-          haloParallaxRef.current.style.transform = `translate3d(${x * 30}px, ${y * 30}px, 0)`;
-        }
-        if (haloBlobRef.current) {
-          haloBlobRef.current.style.left = `calc(${(x + 1) * 50}% - 260px)`;
-          haloBlobRef.current.style.top = `calc(${(y + 1) * 50}% - 260px)`;
-        }
-      });
-    };
-
-    window.addEventListener('mousemove', handleMove, { passive: true });
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('mousemove', handleMove);
-    };
-  }, [preferReducedMotion, bookingModalOpen, adminOpen, legalModalOpen]);
 
   const openLegal = (tab: 'privacy' | 'terms' | 'legal') => {
     setLegalTab(tab);
@@ -777,6 +113,7 @@ const App: React.FC = () => {
   };
 
   const t = translations[lang];
+  const fr = lang === 'fr';
 
   useEffect(() => {
     if (adminOpen) fetchRequests();
@@ -946,834 +283,576 @@ const App: React.FC = () => {
     }
   };
 
-  const toggleLang = () => {
-    setLang(prev => prev === 'en' ? 'fr' : 'en');
-  }
+  const toggleLang = () => setLang((prev) => (prev === 'en' ? 'fr' : 'en'));
 
-  // Simple delivery steps, kept concise for non-technical visitors.
-  const stackChips: Array<{ label: string; icon: React.ReactNode }> = [
-    { label: lang === 'fr' ? 'Cadrage clair' : 'Clear discovery', icon: <Users className="w-4 h-4" /> },
-    { label: lang === 'fr' ? 'Maquette lisible' : 'Readable design', icon: <Layers className="w-4 h-4" /> },
-    { label: lang === 'fr' ? 'Développement fiable' : 'Reliable build', icon: <ShieldCheck className="w-4 h-4" /> },
-    { label: lang === 'fr' ? 'Mise en ligne' : 'Launch', icon: <Rocket className="w-4 h-4" /> },
-    { label: lang === 'fr' ? 'Optimisation continue' : 'Continuous improvement', icon: <RefreshCw className="w-4 h-4" /> },
+  const clientNames = PROJECTS_DATA.filter((p) => p.category === 'client').map((p) => p.title);
+
+  const plans: Array<{ id: ServiceType; data: typeof t.services.s1; tag: string; featured: boolean }> = [
+    { id: 'starter', data: t.services.s1, tag: fr ? 'Site vitrine' : 'Business website', featured: false },
+    { id: 'custom', data: t.services.s2, tag: fr ? 'Projet sur mesure' : 'Custom project', featured: true },
+    { id: 'redesign', data: t.services.s3, tag: fr ? 'Refonte complète' : 'Complete redesign', featured: false },
+  ];
+
+  const whyCards = [
+    { icon: Smartphone, title: t.whyUs.card1.title, desc: t.whyUs.card1.desc },
+    { icon: ShieldCheck, title: t.whyUs.card2.title, desc: t.whyUs.card2.desc },
+    { icon: Store, title: t.whyUs.card3.title, desc: t.whyUs.card3.desc },
+    { icon: Users, title: t.whyUs.card4.title, desc: t.whyUs.card4.desc },
+  ];
+
+  const reviews = [
+    { text: t.reviews.r1, name: 'Adrien', meta: 'CallKitchen · Express Divorce USA', initial: 'A' },
+    { text: t.reviews.r2, name: 'Henry F.', meta: 'Two App', initial: 'H' },
+    { text: t.reviews.r3, name: 'Pierre V.', meta: 'Concept Store', initial: 'P' },
   ];
 
   return (
-    <>
-    {showIntro ? (
-      <IntroScreen onComplete={(selectedLang) => {
-        setLang(selectedLang);
-        try {
-          sessionStorage.setItem('3geeks-intro-done', '1');
-        } catch {
-          /* ignore */
-        }
-        setShowIntro(false);
-      }} />
-    ) : (
-    <div className="min-h-screen bg-[#08090d] text-slate-100 font-sans relative overflow-x-hidden animate-in fade-in duration-700">
-
-      {/* 3D Background — paused while modals are open to avoid jank */}
-      {!preferReducedMotion && showBackground3D && (
-        <div className="fixed inset-0 z-0 hidden md:block">
-          <Suspense fallback={null}>
-            <FloatingLines
-              linesGradient={['#22d3ee', '#a3e635', '#a78bfa', '#22d3ee']}
-              topWavePosition={{ x: 0, y: 1.0, rotate: 0 }}
-              middleWavePosition={{ x: 0, y: 0, rotate: 0 }}
-              bottomWavePosition={{ x: 0, y: -1.0, rotate: 0 }}
-              lineCount={[3, 5, 3]}
-              lineDistance={[4, 5, 4]}
-              animationSpeed={0.55}
-              interactive={true}
-              bendStrength={0.5}
-              parallaxStrength={0.1}
-              paused={bookingModalOpen || adminOpen || legalModalOpen}
-            />
-          </Suspense>
-        </div>
-      )}
-
-      {/* Subtle code-grid overlay (parallax-driven via refs) */}
-      <div
-        ref={gridParallaxRef}
-        className="fixed inset-0 z-0 grid-dust opacity-[0.18] md:opacity-[0.25] pointer-events-none will-change-transform"
-      />
-
-      {/* Parallax light halo following the cursor */}
-      <div
-        ref={haloParallaxRef}
-        className="fixed inset-0 z-0 pointer-events-none hidden md:block will-change-transform"
-        aria-hidden="true"
+    <div className="relative min-h-screen overflow-x-hidden bg-ink font-sans text-slate-100">
+      {/* ------------------------------------------------------------ */}
+      {/* NAVIGATION                                                    */}
+      {/* ------------------------------------------------------------ */}
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled || isMenuOpen
+            ? 'border-b border-white/[0.07] bg-ink/85 backdrop-blur-xl'
+            : 'border-b border-transparent bg-transparent'
+        }`}
       >
-        <div
-          ref={haloBlobRef}
-          className="absolute h-[520px] w-[520px] rounded-full blur-[120px] opacity-50"
-          style={{
-            left: 'calc(50% - 260px)',
-            top: 'calc(50% - 260px)',
-            background: 'radial-gradient(circle, rgba(34,211,238,0.18), rgba(163,230,53,0.08) 45%, transparent 70%)',
-          }}
-        />
-      </div>
+        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8 md:h-20">
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex min-w-0 shrink-0 items-center"
+            aria-label="3geeks"
+          >
+            <Logo variant="wordmark" compact glow={false} />
+          </button>
 
-      {/* Navbar */}
-      <nav className="fixed top-3 md:top-4 left-1/2 -translate-x-1/2 w-[96%] max-w-7xl z-50 bg-[#0d1117]/90 backdrop-blur-xl border border-white/10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl transition-all duration-300">
-        <div className="px-3 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14 md:h-20">
-            {/* Logo */}
+          <div className="hidden items-center gap-8 lg:flex">
+            {NAV_LINKS.map((link) => (
+              <button
+                key={link.id}
+                type="button"
+                onClick={() => scrollToSection(link.id)}
+                className="text-sm font-medium text-slate-300 transition-colors hover:text-white"
+              >
+                {t.nav[link.key]}
+              </button>
+            ))}
+          </div>
+
+          <div className="hidden items-center gap-3 lg:flex">
             <button
               type="button"
-              className="flex-shrink-0 flex items-center cursor-pointer group min-w-0 max-w-[70%]"
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              aria-label="3geeks — back to top"
+              onClick={toggleLang}
+              className="flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-white/25 hover:text-white"
+              aria-label={fr ? 'Switch to English' : 'Passer en français'}
             >
-              <Logo
-                variant="wordmark"
-                spaced
-                compact
-                className="group-hover:scale-[1.02] transition-transform duration-300"
-              />
+              <Globe className="h-3.5 w-3.5 text-brand-mint" /> {lang.toUpperCase()}
             </button>
-
-            {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center space-x-6">
-              <button onClick={() => scrollToSection('projets')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.projects}</button>
-              <button onClick={() => scrollToSection('services')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.services}</button>
-              <button onClick={() => scrollToSection('skills')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.skills}</button>
-              <button onClick={() => scrollToSection('equipe')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.team}</button>
-              <button onClick={() => scrollToSection('temoignages')} className="text-sm text-slate-300 hover:text-cyan-300 transition-colors font-medium">{t.nav.reviews}</button>
-
-              <button onClick={toggleLang} className="flex items-center gap-1.5 text-slate-200 hover:text-white text-xs font-mono border border-white/10 bg-white/5 hover:bg-white/10 rounded-full px-3 py-1 transition-all">
-                 <Globe className="w-3 h-3 text-cyan-300" /> {lang.toUpperCase()}
-              </button>
-
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="glass-button px-5 py-2 rounded-full text-white text-sm font-semibold hover:scale-105 transition-transform"
-              >
-                {t.nav.cta}
-              </button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="lg:hidden flex items-center gap-3">
-              <button onClick={toggleLang} className="text-slate-200 font-mono text-xs border border-white/10 bg-white/5 px-2.5 py-1 rounded-full">
-                 {lang.toUpperCase()}
-              </button>
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white p-2 rounded-xl bg-white/5 border border-white/10 active:scale-95 transition-transform"
-                aria-label="Toggle mobile menu"
-              >
-                {isMenuOpen ? <X className="w-5 h-5 text-cyan-300" /> : <Menu className="w-5 h-5 text-slate-100" />}
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Navigation Drawer Fullscreen */}
-      {isMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-[#08090d]/96 backdrop-blur-2xl flex flex-col justify-between p-5 pt-6 animate-in fade-in slide-in-from-top-3 duration-250">
-          <div>
-            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-              <Logo variant="wordmark" spaced compact />
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 active:scale-95 transition-all"
-                aria-label="Close menu"
-              >
-                <X className="w-6 h-6 text-cyan-300" />
-              </button>
-            </div>
-
-            <nav className="flex flex-col space-y-2 font-mono">
-              <button onClick={() => scrollToSection('projets')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
-                <span>{t.nav.projects}</span>
-                <ArrowRight className="w-4 h-4 text-cyan-400" />
-              </button>
-              <button onClick={() => scrollToSection('services')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
-                <span>{t.nav.services}</span>
-                <ArrowRight className="w-4 h-4 text-cyan-400" />
-              </button>
-              <button onClick={() => scrollToSection('skills')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
-                <span>{t.nav.skills}</span>
-                <ArrowRight className="w-4 h-4 text-lime-300" />
-              </button>
-              <button onClick={() => scrollToSection('equipe')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
-                <span>{t.nav.team}</span>
-                <ArrowRight className="w-4 h-4 text-slate-400" />
-              </button>
-              <button onClick={() => scrollToSection('temoignages')} className="text-left text-base text-slate-100 py-3 px-3 rounded-xl hover:bg-white/5 hover:text-cyan-300 transition-colors flex items-center justify-between border-b border-white/5">
-                <span>{t.nav.reviews}</span>
-                <ArrowRight className="w-4 h-4 text-slate-400" />
-              </button>
-            </nav>
-          </div>
-
-          <div className="space-y-3 pt-4 border-t border-white/10 pb-[max(1rem,env(safe-area-inset-bottom))]">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-slate-400 font-mono">Select Language / Langue</span>
-              <button onClick={toggleLang} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-cyan-400/40 bg-cyan-400/10 text-cyan-200 text-xs font-mono font-bold">
-                <Globe className="w-3.5 h-3.5" /> {lang.toUpperCase()}
-              </button>
-            </div>
-
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="w-full py-3.5 bg-gradient-to-r from-cyan-400 to-lime-400 text-slate-950 rounded-xl font-bold font-mono text-center shadow-lg shadow-cyan-400/25 active:scale-98 transition-transform"
-            >
+            <button type="button" onClick={() => scrollToSection('contact')} className="btn btn-primary !py-3">
               {t.nav.cta}
             </button>
+          </div>
 
+          <div className="flex items-center gap-2 lg:hidden">
+            <button
+              type="button"
+              onClick={toggleLang}
+              className="rounded-full border border-white/10 px-3 py-1.5 text-xs font-semibold text-slate-300"
+              aria-label={fr ? 'Switch to English' : 'Passer en français'}
+            >
+              {lang.toUpperCase()}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="rounded-lg border border-white/10 p-2 text-white"
+              aria-label="Menu"
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
+        </nav>
+
+        {isMenuOpen && (
+          <div className="border-t border-white/[0.07] bg-ink px-5 pb-6 pt-4 lg:hidden">
+            <div className="flex flex-col">
+              {NAV_LINKS.map((link) => (
+                <button
+                  key={link.id}
+                  type="button"
+                  onClick={() => scrollToSection(link.id)}
+                  className="flex items-center justify-between border-b border-white/5 py-4 text-left text-base font-medium text-slate-100"
+                >
+                  {t.nav[link.key]}
+                  <ArrowRight className="h-4 w-4 text-slate-500" />
+                </button>
+              ))}
+            </div>
+            <button type="button" onClick={() => scrollToSection('contact')} className="btn btn-primary mt-6 w-full">
+              {t.nav.cta}
+            </button>
             <a
-              href="https://wa.me/33671618119"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl border border-emerald-400/40 bg-emerald-400/10 text-emerald-200 text-xs font-mono font-bold"
+              className="btn btn-ghost mt-3 w-full"
             >
-              <span>WhatsApp Direct (+33 6 71 61 81 19)</span>
+              <MessageCircle className="h-4 w-4" /> WhatsApp
             </a>
           </div>
-        </div>
-      )}
+        )}
+      </header>
 
-      <main className="pt-20 md:pt-28 pb-20 md:pb-0 relative z-10">
+      <main>
+        {/* ------------------------------------------------------------ */}
+        {/* HERO                                                          */}
+        {/* ------------------------------------------------------------ */}
+        <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden">
+          <HeroVideo lang={lang} />
 
-        {/* HERO SECTION */}
-        <section className="relative pt-6 md:pt-16 pb-8 md:pb-16">
-           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-             <div className="glass-panel p-4 md:p-10 rounded-2xl md:rounded-3xl shadow-lg md:shadow-2xl max-w-5xl mx-auto border border-white/10">
+          {/* Lisibilité du texte : voile sombre à gauche, fondu vers la page en bas */}
+          <div
+            className="pointer-events-none absolute inset-0 bg-ink/60 lg:bg-[linear-gradient(90deg,#08090d_0%,rgba(8,9,13,0.85)_30%,rgba(8,9,13,0.25)_60%,transparent_100%)]"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-ink to-transparent"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/80 to-transparent"
+            aria-hidden="true"
+          />
 
-               <div className="text-center space-y-4 md:space-y-7">
+          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-10 pt-32 sm:px-8 md:pt-36">
+            <div className="max-w-2xl lg:max-w-[33rem]">
+              <div
+                className="hero-rise inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] py-1.5 pl-3 pr-4 text-xs font-medium text-slate-200 backdrop-blur"
+                style={{ ['--rise-delay' as string]: '100ms' }}
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-mint opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-mint" />
+                </span>
+                {t.hero.badge}
+              </div>
 
-                 <div className="inline-flex items-center px-2.5 md:px-4 py-1 md:py-2 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-200 text-[10px] md:text-xs uppercase tracking-wide md:tracking-wider mb-0 md:mb-4 animate-in slide-in-from-bottom-4 fade-in duration-700 backdrop-blur-sm">
-                    {t.hero.badge}
-                 </div>
+              <h1
+                className="hero-rise mt-6 font-display text-[2.15rem] font-semibold leading-[1.06] tracking-tight text-white drop-shadow-[0_2px_24px_rgba(8,9,13,0.8)] sm:text-6xl lg:text-[2.9rem] xl:text-[3.25rem]"
+                style={{ ['--rise-delay' as string]: '220ms' }}
+              >
+                {t.hero.titleStart}{' '}
+                <span className="text-gradient">{t.hero.titleEnd}</span>
+              </h1>
 
-                 <div className="flex flex-col items-center gap-2 pt-1 md:pt-0">
-                   <Logo
-                     variant="wordmark"
-                     spaced
-                     large
-                     className="justify-center opacity-95"
-                   />
-                   <p className="text-center text-[11px] md:text-xs text-slate-500 font-mono leading-relaxed max-w-md px-2 border-b border-white/5 pb-3 md:pb-4">
-                     {t.hero.brandSubtitle}
-                   </p>
-                 </div>
+              <p
+                className="hero-rise mt-7 max-w-xl text-base leading-relaxed text-slate-300 md:text-lg"
+                style={{ ['--rise-delay' as string]: '360ms' }}
+              >
+                {t.hero.comment}
+              </p>
 
-                 <div className="text-[1.35rem] leading-tight sm:text-3xl md:text-5xl lg:text-6xl font-display font-bold text-white md:leading-[1.05] tracking-tight drop-shadow-lg md:drop-shadow-2xl">
-                   <SplitText
-                     text={t.hero.titleStart}
-                     className="block mb-0.5 md:mb-2"
-                     delay={50}
-                   />
-                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-lime-300 to-cyan-300 block mt-1 md:mt-0">
-                     {t.hero.titleEnd}
-                   </span>
-                 </div>
-
-                <p className="text-xs md:text-base text-slate-400 md:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                   {t.hero.comment}
-                 </p>
-
-                 <div className="flex flex-col sm:flex-row items-center justify-center gap-2 md:gap-4 pt-1 md:pt-4 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-500">
-                   <button
-                     onClick={() => scrollToSection('contact')}
-                    className="w-full sm:w-auto px-5 md:px-8 py-2.5 md:py-4 bg-cyan-400 hover:bg-cyan-300 text-slate-950 rounded-lg md:rounded-xl font-semibold shadow-md md:shadow-[0_0_24px_rgba(34,211,238,0.3)] transition-all md:transform md:hover:scale-[1.02] flex items-center justify-center gap-2 text-sm md:text-base"
-                   >
-                     {t.hero.ctaPrimary} <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-                   </button>
-                   <button
-                    onClick={() => scrollToSection('projets')}
-                    className="w-full sm:w-auto px-5 md:px-8 py-2.5 md:py-4 bg-white/5 border border-white/15 hover:border-cyan-300/60 text-slate-100 rounded-lg md:rounded-xl font-semibold transition-all flex items-center justify-center gap-2 text-sm md:text-base"
-                   >
-                     {t.hero.ctaSecondary}
-                   </button>
-                 </div>
-               </div>
-             </div>
-
-             {/* STATS BAR */}
-             <div className="max-w-5xl mx-auto mt-4 md:mt-8 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
-               {[
-                 { n: '03', l: t.stats.founders },
-                 { n: '08', l: t.stats.projects },
-                 { n: '24h', l: t.stats.response },
-                 { n: '100%', l: t.stats.french },
-               ].map((s, i) => (
-                 <div key={i} className="glass-panel rounded-xl md:rounded-2xl p-3 md:p-4 text-center">
-                  <div className="text-xl md:text-3xl font-bold text-cyan-300 text-glow-cyan">{s.n}</div>
-                  <div className="text-[10px] md:text-xs text-slate-400 uppercase tracking-wide md:tracking-widest mt-0.5 md:mt-1 leading-tight">{s.l}</div>
-                 </div>
-               ))}
-             </div>
-           </div>
-        </section>
-
-        {/* ALL 8 3GEEKS PROJECTS SHOWCASE */}
-        <ProjectsShowcase lang={lang} />
-
-        {/* SKILLS & STACK MATRIX */}
-        <SkillsRadar lang={lang} />
-
-        {/* WHY US (Bento Grid) */}
-        <section className="py-9 md:py-16 relative bg-[#0d1117]/25">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto mb-8 md:mb-12 bg-[#0d1117]/40 backdrop-blur-xl border border-white/5 p-4 md:p-6 rounded-2xl md:rounded-3xl text-center shadow-lg md:shadow-2xl">
-              <div className="text-[10px] md:text-xs font-mono text-cyan-300/80 mb-1 md:mb-2">{t.whyUs.path}</div>
-              <h2 className="text-lg md:text-3xl font-display font-bold text-white mb-2 md:mb-3 leading-snug">
-                 <GradientText colors={['#fff', '#22d3ee', '#a3e635', '#fff']} animationSpeed={8}>{t.whyUs.title}</GradientText>
-              </h2>
-              <p className="text-sm text-slate-400 md:text-slate-300 font-medium leading-relaxed">{t.whyUs.subtitle}</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-               {/* Card 1 */}
-               <div className="glass-panel col-span-1 md:col-span-2 rounded-2xl md:rounded-3xl overflow-hidden hover:bg-[#0d1117]/85 transition-all duration-500 group md:hover:scale-[1.01] md:hover:shadow-2xl md:hover:shadow-cyan-500/15">
-                  <IdeBar filename={t.whyUs.card1.file} />
-                  <div className="p-5 md:p-8">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-cyan-400/15 border border-cyan-400/30 rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm mb-4 md:mb-6 text-cyan-300 md:group-hover:scale-110 transition-transform">
-                       <Smartphone className="w-5 h-5 md:w-6 md:h-6" />
-                    </div>
-                    <h3 className="text-base md:text-xl font-bold text-white mb-1.5 md:mb-2 font-mono">{t.whyUs.card1.title}</h3>
-                    <p className="text-sm text-slate-400 md:text-slate-300 leading-relaxed">{t.whyUs.card1.desc}</p>
-                  </div>
-               </div>
-
-               {/* Card 2 (highlighted) */}
-               <div className="rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-cyan-500/15 via-[#0d1117]/80 to-violet-500/10 border border-cyan-400/30 backdrop-blur-2xl text-white relative group transition-all duration-500 md:hover:scale-[1.01] md:hover:shadow-2xl md:hover:shadow-cyan-500/25">
-                  <IdeBar filename={t.whyUs.card2.file} accent="lime" />
-                  <div className="absolute top-2 right-0 -mt-4 -mr-4 w-24 h-24 bg-lime-400/20 rounded-full blur-2xl opacity-60 md:group-hover:opacity-100 transition-opacity"></div>
-                  <div className="p-5 md:p-8 relative">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-lime-400/15 border border-lime-400/30 rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm mb-4 md:mb-6 text-lime-300 backdrop-blur-sm">
-                       <Database className="w-5 h-5 md:w-6 md:h-6" />
-                    </div>
-                    <h3 className="text-base md:text-xl font-bold mb-1.5 md:mb-2 font-mono">{t.whyUs.card2.title}</h3>
-                    <p className="text-sm text-slate-300 md:text-slate-200 leading-relaxed">{t.whyUs.card2.desc}</p>
-                  </div>
-               </div>
-
-               {/* Card 3 */}
-               <div className="glass-panel rounded-2xl md:rounded-3xl overflow-hidden hover:bg-[#0d1117]/85 transition-all duration-500 group md:hover:scale-[1.01] md:hover:shadow-2xl md:hover:shadow-violet-500/15">
-                  <IdeBar filename={t.whyUs.card3.file} />
-                  <div className="p-5 md:p-8">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-violet-400/15 border border-violet-400/30 rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm mb-4 md:mb-6 text-violet-300 md:group-hover:rotate-12 transition-transform">
-                       <Store className="w-5 h-5 md:w-6 md:h-6" />
-                    </div>
-                    <h3 className="text-base md:text-xl font-bold text-white mb-1.5 md:mb-2 font-mono">{t.whyUs.card3.title}</h3>
-                    <p className="text-sm text-slate-400 md:text-slate-300 leading-relaxed">{t.whyUs.card3.desc}</p>
-                  </div>
-               </div>
-
-               {/* Card 4 */}
-               <div className="col-span-1 md:col-span-2 glass-panel rounded-2xl md:rounded-3xl overflow-hidden hover:bg-[#0d1117]/85 transition-all duration-500 group md:hover:scale-[1.01] md:hover:shadow-2xl md:hover:shadow-cyan-500/15">
-                  <IdeBar filename={t.whyUs.card4.file} />
-                  <div className="p-5 md:p-8">
-                    <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6">
-                      <div className="w-10 h-10 md:w-12 md:h-12 bg-cyan-400/15 border border-cyan-400/30 rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm text-cyan-300 flex-shrink-0">
-                         <Users className="w-5 h-5 md:w-6 md:h-6" />
-                      </div>
-                      <div>
-                        <h3 className="text-base md:text-xl font-bold text-white mb-1.5 md:mb-2 font-mono">{t.whyUs.card4.title}</h3>
-                        <p className="text-sm text-slate-400 md:text-slate-300 leading-relaxed">{t.whyUs.card4.desc}</p>
-                      </div>
-                    </div>
-                  </div>
-               </div>
+              <div
+                className="hero-rise mt-9 flex flex-col gap-3 sm:flex-row"
+                style={{ ['--rise-delay' as string]: '480ms' }}
+              >
+                <button type="button" onClick={() => scrollToSection('contact')} className="btn btn-primary">
+                  {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
+                </button>
+                <button type="button" onClick={() => scrollToSection('services')} className="btn btn-ghost">
+                  {t.hero.ctaSecondary}
+                </button>
+              </div>
             </div>
           </div>
-        </section>
 
-        {/* STACK SECTION (NEW) */}
-        <section className="py-8 md:py-16 relative bg-[#0d1117]/25">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-6 md:mb-10 max-w-3xl mx-auto">
-              <div className="text-xs md:text-sm font-mono text-cyan-300 mb-2 md:mb-3 tracking-wide">{t.stack.path}</div>
-              <h3 className="text-xl md:text-3xl font-display font-bold text-white leading-snug">{t.stack.title}</h3>
-              <p className="text-slate-300 text-sm md:text-base mt-3 md:mt-4 max-w-2xl mx-auto leading-relaxed">{t.stack.subtitle}</p>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-2.5 md:gap-3">
-              {stackChips.map((chip, i) => (
-                <div
-                  key={i}
-                  className="group flex items-center gap-2 md:gap-2.5 px-3 py-1.5 md:px-4 md:py-2.5 rounded-full bg-[#0d1117]/80 border border-white/15 backdrop-blur-md font-mono text-xs md:text-sm text-slate-200 hover:border-cyan-400/50 hover:text-cyan-300 md:hover:shadow-[0_0_20px_rgba(34,211,238,0.2)] transition-all"
-                >
-                  <span className="text-lime-300 group-hover:text-cyan-300 transition-colors">{chip.icon}</span>
-                  <span>{chip.label}</span>
+          {/* Bandeau de confiance */}
+          <div className="relative z-10 border-t border-white/[0.08] bg-ink/40 backdrop-blur-md">
+            <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-5 px-5 py-6 sm:px-8 md:grid-cols-4">
+              {t.hero.trust.map((item) => (
+                <div key={item.k} className="flex items-baseline gap-3">
+                  <span className="font-display text-2xl font-semibold text-white md:text-3xl">{item.k}</span>
+                  <span className="text-xs leading-snug text-slate-400 md:text-sm">{item.v}</span>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* SERVICES */}
-        <section id="services" className="py-9 md:py-16 relative bg-[#0d1117]/25">
-           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="max-w-3xl mx-auto mb-8 md:mb-12 bg-[#0d1117]/40 backdrop-blur-xl border border-white/5 p-4 md:p-6 rounded-2xl md:rounded-3xl text-center shadow-lg md:shadow-2xl">
-                 <div className="text-[10px] md:text-xs font-mono text-cyan-300/80 mb-1 md:mb-2">{t.services.path}</div>
-                 <h2 className="text-xl md:text-4xl font-display font-bold text-white leading-snug">
-                    <GradientText colors={['#22d3ee', '#a3e635', '#22d3ee']} animationSpeed={6}>{t.services.title}</GradientText>
-                 </h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
-                 {/* Service 1 */}
-                 <div className="glass-panel rounded-xl md:rounded-2xl overflow-hidden hover:border-cyan-400/40 transition-all duration-300 flex flex-col group md:hover:scale-[1.02] md:hover:-translate-y-1 md:hover:shadow-[0_10px_40px_-10px_rgba(34,211,238,0.35)]">
-                    <IdeBar filename={lang === 'fr' ? 'Site vitrine' : 'Business website'} />
-                    <div className="p-5 md:p-8 flex flex-col flex-1">
-                      <div className="inline-block bg-white/10 text-white text-[10px] md:text-[11px] font-mono font-bold px-2.5 py-0.5 md:px-3 md:py-1 rounded-full w-fit mb-3 md:mb-4 uppercase tracking-wider">{t.services.s1.badge}</div>
-                      <h3 className="text-lg md:text-2xl font-display font-bold text-white mb-3 md:mb-4">{t.services.s1.title}</h3>
-                      <div className="mb-4 md:mb-6">
-                         <div className="text-2xl md:text-3xl font-bold text-white font-mono">{t.services.s1.price}</div>
-                         <div className="text-xs md:text-sm text-slate-400 font-mono">{t.services.s1.subPrice}</div>
-                      </div>
-                      <ul className="space-y-2 md:space-y-3 mb-5 md:mb-8 flex-1">
-                         {t.services.s1.features.map((item, i) => (
-                           <li key={i} className="flex items-center gap-2 md:gap-3 text-slate-300 md:text-slate-200 text-xs md:text-sm">
-                              {item.checked ? (
-                                <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-lime-300 flex-shrink-0" />
-                              ) : (
-                                <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-cyan-300 flex-shrink-0" />
-                              )}
-                              {item.text}
-                           </li>
-                         ))}
-                      </ul>
-                      <button onClick={() => handleServiceSelect('starter')} className="w-full py-2.5 md:py-3 text-sm border border-white/10 bg-white/5 rounded-lg md:rounded-xl font-mono font-bold text-white hover:bg-white/10 hover:border-cyan-400/50 transition-all">{t.services.s1.btn}</button>
-                    </div>
-                 </div>
-
-                 {/* Service 2 (highlighted) */}
-                 <div className="rounded-xl md:rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-500/10 via-[#0d1117]/85 to-violet-500/10 border border-cyan-400/40 relative transform md:-translate-y-4 md:hover:-translate-y-5 md:hover:scale-[1.03] transition-all duration-300 shadow-md md:shadow-[0_0_40px_rgba(34,211,238,0.25)] md:hover:shadow-[0_0_80px_rgba(34,211,238,0.55)] flex flex-col z-10">
-                    <IdeBar filename={lang === 'fr' ? 'Projet sur mesure' : 'Custom project'} accent="lime" />
-                    <div className="p-5 md:p-8 flex flex-col flex-1">
-                      <h3 className="text-lg md:text-2xl font-display font-bold text-white mb-3 md:mb-4">{t.services.s2.title}</h3>
-                      <div className="mb-4 md:mb-6">
-                         <div className="text-2xl md:text-3xl font-bold text-cyan-300 font-mono">{t.services.s2.price}</div>
-                         <div className="text-xs md:text-sm text-slate-300 font-mono">{t.services.s2.subPrice}</div>
-                      </div>
-                      <ul className="space-y-2 md:space-y-3 mb-5 md:mb-8 flex-1">
-                         {t.services.s2.features.map((item, i) => (
-                           <li key={i} className="flex items-center gap-2 md:gap-3 text-slate-200 md:text-slate-100 text-xs md:text-sm">
-                              <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-lime-300 flex-shrink-0" /> {item.text}
-                           </li>
-                         ))}
-                      </ul>
-                      <button onClick={() => handleServiceSelect('custom')} className="w-full py-2.5 md:py-3 text-sm bg-cyan-400 hover:bg-cyan-300 text-slate-950 rounded-lg md:rounded-xl font-mono font-bold transition-colors shadow-md md:shadow-lg shadow-cyan-500/30">{t.services.s2.btn}</button>
-                    </div>
-                 </div>
-
-                 {/* Service 3 */}
-                 <div className="glass-panel rounded-xl md:rounded-2xl overflow-hidden hover:border-violet-400/40 transition-all duration-300 flex flex-col group md:hover:scale-[1.02] md:hover:-translate-y-1 md:hover:shadow-[0_10px_40px_-10px_rgba(167,139,250,0.4)]">
-                    <IdeBar filename={lang === 'fr' ? 'Refonte complète' : 'Complete redesign'} />
-                    <div className="p-5 md:p-8 flex flex-col flex-1">
-                      <div className="inline-block bg-violet-400/20 text-violet-300 text-[10px] md:text-[11px] font-mono font-bold px-2.5 py-0.5 md:px-3 md:py-1 rounded-full w-fit mb-3 md:mb-4 uppercase tracking-wider">{t.services.s3.badge}</div>
-                      <h3 className="text-lg md:text-2xl font-display font-bold text-white mb-3 md:mb-4">{t.services.s3.title}</h3>
-                      <div className="mb-4 md:mb-6">
-                         <div className="text-2xl md:text-3xl font-bold text-white font-mono">{t.services.s3.price}</div>
-                         <div className="text-xs md:text-sm text-slate-400 font-mono">{t.services.s3.subPrice}</div>
-                      </div>
-                      <ul className="space-y-2 md:space-y-3 mb-5 md:mb-8 flex-1">
-                         {t.services.s3.features.map((item, i) => (
-                           <li key={i} className="flex items-center gap-2 md:gap-3 text-slate-300 md:text-slate-200 text-xs md:text-sm">
-                              <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-lime-300 flex-shrink-0" /> {item.text}
-                           </li>
-                         ))}
-                      </ul>
-                      <button onClick={() => handleServiceSelect('redesign')} className="w-full py-2.5 md:py-3 text-sm border border-white/10 bg-white/5 rounded-lg md:rounded-xl font-mono font-bold text-white hover:bg-white/10 hover:border-violet-400/50 transition-all">{t.services.s3.btn}</button>
-                    </div>
-                 </div>
-              </div>
-
-              {/* Maintenance Add-on */}
-              <div
-                className="mt-8 md:mt-12 max-w-3xl mx-auto relative overflow-hidden rounded-xl md:rounded-2xl border border-lime-400/40 bg-gradient-to-r from-lime-400/10 via-[#0d1117]/85 to-cyan-400/10 p-5 md:p-7 flex flex-col sm:flex-row items-center justify-between gap-4 md:gap-6 hover:border-lime-400/60 transition-all duration-300 group md:hover:shadow-[0_10px_40px_-10px_rgba(163,230,53,0.35)] md:hover:-translate-y-1 cursor-pointer"
-                onClick={() => handleServiceSelect('maintenance_only')}
-              >
-                 <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_20%_50%,rgba(163,230,53,0.12),transparent_55%)]" />
-                 <div className="flex items-start gap-3 md:gap-4 w-full sm:w-auto relative z-10">
-                    <div className="p-2.5 md:p-3.5 bg-lime-400/20 border border-lime-400/40 rounded-lg md:rounded-xl text-lime-300 md:group-hover:scale-110 transition-transform shrink-0">
-                       <ShieldCheck className="w-5 h-5 md:w-6 md:h-6" />
-                    </div>
-                    <div className="min-w-0">
-                       <div className="flex flex-wrap items-center gap-2 mb-1">
-                         <h4 className="text-white font-bold text-base md:text-xl font-mono">{t.services.maintenanceTitle}</h4>
-                         <span className="text-[10px] md:text-[11px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-lime-400/20 text-lime-300 border border-lime-400/30">
-                           {t.services.maintenanceHighlight}
-                         </span>
-                       </div>
-                       <p className="text-slate-300 text-sm md:text-base max-w-md mt-0.5 leading-relaxed">
-                          {t.services.maintenanceDesc}{' '}
-                          <span className="text-lime-300 font-bold font-mono">{t.services.maintenancePrice}</span>
-                       </p>
-                    </div>
-                 </div>
-                 <button type="button" className="relative z-10 whitespace-nowrap w-full sm:w-auto px-5 md:px-6 py-2.5 md:py-3 bg-lime-400/15 border border-lime-400/40 hover:bg-lime-400/25 rounded-full text-xs md:text-sm font-mono font-bold text-lime-200 transition-all">
-                    {t.services.maintenanceCta}
-                 </button>
-              </div>
-           </div>
-        </section>
-
-        {/* TEAM SECTION (TRIO SYNERGY) */}
-        <section id="equipe" className="py-8 md:py-24 relative bg-[#0d1117]/50 border-t border-white/5">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="max-w-3xl mx-auto mb-6 md:mb-16 bg-[#0d1117]/60 backdrop-blur-xl border border-white/10 p-4 md:p-8 rounded-2xl md:rounded-3xl text-center shadow-2xl">
-              <div className="text-[10px] md:text-xs font-mono text-cyan-300 mb-1 md:mb-2 uppercase tracking-widest">{t.team.path}</div>
-              <h2 className="text-xl md:text-4xl font-display font-bold text-white mb-2 md:mb-3 leading-snug">{t.team.title}</h2>
-              <p className="text-xs md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-medium">
-                {lang === 'fr'
-                  ? 'Trois fondateurs associés : Design produit d’exception, Ingénierie Cloud/IA certifiée AWS et Relation client directe.'
-                  : 'Three co-founders: Premium product design, AWS-certified Cloud/AI engineering, and direct client execution.'}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
-
-              {/* Member 1: Elias */}
-              <div className="glass-panel rounded-2xl md:rounded-3xl overflow-hidden hover:border-cyan-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-cyan-500/10">
-                 <IdeBar filename="Elias Elloumi · Design & UI/UX" accent="cyan" />
-                 <div className="p-4 md:p-8 flex flex-col items-center flex-1">
-                   <div className="relative w-20 h-20 md:w-32 md:h-32 mb-3 md:mb-5 group-hover:scale-105 transition-transform p-0.5 md:p-1 rounded-full border-2 border-cyan-400/50 shadow-lg md:shadow-xl shadow-cyan-500/20">
-                      <img
-                        src={eliasImg}
-                        alt="Elias Elloumi"
-                        className="w-full h-full rounded-full object-cover"
-                        loading="lazy"
-                      />
-                   </div>
-                   <h3 className="text-lg md:text-xl font-bold text-white mb-0.5 md:mb-1">Elias Elloumi</h3>
-                   <span className="text-cyan-300 text-[11px] md:text-xs font-mono mb-2 md:mb-3 inline-flex items-center gap-1">
-                     <Sparkles className="w-3 h-3 md:w-3.5 md:h-3.5" /> Lead Product & Experience
-                   </span>
-                   <p className="text-slate-300 text-xs md:text-sm mb-4 md:mb-6 leading-relaxed flex-1">
-                     {lang === 'fr'
-                       ? 'Spécialiste UI/UX et front-end réactif (ECE Paris). Il transforme des concepts complexes en interfaces claires et rapides qui convertissent.'
-                       : 'Product Design & React specialist (ECE Paris). He transforms complex ideas into clean, fast, and high-converting user interfaces.'}
-                   </p>
-                   <a
-                     href="https://www.linkedin.com/in/elias-eloumi/"
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="mt-auto inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-sky-600 hover:bg-sky-500 rounded-lg md:rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
-                   >
-                    <svg viewBox="0 0 100 100" className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 fill-neutral-50">
-                       <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
-                     </svg>
-                    <span>LinkedIn</span>
-                   </a>
-                 </div>
-              </div>
-
-              {/* Member 2: Noam */}
-              <div className="glass-panel rounded-2xl md:rounded-3xl overflow-hidden hover:border-lime-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-lime-500/10">
-                 <IdeBar filename="Noam Leclapart · Cloud & GenAI" accent="lime" />
-                 <div className="p-4 md:p-8 flex flex-col items-center flex-1">
-                   <div className="relative w-20 h-20 md:w-32 md:h-32 mb-3 md:mb-5 group-hover:scale-105 transition-transform p-0.5 md:p-1 rounded-full border-2 border-lime-400/50 shadow-lg md:shadow-xl shadow-lime-500/20">
-                      <img
-                        src={noamImg}
-                        alt="Noam Leclapart-Jublot"
-                        className="w-full h-full rounded-full object-cover"
-                        loading="lazy"
-                      />
-                   </div>
-                   <h3 className="text-lg md:text-xl font-bold text-white mb-0.5 md:mb-1">Noam Leclapart-Jublot</h3>
-                   <span className="text-lime-300 text-[11px] md:text-xs font-mono mb-2 md:mb-3 inline-flex items-center gap-1">
-                     <Database className="w-3 h-3 md:w-3.5 md:h-3.5" /> Lead Cloud & IA (Certifié AWS)
-                   </span>
-                   <p className="text-slate-300 text-xs md:text-sm mb-4 md:mb-6 leading-relaxed flex-1">
-                     {lang === 'fr'
-                       ? 'Ingénieur en IA générative chez Thales et diplômé certifié AWS Cloud (ECE Paris). Il conçoit des infrastructures sécurisées et automatisations IA.'
-                       : 'Generative AI Engineer at Thales & AWS Certified Cloud Graduate (ECE Paris). He architects secure cloud infrastructures and AI automations.'}
-                   </p>
-                   <a
-                     href="https://www.linkedin.com/in/noam-leclapart-jublot/"
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="mt-auto inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-sky-600 hover:bg-sky-500 rounded-lg md:rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
-                   >
-                    <svg viewBox="0 0 100 100" className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 fill-neutral-50">
-                       <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
-                     </svg>
-                    <span>LinkedIn</span>
-                   </a>
-                 </div>
-              </div>
-
-               {/* Member 3: Charles */}
-              <div className="glass-panel rounded-2xl md:rounded-3xl overflow-hidden hover:border-violet-400/40 transition-all duration-300 group text-center flex flex-col hover:shadow-2xl hover:shadow-violet-500/10">
-                 <IdeBar filename="Charles Garbus · Business & Ops" accent="cyan" />
-                 <div className="p-4 md:p-8 flex flex-col items-center flex-1">
-                   <div className="relative w-20 h-20 md:w-32 md:h-32 mb-3 md:mb-5 group-hover:scale-105 transition-transform p-0.5 md:p-1 rounded-full border-2 border-violet-400/50 shadow-lg md:shadow-xl shadow-violet-500/20">
-                      <img
-                        src={charlesImg}
-                        alt="Charles Garbus"
-                        className="w-full h-full rounded-full object-cover"
-                        loading="lazy"
-                      />
-                   </div>
-                   <h3 className="text-lg md:text-xl font-bold text-white mb-0.5 md:mb-1">Charles Garbus</h3>
-                   <span className="text-violet-300 text-[11px] md:text-xs font-mono mb-2 md:mb-3 inline-flex items-center gap-1">
-                     <Users className="w-3 h-3 md:w-3.5 md:h-3.5" /> Business & Relation Client
-                   </span>
-                   <p className="text-slate-300 text-xs md:text-sm mb-4 md:mb-6 leading-relaxed flex-1">
-                     {lang === 'fr'
-                       ? 'Tech Entrepreneur bilingue Anglais/Français (ECE Paris & CFBL Londres). Il gère la relation client directe et s\'assure du respect des livrables sous 24h.'
-                       : 'Bilingual Tech Entrepreneur (ECE Paris & CFBL London). He leads client relations and ensures 24h rapid response for every project.'}
-                   </p>
-                   <a
-                     href="https://www.linkedin.com/in/charlesgarbus/"
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="mt-auto inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-sky-600 hover:bg-sky-500 rounded-lg md:rounded-xl text-white text-xs font-mono font-bold transition-all shadow-md"
-                   >
-                    <svg viewBox="0 0 100 100" className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 fill-neutral-50">
-                       <path d="M92.86,0H7.12A7.17,7.17,0,0,0,0,7.21V92.79A7.17,7.17,0,0,0,7.12,100H92.86A7.19,7.19,0,0,0,92.86,0ZM30.22,85.71H15.4V38H30.25V85.71ZM22.81,31.47a8.59,8.59,0,1,1,8.6-8.59A8.6,8.6,0,0,1,22.81,31.47Zm63,54.24H71V62.5c0-5.54-.11-12.66-7.7-12.66s-8.91,6-8.91,12.26V85.71H39.53V38H53.75v6.52H54c2-3.75,6.83-7.7,14-7.7,15,0,17.79,9.89,17.79,22.74Z" />
-                     </svg>
-                    <span>LinkedIn</span>
-                   </a>
-                 </div>
-              </div>
-
+        {/* ------------------------------------------------------------ */}
+        {/* PREUVE : projets déjà en ligne                               */}
+        {/* ------------------------------------------------------------ */}
+        <section className="border-b border-white/5 py-8" aria-label={fr ? 'Projets en ligne' : 'Live projects'}>
+          <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-10 gap-y-3 px-5 sm:px-8 md:flex-row">
+            <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+              {fr ? 'Déjà en ligne' : 'Already live'}
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 md:justify-start">
+              {clientNames.map((name) => (
+                <span key={name} className="font-display text-base font-medium text-slate-400">
+                  {name}
+                </span>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* SOCIAL PROOF */}
-        <section id="temoignages" className="py-10 md:py-20 relative bg-[#0d1117]/25">
-           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="max-w-3xl mx-auto mb-8 md:mb-16 bg-[#0d1117]/40 backdrop-blur-xl border border-white/5 p-5 md:p-8 rounded-2xl md:rounded-3xl text-center shadow-lg md:shadow-2xl">
-                <div className="text-[10px] md:text-xs text-cyan-300/80 mb-1 md:mb-2 uppercase tracking-wide">{t.reviews.path}</div>
-                <h2 className="text-xl md:text-4xl font-display font-bold text-white leading-snug">{t.reviews.title}</h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                 {/* Testimonial 1 */}
-                 <div className="glass-panel rounded-xl md:rounded-2xl overflow-hidden">
-                   <IdeBar filename={t.reviews.path} accent="lime" />
-                    <div className="p-4 md:p-6">
-                      <div className="flex gap-1 text-lime-300 mb-2 md:mb-3 items-center">
-                        <span className="text-[10px] md:text-[11px] mr-2">5/5</span>
-                         {[1,2,3,4,5].map(i => <Star key={i} className="w-3.5 h-3.5 md:w-4 md:h-4 fill-current" />)}
-                      </div>
-                      <p className="text-slate-200 md:text-slate-100 text-sm md:text-base mb-4 md:mb-6 italic font-medium leading-relaxed">"{t.reviews.r1}"</p>
-                      <div className="flex items-center gap-3">
-                         <div className="w-10 h-10 bg-gradient-to-br from-cyan-400/30 to-lime-300/30 rounded-full flex items-center justify-center text-white font-bold border border-cyan-400/40 font-mono text-sm shadow-[0_0_12px_rgba(34,211,238,0.3)]">A</div>
-                         <div className="flex-1">
-                           <p className="text-sm font-bold text-white">Adrien</p>
-                            <div className="flex items-center gap-2 mt-1">
-                               <span className="px-2 py-0.5 bg-cyan-400/20 border border-cyan-400/40 rounded text-[10px] text-cyan-300">CallKitchen</span>
-                               <span className="text-slate-500">+</span>
-                               <span className="px-2 py-0.5 bg-violet-400/20 border border-violet-400/40 rounded text-[10px] text-violet-300 font-mono">Express Divorce</span>
-                            </div>
-                         </div>
-                      </div>
-                    </div>
-                 </div>
+        {/* ------------------------------------------------------------ */}
+        {/* OFFRES                                                        */}
+        {/* ------------------------------------------------------------ */}
+        <section id="services" className="relative py-20 md:py-28">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <Reveal className="mx-auto mb-14 max-w-2xl text-center md:mb-20">
+              <span className="eyebrow">{t.services.path}</span>
+              <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.services.title}</h2>
+              <p className="mt-5 text-base text-slate-400 md:text-lg">{t.services.subtitle}</p>
+            </Reveal>
 
-                 {/* Testimonial 2 - Henry from Two App */}
-                 <div className="glass-panel rounded-xl md:rounded-2xl overflow-hidden border-lime-400/30">
-                   <IdeBar filename={t.reviews.path} accent="lime" />
-                    <div className="p-4 md:p-6">
-                      <div className="flex gap-1 text-lime-300 mb-2 md:mb-3 items-center">
-                         <span className="text-[10px] md:text-[11px] mr-2">5/5</span>
-                         {[1,2,3,4,5].map(i => <Star key={i} className="w-3.5 h-3.5 md:w-4 md:h-4 fill-current" />)}
-                      </div>
-                      <p className="text-slate-200 md:text-slate-100 text-sm md:text-base mb-4 md:mb-6 italic font-medium leading-relaxed">"{t.reviews.r2}"</p>
-                      <div className="flex items-center gap-3">
-                         <div className="w-10 h-10 bg-gradient-to-br from-violet-400/30 to-lime-300/30 rounded-full flex items-center justify-center text-white font-bold border border-violet-400/40 font-mono text-sm">H</div>
-                         <div className="flex-1">
-                           <p className="text-sm font-bold text-white">Henry F.</p>
-                            <div className="flex items-center gap-2 mt-1">
-                               <span className="px-2 py-0.5 bg-violet-400/20 border border-violet-400/40 rounded text-[10px] text-violet-300">Two App</span>
-                               <span className="text-[10px] text-slate-500">verified review</span>
-                            </div>
-                         </div>
-                      </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:items-stretch">
+              {plans.map((plan, i) => (
+                <Reveal key={plan.id} delay={i * 100} className={plan.featured ? 'md:-my-4' : ''}>
+                  <div
+                    className={`${plan.featured ? 'card-featured shadow-[0_30px_80px_-30px_rgba(10,239,187,0.35)]' : 'card'} flex h-full flex-col p-7 md:p-8`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold text-slate-300">{plan.tag}</span>
+                      <span
+                        className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider ${
+                          plan.featured
+                            ? 'bg-brand-lime/15 text-brand-lime'
+                            : 'bg-white/[0.06] text-slate-400'
+                        }`}
+                      >
+                        {plan.data.badge}
+                      </span>
                     </div>
-                 </div>
 
-                 {/* Testimonial 3 */}
-                 <div className="glass-panel rounded-xl md:rounded-2xl overflow-hidden hidden lg:block">
-                   <IdeBar filename={t.reviews.path} accent="lime" />
-                    <div className="p-4 md:p-6">
-                      <div className="flex gap-1 text-lime-300 mb-2 md:mb-3 items-center">
-                        <span className="text-[10px] md:text-[11px] mr-2">5/5</span>
-                         {[1,2,3,4,5].map(i => <Star key={i} className="w-3.5 h-3.5 md:w-4 md:h-4 fill-current" />)}
+                    <h3 className="mt-6 font-display text-2xl font-semibold text-white">{plan.data.title}</h3>
+                    <div className="mt-4">
+                      <div
+                        className={`font-display text-4xl font-semibold tracking-tight ${plan.featured ? 'text-gradient' : 'text-white'}`}
+                      >
+                        {plan.data.price}
                       </div>
-                      <p className="text-slate-200 md:text-slate-100 text-sm md:text-base mb-4 md:mb-6 italic font-medium leading-relaxed">"{t.reviews.r3}"</p>
-                      <div className="flex items-center gap-3">
-                         <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white font-bold border border-white/5 font-mono">PV</div>
-                         <div>
-                           <p className="text-sm font-bold text-white">Pierre V.</p>
-                           <p className="text-xs text-slate-400">Concept Store</p>
-                         </div>
-                      </div>
+                      <div className="mt-1 text-sm text-slate-500">{plan.data.subPrice}</div>
                     </div>
-                 </div>
-              </div>
-           </div>
+
+                    <div className="my-7 h-px bg-white/[0.08]" />
+
+                    <ul className="mb-8 flex-1 space-y-3.5">
+                      {plan.data.features.map((item) => (
+                        <li key={item.text} className="flex items-start gap-3 text-sm text-slate-300">
+                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-mint/15 text-brand-mint">
+                            <Check className="h-3 w-3" strokeWidth={3} />
+                          </span>
+                          {item.text}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <button
+                      type="button"
+                      onClick={() => handleServiceSelect(plan.id)}
+                      className={`btn w-full ${plan.featured ? 'btn-primary' : 'btn-ghost'}`}
+                    >
+                      {plan.data.btn}
+                    </button>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+
+            {/* Option Sérénité */}
+            <Reveal className="mt-14 md:mt-20">
+              <button
+                type="button"
+                onClick={() => handleServiceSelect('maintenance_only')}
+                className="card group flex w-full flex-col items-start gap-6 p-6 text-left md:flex-row md:items-center md:justify-between md:p-8"
+              >
+                <div className="flex items-start gap-5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-lime/10 text-brand-lime ring-1 ring-brand-lime/25">
+                    <ShieldCheck className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h3 className="font-display text-xl font-semibold text-white">{t.services.maintenanceTitle}</h3>
+                      <span className="rounded-full bg-brand-lime/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-brand-lime">
+                        {t.services.maintenanceHighlight}
+                      </span>
+                    </div>
+                    <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-slate-400">{t.services.maintenanceDesc}</p>
+                    <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+                      {t.services.maintenanceBenefits.map((b) => (
+                        <li key={b} className="flex items-center gap-2 text-sm text-slate-300">
+                          <Check className="h-4 w-4 text-brand-mint" strokeWidth={3} /> {b}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="flex w-full shrink-0 items-center justify-between gap-6 md:w-auto md:flex-col md:items-end md:gap-2">
+                  <span className="font-display text-3xl font-semibold text-white">{t.services.maintenancePrice}</span>
+                  <span className="inline-flex items-center gap-2 text-sm font-semibold text-brand-mint transition-all group-hover:gap-3">
+                    {t.services.maintenanceCta} <ArrowRight className="h-4 w-4" />
+                  </span>
+                </div>
+              </button>
+            </Reveal>
+          </div>
         </section>
 
-        {/* CONTACT SECTION */}
-        <section id="contact" className="py-10 md:py-20 relative bg-[#0d1117]/25">
-           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="glass-panel rounded-2xl md:rounded-3xl overflow-hidden shadow-lg md:shadow-2xl flex flex-col md:flex-row border border-white/10">
+        {/* ------------------------------------------------------------ */}
+        {/* MÉTHODE                                                       */}
+        {/* ------------------------------------------------------------ */}
+        <section id="methode" className="relative overflow-hidden border-y border-white/5 bg-surface/60 py-20 md:py-28">
+          <SectionLines variant="a" />
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+            <Reveal className="mb-14 max-w-2xl md:mb-20">
+              <span className="eyebrow">{t.stack.path}</span>
+              <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.stack.title}</h2>
+              <p className="mt-5 text-base text-slate-400 md:text-lg">{t.stack.subtitle}</p>
+            </Reveal>
 
-                 {/* Form Side */}
-                 <div className="p-5 md:p-12 md:w-3/5 relative">
-                   <div className="text-[10px] md:text-xs text-cyan-300/80 mb-1 md:mb-2 uppercase tracking-wide">{t.contact.path}</div>
-                    <h2 className="text-xl md:text-3xl font-display font-bold text-white mb-1 md:mb-2 leading-snug">{t.contact.title}</h2>
-                    <p className="text-sm text-slate-400 md:text-slate-300 mb-5 md:mb-8 font-medium leading-relaxed">{t.contact.subtitle}</p>
-
-                    {formStatus === 'success' ? (
-                       <div className="h-full flex flex-col items-center justify-center text-center animate-in fade-in py-8 md:py-12">
-                          <div className="w-16 h-16 md:w-20 md:h-20 bg-lime-400/15 text-lime-300 rounded-full flex items-center justify-center mb-4 md:mb-6 border border-lime-400/30 glow-lime">
-                             <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10" />
-                          </div>
-                          <h3 className="text-lg md:text-2xl font-bold text-white mb-2">{t.contact.successTitle}</h3>
-                          <p className="text-sm text-slate-400 md:text-slate-300 max-w-xs mb-5 md:mb-8">{t.contact.successDesc}</p>
-                          <div className="p-3 md:p-4 bg-cyan-500/10 border border-cyan-400/30 rounded-lg md:rounded-xl text-xs md:text-sm text-cyan-200">
-                            {t.contact.successTip}
-                          </div>
-                       </div>
-                    ) : (
-                       <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                             <div className="group">
-                               <label className="block text-[10px] md:text-xs font-semibold text-slate-400 md:text-slate-300 mb-1 md:mb-2 uppercase tracking-wider">{t.contact.form.name}</label>
-                                <input
-                                   name="name"
-                                   required
-                                   type="text"
-                                   placeholder="John Doe"
-                                   className="w-full px-3 md:px-4 py-2.5 md:py-3.5 text-sm rounded-lg md:rounded-xl bg-[#0d1117]/70 backdrop-blur-md border border-white/10 focus:border-cyan-400 focus:bg-white/5 focus:ring-2 focus:ring-cyan-400/30 outline-none transition-all duration-300 text-white placeholder:text-slate-500 shadow-inner"
-                                />
-                             </div>
-                             <div className="group">
-                                <label className="block text-[10px] md:text-xs font-mono font-semibold text-slate-400 md:text-slate-300 mb-1 md:mb-2 uppercase tracking-wider">{t.contact.form.email}</label>
-                                <input
-                                   name="email"
-                                   required
-                                   type="email"
-                                   placeholder="john@example.com"
-                                   className="w-full px-3 md:px-4 py-2.5 md:py-3.5 text-sm rounded-lg md:rounded-xl bg-[#0d1117]/70 backdrop-blur-md border border-white/10 focus:border-cyan-400 focus:bg-white/5 focus:ring-2 focus:ring-cyan-400/30 outline-none transition-all duration-300 text-white placeholder:text-slate-500 font-mono shadow-inner"
-                                />
-                             </div>
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                            <div className="group">
-                               <label className="block text-[10px] md:text-xs font-mono font-semibold text-slate-400 md:text-slate-300 mb-1 md:mb-2 uppercase tracking-wider">{t.contact.form.type}</label>
-                               <div className="relative">
-                                 <select name="type" className="w-full px-3 md:px-4 py-2.5 md:py-3.5 text-sm rounded-lg md:rounded-xl bg-[#0d1117]/70 backdrop-blur-md border border-white/10 focus:border-cyan-400 focus:bg-white/5 focus:ring-2 focus:ring-cyan-400/30 outline-none transition-all duration-300 text-white appearance-none cursor-pointer font-mono shadow-inner">
-                                    {t.contact.form.types.map((type, i) => (
-                                        <option key={i} className="bg-[#0d1117] text-white py-2" value={type}>{type}</option>
-                                    ))}
-                                 </select>
-                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                               </div>
-                            </div>
-
-                            <div className="group">
-                               <label className="block text-[10px] md:text-xs font-mono font-semibold text-slate-400 md:text-slate-300 mb-1 md:mb-2 uppercase tracking-wider">{t.contact.form.serviceInterest}</label>
-                               <div className="relative">
-                                 <select name="service" className="w-full px-3 md:px-4 py-2.5 md:py-3.5 text-sm rounded-lg md:rounded-xl bg-[#0d1117]/70 backdrop-blur-md border border-white/10 focus:border-cyan-400 focus:bg-white/5 focus:ring-2 focus:ring-cyan-400/30 outline-none transition-all duration-300 text-white appearance-none cursor-pointer font-mono shadow-inner">
-                                    {t.contact.form.serviceOptions.map((opt, i) => (
-                                        <option key={i} className="bg-[#0d1117] text-white py-2" value={opt}>{opt}</option>
-                                    ))}
-                                 </select>
-                                 <Layers className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                               </div>
-                            </div>
-                          </div>
-
-                          <div className="group">
-                             <label className="block text-[10px] md:text-xs font-semibold text-slate-400 md:text-slate-300 mb-1 md:mb-2 uppercase tracking-wider">{t.contact.form.message}</label>
-                             <textarea
-                                name="message"
-                                required
-                                rows={4}
-                                placeholder="Tell us about your project, goals and deadline..."
-                                className="w-full px-3 md:px-4 py-2.5 md:py-3.5 text-sm rounded-lg md:rounded-xl bg-[#0d1117]/70 backdrop-blur-md border border-white/10 focus:border-cyan-400 focus:bg-white/5 focus:ring-2 focus:ring-cyan-400/30 outline-none transition-all duration-300 text-white placeholder:text-slate-500 shadow-inner resize-none"
-                             ></textarea>
-                          </div>
-
-                          <button
-                             type="submit"
-                             disabled={formStatus === 'submitting'}
-                             className="w-full py-3 md:py-4 mt-1 md:mt-2 text-sm md:text-base bg-cyan-400 hover:bg-cyan-300 text-slate-950 rounded-lg md:rounded-xl font-semibold shadow-md md:shadow-[0_0_30px_rgba(34,211,238,0.4)] md:hover:shadow-[0_0_50px_rgba(34,211,238,0.6)] transition-all duration-300 md:transform md:hover:scale-[1.01] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                          >
-                             {formStatus === 'submitting' ? (
-                                <span className="flex items-center gap-2">
-                                   <div className="w-4 h-4 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin"></div>
-                                   {t.contact.form.sending}
-                                </span>
-                             ) : (
-                                <>{t.contact.form.btn} <Send className="w-4 h-4" /></>
-                             )}
-                          </button>
-                       </form>
-                    )}
-                 </div>
-
-                 {/* Direct Contact Side (Charles) */}
-                 <div className="bg-gradient-to-br from-cyan-500/15 via-[#0d1117] to-violet-500/10 p-5 md:p-12 md:w-2/5 text-slate-100 flex flex-col items-center justify-center text-center backdrop-blur-xl relative overflow-hidden border-t md:border-t-0 md:border-l border-white/10">
-                    <div className="absolute inset-0 grid-dust opacity-30 pointer-events-none"></div>
-
-                    <div className="relative z-10 flex flex-col items-center">
-                       <h3 className="text-base md:text-xl font-bold text-white mb-4 md:mb-6">{t.contact.direct.title}</h3>
-
-                       <div className="relative w-24 h-24 md:w-32 md:h-32 mb-4 md:mb-6 p-1 rounded-full border-2 border-lime-400/50 shadow-md md:shadow-[0_0_24px_rgba(163,230,53,0.3)]">
-                         <img
-                           src={charlesImg}
-                           alt="Charles Garbus"
-                           className="w-full h-full rounded-full object-cover"
-                           loading="lazy"
-                         />
-                         <div className="absolute bottom-1 right-1 w-6 h-6 bg-lime-400 border-4 border-[#0d1117] rounded-full"></div>
-                       </div>
-
-                       <p className="text-white font-bold text-base md:text-lg mb-1">Charles Garbus</p>
-                       <p className="text-slate-400 md:text-slate-300 text-xs md:text-sm mb-5 md:mb-8">{t.contact.direct.subtitle}</p>
-
-                       <a href="https://wa.me/33671618119" target="_blank" rel="noopener noreferrer" className="text-decoration-none">
-                          <button className="button2">
-                              WhatsApp
-                              <svg viewBox="0 0 48 48" y="0px" x="0px" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z" fill="#fff"></path>
-                                <path d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z" fill="#fff"></path>
-                                <path d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z" fill="#cfd8dc"></path>
-                                <path d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z" fill="#40c351"></path>
-                                <path clipRule="evenodd" d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z" fillRule="evenodd" fill="#fff"></path>
-                              </svg>
-                          </button>
-                       </a>
-                       <div className="mt-3 md:mt-4 text-[10px] md:text-xs font-mono text-slate-500">{t.contact.direct.phone}</div>
-                    </div>
-                 </div>
-              </div>
-           </div>
+            <ol className="relative grid grid-cols-1 gap-10 md:grid-cols-5 md:gap-6">
+              <div
+                className="absolute left-[1.35rem] top-2 h-[calc(100%-1rem)] w-px bg-gradient-to-b from-brand-lime/60 via-brand-mint/30 to-transparent md:hidden"
+                aria-hidden="true"
+              />
+              <div
+                className="absolute left-0 right-0 top-[1.35rem] hidden h-px bg-gradient-to-r from-brand-lime/60 via-brand-mint/40 to-transparent md:block"
+                aria-hidden="true"
+              />
+              {t.stack.steps.map((step, i) => (
+                <Reveal as="li" key={step.t} delay={i * 90} className="relative pl-16 md:pl-0">
+                  <span className="absolute left-0 top-0 flex h-11 w-11 items-center justify-center rounded-full border border-brand-mint/40 bg-ink font-display text-sm font-semibold text-brand-mint shadow-[0_0_24px_-4px_rgba(10,239,187,0.5)] md:relative">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className="font-display text-lg font-semibold text-white md:mt-6">{step.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-400">{step.d}</p>
+                </Reveal>
+              ))}
+            </ol>
+          </div>
         </section>
 
-        {/* Sleek Mobile Floating Action Bar */}
-        <div className="lg:hidden fixed bottom-4 left-4 z-40">
-          <button
-            onClick={() => scrollToSection('contact')}
-            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-cyan-400 to-lime-400 text-slate-950 rounded-full text-xs font-mono font-bold shadow-xl shadow-cyan-500/20 backdrop-blur-md border border-cyan-300/40 active:scale-95 transition-all"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{t.nav.cta}</span>
-          </button>
-        </div>
+        {/* ------------------------------------------------------------ */}
+        {/* POURQUOI 3GEEKS                                               */}
+        {/* ------------------------------------------------------------ */}
+        <section className="relative py-20 md:py-28">
+          <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+            <Reveal className="lg:sticky lg:top-28 lg:self-start">
+              <span className="eyebrow">{t.whyUs.path}</span>
+              <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.whyUs.title}</h2>
+              <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">{t.whyUs.subtitle}</p>
+              <button type="button" onClick={() => scrollToSection('contact')} className="btn btn-primary mt-8">
+                {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
+              </button>
+            </Reveal>
 
-        {/* AI Agent Assistant */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {whyCards.map((card, i) => {
+                const Icon = card.icon;
+                return (
+                  <Reveal key={card.title} delay={i * 90}>
+                    <div className="card h-full p-7">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="mt-6 font-display text-lg font-semibold leading-snug text-white">{card.title}</h3>
+                      <p className="mt-3 text-sm leading-relaxed text-slate-400">{card.desc}</p>
+                    </div>
+                  </Reveal>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------------ */}
+        {/* RÉALISATIONS                                                  */}
+        {/* ------------------------------------------------------------ */}
+        <ProjectsShowcase lang={lang} onContact={() => scrollToSection('contact')} />
+
+        {/* ------------------------------------------------------------ */}
+        {/* EXPERTISE                                                     */}
+        {/* ------------------------------------------------------------ */}
+        <SkillsRadar lang={lang} />
+
+        {/* ------------------------------------------------------------ */}
+        {/* AVIS                                                          */}
+        {/* ------------------------------------------------------------ */}
+        <section id="temoignages" className="relative border-t border-white/5 bg-surface/60 py-20 md:py-28">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <Reveal className="mb-12 max-w-2xl md:mb-16">
+              <span className="eyebrow">{t.reviews.path}</span>
+              <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.reviews.title}</h2>
+            </Reveal>
+
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              {reviews.map((review, i) => (
+                <Reveal key={review.name} delay={i * 90}>
+                  <figure className="card flex h-full flex-col p-7">
+                    <div className="flex gap-1 text-brand-lime" aria-label="5/5">
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <Star key={n} className="h-4 w-4 fill-current" />
+                      ))}
+                    </div>
+                    <blockquote className="mt-5 flex-1 text-base leading-relaxed text-slate-200">
+                      “{review.text}”
+                    </blockquote>
+                    <figcaption className="mt-7 flex items-center gap-3 border-t border-white/[0.07] pt-5">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-mint/10 font-display text-sm font-semibold text-brand-mint ring-1 ring-brand-mint/30">
+                        {review.initial}
+                      </span>
+                      <span>
+                        <span className="block text-sm font-semibold text-white">{review.name}</span>
+                        <span className="block text-xs text-slate-500">{review.meta}</span>
+                      </span>
+                    </figcaption>
+                  </figure>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------------ */}
+        {/* CONTACT                                                       */}
+        {/* ------------------------------------------------------------ */}
+        <section id="contact" className="relative overflow-hidden py-20 md:py-28">
+          <SectionLines variant="c" />
+          <div className="relative mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+            <Reveal>
+              <span className="eyebrow">{t.contact.path}</span>
+              <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.contact.title}</h2>
+              <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">{t.contact.subtitle}</p>
+
+              <div className="mt-10 space-y-4">
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card group flex items-center gap-4 p-5 hover:bg-surface-2"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#25D366]/15 text-[#25D366] ring-1 ring-[#25D366]/30">
+                    <MessageCircle className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold text-white">WhatsApp</span>
+                    <span className="block text-sm text-slate-400">{t.contact.direct.subtitle}</span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 text-slate-500 transition-transform group-hover:translate-x-1 group-hover:text-white" />
+                </a>
+                <a
+                  href="mailto:contact@3geeks.fr"
+                  className="card group flex items-center gap-4 p-5 hover:bg-surface-2"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
+                    <Mail className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold text-white">contact@3geeks.fr</span>
+                    <span className="block text-sm text-slate-400">{fr ? 'Réponse sous 24h' : 'Reply within 24h'}</span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 text-slate-500 transition-transform group-hover:translate-x-1 group-hover:text-white" />
+                </a>
+              </div>
+            </Reveal>
+
+            <Reveal delay={120}>
+              <div className="card-featured p-6 md:p-10">
+                {formStatus === 'success' ? (
+                  <div className="flex flex-col items-center justify-center py-14 text-center">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-mint/15 text-brand-mint ring-1 ring-brand-mint/30">
+                      <Check className="h-8 w-8" strokeWidth={2.5} />
+                    </div>
+                    <h3 className="mt-6 font-display text-2xl font-semibold text-white">{t.contact.successTitle}</h3>
+                    <p className="mt-2 max-w-xs text-slate-400">{t.contact.successDesc}</p>
+                    <p className="mt-6 rounded-xl border border-brand-mint/25 bg-brand-mint/[0.06] px-4 py-3 text-sm text-brand-mint">
+                      {t.contact.successTip}
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                      <div>
+                        <label htmlFor="c-name" className={labelClass}>{t.contact.form.name}</label>
+                        <input id="c-name" name="name" required type="text" placeholder={t.booking.namePlaceholder} className={inputClass} />
+                      </div>
+                      <div>
+                        <label htmlFor="c-email" className={labelClass}>{t.contact.form.email}</label>
+                        <input id="c-email" name="email" required type="email" placeholder={t.booking.emailPlaceholder} className={inputClass} />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                      <div>
+                        <label htmlFor="c-type" className={labelClass}>{t.contact.form.type}</label>
+                        <div className="relative">
+                          <select id="c-type" name="type" className={`${inputClass} cursor-pointer appearance-none pr-10`}>
+                            {t.contact.form.types.map((type) => (
+                              <option key={type} className="bg-surface text-white" value={type}>{type}</option>
+                            ))}
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                        </div>
+                      </div>
+                      <div>
+                        <label htmlFor="c-service" className={labelClass}>{t.contact.form.serviceInterest}</label>
+                        <div className="relative">
+                          <select id="c-service" name="service" className={`${inputClass} cursor-pointer appearance-none pr-10`}>
+                            {t.contact.form.serviceOptions.map((opt) => (
+                              <option key={opt} className="bg-surface text-white" value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="c-message" className={labelClass}>{t.contact.form.message}</label>
+                      <textarea
+                        id="c-message"
+                        name="message"
+                        required
+                        rows={5}
+                        placeholder={fr ? 'Parlez-nous de votre projet, de vos objectifs et de votre échéance…' : 'Tell us about your project, goals and deadline…'}
+                        className={`${inputClass} resize-none`}
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={formStatus === 'submitting'}
+                      className="btn btn-primary w-full !py-4 disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {formStatus === 'submitting' ? (
+                        <>
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-ink/30 border-t-ink" />
+                          {t.contact.form.sending}
+                        </>
+                      ) : (
+                        <>
+                          {t.contact.form.btn} <Send className="h-4 w-4" />
+                        </>
+                      )}
+                    </button>
+                    <p className="text-center text-xs text-slate-500">
+                      {fr ? 'Réponse sous 24h · Sans engagement' : 'Reply within 24h · No commitment'}
+                    </p>
+                  </form>
+                )}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
         <AiAgentWidget lang={lang} onNavigateSection={scrollToSection} />
 
-        {/* Booking Modal */}
         <Suspense fallback={null}>
           <BookingModal
             isOpen={bookingModalOpen}
@@ -1784,7 +863,6 @@ const App: React.FC = () => {
           />
         </Suspense>
 
-        {/* Admin Dashboard */}
         <Suspense fallback={null}>
           {adminOpen && (
             <AdminDashboard
@@ -1796,11 +874,10 @@ const App: React.FC = () => {
           )}
         </Suspense>
 
-        {/* GDPR Components */}
         <CookieConsent
           translations={t.cookie}
-          onAccept={() => console.log('Cookies accepted')}
-          onDecline={() => console.log('Cookies declined')}
+          onAccept={() => undefined}
+          onDecline={() => undefined}
         />
 
         <LegalModals
@@ -1809,34 +886,81 @@ const App: React.FC = () => {
           onClose={() => setLegalModalOpen(false)}
           initialTab={legalTab}
         />
-
       </main>
 
-      {/* FOOTER */}
-      <footer className="relative bg-[#0d1117]/90 border-t border-white/5 py-6 md:py-10 backdrop-blur-xl mt-8 md:mt-12">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
-            <div className="flex flex-col items-center md:items-start gap-2">
-              <Logo variant="wordmark" spaced compact className="justify-center md:justify-start" />
-              <p className="text-[11px] md:text-xs text-slate-500 text-center md:text-left font-mono">
-                <span className="text-slate-600">© {new Date().getFullYear()}</span>
-                <span className="mx-1.5 text-slate-700">·</span>
-                <span className="text-lime-300/90">{t.footer.tagline}</span>
-              </p>
+      {/* ------------------------------------------------------------ */}
+      {/* FOOTER                                                        */}
+      {/* ------------------------------------------------------------ */}
+      <footer className="border-t border-white/[0.07] bg-surface">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[minmax(0,2fr)_1fr_1fr]">
+          <div>
+            <Logo variant="wordmark" compact glow={false} />
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-slate-400">{t.footer.blurb}</p>
+            <p className="mt-5 text-sm font-medium text-brand-lime">{t.footer.tagline}</p>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+              {fr ? 'Navigation' : 'Navigate'}
+            </h4>
+            <ul className="mt-5 space-y-3">
+              {NAV_LINKS.map((link) => (
+                <li key={link.id}>
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection(link.id)}
+                    className="text-sm text-slate-300 transition-colors hover:text-white"
+                  >
+                    {t.nav[link.key]}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Contact</h4>
+            <ul className="mt-5 space-y-3 text-sm">
+              <li>
+                <a href="mailto:contact@3geeks.fr" className="text-slate-300 transition-colors hover:text-white">
+                  contact@3geeks.fr
+                </a>
+              </li>
+              <li>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-300 transition-colors hover:text-white"
+                >
+                  +33 6 71 61 81 19
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-white/[0.06]">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-6 pb-24 text-xs text-slate-500 sm:px-8 md:flex-row md:pb-6 md:pr-64">
+            <span>© {new Date().getFullYear()} 3geeks. {t.footer.rights}</span>
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              <button type="button" onClick={() => openLegal('legal')} className="transition-colors hover:text-white">{t.legal.tabs.legal}</button>
+              <button type="button" onClick={() => openLegal('privacy')} className="transition-colors hover:text-white">{t.legal.tabs.privacy}</button>
+              <button type="button" onClick={() => openLegal('terms')} className="transition-colors hover:text-white">{t.legal.tabs.terms}</button>
+              <button
+                type="button"
+                onClick={() => setAdminOpen(true)}
+                className="text-slate-700 transition-colors hover:text-slate-500"
+                title="Admin"
+                aria-label="Admin"
+              >
+                <Lock className="h-3 w-3" />
+              </button>
             </div>
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs md:text-sm font-mono text-slate-500 md:text-slate-400 items-center">
-               <button onClick={() => openLegal('legal')} className="hover:text-cyan-300 transition-colors">{t.legal.tabs.legal}</button>
-               <button onClick={() => openLegal('privacy')} className="hover:text-cyan-300 transition-colors">{t.legal.tabs.privacy}</button>
-               <button onClick={() => openLegal('terms')} className="hover:text-cyan-300 transition-colors">{t.legal.tabs.terms}</button>
-               <a href="mailto:contact@3geeks.fr" className="hover:text-cyan-300 transition-colors hidden md:inline">contact@3geeks.fr</a>
-               <button onClick={() => setAdminOpen(true)} className="text-slate-700 hover:text-slate-500 transition-colors" title="Admin Access">
-                 <Lock className="w-3 h-3" />
-               </button>
-            </div>
-         </div>
+          </div>
+        </div>
       </footer>
     </div>
-    )}
-    </>
   );
 };
 

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { ExternalLink, CheckCircle2, Layers } from 'lucide-react';
-import GradientText from './GradientText';
+import React from 'react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Mark } from './Logo';
+import Reveal from './Reveal';
 
 import callKitchenImg from '../assets/images/CallKitchen.jpeg';
 import divorceImg from '../assets/images/divorce.png';
@@ -12,9 +12,8 @@ import promptOptimImg from '../assets/images/prompt-optim.png';
 
 interface ProjectsShowcaseProps {
   lang: 'en' | 'fr';
+  onContact?: () => void;
 }
-
-type FilterCategory = 'all' | 'client' | 'studio';
 
 export interface ProjectItem {
   id: string;
@@ -200,163 +199,128 @@ export const PROJECTS_DATA: ProjectItem[] = [
   }
 ];
 
-export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang }) => {
-  const [activeCategory, setActiveCategory] = useState<FilterCategory>('all');
+const ProjectLogo: React.FC<{ project: ProjectItem }> = ({ project }) => {
+  if (project.useStudioMark) {
+    return (
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-ink">
+        <Mark className="h-7 w-7" />
+      </div>
+    );
+  }
+  return (
+    <div
+      className={`h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-white/10 ${
+        project.imageBg === 'light' ? 'bg-white p-1' : 'bg-white/[0.06] p-0.5'
+      }`}
+    >
+      <img
+        src={project.image}
+        alt=""
+        loading="lazy"
+        className={`h-full w-full rounded-lg ${project.imageFit === 'contain' ? 'object-contain' : 'object-cover'}`}
+      />
+    </div>
+  );
+};
 
-  const clientCount = PROJECTS_DATA.filter((p) => p.category === 'client').length;
-  const studioCount = PROJECTS_DATA.filter((p) => p.category === 'studio').length;
-  const allCount = PROJECTS_DATA.length;
-
-  const filteredProjects = PROJECTS_DATA.filter((p) => {
-    if (activeCategory === 'all') return true;
-    return p.category === activeCategory;
-  });
+const ProjectCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ project, lang }) => {
+  const Wrapper: React.ElementType = project.link ? 'a' : 'div';
+  const wrapperProps = project.link
+    ? { href: project.link, target: '_blank', rel: 'noopener noreferrer' }
+    : {};
 
   return (
-    <section id="projets" className="py-10 md:py-24 relative bg-[#0d1117]/40 border-y border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-8 md:mb-14">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-[11px] font-mono font-semibold uppercase tracking-wider text-cyan-300 mb-3">
-            <Layers className="h-3.5 w-3.5" />
-            {lang === 'fr' ? 'Réalisations récentes par 3geeks' : 'Recent work by 3geeks'}
-          </div>
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-display font-bold text-white tracking-tight leading-tight">
-            <GradientText colors={['#ffffff', '#22d3ee', '#a3e635', '#ffffff']} animationSpeed={7}>
-              {lang === 'fr' ? 'Des projets réels, déjà en ligne' : 'Real projects, already online'}
-            </GradientText>
+    <Wrapper
+      {...wrapperProps}
+      className="card group flex h-full flex-col p-6 hover:-translate-y-1 hover:bg-surface-2"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <ProjectLogo project={project} />
+        {project.link && (
+          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-slate-400 transition-all group-hover:border-brand-mint/50 group-hover:bg-brand-mint group-hover:text-ink">
+            <ArrowUpRight className="h-4 w-4" />
+          </span>
+        )}
+      </div>
+
+      <h3 className="mt-5 font-display text-xl font-semibold text-white">{project.title}</h3>
+      <p className="mt-1 text-xs font-medium text-brand-mint/90">{project.badge.replace(' · 3geeks beta', '').replace(' · 3geeks', '')}</p>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{project.description[lang]}</p>
+
+      <div className="mt-5 flex flex-wrap gap-1.5">
+        {project.tags.slice(0, 3).map((tag) => (
+          <span key={tag} className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </Wrapper>
+  );
+};
+
+export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onContact }) => {
+  const clientProjects = PROJECTS_DATA.filter((p) => p.category === 'client');
+  const labProjects = PROJECTS_DATA.filter((p) => p.category === 'studio');
+
+  return (
+    <section id="projets" className="relative border-t border-white/5 bg-surface/60 py-20 md:py-28">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal className="mb-12 max-w-2xl md:mb-16">
+          <span className="eyebrow">{lang === 'fr' ? 'Réalisations' : 'Selected work'}</span>
+          <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">
+            {lang === 'fr' ? 'Des projets réels, déjà en ligne.' : 'Real projects, already live.'}
           </h2>
-          <p className="mt-3 text-sm md:text-base text-slate-400 md:text-slate-300 leading-relaxed max-w-2xl mx-auto font-medium">
+          <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">
             {lang === 'fr'
-              ? 'Des applications web, SaaS juridiques, assistants vocaux IA et outils open source conçus, développés et lancés par le studio 3geeks.'
-              : 'Public projects showing the kind of web, app and digital experiences we design, build and launch at 3geeks.'}
+              ? 'Sites, plateformes SaaS, assistants IA et applications mobiles conçus, développés et lancés par 3geeks.'
+              : 'Websites, SaaS platforms, AI assistants and mobile apps designed, built and launched by 3geeks.'}
           </p>
-        </div>
+        </Reveal>
 
-        {/* Filter Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-8 md:mb-12">
-          {[
-            { id: 'all', labelFr: `Tous les projets (${allCount})`, labelEn: `All projects (${allCount})` },
-            { id: 'client', labelFr: `Projets Clients & SaaS (${clientCount})`, labelEn: `Client & SaaS (${clientCount})` },
-            { id: 'studio', labelFr: `3Geeks Lab & Infra (${studioCount})`, labelEn: `3Geeks Lab & Infra (${studioCount})` }
-          ].map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id as FilterCategory)}
-              className={`rounded-full px-4 py-2 text-xs font-mono font-semibold transition-all duration-200 ${
-                activeCategory === cat.id
-                  ? 'bg-cyan-400 text-slate-950 shadow-md shadow-cyan-400/25 scale-105'
-                  : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:border-cyan-400/40'
-              }`}
-            >
-              {lang === 'fr' ? cat.labelFr : cat.labelEn}
-            </button>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {clientProjects.map((project, i) => (
+            <Reveal key={project.id} delay={(i % 3) * 80}>
+              <ProjectCard project={project} lang={lang} />
+            </Reveal>
           ))}
+          {onContact && (
+            <Reveal delay={(clientProjects.length % 3) * 80}>
+              <button
+                type="button"
+                onClick={onContact}
+                className="group flex h-full min-h-[16rem] w-full flex-col items-start justify-between rounded-[1.25rem] border border-dashed border-brand-mint/30 bg-brand-mint/[0.03] p-6 text-left transition-colors hover:border-brand-mint/60 hover:bg-brand-mint/[0.07]"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-gradient text-ink">
+                  <ArrowRight className="h-5 w-5" />
+                </span>
+                <span>
+                  <span className="block font-display text-xl font-semibold text-white">
+                    {lang === 'fr' ? 'Votre projet est le prochain.' : 'Your project is next.'}
+                  </span>
+                  <span className="mt-2 block text-sm text-slate-400">
+                    {lang === 'fr' ? 'Parlons-en : réponse sous 24h.' : "Let's talk: reply within 24h."}
+                  </span>
+                </span>
+              </button>
+            </Reveal>
+          )}
         </div>
 
-        {/* Project Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-7">
-          {filteredProjects.map((project) => (
-            <article
-              key={project.id}
-              className="glass-panel rounded-3xl border border-white/10 flex flex-col justify-between overflow-hidden transition-all duration-300 group hover:border-cyan-400/40 hover:shadow-xl hover:shadow-cyan-500/10"
-            >
-              {/* Window Header */}
-              <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-4 py-2.5">
-                <div className="flex items-center gap-1.5" aria-hidden="true">
-                  <span className="h-2.5 w-2.5 rounded-full bg-rose-400/70" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-amber-300/70" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-300/70" />
-                </div>
-                <span className="text-[10px] font-mono text-cyan-300/90 truncate max-w-[160px]">
-                  {project.subtitle}
-                </span>
-                {project.statsBadge && (
-                  <span className="rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider text-slate-200">
-                    {project.statsBadge}
-                  </span>
-                )}
-              </div>
+        <Reveal className="mb-6 mt-16 flex items-center gap-4">
+          <h3 className="font-display text-lg font-semibold text-white md:text-xl">
+            {lang === 'fr' ? 'Le lab 3geeks' : 'The 3geeks lab'}
+          </h3>
+          <span className="h-px flex-1 bg-white/10" />
+          <span className="hidden text-sm text-slate-500 sm:block">
+            {lang === 'fr' ? 'Nos propres produits et outils' : 'Our own products and tools'}
+          </span>
+        </Reveal>
 
-              {/* Card Main */}
-              <div className="p-5 md:p-6 flex-1 flex flex-col">
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="inline-block rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-300">
-                    {project.badge}
-                  </span>
-                </div>
-
-                <div className="flex items-start gap-3.5 mb-3">
-                  {project.useStudioMark ? (
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-cyan-400/30 bg-[#0d1117] p-1.5 shadow-md">
-                      <Mark className="h-9 w-9" />
-                    </div>
-                  ) : project.image ? (
-                    <div className={`h-12 w-12 shrink-0 rounded-xl border border-white/20 overflow-hidden shadow-md ${project.imageBg === 'light' ? 'bg-white p-1' : 'bg-white/10 p-0.5'}`}>
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        loading="lazy"
-                        className={`h-full w-full rounded-lg ${project.imageFit === 'contain' ? 'object-contain' : 'object-cover'}`}
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300 font-bold font-mono text-lg">
-                      {project.title.substring(0, 2).toUpperCase()}
-                    </div>
-                  )}
-
-                  <div>
-                    <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">
-                      {project.title}
-                    </h3>
-                  </div>
-                </div>
-
-                <p className="text-xs md:text-sm text-slate-300 leading-relaxed mb-4 flex-1">
-                  {project.description[lang]}
-                </p>
-
-                {/* Bullet highlights */}
-                <ul className="space-y-1.5 mb-4 text-xs text-slate-200">
-                  {project.highlights[lang].map((h, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-lime-300 shrink-0 mt-0.5" />
-                      <span>{h}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Tech tags */}
-                <div className="flex flex-wrap gap-1.5 mb-5">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-mono text-slate-300"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Link Action */}
-                {project.link ? (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-cyan-400/40 bg-cyan-400/10 hover:bg-cyan-400 hover:text-slate-950 text-xs font-bold text-cyan-200 transition-all duration-200 group/btn"
-                  >
-                    <span>{project.btnText[lang]}</span>
-                    <ExternalLink className="h-3.5 w-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
-                  </a>
-                ) : (
-                  <div className="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-white/10 bg-white/5 text-xs font-semibold text-slate-300">
-                    <span>{project.btnText[lang]}</span>
-                  </div>
-                )}
-              </div>
-            </article>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {labProjects.map((project, i) => (
+            <Reveal key={project.id} delay={(i % 3) * 80}>
+              <ProjectCard project={project} lang={lang} />
+            </Reveal>
           ))}
         </div>
       </div>

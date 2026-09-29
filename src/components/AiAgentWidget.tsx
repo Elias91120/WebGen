@@ -101,7 +101,7 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, onNavigateSe
                     </span>
                   </h3>
                   <p className="text-[11px] text-slate-400">
-                    {lang === 'fr' ? 'Studio web français · 3 fondateurs' : 'French web studio · 3 founders'}
+                    {lang === 'fr' ? 'Studio web français · Réponse sous 24h' : 'French web studio · Reply within 24h'}
                   </p>
                 </div>
               </div>
@@ -236,12 +236,12 @@ function generateAnswer(
     };
   }
 
-  if (q.includes('3geeks') || q.includes('c\'est quoi') || q.includes('studio') || q.includes('fondateur')) {
+  if (q.includes('3geeks') || q.includes('c\'est quoi') || q.includes('studio') || q.includes('fondateur') || q.includes('équipe') || q.includes('team')) {
     return {
       sender: 'ai',
       text: lang === 'fr'
-        ? "3geeks est un studio web & produit digital français fondé par trois associés complémentaires : Elias Elloumi (Design & Expérience visuelle), Noam Leclapart-Jublot (Systèmes & Data) et Charles Garbus (Relation client & Business). Nous créons des sites et outils digitaux clairs, rapides et soignés."
-        : "3geeks is a French web & digital product studio co-founded by three friends: Elias Elloumi (Design & Visual Experience), Noam Leclapart-Jublot (Systems & Data), and Charles Garbus (Client Relations & Business). We build clean, fast, and polished web products."
+        ? "3geeks est un studio web & produit digital français. Nous créons des sites et outils digitaux clairs, rapides et soignés, avec trois pôles d'expertise : design produit, cloud & IA (certifié AWS) et stratégie business."
+        : "3geeks is a French web & digital product studio. We build clean, fast, polished websites and digital tools, with three areas of expertise: product design, cloud & AI (AWS certified) and business strategy."
     };
   }
 
