@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 interface HeroVideoProps {
   lang: 'fr' | 'en';
+  className?: string;
 }
 
 // Bump when a video file changes: the CDN keeps the old copy otherwise.
@@ -35,20 +36,24 @@ function useVideoPolicy() {
 }
 
 /**
- * Plays the video only while it is on screen. iOS Safari only autoplays a video that is
- * muted before play() is called; React does not reliably set the muted attribute, so it is
- * forced here.
+ * The full 16:9 brand film in its own frame, next to the hero text on large screens
+ * and under it on phones. 720p on large screens, a lighter 540p encode on phones.
+ *
+ * Plays only while on screen. iOS Safari only autoplays a video that is muted before
+ * play() is called; React does not reliably set the muted attribute, so it is forced here.
  */
-function useAutoplayWhenVisible(
-  wrapRef: React.RefObject<HTMLDivElement | null>,
-  videoRef: React.RefObject<HTMLVideoElement | null>,
-  active: boolean,
-  deps: unknown[],
-) {
+export const HeroVideoCard: React.FC<HeroVideoProps> = ({ lang, className = '' }) => {
+  const { allowed, wide } = useVideoPolicy();
+  const [ready, setReady] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => setReady(false), [lang, wide]);
+
   useEffect(() => {
     const wrap = wrapRef.current;
     const video = videoRef.current;
-    if (!active || !wrap || !video) return;
+    if (!allowed || !wrap || !video) return;
     video.muted = true;
     video.defaultMuted = true;
     video.setAttribute('muted', '');
@@ -63,79 +68,18 @@ function useAutoplayWhenVisible(
     });
     observer.observe(wrap);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, ...deps]);
-}
-
-/**
- * Large screens: brand video in the right half of the hero (the video carries its own
- * slogan, so it must not sit under the page title), faded into the page on every edge.
- */
-const HeroVideo: React.FC<HeroVideoProps> = ({ lang }) => {
-  const { allowed, wide } = useVideoPolicy();
-  const [ready, setReady] = useState(false);
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const active = allowed && wide;
-
-  useEffect(() => setReady(false), [lang]);
-  useAutoplayWhenVisible(wrapRef, videoRef, active, [lang]);
-
-  return (
-    <div ref={wrapRef} className="hero-media absolute inset-y-0 -right-[3%] hidden w-[60%] overflow-hidden lg:block" aria-hidden="true">
-      <img
-        src={POSTER}
-        alt=""
-        width={1280}
-        height={720}
-        decoding="async"
-        className="absolute inset-0 h-full w-full object-contain object-center opacity-60"
-      />
-      {active && (
-        <video
-          key={lang}
-          ref={videoRef}
-          className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-1000 ${ready ? 'opacity-90' : 'opacity-0'}`}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster={POSTER}
-          onPlaying={() => setReady(true)}
-        >
-          <source src={`/videos/hero-${lang}.mp4?v=${VIDEO_VERSION}`} type="video/mp4" />
-          <source src={`/videos/hero-${lang}.webm?v=${VIDEO_VERSION}`} type="video/webm" />
-        </video>
-      )}
-    </div>
-  );
-};
-
-/**
- * Phones and tablets: the full 16:9 brand video in its own frame under the hero text,
- * instead of a cropped background that cut words off behind the title.
- */
-export const HeroVideoCard: React.FC<HeroVideoProps & { className?: string }> = ({ lang, className = '' }) => {
-  const { allowed, wide } = useVideoPolicy();
-  const [ready, setReady] = useState(false);
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const active = allowed && !wide;
-
-  useEffect(() => setReady(false), [lang]);
-  useAutoplayWhenVisible(wrapRef, videoRef, active, [lang]);
+  }, [allowed, lang, wide]);
 
   return (
     <div
       ref={wrapRef}
-      className={`relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-ink shadow-[0_30px_80px_-30px_rgba(10,239,187,0.45)] lg:hidden ${className}`}
+      className={`relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-ink shadow-[0_30px_80px_-30px_rgba(10,239,187,0.45)] lg:rounded-3xl lg:shadow-[0_40px_120px_-40px_rgba(10,239,187,0.55)] ${className}`}
       aria-hidden="true"
     >
       <img src={POSTER} alt="" width={1280} height={720} decoding="async" className="absolute inset-0 h-full w-full object-cover" />
-      {active && (
+      {allowed && (
         <video
-          key={lang}
+          key={`${lang}-${wide ? 'hd' : 'sd'}`}
           ref={videoRef}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`}
           autoPlay
@@ -146,12 +90,19 @@ export const HeroVideoCard: React.FC<HeroVideoProps & { className?: string }> = 
           poster={POSTER}
           onPlaying={() => setReady(true)}
         >
-          <source src={`/videos/hero-${lang}-540.mp4?v=${VIDEO_VERSION}`} type="video/mp4" />
+          {wide ? (
+            <>
+              <source src={`/videos/hero-${lang}.mp4?v=${VIDEO_VERSION}`} type="video/mp4" />
+              <source src={`/videos/hero-${lang}.webm?v=${VIDEO_VERSION}`} type="video/webm" />
+            </>
+          ) : (
+            <source src={`/videos/hero-${lang}-540.mp4?v=${VIDEO_VERSION}`} type="video/mp4" />
+          )}
         </video>
       )}
-      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-brand-mint/20" />
+      <div className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-brand-mint/20" />
     </div>
   );
 };
 
-export default HeroVideo;
+export default HeroVideoCard;

@@ -8,13 +8,15 @@ Landing du studio **3geeks** : sites et produits digitaux, faits en France.
 
 ## Vitrine projets
 
-Source unique : `src/components/ProjectsShowcase.tsx`.
+Source unique : `src/components/ProjectsShowcase.tsx` (vignettes dans `src/assets/images/projects/`, logos du bandeau « Déjà en ligne » dans `src/assets/images/logos/`).
 
-**Clients** — Express Divorce USA, Vipagence ([vipagence.net](https://www.vipagence.net/) : le site seulement), CallKitchen, Two, Green Jardin.
+**Clients** — Cabinet Dr Amel Elloumi Jellouli, Express Divorce USA, Vipagence ([vipagence.net](https://www.vipagence.net/) : le site seulement), Two, Aurenza Capital, Green Jardin, CallKitchen, et deux plateformes privées (signature de contrats, mini-app Telegram) montrées en maquette, sans lien ni nom de client.
 
-**Studio public** — Prompt Hub, PromptOptim, une carte Infra volontairement floue (pas de lien, pas de stack, pas d’outils internes).
+**Lab** — 3geeks Infra (volontairement floue), Prompt Hub, PromptOptim, EFREI Skill Hub.
 
-Hors vitrine : Workspace, API Hub, trading, Filament, Harmony, VIPA / api-vipa, chat.
+## Prise de contact
+
+Pas de formulaire ni de backend : tous les boutons « parler de mon projet » ouvrent l’appel découverte Calendly (`src/lib/booking.ts`). Contact secondaire : contact@3geeks.fr et LinkedIn des cofondateurs.
 
 ## Local
 
@@ -23,10 +25,11 @@ npm install
 npm run dev
 ```
 
-Build : `npm run build` (Docker prod fait `npm ci` puis ce build).
-
-Variables optionnelles : voir `.env.example` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, clé Gemini pour le widget).
+Build : `npm run build` (Docker prod fait `npm ci` puis ce build). Aucune variable d’environnement nécessaire.
 
 ## Deploy
 
-Push `main` → Coolify app `3geeks-landing` (`hziiyov76znpv4lmokz16brb`) → health `https://www.3geeks.fr/health`.
+Push sur `main` → webhook GitHub → Coolify app `3geeks-landing` (`hziiyov76znpv4lmokz16brb`) → health `https://www.3geeks.fr/health`.
+
+- La compression gzip est faite par nginx (`nginx.conf`), pas par Traefik : la compression proxy cassait la lecture des vidéos sur iPhone.
+- Après un changement de vidéo dans `public/videos/`, incrémenter `VIDEO_VERSION` dans `src/components/HeroVideo.tsx` (Cloudflare garde l’ancienne copie quelques heures).

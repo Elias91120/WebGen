@@ -250,8 +250,8 @@ function generateAnswer(
     return {
       sender: 'ai',
       text: lang === 'fr'
-        ? "Parmi nos projets réels en ligne :\n- Express Divorce USA (SaaS juridique multi-états)\n- Vipagence (site vitrine pour une agence créateurs)\n- CallKitchen (Agent vocal IA 24/7 pour restaurants)\n- Two App (Application iOS grand public sur l'App Store)\n- Green Jardin (Shopify CBD + caisse POS & menu TV)\n- Prompt Hub & PromptOptim (outils IA Green IT)"
-        : "Our live production products include:\n- Express Divorce USA (Legal-tech SaaS)\n- Vipagence (marketing site for a creator agency)\n- CallKitchen (Restaurant 24/7 AI voice reception)\n- Two App (Consumer iOS app on the App Store)\n- Green Jardin (Omnichannel CBD store + POS + TV menu)\n- Prompt Hub & PromptOptim (Green IT open tools)",
+        ? "Parmi nos projets réels :\n- Cabinet Dr Amel Elloumi Jellouli (site médical bilingue FR / AR)\n- Express Divorce USA (SaaS juridique, 50 États)\n- Vipagence (site pour une agence créateurs)\n- Two (app iOS sur l'App Store, notée 5,0)\n- Aurenza Capital (vitrine de conseil patrimonial)\n- Green Jardin (Shopify + caisse POS & menu TV)\n- CallKitchen (agent vocal IA 24/7 pour restaurants)\n- Deux plateformes privées : signature de contrats et boutique Telegram\n- Lab : Prompt Hub, PromptOptim, EFREI Skill Hub"
+        : "Some of our real projects:\n- Dr Amel Elloumi Jellouli's practice (bilingual FR / AR medical site)\n- Express Divorce USA (legal-tech SaaS, all 50 states)\n- Vipagence (site for a creator agency)\n- Two (iOS app on the App Store, rated 5.0)\n- Aurenza Capital (wealth advisory showcase)\n- Green Jardin (Shopify + POS & TV menu)\n- CallKitchen (24/7 AI voice agent for restaurants)\n- Two private platforms: contract signing and a Telegram shop\n- Lab: Prompt Hub, PromptOptim, EFREI Skill Hub",
       actions: onNavigateSection
         ? [{ label: lang === 'fr' ? 'Parcourir les projets' : 'Browse projects', action: () => onNavigateSection('projets') }]
         : []

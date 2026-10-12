@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowRight, ArrowUpRight, Check, GraduationCap, Lock, Send } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { ArrowRight, ArrowUpRight, Check, GraduationCap, Lock, Send, X } from 'lucide-react';
 import { Mark } from './Logo';
 import Reveal from './Reveal';
 
@@ -15,6 +15,12 @@ import twoCover from '../assets/images/projects/two.jpg';
 import aurenzaCover from '../assets/images/projects/aurenza.jpg';
 import greenJardinCover from '../assets/images/projects/green-jardin.jpg';
 import callKitchenCover from '../assets/images/projects/callkitchen.jpg';
+
+// Phone captures for the case studies
+import jelloulMobile from '../assets/images/projects/jellouli-mobile.jpg';
+import expressDivorceMobile from '../assets/images/projects/express-divorce-mobile.jpg';
+import twoMobile from '../assets/images/projects/two-mobile.jpg';
+import greenJardinMobile from '../assets/images/projects/green-jardin-mobile.jpg';
 
 interface ProjectsShowcaseProps {
   lang: 'en' | 'fr';
@@ -39,6 +45,13 @@ export interface ProjectItem {
   image?: string;
   icon?: React.ElementType;
   useStudioMark?: boolean;
+  /** Flagship public projects get a short case study (context, what we shipped, result). */
+  caseStudy?: {
+    mobile: string;
+    context: Localized<string>;
+    delivered: Localized<string[]>;
+    result: Localized<string>;
+  };
 }
 
 // Display order: strongest work first.
@@ -55,7 +68,22 @@ export const PROJECTS_DATA: ProjectItem[] = [
     },
     tags: ['Bilingue FR / AR', 'Cas cliniques', 'Prise de RDV'],
     link: 'https://www.amel-jellouli-elloumi.com/',
-    cover: jelloulCover
+    cover: jelloulCover,
+    caseStudy: {
+      mobile: jelloulMobile,
+      context: {
+        fr: 'Le Dr Amel Elloumi Jellouli, ancien médecin principal des hôpitaux, exerce à la Clinique Les Jasmins à Tunis. Ses patients, francophones comme arabophones, veulent être rassurés avant de prendre rendez-vous : le site devait refléter son exigence médicale.',
+        en: 'Dr Amel Elloumi Jellouli, a former senior hospital physician, practises at Clinique Les Jasmins in Tunis. Her French- and Arabic-speaking patients want reassurance before booking: the site had to reflect her medical standards.'
+      },
+      delivered: {
+        fr: ['Site bilingue français / arabe', 'Pôles d’expertise détaillés : dermatologie, lasers, esthétique, chirurgie', '15 cas cliniques documentés, filtrables par spécialité', 'Visite vidéo du cabinet et du plateau laser', 'Rendez-vous en un clic : appel, WhatsApp, e-mail, itinéraire'],
+        en: ['Bilingual French / Arabic website', 'Detailed specialties: dermatology, lasers, aesthetics, surgery', '15 documented clinical cases, filterable by specialty', 'Video tour of the practice and the laser suite', 'One-tap booking: call, WhatsApp, email, directions']
+      },
+      result: {
+        fr: 'Un site à la hauteur du parcours du Dr Jellouli : crédible pour les patients, clair sur chaque soin, et pensé d’abord pour le mobile.',
+        en: "A site that matches Dr Jellouli's background: credible for patients, clear about every treatment, and designed mobile-first."
+      }
+    }
   },
   {
     id: 'express-divorce',
@@ -69,7 +97,22 @@ export const PROJECTS_DATA: ProjectItem[] = [
     },
     tags: ['Next.js', 'Legal tech', '50 États'],
     link: 'https://www.expressdivorceusa.co',
-    cover: expressDivorceCover
+    cover: expressDivorceCover,
+    caseStudy: {
+      mobile: expressDivorceMobile,
+      context: {
+        fr: 'Express Divorce USA simplifie le divorce à l’amiable aux États-Unis. La difficulté : chaque État a ses propres formulaires, et le sujet est sensible pour les utilisateurs.',
+        en: 'Express Divorce USA makes uncontested divorce simpler in the United States. The challenge: every state has its own forms, and the topic is sensitive for users.'
+      },
+      delivered: {
+        fr: ['Questionnaire guidé qui vérifie l’éligibilité', 'Génération des formulaires propres à chaque État', 'Parcours disponible dans les 50 États', 'Tarif affiché dès l’accueil, à partir de 299 $', 'Un ton et un design rassurants sur un sujet difficile'],
+        en: ['Guided questionnaire that checks eligibility', 'State-specific forms generated automatically', 'Available in all 50 states', 'Price shown upfront, starting at $299', 'Reassuring tone and design on a difficult topic']
+      },
+      result: {
+        fr: 'Plateforme en production aux États-Unis, avec plus de 500 familles accompagnées selon les chiffres affichés par le client.',
+        en: 'Live platform in the United States, with 500+ families helped according to the figures the client displays.'
+      }
+    }
   },
   {
     id: 'esign',
@@ -110,7 +153,22 @@ export const PROJECTS_DATA: ProjectItem[] = [
     },
     tags: ['iOS', 'Swift', 'App Store'],
     link: 'https://apps.apple.com/fr/app/two/id6758867716',
-    cover: twoCover
+    cover: twoCover,
+    caseStudy: {
+      mobile: twoMobile,
+      context: {
+        fr: 'Two est une app pour les couples : un espace privé pour partager le quotidien, les souvenirs et les projets à deux.',
+        en: 'Two is an app for couples: a private space to share everyday life, memories and plans together.'
+      },
+      delivered: {
+        fr: ['App iOS native publiée sur l’App Store', 'Carte des souvenirs partagés', 'Humeur du jour et compteur de jours ensemble', 'Calendrier commun pour planifier', 'CinéMatch : trouver un film qui plaît aux deux'],
+        en: ['Native iOS app live on the App Store', 'Shared memory map', 'Daily mood and days-together counter', 'Shared calendar to plan ahead', 'CinéMatch: find a movie you both like']
+      },
+      result: {
+        fr: 'Application publique sur l’App Store, notée 5,0 par ses utilisateurs.',
+        en: 'Public app on the App Store, rated 5.0 by its users.'
+      }
+    }
   },
   {
     id: 'aurenza',
@@ -138,7 +196,22 @@ export const PROJECTS_DATA: ProjectItem[] = [
     },
     tags: ['Shopify', 'POS', 'Firebase'],
     link: 'https://green-jardin.fr',
-    cover: greenJardinCover
+    cover: greenJardinCover,
+    caseStudy: {
+      mobile: greenJardinMobile,
+      context: {
+        fr: 'Green Jardin vend du CBD en boutique à Palaiseau et en ligne. Trois canaux à garder alignés : le site, la caisse du magasin et l’affichage en boutique.',
+        en: 'Green Jardin sells CBD in its Palaiseau shop and online. Three channels to keep aligned: the website, the in-store till and the in-store display.'
+      },
+      delivered: {
+        fr: ['Boutique Shopify, réalisée avec Ino Digital', 'Menu TV dynamique en magasin, mis à jour en temps réel', 'Caisse POS avec balance et programme de fidélité', 'Vérification d’âge et paiement sécurisé', 'Livraison offerte dès 50 € et expédition en 24/48 h'],
+        en: ['Shopify store, built with Ino Digital', 'Dynamic in-store TV menu, updated in real time', 'POS till with scale and loyalty programme', 'Age verification and secure checkout', 'Free shipping from €50, dispatched in 24/48h']
+      },
+      result: {
+        fr: 'Le site, la caisse et l’écran du magasin partagent les mêmes produits et les mêmes prix : une seule source à tenir à jour.',
+        en: 'The website, the till and the in-store screen share the same products and prices: a single source to keep up to date.'
+      }
+    }
   },
   {
     id: 'telegram',
@@ -317,41 +390,47 @@ const TelegramMockup: React.FC = () => (
   </div>
 );
 
-const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ project, lang }) => {
+const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase: (project: ProjectItem) => void }> = ({
+  project,
+  lang,
+  onOpenCase,
+}) => {
   const fr = lang === 'fr';
-  const Wrapper: React.ElementType = project.link ? 'a' : 'div';
-  const wrapperProps = project.link
-    ? { href: project.link, target: '_blank', rel: 'noopener noreferrer' }
-    : {};
+  const visual = project.cover ? (
+    <img
+      src={project.cover}
+      alt={project.title[lang]}
+      loading="lazy"
+      className="absolute inset-0 h-full w-full object-cover object-left-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+    />
+  ) : project.mockup === 'esign' ? (
+    <EsignMockup />
+  ) : (
+    <TelegramMockup />
+  );
+  const coverClass = 'relative block aspect-[16/10] w-full overflow-hidden border-b border-white/[0.07] bg-ink text-left';
 
   return (
-    <Wrapper
-      {...wrapperProps}
-      className="card group flex h-full flex-col overflow-hidden hover:-translate-y-1 hover:bg-surface-2"
-    >
-      <div className="relative aspect-[16/10] overflow-hidden border-b border-white/[0.07] bg-ink">
-        {project.cover ? (
-          <img
-            src={project.cover}
-            alt={project.title[lang]}
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover object-left-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-          />
-        ) : project.mockup === 'esign' ? (
-          <EsignMockup />
-        ) : (
-          <TelegramMockup />
-        )}
-        {project.link ? (
-          <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-ink/70 text-slate-200 backdrop-blur transition-all group-hover:border-brand-mint/50 group-hover:bg-brand-mint group-hover:text-ink">
-            <ArrowUpRight className="h-4 w-4" />
+    <article className="card group flex h-full flex-col overflow-hidden hover:-translate-y-1 hover:bg-surface-2">
+      {project.caseStudy ? (
+        <button type="button" onClick={() => onOpenCase(project)} className={coverClass} aria-label={`${fr ? 'Étude de cas' : 'Case study'} : ${project.title[lang]}`}>
+          {visual}
+          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-ink/75 px-3 py-1 text-[11px] font-semibold text-white opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">
+            {fr ? 'Voir l’étude de cas' : 'View case study'} <ArrowRight className="h-3 w-3" />
           </span>
-        ) : (
+        </button>
+      ) : project.link ? (
+        <a href={project.link} target="_blank" rel="noopener noreferrer" className={coverClass} aria-label={project.title[lang]}>
+          {visual}
+        </a>
+      ) : (
+        <div className={coverClass}>
+          {visual}
           <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-ink/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 backdrop-blur">
             <Lock className="h-3 w-3" /> {fr ? 'Confidentiel' : 'Confidential'}
           </span>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="flex flex-1 flex-col p-6">
         <p className="text-xs font-medium text-brand-mint/90">{project.badge[lang]}</p>
@@ -366,17 +445,132 @@ const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ pro
           ))}
         </div>
 
-        <div className="mt-5 border-t border-white/[0.07] pt-4 text-xs">
+        <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/[0.07] pt-4 text-xs">
           {project.link ? (
-            <span className="text-slate-500 transition-colors group-hover:text-slate-300">{project.subtitle}</span>
+            <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex min-w-0 items-center gap-1 text-slate-400 transition-colors hover:text-white">
+              <span className="truncate">{project.subtitle}</span> <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
+            </a>
           ) : (
             <span className="inline-flex items-center gap-1.5 text-slate-500">
               <Lock className="h-3.5 w-3.5" /> {fr ? 'Projet privé · pas de lien public' : 'Private project · no public link'}
             </span>
           )}
+          {project.caseStudy && (
+            <button type="button" onClick={() => onOpenCase(project)} className="inline-flex shrink-0 items-center gap-1 font-semibold text-brand-mint transition-colors hover:text-white">
+              {fr ? 'Étude de cas' : 'Case study'} <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
       </div>
-    </Wrapper>
+    </article>
+  );
+};
+
+const CaseStudyModal: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onClose: () => void; onContact?: () => void }> = ({
+  project,
+  lang,
+  onClose,
+  onContact,
+}) => {
+  const fr = lang === 'fr';
+  const study = project.caseStudy!;
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-ink/80 backdrop-blur-sm sm:items-center sm:p-6"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="case-study-title"
+    >
+      <div
+        className="relative max-h-[92svh] w-full max-w-5xl overflow-y-auto rounded-t-3xl border border-white/10 bg-surface shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] sm:rounded-3xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Zero-height sticky bar: keeps the close button visible while the sheet scrolls. */}
+        <div className="sticky top-0 z-10 flex h-0 justify-end">
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            className="mr-4 mt-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-ink/80 text-slate-200 backdrop-blur transition-colors hover:text-white"
+            aria-label={fr ? 'Fermer' : 'Close'}
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="grid items-end gap-4 border-b border-white/[0.07] bg-ink p-5 sm:grid-cols-[minmax(0,1fr)_auto] md:p-8">
+          <div className="overflow-hidden rounded-xl border border-white/10">
+            <img src={project.cover} alt={`${project.title[lang]} — ${fr ? 'version ordinateur' : 'desktop'}`} className="block aspect-[16/10] w-full object-cover object-left-top" />
+          </div>
+          <div className="mx-auto w-40 overflow-hidden rounded-[1.6rem] border-4 border-white/10 shadow-xl sm:w-44">
+            <img src={study.mobile} alt={`${project.title[lang]} — ${fr ? 'version mobile' : 'mobile'}`} className="block aspect-[468/797] w-full object-cover object-top" />
+          </div>
+        </div>
+
+        <div className="p-6 md:p-10">
+          <p className="text-xs font-medium text-brand-mint/90">{project.badge[lang]}</p>
+          <h3 id="case-study-title" className="mt-2 font-display text-2xl font-semibold text-white md:text-3xl">{project.title[lang]}</h3>
+
+          <div className="mt-8 grid gap-8 md:grid-cols-2 md:gap-10">
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{fr ? 'Le contexte' : 'Context'}</h4>
+              <p className="mt-3 text-sm leading-relaxed text-slate-300 md:text-base">{study.context[lang]}</p>
+
+              <h4 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{fr ? 'Le résultat' : 'Result'}</h4>
+              <p className="mt-3 text-sm leading-relaxed text-white md:text-base">{study.result[lang]}</p>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{fr ? 'Ce qu’on a livré' : 'What we shipped'}</h4>
+              <ul className="mt-3 space-y-3">
+                {study.delivered[lang].map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-slate-300">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-mint/15 text-brand-mint">
+                      <Check className="h-3 w-3" strokeWidth={3} />
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col gap-3 border-t border-white/[0.07] pt-6 sm:flex-row sm:items-center">
+            {onContact && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onContact();
+                }}
+                className="btn btn-primary"
+              >
+                {fr ? 'Un projet similaire ? Parlons-en' : 'A similar project? Let’s talk'} <ArrowRight className="h-4 w-4" />
+              </button>
+            )}
+            {project.link && (
+              <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
+                {fr ? 'Voir le projet en ligne' : 'See it live'} <ArrowUpRight className="h-4 w-4" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -433,6 +627,8 @@ const LabCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ projec
 
 export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onContact }) => {
   const fr = lang === 'fr';
+  const [openCase, setOpenCase] = useState<ProjectItem | null>(null);
+  const closeCase = useCallback(() => setOpenCase(null), []);
   const clientProjects = PROJECTS_DATA.filter((p) => p.category === 'client');
   const labProjects = PROJECTS_DATA.filter((p) => p.category === 'studio');
 
@@ -454,7 +650,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {clientProjects.map((project, i) => (
             <Reveal key={project.id} delay={(i % 3) * 80}>
-              <ClientCard project={project} lang={lang} />
+              <ClientCard project={project} lang={lang} onOpenCase={setOpenCase} />
             </Reveal>
           ))}
         </div>
@@ -498,6 +694,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
           ))}
         </div>
       </div>
+
+      {openCase?.caseStudy && (
+        <CaseStudyModal project={openCase} lang={lang} onClose={closeCase} onContact={onContact} />
+      )}
     </section>
   );
 };

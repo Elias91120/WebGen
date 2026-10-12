@@ -5,22 +5,25 @@
 */
 import {
   ArrowRight,
+  BadgeEuro,
+  CalendarCheck,
   Check,
   Globe,
-  Lock,
+  KeyRound,
   Mail,
   Menu,
   ShieldCheck,
   Smartphone,
   Star,
   Store,
+  Timer,
   Users,
   X,
 } from 'lucide-react';
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useState } from 'react';
 import AiAgentWidget from './components/AiAgentWidget';
-import CookieConsent from './components/CookieConsent';
-import HeroVideo, { HeroVideoCard } from './components/HeroVideo';
+import ClientLogos from './components/ClientLogos';
+import { HeroVideoCard } from './components/HeroVideo';
 import LegalModals from './components/LegalModals';
 import Logo from './components/Logo';
 import ProjectsShowcase, { PROJECTS_DATA } from './components/ProjectsShowcase';
@@ -29,12 +32,7 @@ import SectionLines from './components/SectionLines';
 import SkillsRadar from './components/SkillsRadar';
 import TeamSection, { FOUNDERS, LinkedInIcon } from './components/TeamSection';
 import { Lang, translations } from './i18n';
-import { getSupabase } from './services/supabaseClient';
-import { ClientRequest, ServiceType } from './types';
-
-// Lazy-loaded components for performance optimization
-const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
-const BookingModal = lazy(() => import('./components/BookingModal'));
+import { openBooking } from './lib/booking';
 
 const LANG_STORAGE_KEY = '3geeks-lang';
 
@@ -63,17 +61,10 @@ const NAV_LINKS: Array<{ id: string; key: 'services' | 'method' | 'projects' | '
 
 const App: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [lang, setLang] = useState<Lang>(detectLang);
   const [scrolled, setScrolled] = useState(false);
 
-  // Booking & Admin State
-  const [bookingModalOpen, setBookingModalOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState<ServiceType>(null);
-  const [adminOpen, setAdminOpen] = useState(false);
-  const [requests, setRequests] = useState<ClientRequest[]>([]);
-
-  // GDPR State
+  // Legal notices
   const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [legalTab, setLegalTab] = useState<'privacy' | 'terms' | 'legal'>('legal');
 
@@ -108,122 +99,10 @@ const App: React.FC = () => {
   const t = translations[lang];
   const fr = lang === 'fr';
 
-  useEffect(() => {
-    if (adminOpen) fetchRequests();
-  }, [adminOpen]);
-
-  const fetchRequests = async () => {
-    const supabase = await getSupabase();
-    if (!supabase) return;
-    try {
-      const { data, error } = await supabase
-        .from('client_requests')
-        .select('*')
-        .order('date', { ascending: false });
-
-      if (error) throw error;
-
-      if (data) {
-        const mappedRequests: ClientRequest[] = data.map(item => ({
-          id: item.id,
-          date: item.date,
-          status: item.status,
-          serviceId: item.service_id as ServiceType,
-          serviceName: item.service_name,
-          hasMaintenance: item.has_maintenance,
-          totalEstimate: item.total_estimate,
-          clientName: item.client_name,
-          clientEmail: item.client_email,
-          clientCompany: item.client_company,
-          message: item.message,
-          preferredDate: item.preferred_date
-        }));
-        setRequests(mappedRequests);
-      }
-    } catch (error) {
-      // Silenced: backend may be offline. Public site still works.
-    }
-  };
-
-  const handleBookingSubmit = async (data: Omit<ClientRequest, 'id' | 'date' | 'status'>) => {
-    const newRequest = {
-      id: Math.random().toString(36).substr(2, 9),
-      date: new Date().toISOString(),
-      status: 'new',
-      service_id: data.serviceId,
-      service_name: data.serviceName,
-      has_maintenance: data.hasMaintenance,
-      total_estimate: data.totalEstimate,
-      client_name: data.clientName,
-      client_email: data.clientEmail,
-      client_company: data.clientCompany,
-      message: data.message,
-      preferred_date: data.preferredDate
-    };
-
-    const supabase = await getSupabase();
-    if (!supabase) {
-      setBookingModalOpen(false);
-      setFormStatus('success');
-      scrollToSection('contact');
-      return;
-    }
-
-    try {
-      const { error } = await supabase
-        .from('client_requests')
-        .insert([newRequest]);
-
-      if (error) throw error;
-
-      fetchRequests();
-      setBookingModalOpen(false);
-      setFormStatus('success');
-      scrollToSection('contact');
-    } catch (error) {
-      alert('Une erreur est survenue. Merci d’écrire à contact@3geeks.fr.');
-    }
-  };
-
-  const handleServiceSelect = (service: ServiceType) => {
-    setSelectedService(service);
-    setBookingModalOpen(true);
-  };
-
-  const handleAdminStatusUpdate = async (id: string, status: ClientRequest['status']) => {
-    const supabase = await getSupabase();
-    if (!supabase) return;
-    try {
-      const { error } = await supabase
-        .from('client_requests')
-        .update({ status })
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setRequests(requests.map(req => req.id === id ? { ...req, status } : req));
-    } catch (error) {
-      // silenced
-    }
-  };
-
-  const handleAdminDelete = async (id: string) => {
-    const supabase = await getSupabase();
-    if (!supabase) return;
-    if (!window.confirm('Are you sure you want to delete this request?')) return;
-
-    try {
-      const { error } = await supabase
-        .from('client_requests')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setRequests(requests.filter(req => req.id !== id));
-    } catch (error) {
-      // silenced
-    }
+  // Every "talk to us" button books a free call on Calendly.
+  const book = (source: string) => {
+    setIsMenuOpen(false);
+    openBooking(source);
   };
 
   const scrollToSection = (id: string) => {
@@ -236,10 +115,10 @@ const App: React.FC = () => {
 
   const toggleLang = () => setLang((prev) => (prev === 'en' ? 'fr' : 'en'));
 
-  // Only public projects are named in the "already live" strip.
-  const clientNames = PROJECTS_DATA.filter((p) => p.category === 'client' && p.link).map((p) => p.title[lang]);
+  const commitmentIcons = [Timer, BadgeEuro, KeyRound, CalendarCheck];
+  const commitments = t.commitments.items.map((item, i) => ({ ...item, icon: commitmentIcons[i] }));
 
-  const plans: Array<{ id: ServiceType; data: typeof t.services.s1; tag: string; featured: boolean }> = [
+  const plans: Array<{ id: string; data: typeof t.services.s1; tag: string; featured: boolean }> = [
     { id: 'starter', data: t.services.s1, tag: fr ? 'Site vitrine' : 'Business website', featured: false },
     { id: 'custom', data: t.services.s2, tag: fr ? 'Projet sur mesure' : 'Custom project', featured: true },
     { id: 'redesign', data: t.services.s3, tag: fr ? 'Refonte complète' : 'Complete redesign', featured: false },
@@ -302,7 +181,7 @@ const App: React.FC = () => {
             >
               <Globe className="h-3.5 w-3.5 text-brand-mint" /> {lang.toUpperCase()}
             </button>
-            <button type="button" onClick={() => scrollToSection('contact')} className="btn btn-primary !py-3">
+            <button type="button" onClick={() => book('nav')} className="btn btn-primary !py-3">
               {t.nav.cta}
             </button>
           </div>
@@ -343,7 +222,7 @@ const App: React.FC = () => {
                 </button>
               ))}
             </div>
-            <button type="button" onClick={() => scrollToSection('contact')} className="btn btn-primary mt-6 w-full">
+            <button type="button" onClick={() => book('menu')} className="btn btn-primary mt-6 w-full">
               {t.nav.cta}
             </button>
           </div>
@@ -355,11 +234,9 @@ const App: React.FC = () => {
         {/* HERO                                                          */}
         {/* ------------------------------------------------------------ */}
         <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden">
-          <HeroVideo lang={lang} />
-
-          {/* Mobile : halo de marque discret. Grand écran : voile sombre à gauche pour lire le titre devant la vidéo */}
+          {/* Halo de marque discret derrière le titre et la vidéo */}
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_45%_at_90%_8%,rgba(10,239,187,0.16),transparent_70%),radial-gradient(ellipse_70%_40%_at_0%_95%,rgba(195,251,5,0.08),transparent_70%)] lg:bg-[linear-gradient(90deg,#08090d_0%,rgba(8,9,13,0.85)_30%,rgba(8,9,13,0.25)_60%,transparent_100%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_45%_at_90%_8%,rgba(10,239,187,0.16),transparent_70%),radial-gradient(ellipse_70%_40%_at_0%_95%,rgba(195,251,5,0.08),transparent_70%)] lg:bg-[radial-gradient(ellipse_45%_60%_at_75%_45%,rgba(10,239,187,0.14),transparent_70%),radial-gradient(ellipse_40%_40%_at_10%_90%,rgba(195,251,5,0.06),transparent_70%)]"
             aria-hidden="true"
           />
           <div
@@ -371,8 +248,8 @@ const App: React.FC = () => {
             aria-hidden="true"
           />
 
-          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-10 pt-24 sm:px-8 sm:pt-32 md:pt-36">
-            <div className="max-w-2xl lg:max-w-[33rem]">
+          <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 content-center items-center gap-10 px-5 pb-10 pt-24 sm:px-8 sm:pt-32 md:pt-36 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
+            <div className="max-w-2xl">
               <div
                 className="hero-rise inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] py-1.5 pl-3 pr-4 text-xs font-medium text-slate-200 backdrop-blur"
                 style={{ ['--rise-delay' as string]: '100ms' }}
@@ -403,17 +280,17 @@ const App: React.FC = () => {
                 className="hero-rise mt-9 flex flex-col gap-3 sm:flex-row"
                 style={{ ['--rise-delay' as string]: '480ms' }}
               >
-                <button type="button" onClick={() => scrollToSection('contact')} className="btn btn-primary">
+                <button type="button" onClick={() => book('hero')} className="btn btn-primary">
                   {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
                 </button>
                 <button type="button" onClick={() => scrollToSection('services')} className="btn btn-ghost">
                   {t.hero.ctaSecondary}
                 </button>
               </div>
+            </div>
 
-              <div className="hero-rise mt-10 lg:hidden" style={{ ['--rise-delay' as string]: '600ms' }}>
-                <HeroVideoCard lang={lang} />
-              </div>
+            <div className="hero-rise" style={{ ['--rise-delay' as string]: '600ms' }}>
+              <HeroVideoCard lang={lang} />
             </div>
           </div>
 
@@ -421,8 +298,8 @@ const App: React.FC = () => {
           <div className="relative z-10 border-t border-white/[0.08] bg-ink/40 backdrop-blur-md">
             <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-5 px-5 py-6 sm:px-8 md:grid-cols-4">
               {t.hero.trust.map((item) => (
-                <div key={item.v} className="flex items-baseline gap-3">
-                  <span className="font-display text-2xl font-semibold text-white md:text-3xl">
+                <div key={item.v} className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-3">
+                  <span className="shrink-0 whitespace-nowrap font-display text-2xl font-semibold text-white md:text-3xl">
                     {item.k.replace('{projects}', String(PROJECTS_DATA.length))}
                   </span>
                   <span className="text-xs leading-snug text-slate-400 md:text-sm">{item.v}</span>
@@ -435,17 +312,35 @@ const App: React.FC = () => {
         {/* ------------------------------------------------------------ */}
         {/* PREUVE : projets déjà en ligne                               */}
         {/* ------------------------------------------------------------ */}
-        <section className="border-b border-white/5 py-8" aria-label={fr ? 'Projets en ligne' : 'Live projects'}>
-          <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-10 gap-y-3 px-5 sm:px-8 md:flex-row">
-            <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
-              {fr ? 'Déjà en ligne' : 'Already live'}
-            </span>
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 md:justify-start">
-              {clientNames.map((name) => (
-                <span key={name} className="font-display text-base font-medium text-slate-400">
-                  {name}
-                </span>
-              ))}
+        <ClientLogos lang={lang} />
+
+        {/* ------------------------------------------------------------ */}
+        {/* ENGAGEMENTS                                                   */}
+        {/* ------------------------------------------------------------ */}
+        <section className="relative border-b border-white/5 py-16 md:py-24" aria-labelledby="engagements-title">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <Reveal className="mb-10 max-w-2xl md:mb-14">
+              <span className="eyebrow">{t.commitments.path}</span>
+              <h2 id="engagements-title" className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.commitments.title}</h2>
+            </Reveal>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {commitments.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <Reveal key={item.title} delay={i * 80}>
+                    <div className={`${i === 0 ? 'card-featured shadow-[0_30px_80px_-35px_rgba(10,239,187,0.45)]' : 'card'} flex h-full flex-col p-6 md:p-7`}>
+                      <div className="flex items-center justify-between">
+                        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <span className={`font-display text-2xl font-semibold tracking-tight ${i === 0 ? 'text-gradient' : 'text-white'}`}>{item.k}</span>
+                      </div>
+                      <h3 className="mt-6 font-display text-lg font-semibold text-white">{item.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-slate-400">{item.desc}</p>
+                    </div>
+                  </Reveal>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -505,7 +400,7 @@ const App: React.FC = () => {
 
                     <button
                       type="button"
-                      onClick={() => handleServiceSelect(plan.id)}
+                      onClick={() => book(`offer-${plan.id}`)}
                       className={`btn w-full ${plan.featured ? 'btn-primary' : 'btn-ghost'}`}
                     >
                       {plan.data.btn}
@@ -519,7 +414,7 @@ const App: React.FC = () => {
             <Reveal className="mt-14 md:mt-20">
               <button
                 type="button"
-                onClick={() => handleServiceSelect('maintenance_only')}
+                onClick={() => book('offer-maintenance')}
                 className="card group flex w-full flex-col items-start gap-6 p-6 text-left md:flex-row md:items-center md:justify-between md:p-8"
               >
                 <div className="flex items-start gap-5">
@@ -597,7 +492,7 @@ const App: React.FC = () => {
               <span className="eyebrow">{t.whyUs.path}</span>
               <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.whyUs.title}</h2>
               <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">{t.whyUs.subtitle}</p>
-              <button type="button" onClick={() => scrollToSection('contact')} className="btn btn-primary mt-8">
+              <button type="button" onClick={() => book('why-us')} className="btn btn-primary mt-8">
                 {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
               </button>
             </Reveal>
@@ -624,7 +519,7 @@ const App: React.FC = () => {
         {/* ------------------------------------------------------------ */}
         {/* RÉALISATIONS                                                  */}
         {/* ------------------------------------------------------------ */}
-        <ProjectsShowcase lang={lang} onContact={() => scrollToSection('contact')} />
+        <ProjectsShowcase lang={lang} onContact={() => book('projects')} />
 
         {/* ------------------------------------------------------------ */}
         {/* EXPERTISE                                                     */}
@@ -688,14 +583,22 @@ const App: React.FC = () => {
 
             <Reveal delay={120}>
               <div className="card-featured p-6 md:p-10">
-                {formStatus === 'success' && (
-                  <div role="status" className="mb-6 flex items-center gap-3 rounded-xl border border-brand-mint/25 bg-brand-mint/[0.06] px-4 py-3 text-sm text-brand-mint">
-                    <Check className="h-4 w-4 shrink-0" strokeWidth={3} />
-                    <span><strong className="font-semibold">{t.contact.successTitle}</strong> {t.contact.successDesc}</span>
-                  </div>
-                )}
+                <button
+                  type="button"
+                  onClick={() => book('contact')}
+                  className="group flex w-full items-center gap-4 rounded-[1.25rem] bg-brand-gradient p-5 text-left text-ink shadow-[0_20px_50px_-20px_rgba(10,239,187,0.7)] transition-transform hover:-translate-y-0.5"
+                >
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ink/10 ring-1 ring-ink/15">
+                    <CalendarCheck className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-display text-lg font-semibold">{t.contact.book}</span>
+                    <span className="block text-sm text-ink/75">{t.contact.bookDesc}</span>
+                  </span>
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </button>
 
-                <a href="mailto:contact@3geeks.fr" className="card group flex items-center gap-4 p-5 hover:bg-surface-2">
+                <a href="mailto:contact@3geeks.fr" className="card group mt-4 flex items-center gap-4 p-5 hover:bg-surface-2">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
                     <Mail className="h-5 w-5" />
                   </span>
@@ -734,33 +637,6 @@ const App: React.FC = () => {
         </section>
 
         <AiAgentWidget lang={lang} onNavigateSection={scrollToSection} />
-
-        <Suspense fallback={null}>
-          <BookingModal
-            isOpen={bookingModalOpen}
-            onClose={() => setBookingModalOpen(false)}
-            selectedService={selectedService}
-            onSubmit={handleBookingSubmit}
-            translations={t}
-          />
-        </Suspense>
-
-        <Suspense fallback={null}>
-          {adminOpen && (
-            <AdminDashboard
-              requests={requests}
-              onUpdateStatus={handleAdminStatusUpdate}
-              onDelete={handleAdminDelete}
-              onClose={() => setAdminOpen(false)}
-            />
-          )}
-        </Suspense>
-
-        <CookieConsent
-          translations={t.cookie}
-          onAccept={() => undefined}
-          onDecline={() => undefined}
-        />
 
         <LegalModals
           translations={t.legal}
@@ -831,15 +707,6 @@ const App: React.FC = () => {
               <button type="button" onClick={() => openLegal('legal')} className="transition-colors hover:text-white">{t.legal.tabs.legal}</button>
               <button type="button" onClick={() => openLegal('privacy')} className="transition-colors hover:text-white">{t.legal.tabs.privacy}</button>
               <button type="button" onClick={() => openLegal('terms')} className="transition-colors hover:text-white">{t.legal.tabs.terms}</button>
-              <button
-                type="button"
-                onClick={() => setAdminOpen(true)}
-                className="text-slate-700 transition-colors hover:text-slate-500"
-                title="Admin"
-                aria-label="Admin"
-              >
-                <Lock className="h-3 w-3" />
-              </button>
             </div>
           </div>
         </div>

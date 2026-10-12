@@ -15,15 +15,25 @@ export const translations = {
       badge: "Web & digital studio · Made in France",
       titleStart: "Websites and digital tools",
       titleEnd: "that make people contact you.",
-      comment: "Start with a focused €300 website or a custom web project. We help you choose the simplest format for your goal.",
-      ctaPrimary: "Talk about my project",
+      comment: "Start with a focused €300 website or a custom web project. Small requests delivered in 24 to 48 hours, and nothing to pay until you're happy.",
+      ctaPrimary: "Book a free call",
       ctaSecondary: "See our offers",
       scroll: "Scroll",
       trust: [
-        { k: "24h", v: "response time" },
+        { k: "24–48 h", v: "to deliver a small request" },
         { k: "€300", v: "Starter website, one-off" },
         { k: "AWS", v: "certified cloud expertise" },
         { k: "{projects}", v: "projects delivered" },
+      ],
+    },
+    commitments: {
+      path: "Our commitments",
+      title: "Fast delivery, nothing upfront, and your site stays yours.",
+      items: [
+        { k: "24–48 h", title: "Express delivery", desc: "Small requests are delivered in 24 to 48 hours. For larger projects, the schedule is set on the first call." },
+        { k: "€0", title: "Nothing to pay upfront", desc: "You pay on delivery, once you're happy with the result. No deposit." },
+        { k: "100%", title: "Your site belongs to you", desc: "The source code and the domain name are in your name. You stay free, with no lock-in." },
+        { k: "Free", title: "Free quote, no commitment", desc: "We talk it through on a 30-minute call, no pressure, then send you a clear quote." },
       ],
     },
     projects: {
@@ -102,7 +112,7 @@ export const translations = {
       path: "Service plans",
       badge: "SOLUTIONS",
       title: "Three clear ways to start your project.",
-      subtitle: "A displayed price when possible, a fast quote otherwise.",
+      subtitle: "A displayed price when possible, otherwise a free quote after a 30-minute call.",
       maintenanceTitle: "Peace-of-mind option",
       maintenanceDesc: "Keep your site monitored, secure and lightly updated after launch.",
       maintenancePrice: "€50/mo",
@@ -157,27 +167,6 @@ export const translations = {
           { text: 'Safer launch plan with your current site', checked: true },
         ]
       }
-    },
-    booking: {
-      title: "Confirm your request",
-      stepOf: "Step {step} of 2",
-      selectedOffer: "Selected offer",
-      quote: "Custom quote",
-      estimatedTotal: "Estimated total",
-      continue: "Continue",
-      back: "Back",
-      confirm: "Confirm",
-      processing: "Sending...",
-      name: "Name",
-      email: "Email",
-      company: "Company / project",
-      preferredDate: "Preferred date (optional)",
-      dateHint: "Leave blank to schedule later",
-      details: "Additional details",
-      namePlaceholder: "John Doe",
-      emailPlaceholder: "john@company.com",
-      companyPlaceholder: "My Awesome Shop",
-      detailsPlaceholder: "Anything else we should know?",
     },
     reviews: {
       path: "Client feedback",
@@ -252,9 +241,9 @@ export const translations = {
       title: "Let's talk about your project.",
       subtitle: "Tell us what you want to sell, show or automate. We reply within 24h with the simplest next step.",
       email: "Reply within 24h",
+      book: "Book a free call",
+      bookDesc: "30 minutes by phone, no commitment. Free quote.",
       linkedin: "Or reach a co-founder directly on LinkedIn",
-      successTitle: "Received.",
-      successDesc: "The 3geeks team will be in touch shortly.",
     },
     footer: {
       eof: "End",
@@ -262,12 +251,6 @@ export const translations = {
       tagline: "Made in France",
       links: ["Legal", "Privacy", "Terms"],
       blurb: "Websites and digital tools that make people want to contact you."
-    },
-    cookie: {
-      title: "Cookies, please.",
-      desc: "We use cookies to improve your browsing experience and analyse our traffic. Click \"Accept\" to consent.",
-      accept: "Accept",
-      decline: "Decline"
     },
     legal: {
       title: "Legal Information",
@@ -279,52 +262,64 @@ export const translations = {
       content: {
         legal: [
           {
-            title: "1. Website Editor",
-            text: "This site is edited by 3geeks.\nCompany registration details and registered office must be added before commercial publication.\nEmail: contact@3geeks.fr"
+            title: "1. Website editor",
+            text: "This website is published by 3geeks, a web studio co-founded by Elias Elloumi and Noam Leclapart-Jublot.\nPublication directors: Elias Elloumi and Noam Leclapart-Jublot.\nContact: contact@3geeks.fr"
           },
           {
             title: "2. Hosting",
-            text: "The website is hosted by Vercel Inc.\nAddress: 340 S Lemon Ave #4133 Walnut, CA 91789, USA"
+            text: "The website runs on servers operated by 3geeks and is delivered through the Cloudflare network (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA)."
           },
           {
-            title: "3. Intellectual Property",
-            text: "This entire site is subject to French and international copyright and intellectual property law. All reproduction rights reserved."
+            title: "3. Intellectual property",
+            text: "The content of this site (texts, visuals, logo, brand video) belongs to 3geeks. Client logos and screenshots of client projects belong to their respective owners and are shown as references."
           }
         ],
         privacy: [
           {
-            title: "1. Data Collection",
-            text: "We collect the following information via our contact form:\n- First and last name\n- Email address\n- Company name\n- Project details"
+            title: "1. What we receive",
+            text: "This site has no contact form and does not track you. We only receive what you choose to send us: an email to contact@3geeks.fr, a LinkedIn message, or a call booked through Calendly (name, email, phone number and the details you share)."
           },
           {
-            title: "2. Data Usage",
-            text: "This data is used solely to:\n- Respond to your contact requests\n- Establish quotes\n- Contact you regarding commercial relations\n\nYour data is never sold to third parties."
+            title: "2. How we use it",
+            text: "Only to answer you, prepare your quote and follow up on our work together. Your data is never sold or passed on to third parties."
           },
           {
-            title: "3. Your Rights",
-            text: "Under the GDPR, you have the right to access, rectify, and delete your data. To exercise this right, contact us at contact@3geeks.fr."
+            title: "3. Services we rely on",
+            text: "Calls are booked through Calendly, which processes booking data under its own privacy policy. The site assistant answers from pre-written content in your browser: nothing you type is sent to a server."
           },
           {
-            title: "4. Cookies",
-            text: "This site uses essential cookies for operation and analytics cookies to improve your experience. You can manage preferences via the consent banner."
+            title: "4. Your rights",
+            text: "Under the GDPR, you can access, correct or delete your data by writing to contact@3geeks.fr. You can also file a complaint with the CNIL (cnil.fr)."
+          },
+          {
+            title: "5. Cookies",
+            text: "This site sets no advertising or tracking cookies. Your language choice is stored in your browser only. If you open the booking window, Calendly may set its own cookies."
           }
         ],
         terms: [
           {
             title: "1. Purpose",
-            text: "These conditions govern the sale of web development services by 3geeks."
+            text: "These conditions govern the web development services provided by 3geeks."
           },
           {
-            title: "2. Price",
-            text: "Prices are listed in euros. 3geeks reserves the right to modify prices at any time, but any service is billed at the rate in effect when the quote is validated."
+            title: "2. Quote",
+            text: "Every project starts with a free call and a free, no-commitment quote."
           },
           {
-            title: "3. Payment",
-            text: "Payment is due upon signing the quote (deposit) and upon delivery (balance)."
+            title: "3. Price",
+            text: "Prices are in euros. The price billed is the one set in the accepted quote."
           },
           {
-            title: "4. Delivery",
-            text: "Delivery times are indicative and may vary depending on project complexity and client responsiveness."
+            title: "4. Payment",
+            text: "Nothing is paid upfront: payment is due on delivery, once the client has approved the result."
+          },
+          {
+            title: "5. Delivery",
+            text: "Small requests are usually delivered within 24 to 48 hours. For larger projects, the schedule is agreed in the quote and may depend on the client's responsiveness."
+          },
+          {
+            title: "6. Ownership",
+            text: "Once paid, the source code and the domain name belong to the client."
           }
         ]
       },
@@ -345,15 +340,25 @@ export const translations = {
       badge: "Studio web & digital · Made in France",
       titleStart: "Des sites et outils web",
       titleEnd: "qui donnent envie de vous contacter.",
-      comment: "Démarrez avec un site ciblé à 300€ ou un projet web sur mesure. On vous aide à choisir le format le plus simple pour votre objectif.",
-      ctaPrimary: "Parler de mon projet",
+      comment: "Démarrez avec un site ciblé à 300€ ou un projet web sur mesure. Petites demandes livrées en 24 à 48 h, et rien à payer avant d’être satisfait.",
+      ctaPrimary: "Réserver un appel gratuit",
       ctaSecondary: "Découvrir nos offres",
       scroll: "Défiler",
       trust: [
-        { k: "24h", v: "de délai de réponse" },
+        { k: "24–48 h", v: "pour livrer une petite demande" },
         { k: "300€", v: "site Starter, paiement unique" },
         { k: "AWS", v: "expertise cloud certifiée" },
         { k: "{projects}", v: "projets livrés" },
+      ],
+    },
+    commitments: {
+      path: "Nos engagements",
+      title: "Livraison rapide, zéro avance, et votre site reste à vous.",
+      items: [
+        { k: "24–48 h", title: "Livraison express", desc: "Les petites demandes sont livrées en 24 à 48 h. Pour un projet plus large, le planning est fixé dès le premier appel." },
+        { k: "0 €", title: "Rien à payer d’avance", desc: "Vous réglez à la livraison, une fois satisfait du résultat. Pas d’acompte." },
+        { k: "100 %", title: "Votre site vous appartient", desc: "Le code source et le nom de domaine sont à votre nom. Vous restez libre, sans engagement." },
+        { k: "Gratuit", title: "Devis offert, sans engagement", desc: "On en parle lors d’un appel de 30 min, sans pression, puis on vous envoie un devis clair." },
       ],
     },
     projects: {
@@ -432,7 +437,7 @@ export const translations = {
       path: "Nos offres",
       badge: "SOLUTIONS",
       title: "Trois façons claires de démarrer votre projet.",
-      subtitle: "Un prix affiché quand c'est possible, un devis rapide sinon.",
+      subtitle: "Un prix affiché quand c’est possible, sinon un devis gratuit après un appel de 30 min.",
       maintenanceTitle: "Option Sérénité",
       maintenanceDesc: "Gardez votre site surveillé, sécurisé et légèrement mis à jour après la mise en ligne.",
       maintenancePrice: "50€/mois",
@@ -487,27 +492,6 @@ export const translations = {
           { text: 'Plan de mise en ligne sans coupure brutale', checked: true },
         ]
       },
-    },
-    booking: {
-      title: "Confirmer votre demande",
-      stepOf: "Étape {step} sur 2",
-      selectedOffer: "Offre sélectionnée",
-      quote: "Sur devis",
-      estimatedTotal: "Total estimé",
-      continue: "Continuer",
-      back: "Retour",
-      confirm: "Confirmer",
-      processing: "Envoi...",
-      name: "Nom",
-      email: "Email",
-      company: "Entreprise / projet",
-      preferredDate: "Date souhaitée (optionnel)",
-      dateHint: "Laissez vide pour planifier plus tard",
-      details: "Détails supplémentaires",
-      namePlaceholder: "Jean Dupont",
-      emailPlaceholder: "jean@entreprise.com",
-      companyPlaceholder: "Ma boutique",
-      detailsPlaceholder: "Autre chose à savoir ?",
     },
     reviews: {
       path: "Retours clients",
@@ -582,9 +566,9 @@ export const translations = {
       title: "Parlons de votre projet.",
       subtitle: "Expliquez-nous ce que vous voulez vendre, présenter ou automatiser. On répond sous 24h avec la prochaine étape la plus simple.",
       email: "Réponse sous 24h",
+      book: "Réserver un appel gratuit",
+      bookDesc: "30 min au téléphone, sans engagement. Devis offert.",
       linkedin: "Ou écrivez directement à un cofondateur sur LinkedIn",
-      successTitle: "Bien reçu.",
-      successDesc: "L'équipe 3geeks vous recontacte très vite.",
     },
     footer: {
       eof: "Fin",
@@ -592,12 +576,6 @@ export const translations = {
       tagline: "Made in France",
       links: ["Mentions Légales", "Confidentialité", "CGV"],
       blurb: "Des sites et outils web qui donnent envie de vous contacter."
-    },
-    cookie: {
-      title: "Cookies, s'il vous plaît.",
-      desc: "Nous utilisons des cookies pour améliorer votre navigation et analyser notre trafic. Cliquez sur \"Accepter\" pour consentir.",
-      accept: "Accepter",
-      decline: "Refuser"
     },
     legal: {
       title: "Informations légales",
@@ -610,51 +588,63 @@ export const translations = {
         legal: [
           {
             title: "1. Éditeur du site",
-            text: "Ce site est édité par 3geeks.\nLes informations d'immatriculation et de siège social doivent être ajoutées avant une publication commerciale définitive.\nEmail : contact@3geeks.fr"
+            text: "Ce site est édité par 3geeks, studio web cofondé par Elias Elloumi et Noam Leclapart-Jublot.\nDirecteurs de la publication : Elias Elloumi et Noam Leclapart-Jublot.\nContact : contact@3geeks.fr"
           },
           {
             title: "2. Hébergement",
-            text: "Le site est hébergé par Vercel Inc.\nAdresse : 340 S Lemon Ave #4133 Walnut, CA 91789, USA"
+            text: "Le site est hébergé sur des serveurs exploités par 3geeks et distribué via le réseau Cloudflare (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis)."
           },
           {
             title: "3. Propriété intellectuelle",
-            text: "L'ensemble de ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés."
+            text: "Les contenus de ce site (textes, visuels, logo, vidéo de marque) appartiennent à 3geeks. Les logos et captures des projets clients restent la propriété de leurs titulaires et sont présentés à titre de références."
           }
         ],
         privacy: [
           {
-            title: "1. Collecte des données",
-            text: "Nous collectons les informations suivantes via notre formulaire de contact :\n- Nom et prénom\n- Adresse email\n- Nom de l'entreprise\n- Détails du projet"
+            title: "1. Ce que nous recevons",
+            text: "Ce site n’a pas de formulaire et ne vous suit pas. Nous recevons uniquement ce que vous choisissez de nous envoyer : un e-mail à contact@3geeks.fr, un message LinkedIn ou un appel réservé via Calendly (nom, e-mail, numéro de téléphone et les informations que vous partagez)."
           },
           {
-            title: "2. Utilisation des données",
-            text: "Ces données sont utilisées uniquement pour :\n- Répondre à vos demandes de contact\n- Établir des devis\n- Vous contacter dans le cadre de la relation commerciale\n\nVos données ne sont jamais vendues à des tiers."
+            title: "2. Utilisation",
+            text: "Uniquement pour vous répondre, préparer votre devis et assurer le suivi de notre collaboration. Vos données ne sont jamais vendues ni transmises à des tiers."
           },
           {
-            title: "3. Vos droits",
-            text: "Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ce droit, contactez-nous à contact@3geeks.fr."
+            title: "3. Services utilisés",
+            text: "Les appels sont réservés via Calendly, qui traite les données de réservation selon sa propre politique de confidentialité. L’assistant du site répond à partir de contenus pré-rédigés, directement dans votre navigateur : rien de ce que vous tapez n’est envoyé à un serveur."
           },
           {
-            title: "4. Cookies",
-            text: "Ce site utilise des cookies essentiels au fonctionnement et des cookies d'analyse pour améliorer votre expérience. Vous pouvez gérer vos préférences via la bannière de consentement."
+            title: "4. Vos droits",
+            text: "Conformément au RGPD, vous pouvez accéder à vos données, les rectifier ou les supprimer en écrivant à contact@3geeks.fr. Vous pouvez aussi adresser une réclamation à la CNIL (cnil.fr)."
+          },
+          {
+            title: "5. Cookies",
+            text: "Ce site ne dépose aucun cookie publicitaire ni de suivi. Votre choix de langue est seulement mémorisé dans votre navigateur. Si vous ouvrez la fenêtre de réservation, Calendly peut déposer ses propres cookies."
           }
         ],
         terms: [
           {
             title: "1. Objet",
-            text: "Les présentes conditions régissent les ventes de prestations de services de développement web par 3geeks."
+            text: "Les présentes conditions régissent les prestations de développement web réalisées par 3geeks."
           },
           {
-            title: "2. Prix",
-            text: "Les prix sont indiqués en euros. 3geeks se réserve le droit de modifier ses prix à tout moment, mais le service sera facturé sur la base du tarif en vigueur au moment de la validation du devis."
+            title: "2. Devis",
+            text: "Chaque projet commence par un appel et un devis gratuits, sans engagement."
           },
           {
-            title: "3. Paiement",
-            text: "Le paiement est exigible à la signature du devis (acompte) et à la livraison du projet (solde)."
+            title: "3. Prix",
+            text: "Les prix sont indiqués en euros. Le prix facturé est celui fixé dans le devis accepté."
           },
           {
-            title: "4. Livraison",
-            text: "Les délais de livraison sont donnés à titre indicatif et peuvent varier selon la complexité du projet et la réactivité du client."
+            title: "4. Paiement",
+            text: "Rien n’est payé d’avance : le règlement intervient à la livraison, une fois le résultat validé par le client."
+          },
+          {
+            title: "5. Livraison",
+            text: "Les petites demandes sont généralement livrées en 24 à 48 h. Pour les projets plus larges, le planning est fixé dans le devis et peut dépendre de la réactivité du client."
+          },
+          {
+            title: "6. Propriété",
+            text: "Une fois la prestation réglée, le code source et le nom de domaine appartiennent au client."
           }
         ]
       },
