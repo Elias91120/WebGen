@@ -65,18 +65,19 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, onNavigateSe
   return (
     <>
       {/* Floating launcher trigger */}
-      <div className="fixed bottom-4 right-4 z-40">
+      {/* Phones: a round icon button that does not cover the page content */}
+      <div className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-40">
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="3Geeks AI Agent"
-          className="group relative flex items-center gap-2.5 rounded-full border border-cyan-400/40 bg-[#0d1117]/90 px-4 py-2.5 text-xs font-semibold text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-cyan-300 hover:bg-[#0d1117] hover:scale-105 active:scale-95"
+          className="group relative flex items-center gap-2.5 rounded-full border border-cyan-400/40 bg-[#0d1117]/90 p-3.5 text-xs font-semibold text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-cyan-300 hover:bg-[#0d1117] hover:scale-105 active:scale-95 sm:px-4 sm:py-2.5"
         >
-          <span className="relative flex h-2.5 w-2.5 shrink-0">
+          <span className="absolute right-0.5 top-0.5 flex h-2.5 w-2.5 shrink-0 sm:relative sm:right-auto sm:top-auto">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400/80 opacity-75" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-cyan-400" />
           </span>
-          <Bot className="h-4 w-4 text-cyan-300 group-hover:rotate-12 transition-transform" />
-          <span className="font-mono">AI Agent · 3Geeks</span>
+          <Bot className="h-5 w-5 text-cyan-300 transition-transform group-hover:rotate-12 sm:h-4 sm:w-4" />
+          <span className="hidden font-mono sm:inline">AI Agent · 3Geeks</span>
         </button>
       </div>
 

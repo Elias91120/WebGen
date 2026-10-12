@@ -20,7 +20,7 @@ import {
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import AiAgentWidget from './components/AiAgentWidget';
 import CookieConsent from './components/CookieConsent';
-import HeroVideo from './components/HeroVideo';
+import HeroVideo, { HeroVideoCard } from './components/HeroVideo';
 import LegalModals from './components/LegalModals';
 import Logo from './components/Logo';
 import ProjectsShowcase, { PROJECTS_DATA } from './components/ProjectsShowcase';
@@ -357,9 +357,9 @@ const App: React.FC = () => {
         <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden">
           <HeroVideo lang={lang} />
 
-          {/* Lisibilité du texte : voile sombre à gauche, fondu vers la page en bas */}
+          {/* Mobile : halo de marque discret. Grand écran : voile sombre à gauche pour lire le titre devant la vidéo */}
           <div
-            className="pointer-events-none absolute inset-0 bg-ink/60 lg:bg-[linear-gradient(90deg,#08090d_0%,rgba(8,9,13,0.85)_30%,rgba(8,9,13,0.25)_60%,transparent_100%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_45%_at_90%_8%,rgba(10,239,187,0.16),transparent_70%),radial-gradient(ellipse_70%_40%_at_0%_95%,rgba(195,251,5,0.08),transparent_70%)] lg:bg-[linear-gradient(90deg,#08090d_0%,rgba(8,9,13,0.85)_30%,rgba(8,9,13,0.25)_60%,transparent_100%)]"
             aria-hidden="true"
           />
           <div
@@ -371,7 +371,7 @@ const App: React.FC = () => {
             aria-hidden="true"
           />
 
-          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-10 pt-32 sm:px-8 md:pt-36">
+          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-10 pt-24 sm:px-8 sm:pt-32 md:pt-36">
             <div className="max-w-2xl lg:max-w-[33rem]">
               <div
                 className="hero-rise inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] py-1.5 pl-3 pr-4 text-xs font-medium text-slate-200 backdrop-blur"
@@ -409,6 +409,10 @@ const App: React.FC = () => {
                 <button type="button" onClick={() => scrollToSection('services')} className="btn btn-ghost">
                   {t.hero.ctaSecondary}
                 </button>
+              </div>
+
+              <div className="hero-rise mt-10 lg:hidden" style={{ ['--rise-delay' as string]: '600ms' }}>
+                <HeroVideoCard lang={lang} />
               </div>
             </div>
           </div>
