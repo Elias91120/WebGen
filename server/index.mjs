@@ -15,7 +15,7 @@ const handleChat = createChatHandler({
 http
   .createServer((req, res) => {
     const path = (req.url || '').split('?')[0];
-    if (path === '/api/chat') return handleChat(req, res);
+    if (path === '/api/chat' || path === '/api/chat/warm') return handleChat(req, res);
     if (path === '/api/chat/health') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ ok: true, configured: Boolean(apiKey) }));

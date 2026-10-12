@@ -131,10 +131,18 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const warmedUp = useRef(false);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [messages, isOpen]);
+
+  // Lets the server load the model while the visitor reads and types.
+  useEffect(() => {
+    if (!isOpen || warmedUp.current) return;
+    warmedUp.current = true;
+    fetch('/api/chat/warm', { method: 'POST' }).catch(() => {});
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
