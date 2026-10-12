@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import AiAgentWidget from './components/AiAgentWidget';
+import BookingModal from './components/BookingModal';
 import ClientLogos from './components/ClientLogos';
 import { HeroVideoCard } from './components/HeroVideo';
 import LegalModals from './components/LegalModals';
@@ -181,7 +182,7 @@ const App: React.FC = () => {
             >
               <Globe className="h-3.5 w-3.5 text-brand-mint" /> {lang.toUpperCase()}
             </button>
-            <button type="button" onClick={() => book('nav')} className="btn btn-primary !py-3">
+            <button type="button" data-booking="nav" onClick={() => book('nav')} className="btn btn-primary !py-3">
               {t.nav.cta}
             </button>
           </div>
@@ -222,7 +223,7 @@ const App: React.FC = () => {
                 </button>
               ))}
             </div>
-            <button type="button" onClick={() => book('menu')} className="btn btn-primary mt-6 w-full">
+            <button type="button" data-booking="menu" onClick={() => book('menu')} className="btn btn-primary mt-6 w-full">
               {t.nav.cta}
             </button>
           </div>
@@ -280,7 +281,7 @@ const App: React.FC = () => {
                 className="hero-rise mt-9 flex flex-col gap-3 sm:flex-row"
                 style={{ ['--rise-delay' as string]: '480ms' }}
               >
-                <button type="button" onClick={() => book('hero')} className="btn btn-primary">
+                <button type="button" data-booking="hero" onClick={() => book('hero')} className="btn btn-primary">
                   {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
                 </button>
                 <button type="button" onClick={() => scrollToSection('services')} className="btn btn-ghost">
@@ -400,6 +401,7 @@ const App: React.FC = () => {
 
                     <button
                       type="button"
+                      data-booking={`offer-${plan.id}`}
                       onClick={() => book(`offer-${plan.id}`)}
                       className={`btn w-full ${plan.featured ? 'btn-primary' : 'btn-ghost'}`}
                     >
@@ -414,6 +416,7 @@ const App: React.FC = () => {
             <Reveal className="mt-14 md:mt-20">
               <button
                 type="button"
+                data-booking="offer-maintenance"
                 onClick={() => book('offer-maintenance')}
                 className="card group flex w-full flex-col items-start gap-6 p-6 text-left md:flex-row md:items-center md:justify-between md:p-8"
               >
@@ -492,7 +495,7 @@ const App: React.FC = () => {
               <span className="eyebrow">{t.whyUs.path}</span>
               <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.whyUs.title}</h2>
               <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">{t.whyUs.subtitle}</p>
-              <button type="button" onClick={() => book('why-us')} className="btn btn-primary mt-8">
+              <button type="button" data-booking="why-us" onClick={() => book('why-us')} className="btn btn-primary mt-8">
                 {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
               </button>
             </Reveal>
@@ -585,6 +588,7 @@ const App: React.FC = () => {
               <div className="card-featured p-6 md:p-10">
                 <button
                   type="button"
+                  data-booking="contact"
                   onClick={() => book('contact')}
                   className="group flex w-full items-center gap-4 rounded-[1.25rem] bg-brand-gradient p-5 text-left text-ink shadow-[0_20px_50px_-20px_rgba(10,239,187,0.7)] transition-transform hover:-translate-y-0.5"
                 >
@@ -637,6 +641,7 @@ const App: React.FC = () => {
         </section>
 
         <AiAgentWidget lang={lang} />
+        <BookingModal lang={lang} />
 
         <LegalModals
           translations={t.legal}

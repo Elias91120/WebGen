@@ -553,6 +553,7 @@ const CaseStudyModal: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onClos
             {onContact && (
               <button
                 type="button"
+                data-booking="case-study"
                 onClick={() => {
                   onClose();
                   onContact();
@@ -669,7 +670,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
                     : `${clientProjects.length} client projects and ${labProjects.length} in-house products: every project widens what we can build. The next one could be yours.`}
                 </p>
               </div>
-              <button type="button" onClick={onContact} className="btn btn-primary shrink-0">
+              <button type="button" data-booking="projects" onClick={onContact} className="btn btn-primary shrink-0">
                 {fr ? 'Lancer mon projet' : 'Start my project'} <ArrowRight className="h-4 w-4" />
               </button>
             </div>

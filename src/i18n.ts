@@ -293,7 +293,7 @@ export const translations = {
           },
           {
             title: "5. Cookies",
-            text: "This site sets no advertising or tracking cookies. Your language choice is stored in your browser only. If you open the booking window, Calendly may set its own cookies."
+            text: "This site sets no advertising or tracking cookies. Your language choice is stored in your browser only. The booking calendar is provided by Calendly: it starts loading when you point at a booking button or when the assistant offers a call, and Calendly may then set its own technical cookies."
           }
         ],
         terms: [
@@ -618,7 +618,7 @@ export const translations = {
           },
           {
             title: "5. Cookies",
-            text: "Ce site ne dépose aucun cookie publicitaire ni de suivi. Votre choix de langue est seulement mémorisé dans votre navigateur. Si vous ouvrez la fenêtre de réservation, Calendly peut déposer ses propres cookies."
+            text: "Ce site ne dépose aucun cookie publicitaire ni de suivi. Votre choix de langue est seulement mémorisé dans votre navigateur. Le calendrier de réservation est fourni par Calendly : il commence à se charger quand vous pointez un bouton de réservation ou quand l’assistant vous propose un appel, et Calendly peut alors déposer ses propres cookies techniques."
           }
         ],
         terms: [

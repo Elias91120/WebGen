@@ -16,7 +16,7 @@ Source unique : `src/components/ProjectsShowcase.tsx` (vignettes dans `src/asset
 
 ## Prise de contact
 
-Pas de formulaire : tous les boutons « parler de mon projet » ouvrent l’appel découverte Calendly (`src/lib/booking.ts`). Contact secondaire : contact@3geeks.fr et LinkedIn des cofondateurs.
+Pas de formulaire : tous les boutons « parler de mon projet » ouvrent le calendrier Calendly de l’appel découverte dans notre propre fenêtre (`src/components/BookingModal.tsx`, état dans `src/lib/booking.ts`, sans le script Calendly). Le calendrier se précharge dès qu’on survole, touche ou sélectionne un bouton portant `data-booking="<source>"` (à mettre sur tout nouveau bouton de réservation), ou quand l’assistant propose un appel. Contact secondaire : contact@3geeks.fr et LinkedIn des cofondateurs.
 
 ## Assistant IA
 

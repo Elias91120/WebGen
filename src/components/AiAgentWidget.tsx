@@ -1,7 +1,7 @@
 import { Bot, CalendarCheck, Mail, RotateCcw, Send, Sparkles, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { openBooking } from '../lib/booking';
+import { openBooking, prepareBooking } from '../lib/booking';
 
 interface AiAgentWidgetProps {
   lang: 'en' | 'fr';
@@ -143,6 +143,13 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang }) => {
     warmedUp.current = true;
     fetch('/api/chat/warm', { method: 'POST' }).catch(() => {});
   }, [isOpen]);
+
+  // When an answer offers a call, load the calendar while the visitor reads it.
+  const last = messages[messages.length - 1];
+  const offersCall = last?.role === 'assistant' && (last.status === 'error' || (!last.status && MENTIONS_CALL.test(last.content)));
+  useEffect(() => {
+    if (offersCall) prepareBooking('chatbot');
+  }, [offersCall]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -319,6 +326,7 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang }) => {
                         <div className="mt-3 flex flex-wrap gap-2 border-t border-white/10 pt-3">
                           <button
                             type="button"
+                            data-booking="chatbot"
                             onClick={book}
                             className="inline-flex items-center gap-1.5 rounded-lg bg-brand-gradient px-3 py-1.5 text-xs font-semibold text-ink transition-opacity hover:opacity-90"
                           >
