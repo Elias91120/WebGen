@@ -6,13 +6,10 @@
 import {
   ArrowRight,
   Check,
-  ChevronDown,
   Globe,
   Lock,
   Mail,
   Menu,
-  MessageCircle,
-  Send,
   ShieldCheck,
   Smartphone,
   Star,
@@ -30,6 +27,7 @@ import ProjectsShowcase, { PROJECTS_DATA } from './components/ProjectsShowcase';
 import Reveal from './components/Reveal';
 import SectionLines from './components/SectionLines';
 import SkillsRadar from './components/SkillsRadar';
+import TeamSection, { FOUNDERS, LinkedInIcon } from './components/TeamSection';
 import { Lang, translations } from './i18n';
 import { getSupabase } from './services/supabaseClient';
 import { ClientRequest, ServiceType } from './types';
@@ -54,19 +52,14 @@ function detectLang(): Lang {
   return 'fr';
 }
 
-const NAV_LINKS: Array<{ id: string; key: 'services' | 'method' | 'projects' | 'expertise' | 'reviews' }> = [
+const NAV_LINKS: Array<{ id: string; key: 'services' | 'method' | 'projects' | 'expertise' | 'team' | 'reviews' }> = [
   { id: 'services', key: 'services' },
   { id: 'methode', key: 'method' },
   { id: 'projets', key: 'projects' },
   { id: 'skills', key: 'expertise' },
+  { id: 'equipe', key: 'team' },
   { id: 'temoignages', key: 'reviews' },
 ];
-
-const WHATSAPP_URL = 'https://wa.me/33671618119';
-
-const inputClass =
-  'w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-brand-mint/70 focus:bg-white/[0.05] focus:ring-4 focus:ring-brand-mint/10';
-const labelClass = 'mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-400';
 
 const App: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -152,48 +145,6 @@ const App: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFormStatus('submitting');
-
-    const formData = new FormData(e.currentTarget);
-    const newRequest = {
-      id: Math.random().toString(36).substr(2, 9),
-      date: new Date().toISOString(),
-      status: 'new',
-      service_id: null,
-      service_name: formData.get('service') as string || 'General Inquiry',
-      has_maintenance: false,
-      total_estimate: 'Contact Form',
-      client_name: formData.get('name') as string,
-      client_email: formData.get('email') as string,
-      client_company: formData.get('type') as string,
-      message: formData.get('message') as string,
-      preferred_date: null
-    };
-
-    const supabase = await getSupabase();
-    if (!supabase) {
-      // Backend offline: still confirm to the user instead of failing silently.
-      setFormStatus('success');
-      return;
-    }
-
-    try {
-      const { error } = await supabase
-        .from('client_requests')
-        .insert([newRequest]);
-
-      if (error) throw error;
-
-      fetchRequests();
-      setFormStatus('success');
-    } catch (error) {
-      alert('Une erreur est survenue. Merci d’écrire à contact@3geeks.fr ou via WhatsApp.');
-      setFormStatus('idle');
-    }
-  };
-
   const handleBookingSubmit = async (data: Omit<ClientRequest, 'id' | 'date' | 'status'>) => {
     const newRequest = {
       id: Math.random().toString(36).substr(2, 9),
@@ -230,7 +181,7 @@ const App: React.FC = () => {
       setFormStatus('success');
       scrollToSection('contact');
     } catch (error) {
-      alert('Une erreur est survenue. Merci d’écrire à contact@3geeks.fr ou via WhatsApp.');
+      alert('Une erreur est survenue. Merci d’écrire à contact@3geeks.fr.');
     }
   };
 
@@ -285,7 +236,8 @@ const App: React.FC = () => {
 
   const toggleLang = () => setLang((prev) => (prev === 'en' ? 'fr' : 'en'));
 
-  const clientNames = PROJECTS_DATA.filter((p) => p.category === 'client').map((p) => p.title);
+  // Only public projects are named in the "already live" strip.
+  const clientNames = PROJECTS_DATA.filter((p) => p.category === 'client' && p.link).map((p) => p.title[lang]);
 
   const plans: Array<{ id: ServiceType; data: typeof t.services.s1; tag: string; featured: boolean }> = [
     { id: 'starter', data: t.services.s1, tag: fr ? 'Site vitrine' : 'Business website', featured: false },
@@ -394,14 +346,6 @@ const App: React.FC = () => {
             <button type="button" onClick={() => scrollToSection('contact')} className="btn btn-primary mt-6 w-full">
               {t.nav.cta}
             </button>
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-ghost mt-3 w-full"
-            >
-              <MessageCircle className="h-4 w-4" /> WhatsApp
-            </a>
           </div>
         )}
       </header>
@@ -473,8 +417,10 @@ const App: React.FC = () => {
           <div className="relative z-10 border-t border-white/[0.08] bg-ink/40 backdrop-blur-md">
             <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-5 px-5 py-6 sm:px-8 md:grid-cols-4">
               {t.hero.trust.map((item) => (
-                <div key={item.k} className="flex items-baseline gap-3">
-                  <span className="font-display text-2xl font-semibold text-white md:text-3xl">{item.k}</span>
+                <div key={item.v} className="flex items-baseline gap-3">
+                  <span className="font-display text-2xl font-semibold text-white md:text-3xl">
+                    {item.k.replace('{projects}', String(PROJECTS_DATA.length))}
+                  </span>
                   <span className="text-xs leading-snug text-slate-400 md:text-sm">{item.v}</span>
                 </div>
               ))}
@@ -682,6 +628,11 @@ const App: React.FC = () => {
         <SkillsRadar lang={lang} />
 
         {/* ------------------------------------------------------------ */}
+        {/* ÉQUIPE                                                        */}
+        {/* ------------------------------------------------------------ */}
+        <TeamSection team={t.team} />
+
+        {/* ------------------------------------------------------------ */}
         {/* AVIS                                                          */}
         {/* ------------------------------------------------------------ */}
         <section id="temoignages" className="relative border-t border-white/5 bg-surface/60 py-20 md:py-28">
@@ -724,128 +675,55 @@ const App: React.FC = () => {
         {/* ------------------------------------------------------------ */}
         <section id="contact" className="relative overflow-hidden py-20 md:py-28">
           <SectionLines variant="c" />
-          <div className="relative mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <div className="relative mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-16">
             <Reveal>
               <span className="eyebrow">{t.contact.path}</span>
               <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.contact.title}</h2>
               <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">{t.contact.subtitle}</p>
-
-              <div className="mt-10 space-y-4">
-                <a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="card group flex items-center gap-4 p-5 hover:bg-surface-2"
-                >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#25D366]/15 text-[#25D366] ring-1 ring-[#25D366]/30">
-                    <MessageCircle className="h-5 w-5" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-semibold text-white">WhatsApp</span>
-                    <span className="block text-sm text-slate-400">{t.contact.direct.subtitle}</span>
-                  </span>
-                  <ArrowRight className="h-4 w-4 text-slate-500 transition-transform group-hover:translate-x-1 group-hover:text-white" />
-                </a>
-                <a
-                  href="mailto:contact@3geeks.fr"
-                  className="card group flex items-center gap-4 p-5 hover:bg-surface-2"
-                >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
-                    <Mail className="h-5 w-5" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-semibold text-white">contact@3geeks.fr</span>
-                    <span className="block text-sm text-slate-400">{fr ? 'Réponse sous 24h' : 'Reply within 24h'}</span>
-                  </span>
-                  <ArrowRight className="h-4 w-4 text-slate-500 transition-transform group-hover:translate-x-1 group-hover:text-white" />
-                </a>
-              </div>
             </Reveal>
 
             <Reveal delay={120}>
               <div className="card-featured p-6 md:p-10">
-                {formStatus === 'success' ? (
-                  <div className="flex flex-col items-center justify-center py-14 text-center">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-mint/15 text-brand-mint ring-1 ring-brand-mint/30">
-                      <Check className="h-8 w-8" strokeWidth={2.5} />
-                    </div>
-                    <h3 className="mt-6 font-display text-2xl font-semibold text-white">{t.contact.successTitle}</h3>
-                    <p className="mt-2 max-w-xs text-slate-400">{t.contact.successDesc}</p>
-                    <p className="mt-6 rounded-xl border border-brand-mint/25 bg-brand-mint/[0.06] px-4 py-3 text-sm text-brand-mint">
-                      {t.contact.successTip}
-                    </p>
+                {formStatus === 'success' && (
+                  <div role="status" className="mb-6 flex items-center gap-3 rounded-xl border border-brand-mint/25 bg-brand-mint/[0.06] px-4 py-3 text-sm text-brand-mint">
+                    <Check className="h-4 w-4 shrink-0" strokeWidth={3} />
+                    <span><strong className="font-semibold">{t.contact.successTitle}</strong> {t.contact.successDesc}</span>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                      <div>
-                        <label htmlFor="c-name" className={labelClass}>{t.contact.form.name}</label>
-                        <input id="c-name" name="name" required type="text" placeholder={t.booking.namePlaceholder} className={inputClass} />
-                      </div>
-                      <div>
-                        <label htmlFor="c-email" className={labelClass}>{t.contact.form.email}</label>
-                        <input id="c-email" name="email" required type="email" placeholder={t.booking.emailPlaceholder} className={inputClass} />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                      <div>
-                        <label htmlFor="c-type" className={labelClass}>{t.contact.form.type}</label>
-                        <div className="relative">
-                          <select id="c-type" name="type" className={`${inputClass} cursor-pointer appearance-none pr-10`}>
-                            {t.contact.form.types.map((type) => (
-                              <option key={type} className="bg-surface text-white" value={type}>{type}</option>
-                            ))}
-                          </select>
-                          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                        </div>
-                      </div>
-                      <div>
-                        <label htmlFor="c-service" className={labelClass}>{t.contact.form.serviceInterest}</label>
-                        <div className="relative">
-                          <select id="c-service" name="service" className={`${inputClass} cursor-pointer appearance-none pr-10`}>
-                            {t.contact.form.serviceOptions.map((opt) => (
-                              <option key={opt} className="bg-surface text-white" value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="c-message" className={labelClass}>{t.contact.form.message}</label>
-                      <textarea
-                        id="c-message"
-                        name="message"
-                        required
-                        rows={5}
-                        placeholder={fr ? 'Parlez-nous de votre projet, de vos objectifs et de votre échéance…' : 'Tell us about your project, goals and deadline…'}
-                        className={`${inputClass} resize-none`}
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={formStatus === 'submitting'}
-                      className="btn btn-primary w-full !py-4 disabled:cursor-not-allowed disabled:opacity-70"
-                    >
-                      {formStatus === 'submitting' ? (
-                        <>
-                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-ink/30 border-t-ink" />
-                          {t.contact.form.sending}
-                        </>
-                      ) : (
-                        <>
-                          {t.contact.form.btn} <Send className="h-4 w-4" />
-                        </>
-                      )}
-                    </button>
-                    <p className="text-center text-xs text-slate-500">
-                      {fr ? 'Réponse sous 24h · Sans engagement' : 'Reply within 24h · No commitment'}
-                    </p>
-                  </form>
                 )}
+
+                <a href="mailto:contact@3geeks.fr" className="card group flex items-center gap-4 p-5 hover:bg-surface-2">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
+                    <Mail className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-display text-lg font-semibold text-white">contact@3geeks.fr</span>
+                    <span className="block text-sm text-slate-400">{t.contact.email}</span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 text-slate-500 transition-transform group-hover:translate-x-1 group-hover:text-white" />
+                </a>
+
+                <p className="mb-3 mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{t.contact.linkedin}</p>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {(['elias', 'noam'] as const).map((key) => {
+                    const founder = FOUNDERS[key];
+                    return (
+                      <a
+                        key={key}
+                        href={founder.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="card group flex items-center gap-3 p-4 hover:bg-surface-2"
+                      >
+                        <img src={founder.image} alt="" loading="lazy" className="h-11 w-11 shrink-0 rounded-full object-cover ring-1 ring-white/15" />
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-sm font-semibold text-white">{founder.name}</span>
+                          <span className="block text-xs leading-snug text-slate-500">{t.team.founders[key].role}</span>
+                        </span>
+                        <LinkedInIcon className="h-5 w-5 text-sky-400" />
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
             </Reveal>
           </div>
@@ -926,16 +804,18 @@ const App: React.FC = () => {
                   contact@3geeks.fr
                 </a>
               </li>
-              <li>
-                <a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-slate-300 transition-colors hover:text-white"
-                >
-                  +33 6 71 61 81 19
-                </a>
-              </li>
+              {(['elias', 'noam'] as const).map((key) => (
+                <li key={key}>
+                  <a
+                    href={FOUNDERS[key].linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-slate-300 transition-colors hover:text-white"
+                  >
+                    <LinkedInIcon className="h-3.5 w-3.5 text-slate-500" /> {FOUNDERS[key].name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

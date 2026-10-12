@@ -7,6 +7,7 @@ export const translations = {
       method: "Process",
       projects: "Work",
       expertise: "Expertise",
+      team: "Team",
       reviews: "Reviews",
       cta: "Let's talk",
     },
@@ -22,7 +23,7 @@ export const translations = {
         { k: "24h", v: "response time" },
         { k: "€300", v: "Starter website, one-off" },
         { k: "AWS", v: "certified cloud expertise" },
-        { k: "100%", v: "Made in France" },
+        { k: "{projects}", v: "projects delivered" },
       ],
     },
     projects: {
@@ -185,29 +186,75 @@ export const translations = {
       r2: "The team translated our constraints into concrete decisions. We saw better traction within weeks.",
       r3: "Our booking operations became far more reliable and easier to manage day to day."
     },
+    team: {
+      path: "Founding team",
+      title: "Co-founded by Elias & Noam.",
+      subtitle: "3geeks is co-founded by Elias and Noam. Alongside them, a growing network of business introducers brings new opportunities.",
+      labels: {
+        expertise: "3geeks expertise",
+        background: "Background",
+        certifications: "Licenses & certifications",
+        issued: "Issued",
+        expires: "Expires",
+        expired: "Expired",
+        credentialId: "Credential ID:",
+        skills: "Skills:",
+        viewCredential: "View credential",
+      },
+      founders: {
+        elias: {
+          role: "Co-founder · Design & experience",
+          desc: "Elias shapes the visual experience: clear pages, smooth interactions and a polished feeling that helps visitors understand the offer.",
+          expertise: ["UI/UX & front-end", "React · Vite · Node.js", "Tailwind CSS", "Python · SQL & NoSQL", "Generative AI & prompt engineering"],
+          background: [
+            { title: "Data & AI Developer · apprenticeship", org: "ClevAI", period: "2026 – now" },
+            { title: "Apprentice", org: "Nokia", period: "2025 – 2026" },
+            { title: "Master's in Data & Artificial Intelligence", org: "ECE Paris", period: "2026 – 2028" },
+            { title: "Bachelor's in Computer Science", org: "ECE Paris", period: "2023 – 2026" },
+          ],
+          certifications: [
+            { title: "IA & GenAI - Prompt Engineering Niveau 1 certification (FR)", issuer: "Liora", date: "Apr 2026", link: "https://files.datascientest.com/certification/47ea77a3-3b36-40c4-be71-829d9f2d5c87.pdf" },
+            { title: "AWS Academy Graduate - Machine Learning Foundations - Training Badge", issuer: "Amazon Web Services (AWS)", date: "Mar 2026", credentialId: "1be23fb4-8b0e-4923-8192-346026ef3683" },
+            { title: "AWS Academy Graduate - Cloud Architecting - Training Badge", issuer: "Amazon Web Services (AWS)", date: "Mar 2026", skill: "AWS CloudFormation", link: "https://www.credly.com/go/ffYE77aJ" },
+            { title: "Examen Final - Programming for DS - Techaway niv2 (FR)", issuer: "Liora", link: "https://files.datascientest.com/certification/20e5da1e-97e2-44ce-bc0b-ad60bb603e7a.pdf" },
+            { title: "IA & GenAI - Prompt Engineering", issuer: "DataScientest.com", date: "Dec 2025", skill: "Applied AI & Prompt Engineering", link: "https://files.datascientest.com/certification/47ea77a3-3b36-40c4-be71-829d9f2d5c87.pdf" },
+            { title: "Final Exam - Python pour les Data Scientists - Techaway niv1", issuer: "DataScientest.com", date: "Nov 2024", expired: true, skill: "Python (programming language)", link: "https://files.datascientest.com/certification/456ec476-8bab-43f9-9b11-849e31d4cc92.pdf" },
+          ],
+        },
+        noam: {
+          role: "Co-founder · Systems & data",
+          desc: "Noam builds the reliable logic behind the product: forms, dashboards, automations and clean data flows.",
+          expertise: ["Generative AI", "AWS cloud & infrastructure", "Machine learning", "Python & data", "Automations & dashboards"],
+          background: [
+            { title: "Generative AI Engineer · apprenticeship", org: "Thales", period: "2025 – now" },
+            { title: "Cloud Infrastructure Intern", org: "SOWARP", period: "2024" },
+            { title: "Engineering degree, Big Data & Machine Learning", org: "EFREI Paris", period: "2026 – 2029" },
+            { title: "Bachelor's in Computer Science", org: "ECE Paris", period: "2023 – 2026" },
+          ],
+          certifications: [
+            { title: "AWS Certified Cloud Practitioner", issuer: "Amazon Web Services (AWS)", date: "Oct 2025", expires: "Oct 2028", skill: "AWS CloudFormation, Amazon Web Services", link: "https://www.credly.com/badges/4b3cbf5d-c390-4c85-9088-fe55a7cf31a1" },
+            { title: "AWS Academy Graduate - Machine Learning Foundations - Training Badge", issuer: "Amazon Web Services (AWS)", date: "Mar 2026", skill: "Supervised learning, AWS Machine Learning", link: "https://www.credly.com/badges/e5a0aaa5-44e6-4e0e-ac8e-08176d234b53" },
+            { title: "AWS Academy Graduate - AWS Academy Cloud Foundations", issuer: "Amazon Web Services (AWS)", date: "Dec 2024", skill: "AWS CloudFormation", link: "https://www.credly.com/badges/fa42ebd1-ab76-436e-80b2-505e115a6918" },
+            { title: "Final Exam - Python pour les Data Scientists - Techaway niv1", issuer: "DataScientest.com", link: "https://files.datascientest.com/certification/3c76d004-b05c-42de-bdf9-d963142fbb27.pdf" },
+          ],
+        },
+      },
+      introducersTitle: "Business introducers",
+      introducersSubtitle: "Charles and Niels are part of our growing introducer network. We aim to welcome more partners over time.",
+      introducerRole: "Business introducer",
+      introducers: {
+        charles: "Charles spots companies and project owners who need a website or digital tool, and introduces them to 3geeks.",
+        niels: "Niels finds new opportunities among businesses looking for a digital project, and points them towards 3geeks.",
+      },
+    },
     contact: {
-      path: "Let's discuss your project",
-      title: "Not sure whether you need a starter site or custom project?",
+      path: "Contact",
+      title: "Let's talk about your project.",
       subtitle: "Tell us what you want to sell, show or automate. We reply within 24h with the simplest next step.",
+      email: "Reply within 24h",
+      linkedin: "Or reach a co-founder directly on LinkedIn",
       successTitle: "Received.",
       successDesc: "The 3geeks team will be in touch shortly.",
-      successTip: "Need it urgent? Message us directly on WhatsApp.",
-      form: {
-        name: "Full name",
-        email: "Email",
-        type: "Business type",
-        serviceInterest: "Solution interest",
-        message: "Message & project details",
-        btn: "Send request",
-        sending: "Sending...",
-        types: ["Restaurant / Bar", "Retail / Shop", "Service / Craftsman", "Health / Medical", "Other"],
-        serviceOptions: ["Starter website (€300)", "Custom web project", "Complete redesign", "Maintenance only", "Other / Not sure"]
-      },
-      direct: {
-        title: "Prefer a direct chat?",
-        subtitle: "Skip the form and write to us on WhatsApp.",
-        phone: "+33 6 71 61 81 19"
-      }
     },
     footer: {
       eof: "End",
@@ -233,7 +280,7 @@ export const translations = {
         legal: [
           {
             title: "1. Website Editor",
-            text: "This site is edited by 3geeks.\nCompany registration details and registered office must be added before commercial publication.\nEmail: contact@3geeks.fr\nPhone: +33 6 71 61 81 19"
+            text: "This site is edited by 3geeks.\nCompany registration details and registered office must be added before commercial publication.\nEmail: contact@3geeks.fr"
           },
           {
             title: "2. Hosting",
@@ -290,6 +337,7 @@ export const translations = {
       method: "Méthode",
       projects: "Réalisations",
       expertise: "Expertise",
+      team: "Équipe",
       reviews: "Avis",
       cta: "Parler de mon projet",
     },
@@ -305,7 +353,7 @@ export const translations = {
         { k: "24h", v: "de délai de réponse" },
         { k: "300€", v: "site Starter, paiement unique" },
         { k: "AWS", v: "expertise cloud certifiée" },
-        { k: "100%", v: "Made in France" },
+        { k: "{projects}", v: "projets livrés" },
       ],
     },
     projects: {
@@ -468,29 +516,75 @@ export const translations = {
       r2: "Ils ont compris notre métier rapidement et proposé des choix utiles. On a vu une vraie progression.",
       r3: "Le système mis en place est robuste et simple à opérer. Notre quotidien est plus serein."
     },
+    team: {
+      path: "Équipe fondatrice",
+      title: "3geeks, cofondée par Elias et Noam.",
+      subtitle: "3geeks est cofondée par Elias et Noam. À leurs côtés, un réseau grandissant d’apporteurs d’affaires fait émerger de nouvelles opportunités.",
+      labels: {
+        expertise: "Expertise 3geeks",
+        background: "Parcours",
+        certifications: "Licences et certifications",
+        issued: "Émise le",
+        expires: "Expire le",
+        expired: "Expirée le",
+        credentialId: "Identifiant du diplôme :",
+        skills: "Compétences :",
+        viewCredential: "Afficher le diplôme",
+      },
+      founders: {
+        elias: {
+          role: "Cofondateur · Design & expérience",
+          desc: "Elias façonne l'expérience visuelle : pages claires, interactions fluides et rendu soigné qui aide à comprendre l'offre.",
+          expertise: ["UI/UX & front-end", "React · Vite · Node.js", "Tailwind CSS", "Python · SQL & NoSQL", "IA générative & prompt engineering"],
+          background: [
+            { title: "Développeur Data & IA · alternance", org: "ClevAI", period: "2026 – auj." },
+            { title: "Alternant", org: "Nokia", period: "2025 – 2026" },
+            { title: "Master Data & Intelligence Artificielle", org: "ECE Paris", period: "2026 – 2028" },
+            { title: "Bachelor Informatique", org: "ECE Paris", period: "2023 – 2026" },
+          ],
+          certifications: [
+            { title: "IA & GenAI - Prompt Engineering Niveau 1 certification (FR)", issuer: "Liora", date: "avr. 2026", link: "https://files.datascientest.com/certification/47ea77a3-3b36-40c4-be71-829d9f2d5c87.pdf" },
+            { title: "AWS Academy Graduate - Machine Learning Foundations - Training Badge", issuer: "Amazon Web Services (AWS)", date: "mars 2026", credentialId: "1be23fb4-8b0e-4923-8192-346026ef3683" },
+            { title: "AWS Academy Graduate - Cloud Architecting - Training Badge", issuer: "Amazon Web Services (AWS)", date: "mars 2026", skill: "AWS CloudFormation", link: "https://www.credly.com/go/ffYE77aJ" },
+            { title: "Examen Final - Programming for DS - Techaway niv2 (FR)", issuer: "Liora", link: "https://files.datascientest.com/certification/20e5da1e-97e2-44ce-bc0b-ad60bb603e7a.pdf" },
+            { title: "IA & GenAI - Prompt Engineering", issuer: "DataScientest.com", date: "déc. 2025", skill: "Applied AI & Prompt Engineering", link: "https://files.datascientest.com/certification/47ea77a3-3b36-40c4-be71-829d9f2d5c87.pdf" },
+            { title: "Final Exam - Python pour les Data Scientists - Techaway niv1", issuer: "DataScientest.com", date: "nov. 2024", expired: true, skill: "Python (langage de programmation)", link: "https://files.datascientest.com/certification/456ec476-8bab-43f9-9b11-849e31d4cc92.pdf" },
+          ],
+        },
+        noam: {
+          role: "Cofondateur · Systèmes & data",
+          desc: "Noam construit la logique fiable derrière le produit : formulaires, dashboards, automatisations et flux de données propres.",
+          expertise: ["IA générative", "Cloud AWS & infrastructure", "Machine learning", "Python & data", "Automatisations & dashboards"],
+          background: [
+            { title: "Ingénieur en IA générative · alternance", org: "Thales", period: "2025 – auj." },
+            { title: "Stagiaire Infrastructure Cloud", org: "SOWARP", period: "2024" },
+            { title: "Diplôme d’ingénieur Big Data & Machine Learning", org: "EFREI Paris", period: "2026 – 2029" },
+            { title: "Bachelor Informatique", org: "ECE Paris", period: "2023 – 2026" },
+          ],
+          certifications: [
+            { title: "AWS Certified Cloud Practitioner", issuer: "Amazon Web Services (AWS)", date: "oct. 2025", expires: "oct. 2028", skill: "AWS CloudFormation, Amazon Web Services", link: "https://www.credly.com/badges/4b3cbf5d-c390-4c85-9088-fe55a7cf31a1" },
+            { title: "AWS Academy Graduate - Machine Learning Foundations - Training Badge", issuer: "Amazon Web Services (AWS)", date: "mars 2026", skill: "Apprentissage supervisé, AWS Machine Learning", link: "https://www.credly.com/badges/e5a0aaa5-44e6-4e0e-ac8e-08176d234b53" },
+            { title: "AWS Academy Graduate - AWS Academy Cloud Foundations", issuer: "Amazon Web Services (AWS)", date: "déc. 2024", skill: "AWS CloudFormation", link: "https://www.credly.com/badges/fa42ebd1-ab76-436e-80b2-505e115a6918" },
+            { title: "Final Exam - Python pour les Data Scientists - Techaway niv1", issuer: "DataScientest.com", link: "https://files.datascientest.com/certification/3c76d004-b05c-42de-bdf9-d963142fbb27.pdf" },
+          ],
+        },
+      },
+      introducersTitle: "Apporteurs d’affaires",
+      introducersSubtitle: "Charles et Niels font partie de notre réseau, que nous souhaitons développer avec de nouveaux apporteurs d’affaires.",
+      introducerRole: "Apporteur d’affaires",
+      introducers: {
+        charles: "Charles repère des entreprises et porteurs de projet qui ont besoin d’un site ou d’un outil digital, et les met en relation avec 3geeks.",
+        niels: "Niels identifie de nouvelles opportunités auprès d’entreprises en quête d’un projet digital, et les oriente vers 3geeks.",
+      },
+    },
     contact: {
-      path: "Discutons de votre projet",
-      title: "Vous hésitez entre site starter et projet sur mesure ?",
-      subtitle: "Expliquez ce que vous voulez vendre, présenter ou automatiser. On répond sous 24h avec la prochaine étape la plus simple.",
+      path: "Contact",
+      title: "Parlons de votre projet.",
+      subtitle: "Expliquez-nous ce que vous voulez vendre, présenter ou automatiser. On répond sous 24h avec la prochaine étape la plus simple.",
+      email: "Réponse sous 24h",
+      linkedin: "Ou écrivez directement à un cofondateur sur LinkedIn",
       successTitle: "Bien reçu.",
       successDesc: "L'équipe 3geeks vous recontacte très vite.",
-      successTip: "Urgent ? Écrivez-nous directement sur WhatsApp.",
-      form: {
-        name: "Nom complet",
-        email: "Email",
-        type: "Type de business",
-        serviceInterest: "Solution envisagée",
-        message: "Message & détails du projet",
-        btn: "Envoyer la demande",
-        sending: "Envoi...",
-        types: ["Restauration / Bar", "Commerce / Boutique", "Artisan / Service", "Santé / Médical", "Autre"],
-        serviceOptions: ["Site Starter (300€)", "Projet web sur mesure", "Refonte complète", "Maintenance seule", "Autre / Je ne sais pas"]
-      },
-      direct: {
-        title: "Vous préférez discuter ?",
-        subtitle: "Pas de formulaire : écrivez-nous sur WhatsApp.",
-        phone: "+33 6 71 61 81 19"
-      }
     },
     footer: {
       eof: "Fin",
@@ -516,7 +610,7 @@ export const translations = {
         legal: [
           {
             title: "1. Éditeur du site",
-            text: "Ce site est édité par 3geeks.\nLes informations d'immatriculation et de siège social doivent être ajoutées avant une publication commerciale définitive.\nEmail : contact@3geeks.fr\nTéléphone : +33 6 71 61 81 19"
+            text: "Ce site est édité par 3geeks.\nLes informations d'immatriculation et de siège social doivent être ajoutées avant une publication commerciale définitive.\nEmail : contact@3geeks.fr"
           },
           {
             title: "2. Hébergement",
