@@ -5,7 +5,7 @@ interface HeroVideoProps {
 }
 
 // Bump when a video file changes: the CDN keeps the old copy otherwise.
-const VIDEO_VERSION = '2';
+const VIDEO_VERSION = '3';
 const POSTER = '/videos/hero-poster.jpg';
 
 /** Autoplay is skipped with "reduce motion" or data saver; the poster stays instead. */
