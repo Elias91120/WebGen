@@ -636,7 +636,7 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        <AiAgentWidget lang={lang} onNavigateSection={scrollToSection} />
+        <AiAgentWidget lang={lang} />
 
         <LegalModals
           translations={t.legal}

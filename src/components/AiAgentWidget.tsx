@@ -1,215 +1,385 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, Send, X, Bot, User, ArrowRight } from 'lucide-react';
+import { Bot, CalendarCheck, Mail, RotateCcw, Send, Sparkles, X } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+
+import { openBooking } from '../lib/booking';
 
 interface AiAgentWidgetProps {
   lang: 'en' | 'fr';
-  onNavigateSection?: (sectionId: string) => void;
 }
 
-interface Message {
-  sender: 'ai' | 'user';
-  text: string;
-  actions?: { label: string; action: () => void }[];
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  status?: 'streaming' | 'error';
 }
 
-const QUICK_PROMPTS = {
-  fr: [
-    "Quels sont vos tarifs ?",
-    "C'est quoi 3geeks ?",
-    "Quels projets avez-vous livrés ?",
-    "Comment démarrer un projet ?"
-  ],
-  en: [
-    "What are your pricing plans?",
-    "What is 3geeks?",
-    "What live projects have you shipped?",
-    "How do we get started?"
-  ]
+const MAX_CHARS = 500;
+const CONTACT_EMAIL = 'contact@3geeks.fr';
+
+const COPY = {
+  fr: {
+    launcher: 'Assistant IA',
+    title: 'Assistant 3geeks',
+    online: 'En ligne',
+    subtitle: 'Réponse en quelques secondes',
+    greeting: 'Bonjour ! Je suis l’assistant de 3geeks. Posez-moi vos questions sur nos offres, nos délais, nos réalisations ou votre projet.',
+    suggestionsLabel: 'Questions fréquentes',
+    suggestions: ['Combien coûte un site vitrine ?', 'En combien de temps livrez-vous ?', 'Quels projets avez-vous réalisés ?', 'Comment se passe le paiement ?'],
+    placeholder: 'Posez votre question…',
+    send: 'Envoyer',
+    typing: 'L’assistant rédige sa réponse…',
+    disclaimer: 'Assistant IA : il peut se tromper. Pour un devis précis, réservez un appel.',
+    book: 'Réserver un appel gratuit',
+    email: 'Écrire un e-mail',
+    reset: 'Nouvelle conversation',
+    close: 'Fermer l’assistant',
+    error: 'Je ne peux pas répondre pour le moment. Réservez un appel gratuit de 30 min ou écrivez-nous à contact@3geeks.fr : on vous répond sous 24 h.',
+  },
+  en: {
+    launcher: 'AI assistant',
+    title: '3geeks assistant',
+    online: 'Online',
+    subtitle: 'Answers in seconds',
+    greeting: 'Hi! I’m the 3geeks assistant. Ask me about our offers, timelines, past projects or your own project.',
+    suggestionsLabel: 'Popular questions',
+    suggestions: ['How much is a showcase website?', 'How fast do you deliver?', 'What have you built?', 'How does payment work?'],
+    placeholder: 'Ask your question…',
+    send: 'Send',
+    typing: 'The assistant is writing…',
+    disclaimer: 'AI assistant: it can make mistakes. For an exact quote, book a call.',
+    book: 'Book a free call',
+    email: 'Send an email',
+    reset: 'New conversation',
+    close: 'Close the assistant',
+    error: 'I can’t answer right now. Book a free 30-minute call or email us at contact@3geeks.fr: we reply within 24 hours.',
+  },
 };
 
-export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, onNavigateSection }) => {
+// Answers that point to a call get a one-tap booking button.
+const MENTIONS_CALL = /appel|book a (free )?call|free (30-minute )?call|calendly/i;
+
+class ChatError extends Error {}
+
+async function streamChat(
+  body: { lang: string; messages: Array<Pick<ChatMessage, 'role' | 'content'>> },
+  signal: AbortSignal,
+  onEvent: (event: string, data: { t?: string }) => void,
+) {
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal,
+  });
+  if (!res.ok || !res.body || !res.headers.get('content-type')?.includes('text/event-stream')) {
+    const data = await res.json().catch(() => ({}));
+    throw new ChatError(typeof data.message === 'string' ? data.message : '');
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let index;
+    while ((index = buffer.indexOf('\n\n')) >= 0) {
+      const block = buffer.slice(0, index);
+      buffer = buffer.slice(index + 2);
+      const event = /^event: (.*)$/m.exec(block)?.[1];
+      const data = /^data: (.*)$/m.exec(block)?.[1];
+      if (event && data) onEvent(event, JSON.parse(data));
+    }
+  }
+}
+
+// Links, e-mails and **bold** from the model, rendered without injecting HTML.
+const RICH = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*|(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"»])|([\w.%+-]+@[\w-]+\.[\w.-]*\w)/g;
+const linkClass = 'font-medium text-brand-mint underline decoration-brand-mint/40 underline-offset-2 hover:decoration-brand-mint';
+
+function renderRich(raw: string) {
+  const text = raw.replace(/^#{1,6}\s+/gm, '');
+  const nodes: React.ReactNode[] = [];
+  let last = 0;
+  for (const match of text.matchAll(RICH)) {
+    const [whole, label, href, bold, url, email] = match;
+    const at = match.index ?? 0;
+    if (at > last) nodes.push(text.slice(last, at));
+    if (href || url) {
+      nodes.push(
+        <a key={at} href={href || url} target="_blank" rel="noopener noreferrer" className={linkClass}>
+          {label || url}
+        </a>,
+      );
+    } else if (bold) {
+      nodes.push(<strong key={at} className="font-semibold text-white">{bold}</strong>);
+    } else if (email) {
+      nodes.push(<a key={at} href={`mailto:${email}`} className={linkClass}>{email}</a>);
+    }
+    last = at + whole.length;
+  }
+  if (last < text.length) nodes.push(text.slice(last));
+  return nodes;
+}
+
+export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang }) => {
+  const copy = COPY[lang];
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const initialGreeting: Message = {
-    sender: 'ai',
-    text: lang === 'fr'
-      ? "Bonjour ! Je suis l'assistant du studio 3Geeks. Posez-moi une question sur nos offres (site Starter 300€, projet sur mesure), nos réalisations clients ou notre façon de travailler."
-      : "Hi! I'm the 3Geeks studio assistant. Ask me anything about our offers (€300 Starter site, custom projects), client case studies, or how we build."
-  };
-
-  const [messages, setMessages] = useState<Message[]>([initialGreeting]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [busy, setBusy] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
+  }, [messages, isOpen]);
 
-  const handleSend = (textToSend?: string) => {
-    const query = (textToSend || input).trim();
-    if (!query) return;
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setIsOpen(false);
+    document.addEventListener('keydown', onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    // No auto-focus on touch screens: it would pop the keyboard over the answer.
+    if (window.matchMedia('(pointer: fine)').matches) inputRef.current?.focus();
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
 
-    const userMsg: Message = { sender: 'user', text: query };
-    setMessages((prev) => [...prev, userMsg]);
-    if (!textToSend) setInput('');
-    setIsTyping(true);
+  useEffect(() => () => abortRef.current?.abort(), []);
 
-    setTimeout(() => {
-      const reply = generateAnswer(query, lang, onNavigateSection);
-      setMessages((prev) => [...prev, reply]);
-      setIsTyping(false);
-    }, 400);
+  const book = () => {
+    setIsOpen(false);
+    openBooking('chatbot');
   };
+
+  const reset = () => {
+    abortRef.current?.abort();
+    setMessages([]);
+    setBusy(false);
+  };
+
+  const send = async (text: string) => {
+    const question = text.trim().slice(0, MAX_CHARS);
+    if (!question || busy) return;
+
+    const history = [...messages.filter((m) => m.status !== 'error'), { role: 'user' as const, content: question }];
+    setMessages((prev) => [...prev, { role: 'user', content: question }, { role: 'assistant', content: '', status: 'streaming' }]);
+    setInput('');
+    setBusy(true);
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+    // Only ever touches the answer being streamed, even after a reset.
+    const updateAnswer = (change: (m: ChatMessage) => ChatMessage) =>
+      setMessages((prev) => {
+        const current = prev[prev.length - 1];
+        if (controller.signal.aborted || current?.status !== 'streaming') return prev;
+        return [...prev.slice(0, -1), change(current)];
+      });
+
+    try {
+      await streamChat(
+        { lang, messages: history.slice(-10).map(({ role, content }) => ({ role, content })) },
+        controller.signal,
+        (event, data) => {
+          if (event === 'delta') updateAnswer((m) => ({ ...m, content: m.content + (data.t || '') }));
+          else if (event === 'replace') updateAnswer((m) => ({ ...m, content: data.t || '' }));
+          else if (event === 'error') updateAnswer((m) => ({ ...m, content: data.t || copy.error, status: 'error' }));
+        },
+      );
+      updateAnswer((m) => (m.content ? { ...m, status: undefined } : { ...m, content: copy.error, status: 'error' }));
+    } catch (err) {
+      const message = err instanceof ChatError && err.message ? err.message : copy.error;
+      updateAnswer((m) => ({ ...m, content: message, status: 'error' }));
+    } finally {
+      if (abortRef.current === controller) setBusy(false);
+    }
+  };
+
+  const conversation: ChatMessage[] = [{ role: 'assistant', content: copy.greeting }, ...messages];
 
   return (
     <>
-      {/* Floating launcher trigger */}
-      {/* Phones: a round icon button that does not cover the page content */}
+      {/* Launcher: a round icon on phones so it never covers the page content */}
       <div className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-40">
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="3Geeks AI Agent"
-          className="group relative flex items-center gap-2.5 rounded-full border border-cyan-400/40 bg-[#0d1117]/90 p-3.5 text-xs font-semibold text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-cyan-300 hover:bg-[#0d1117] hover:scale-105 active:scale-95 sm:px-4 sm:py-2.5"
+          type="button"
+          onClick={() => setIsOpen((open) => !open)}
+          aria-label={copy.launcher}
+          aria-expanded={isOpen}
+          className="group relative flex items-center gap-2.5 rounded-full border border-brand-mint/40 bg-surface/90 p-3.5 text-xs font-semibold text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:border-brand-mint active:scale-95 sm:px-4 sm:py-2.5"
         >
           <span className="absolute right-0.5 top-0.5 flex h-2.5 w-2.5 shrink-0 sm:relative sm:right-auto sm:top-auto">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400/80 opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-cyan-400" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-mint/80 opacity-75" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-mint" />
           </span>
-          <Bot className="h-5 w-5 text-cyan-300 transition-transform group-hover:rotate-12 sm:h-4 sm:w-4" />
-          <span className="hidden font-mono sm:inline">AI Agent · 3Geeks</span>
+          <Bot className="h-5 w-5 text-brand-mint transition-transform group-hover:rotate-12 sm:h-4 sm:w-4" />
+          <span className="hidden sm:inline">{copy.launcher}</span>
         </button>
       </div>
 
-      {/* Modal / Drawer Chat Dialog */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-ink/70 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+          onClick={() => setIsOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="assistant-title"
+        >
           <div
-            className="relative flex flex-col w-full sm:max-w-lg h-[85vh] sm:h-[600px] bg-[#0d1117]/95 border border-cyan-500/30 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden"
+            className="relative flex h-[85svh] w-full flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-surface shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] sm:h-[620px] sm:max-w-lg sm:rounded-3xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-white/[0.03]">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-cyan-400/40 bg-cyan-400/10 text-cyan-300">
+            <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-brand-mint/30 bg-brand-mint/10 text-brand-mint">
                   <Sparkles className="h-5 w-5" />
                 </div>
-                <div>
-                  <h3 className="text-sm font-bold text-white font-mono flex items-center gap-2">
-                    3Geeks Studio AI
-                    <span className="rounded-full bg-cyan-400/20 px-2 py-0.5 text-[10px] text-cyan-300 font-sans border border-cyan-400/30">
-                      En ligne
+                <div className="min-w-0">
+                  <h3 id="assistant-title" className="flex items-center gap-2 font-display text-sm font-semibold text-white">
+                    {copy.title}
+                    <span className="rounded-full border border-brand-mint/30 bg-brand-mint/10 px-2 py-0.5 font-sans text-[10px] font-medium text-brand-mint">
+                      {copy.online}
                     </span>
                   </h3>
-                  <p className="text-[11px] text-slate-400">
-                    {lang === 'fr' ? 'Studio web français · Réponse sous 24h' : 'French web studio · Reply within 24h'}
-                  </p>
+                  <p className="truncate text-[11px] text-slate-400">{copy.subtitle}</p>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-white/10 hover:text-white transition-colors"
-                aria-label="Fermer le chat"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex shrink-0 items-center gap-1">
+                {messages.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={reset}
+                    className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
+                    aria-label={copy.reset}
+                    title={copy.reset}
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
+                  aria-label={copy.close}
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
-            {/* Messages Body */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs sm:text-sm">
-              {messages.map((msg, idx) => (
-                <div
-                  key={idx}
-                  className={`flex items-start gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  {msg.sender === 'ai' && (
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-cyan-400/30 bg-cyan-400/15 text-cyan-300">
-                      <Bot className="h-3.5 w-3.5" />
-                    </div>
-                  )}
-                  <div
-                    className={`max-w-[84%] rounded-2xl px-4 py-3 leading-relaxed ${
-                      msg.sender === 'user'
-                        ? 'bg-cyan-500 text-slate-950 font-medium rounded-tr-none shadow-md'
-                        : 'bg-white/5 border border-white/10 text-slate-100 rounded-tl-none backdrop-blur-md'
-                    }`}
-                  >
-                    <p className="whitespace-pre-wrap">{msg.text}</p>
-
-                    {msg.actions && msg.actions.length > 0 && (
-                      <div className="mt-3 flex flex-wrap gap-2 pt-2 border-t border-white/10">
-                        {msg.actions.map((act, aIdx) => (
-                          <button
-                            key={aIdx}
-                            onClick={() => {
-                              act.action();
-                              setIsOpen(false);
-                            }}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-[11px] font-semibold text-cyan-200 hover:bg-cyan-400/25 transition-colors"
-                          >
-                            {act.label} <ArrowRight className="h-3 w-3" />
-                          </button>
-                        ))}
+            {/* Messages */}
+            <div ref={scrollRef} className="flex-1 space-y-3.5 overflow-y-auto p-4 text-sm" aria-live="polite" aria-busy={busy}>
+              {conversation.map((msg, idx) => {
+                const isUser = msg.role === 'user';
+                const waiting = msg.status === 'streaming' && !msg.content;
+                const lastAnswer = !isUser && idx > 0 && !msg.status && idx === conversation.length - 1;
+                return (
+                  <div key={idx} className={`flex items-start gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                    {!isUser && (
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-brand-mint/30 bg-brand-mint/10 text-brand-mint">
+                        <Bot className="h-3.5 w-3.5" />
                       </div>
                     )}
-                  </div>
-                  {msg.sender === 'user' && (
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-cyan-400 text-slate-950 font-bold text-xs">
-                      <User className="h-3.5 w-3.5" />
+                    <div
+                      className={`max-w-[84%] rounded-2xl px-4 py-3 leading-relaxed ${
+                        isUser
+                          ? 'rounded-tr-none bg-brand-gradient font-medium text-ink'
+                          : 'rounded-tl-none border border-white/10 bg-white/[0.04] text-slate-100'
+                      }`}
+                    >
+                      {waiting ? (
+                        <span className="flex items-center gap-2 text-slate-400">
+                          <span className="flex gap-1" aria-hidden="true">
+                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-brand-mint [animation-delay:-0.3s]" />
+                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-brand-mint [animation-delay:-0.15s]" />
+                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-brand-mint" />
+                          </span>
+                          {copy.typing}
+                        </span>
+                      ) : (
+                        <p className="whitespace-pre-wrap break-words">{isUser ? msg.content : renderRich(msg.content)}</p>
+                      )}
+
+                      {(msg.status === 'error' || (lastAnswer && MENTIONS_CALL.test(msg.content))) && (
+                        <div className="mt-3 flex flex-wrap gap-2 border-t border-white/10 pt-3">
+                          <button
+                            type="button"
+                            onClick={book}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-brand-gradient px-3 py-1.5 text-xs font-semibold text-ink transition-opacity hover:opacity-90"
+                          >
+                            <CalendarCheck className="h-3.5 w-3.5" /> {copy.book}
+                          </button>
+                          {msg.status === 'error' && (
+                            <a
+                              href={`mailto:${CONTACT_EMAIL}`}
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-200 transition-colors hover:border-brand-mint/50 hover:text-white"
+                            >
+                              <Mail className="h-3.5 w-3.5" /> {copy.email}
+                            </a>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
-
-              {isTyping && (
-                <div className="flex items-center gap-2 text-slate-400 text-xs py-1">
-                  <Bot className="h-3.5 w-3.5 text-cyan-300 animate-spin" />
-                  <span>3Geeks AI prépare une réponse...</span>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Quick Prompts Chips */}
-            <div className="p-3 border-t border-white/10 bg-white/[0.02]">
-              <p className="text-[10px] text-slate-400 mb-2 font-mono uppercase tracking-wider">
-                {lang === 'fr' ? 'Questions fréquentes :' : 'Suggested queries:'}
-              </p>
-              <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
-                {QUICK_PROMPTS[lang].map((prompt, pIdx) => (
-                  <button
-                    key={pIdx}
-                    onClick={() => handleSend(prompt)}
-                    className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-slate-300 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:text-cyan-200 transition-colors text-left"
-                  >
-                    {prompt}
-                  </button>
-                ))}
+            {/* Suggestions until the first question */}
+            {messages.length === 0 && (
+              <div className="border-t border-white/10 px-4 py-3">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">{copy.suggestionsLabel}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {copy.suggestions.map((prompt) => (
+                    <button
+                      key={prompt}
+                      type="button"
+                      onClick={() => send(prompt)}
+                      className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-left text-xs text-slate-300 transition-colors hover:border-brand-mint/50 hover:bg-brand-mint/10 hover:text-white"
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Input Footer */}
+            {/* Input */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                handleSend();
+                send(input);
               }}
-              className="flex items-center gap-2 p-3 border-t border-white/10 bg-[#0d1117]"
+              className="border-t border-white/10 bg-ink/40 px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3"
             >
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={lang === 'fr' ? 'Posez votre question à 3geeks...' : 'Ask 3geeks studio...'}
-                className="flex-1 rounded-xl bg-white/5 border border-white/10 px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:bg-white/10 transition-all font-sans"
-              />
-              <button
-                type="submit"
-                disabled={!input.trim()}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-400 text-slate-950 hover:bg-cyan-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md shadow-cyan-400/20"
-              >
-                <Send className="h-4 w-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  maxLength={MAX_CHARS}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={copy.placeholder}
+                  aria-label={copy.placeholder}
+                  className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-base text-white placeholder-slate-500 transition-colors focus:border-brand-mint/60 focus:bg-white/[0.07] focus:outline-none sm:text-sm"
+                />
+                <button
+                  type="submit"
+                  disabled={!input.trim() || busy}
+                  aria-label={copy.send}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-gradient text-ink transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Send className="h-4 w-4" />
+                </button>
+              </div>
+              <p className="mt-2 text-center text-[10px] text-slate-500">{copy.disclaimer}</p>
             </form>
           </div>
         </div>
@@ -217,56 +387,5 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, onNavigateSe
     </>
   );
 };
-
-function generateAnswer(
-  query: string,
-  lang: 'en' | 'fr',
-  onNavigateSection?: (sectionId: string) => void
-): Message {
-  const q = query.toLowerCase();
-
-  if (q.includes('tarif') || q.includes('prix') || q.includes('price') || q.includes('offre') || q.includes('300')) {
-    return {
-      sender: 'ai',
-      text: lang === 'fr'
-        ? "Chez 3geeks, nous proposons deux formules principales :\n1. Site Starter à 300€ (paiement unique) : site one-page responsive avec design moderne, offre claire et formulaire/WhatsApp.\n2. Projet web sur mesure (sur devis) : réservation, e-commerce, dashboard admin et automatisations.\nOption Sérénité à 50€/mois pour la maintenance et la sécurité."
-        : "At 3geeks, we offer two main formats:\n1. Starter Website (€300 one-off): focused single-page responsive site with clear offer, contact flow and modern design.\n2. Custom Web Project (custom quote): bookings, e-commerce, custom admin dashboards, and integrations.\nPeace-of-Mind maintenance at €50/mo.",
-      actions: onNavigateSection
-        ? [{ label: lang === 'fr' ? 'Voir nos offres' : 'View service plans', action: () => onNavigateSection('services') }]
-        : []
-    };
-  }
-
-  if (q.includes('3geeks') || q.includes('c\'est quoi') || q.includes('studio') || q.includes('fondateur') || q.includes('équipe') || q.includes('team')) {
-    return {
-      sender: 'ai',
-      text: lang === 'fr'
-        ? "3geeks est un studio web & produit digital français. Nous créons des sites et outils digitaux clairs, rapides et soignés, avec trois pôles d'expertise : design produit, cloud & IA (certifié AWS) et stratégie business."
-        : "3geeks is a French web & digital product studio. We build clean, fast, polished websites and digital tools, with three areas of expertise: product design, cloud & AI (AWS certified) and business strategy."
-    };
-  }
-
-  if (q.includes('projet') || q.includes('client') || q.includes('réalisation') || q.includes('shipped')) {
-    return {
-      sender: 'ai',
-      text: lang === 'fr'
-        ? "Parmi nos projets réels :\n- Cabinet Dr Amel Elloumi Jellouli (site médical bilingue FR / AR)\n- Express Divorce USA (SaaS juridique, 50 États)\n- Vipagence (site pour une agence créateurs)\n- Two (app iOS sur l'App Store, notée 5,0)\n- Aurenza Capital (vitrine de conseil patrimonial)\n- Green Jardin (Shopify + caisse POS & menu TV)\n- CallKitchen (agent vocal IA 24/7 pour restaurants)\n- Deux plateformes privées : signature de contrats et boutique Telegram\n- Lab : Prompt Hub, PromptOptim, EFREI Skill Hub"
-        : "Some of our real projects:\n- Dr Amel Elloumi Jellouli's practice (bilingual FR / AR medical site)\n- Express Divorce USA (legal-tech SaaS, all 50 states)\n- Vipagence (site for a creator agency)\n- Two (iOS app on the App Store, rated 5.0)\n- Aurenza Capital (wealth advisory showcase)\n- Green Jardin (Shopify + POS & TV menu)\n- CallKitchen (24/7 AI voice agent for restaurants)\n- Two private platforms: contract signing and a Telegram shop\n- Lab: Prompt Hub, PromptOptim, EFREI Skill Hub",
-      actions: onNavigateSection
-        ? [{ label: lang === 'fr' ? 'Parcourir les projets' : 'Browse projects', action: () => onNavigateSection('projets') }]
-        : []
-    };
-  }
-
-  return {
-    sender: 'ai',
-    text: lang === 'fr'
-      ? `Expliquez-nous ce que vous souhaitez vendre, présenter ou automatiser. L'équipe 3geeks vous répond sous 24h avec la solution la plus simple.`
-      : `Tell us what you want to sell, present or automate. The 3geeks team replies within 24h with the simplest next step.`,
-    actions: onNavigateSection
-      ? [{ label: lang === 'fr' ? 'Parler de mon projet' : 'Talk about my project', action: () => onNavigateSection('contact') }]
-      : []
-  };
-}
 
 export default AiAgentWidget;

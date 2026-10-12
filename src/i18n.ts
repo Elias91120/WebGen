@@ -277,7 +277,7 @@ export const translations = {
         privacy: [
           {
             title: "1. What we receive",
-            text: "This site has no contact form and does not track you. We only receive what you choose to send us: an email to contact@3geeks.fr, a LinkedIn message, or a call booked through Calendly (name, email, phone number and the details you share)."
+            text: "This site has no contact form and does not track you. We only receive what you choose to send us: an email to contact@3geeks.fr, a LinkedIn message, a call booked through Calendly (name, email, phone number and the details you share), or the questions you ask the site assistant."
           },
           {
             title: "2. How we use it",
@@ -285,7 +285,7 @@ export const translations = {
           },
           {
             title: "3. Services we rely on",
-            text: "Calls are booked through Calendly, which processes booking data under its own privacy policy. The site assistant answers from pre-written content in your browser: nothing you type is sent to a server."
+            text: "Calls are booked through Calendly, which processes booking data under its own privacy policy. The site assistant is an AI run on 3geeks’ own servers: your messages are sent to it only to generate the answer, and their content is not stored. Please don’t share sensitive information with it."
           },
           {
             title: "4. Your rights",
@@ -602,7 +602,7 @@ export const translations = {
         privacy: [
           {
             title: "1. Ce que nous recevons",
-            text: "Ce site n’a pas de formulaire et ne vous suit pas. Nous recevons uniquement ce que vous choisissez de nous envoyer : un e-mail à contact@3geeks.fr, un message LinkedIn ou un appel réservé via Calendly (nom, e-mail, numéro de téléphone et les informations que vous partagez)."
+            text: "Ce site n’a pas de formulaire et ne vous suit pas. Nous recevons uniquement ce que vous choisissez de nous envoyer : un e-mail à contact@3geeks.fr, un message LinkedIn, un appel réservé via Calendly (nom, e-mail, numéro de téléphone et les informations que vous partagez) ou les questions posées à l’assistant du site."
           },
           {
             title: "2. Utilisation",
@@ -610,7 +610,7 @@ export const translations = {
           },
           {
             title: "3. Services utilisés",
-            text: "Les appels sont réservés via Calendly, qui traite les données de réservation selon sa propre politique de confidentialité. L’assistant du site répond à partir de contenus pré-rédigés, directement dans votre navigateur : rien de ce que vous tapez n’est envoyé à un serveur."
+            text: "Les appels sont réservés via Calendly, qui traite les données de réservation selon sa propre politique de confidentialité. L’assistant du site est une IA exécutée sur les serveurs de 3geeks : vos messages lui sont transmis uniquement pour générer la réponse, et leur contenu n’est pas conservé. Merci de ne pas y partager d’informations sensibles."
           },
           {
             title: "4. Vos droits",

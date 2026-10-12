@@ -1,7 +1,27 @@
 import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+
+import { createChatHandler } from './server/chat.mjs';
+
+// Serves the assistant API in dev, like nginx + server/index.mjs do in production.
+// The key stays server-side: it comes from .env and never reaches the browser bundle.
+function assistantApi(env: Record<string, string>): Plugin {
+  return {
+    name: '3geeks-assistant-api',
+    configureServer(server) {
+      const handleChat = createChatHandler({
+        apiKey: env.THREEGEEKS_API_KEY || env['3gks_api'] || '',
+        baseUrl: env.THREEGEEKS_API_BASE_URL || undefined,
+        model: env.THREEGEEKS_MODEL || undefined,
+      });
+      server.middlewares.use('/api/chat', (req, res) => {
+        handleChat(req, res);
+      });
+    },
+  };
+}
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
@@ -10,7 +30,7 @@ export default defineConfig(({ mode }) => {
         port: 3000,
         host: '0.0.0.0',
       },
-      plugins: [react(), tailwindcss()],
+      plugins: [react(), tailwindcss(), assistantApi(env)],
       build: {
         rollupOptions: {
           output: {
@@ -24,10 +44,6 @@ export default defineConfig(({ mode }) => {
             },
           },
         },
-      },
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
       },
       resolve: {
         alias: {
