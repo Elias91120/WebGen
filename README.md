@@ -14,6 +14,15 @@ Page à envoyer aux entreprises qui ont déjà un site : [www.3geeks.fr/ia](http
 - Servie par nginx sur `/ia` et `/ia/` depuis `dist/ia/index.html` (location dédiée dans `nginx.conf`).
 - Réutilise le design, la réservation Calendly (sources `ia-*`), l’assistant (accueil et suggestions IA) et les mentions légales du site principal. Le site principal y renvoie depuis la navigation (« IA pour entreprises »).
 - Pas de prix affiché : services sur devis après l’audit gratuit de 30 min.
+- Le site principal y mène depuis la section « IA & automatisation » (`src/components/AiTeaser.tsx`, même convoyeur animé). Chaque domaine ouvre `/ia?service=<n>#vos-process` sur le bon service (ordre des `departments` dans `src/ia/copy.ts`).
+
+## Motion design
+
+Animations CSS ou `motion/react`, en pause hors écran et figées avec « réduire les animations ». À garder sobre : une pièce animée par section au plus.
+
+- Convoyeur IA (`src/ia/AiConveyor.tsx`) : hero de `/ia` et section IA du site principal.
+- Méthode du site principal (`src/components/BuildTimeline.tsx`) : un navigateur construit le site au fil des 5 étapes.
+- Démo de process et explorateur par service sur `/ia` (`src/ia/ProcessDemo.tsx`, `src/ia/AutomationExplorer.tsx`).
 
 ## Vitrine projets
 

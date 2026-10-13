@@ -68,6 +68,14 @@ const AiPage: React.FC = () => {
     document.querySelector('meta[name="description"]')?.setAttribute('content', t.meta.description);
   }, [lang, t.meta.title, t.meta.description]);
 
+  // Links like /ia#vos-process: the section only exists once React has rendered, so scroll here.
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    const frame = window.requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: 'start' }));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();

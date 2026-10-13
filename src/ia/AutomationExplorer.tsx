@@ -16,7 +16,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import type { AiCopy, AutomationLevel } from './copy';
 
@@ -51,10 +51,24 @@ const Meter: React.FC<{ level: AutomationLevel; delay: number; animate: boolean;
 };
 
 const AutomationExplorer: React.FC<{ copy: AiCopy['explorer']; onBook: () => void }> = ({ copy, onBook }) => {
-  const [dept, setDept] = useState(0);
+  // /ia?service=2#vos-process opens on that department (links from the main page).
+  const [dept, setDept] = useState(() => {
+    const wanted = Number(new URLSearchParams(window.location.search).get('service'));
+    return Number.isInteger(wanted) && wanted >= 0 && wanted < copy.departments.length ? wanted : 0;
+  });
   const reduce = useReducedMotion();
   const animate = !reduce;
   const current = copy.departments[dept];
+  const tabsRef = useRef<HTMLDivElement>(null);
+
+  // Phones: the tab bar scrolls sideways, so keep the selected department in view
+  // (horizontally only, the page itself must not jump).
+  useEffect(() => {
+    const bar = tabsRef.current;
+    const tab = bar?.children[dept] as HTMLElement | undefined;
+    if (!bar || !tab || bar.scrollWidth <= bar.clientWidth) return;
+    bar.scrollTo({ left: tab.offsetLeft - (bar.clientWidth - tab.offsetWidth) / 2, behavior: animate ? 'smooth' : 'auto' });
+  }, [dept, animate]);
 
   return (
     <div>
@@ -79,7 +93,7 @@ const AutomationExplorer: React.FC<{ copy: AiCopy['explorer']; onBook: () => voi
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]">
         {/* Departments */}
-        <div className="ia-scroll-fade -mx-5 flex gap-2 overflow-x-auto px-5 pb-1 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:[mask-image:none]" role="tablist">
+        <div ref={tabsRef} className="ia-scroll-fade -mx-5 flex gap-2 overflow-x-auto px-5 pb-1 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:[mask-image:none]" role="tablist">
           {copy.departments.map((d, i) => {
             const Icon = DEPT_ICONS[i];
             const selected = i === dept;

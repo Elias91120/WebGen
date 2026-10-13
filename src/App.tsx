@@ -23,6 +23,8 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import AiAgentWidget from './components/AiAgentWidget';
+import AiTeaser from './components/AiTeaser';
+import BuildTimeline from './components/BuildTimeline';
 import BookingModal from './components/BookingModal';
 import ClientLogos from './components/ClientLogos';
 import { HeroVideoCard } from './components/HeroVideo';
@@ -444,36 +446,24 @@ const App: React.FC = () => {
         </section>
 
         {/* ------------------------------------------------------------ */}
+        {/* IA : passerelle vers la page /ia                              */}
+        {/* ------------------------------------------------------------ */}
+        <AiTeaser lang={lang} copy={t.aiTeaser} />
+
+        {/* ------------------------------------------------------------ */}
         {/* MÉTHODE                                                       */}
         {/* ------------------------------------------------------------ */}
-        <section id="methode" className="relative overflow-hidden border-y border-white/5 bg-surface/60 py-20 md:py-28">
-          <SectionLines variant="a" />
+        <section id="methode" className="relative overflow-hidden py-20 md:py-28">
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-            <Reveal className="mb-14 max-w-2xl md:mb-20">
+            <Reveal className="mb-10 max-w-2xl md:mb-14">
               <span className="eyebrow">{t.stack.path}</span>
               <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.stack.title}</h2>
               <p className="mt-5 text-base text-slate-400 md:text-lg">{t.stack.subtitle}</p>
             </Reveal>
 
-            <ol className="relative grid grid-cols-1 gap-10 md:grid-cols-5 md:gap-6">
-              <div
-                className="absolute left-[1.35rem] top-2 h-[calc(100%-1rem)] w-px bg-gradient-to-b from-brand-lime/60 via-brand-mint/30 to-transparent md:hidden"
-                aria-hidden="true"
-              />
-              <div
-                className="absolute left-0 right-0 top-[1.35rem] hidden h-px bg-gradient-to-r from-brand-lime/60 via-brand-mint/40 to-transparent md:block"
-                aria-hidden="true"
-              />
-              {t.stack.steps.map((step, i) => (
-                <Reveal as="li" key={step.t} delay={i * 90} className="relative pl-16 md:pl-0">
-                  <span className="absolute left-0 top-0 flex h-11 w-11 items-center justify-center rounded-full border border-brand-mint/40 bg-ink font-display text-sm font-semibold text-brand-mint shadow-[0_0_24px_-4px_rgba(10,239,187,0.5)] md:relative">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <h3 className="font-display text-lg font-semibold text-white md:mt-6">{step.t}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-400">{step.d}</p>
-                </Reveal>
-              ))}
-            </ol>
+            <Reveal>
+              <BuildTimeline steps={t.stack.steps} mock={t.stack.mock} />
+            </Reveal>
           </div>
         </section>
 
