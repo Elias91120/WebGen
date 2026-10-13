@@ -25,6 +25,7 @@ const TEXT = {
     phone: 'Le plus simple pour nous parler est de réserver un appel gratuit de 30 min avec le bouton « Réserver un appel gratuit » : les détails de l’appel vous sont confirmés à la réservation. Vous pouvez aussi écrire à contact@3geeks.fr (réponse sous 24 h).',
     fallback: 'Je ne peux pas répondre pour le moment. Réservez un appel gratuit de 30 min ou écrivez-nous à contact@3geeks.fr : on vous répond sous 24 h.',
     rateLimited: 'Vous avez envoyé beaucoup de messages. Réessayez dans quelques minutes, ou écrivez-nous directement à contact@3geeks.fr.',
+    assistantData: 'Cet assistant utilise un modèle de Mistral AI, société française : vos messages lui sont transmis pour générer la réponse, avec les serveurs de 3geeks en relais, et 3geeks n’en conserve pas le contenu. Évitez donc d’y écrire des informations sensibles. Pour vos propres projets IA, c’est différent : le lieu d’hébergement des données se décide avec vous. Le plus simple pour en parler est de réserver un appel gratuit de 30 min.',
     language: 'français',
   },
   en: {
@@ -34,6 +35,7 @@ const TEXT = {
     phone: 'The easiest way to talk to us is to book a free 30-minute call with the “Book a free call” button: the call details are confirmed when you book. You can also email contact@3geeks.fr (reply within 24 hours).',
     fallback: 'I can’t answer right now. Book a free 30-minute call or email us at contact@3geeks.fr: we reply within 24 hours.',
     rateLimited: 'You have sent a lot of messages. Please try again in a few minutes, or email us directly at contact@3geeks.fr.',
+    assistantData: 'This assistant uses a model from Mistral AI, a French company: your messages are sent to it to generate the answer, with 3geeks’ servers as a fallback, and 3geeks does not store their content. So please don’t share sensitive information here. Your own AI projects are different: where the data is hosted is decided with you. The easiest way to discuss it is to book a free 30-minute call.',
     language: 'anglais',
   },
 };
@@ -202,6 +204,11 @@ const TOPICS = [
   {
     id: 'location',
     pattern: /\badresse\b(?!\s*(e-?mail|mail|[ée]lectronique))|(?<!e-?mail\s)\baddress\b(?!\s*e?-?mail)|\bvos\s+(locaux|bureaux)\b|si[eè]ge social|headquarters|\bo[uù]\s+([êe]tes|se trouve|se situe)|vous\s+[êe]tes\s+(o[uù]|bas[ée]s|situ[ée]s|install[ée]s)|[êe]tes[- ]vous\s+(bas[ée]s|situ[ée]s|install[ée]s)|where\s+(are\s+you|is\s+3geeks|is\s+the\s+studio)|(are\s+you|you're)\s+(based|located)|quelle\s+ville|which\s+city/i,
+  },
+  {
+    // How this chatbot handles messages: a privacy statement, so never left to the model.
+    id: 'assistantData',
+    pattern: /mistral|\b(ce|cet|cette|this|your|votre) (chat ?bot|assistant|chat)\b|\b(cette|this) (ia|ai)\b|\bmy (chat|messages?|conversation)\b|\bmes (messages|questions|conversations?)\b|\bquel(le)? (mod[eè]le|llm|ia)\b[^?]{0,30}\b(utilis|tourne|propuls|derri[eè]re)|\bwhich (model|llm|ai)\b[^?]{0,30}\b(use|run|power|behind)|\b(vous utilisez|do you use|is this|c['’]est) (chat ?gpt|gpt|openai)\b/i,
   },
   {
     id: 'phone',
