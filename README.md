@@ -22,6 +22,7 @@ Animations CSS ou `motion/react`, en pause hors écran et figées avec « rédui
 
 - Convoyeur IA (`src/ia/AiConveyor.tsx`) : hero de `/ia` et section IA du site principal.
 - Méthode du site principal (`src/components/BuildTimeline.tsx`) : un navigateur construit le site au fil des 5 étapes.
+- Réalisations (`src/components/BeforeAfter/`) : curseur avant/après sur le site du Dr Jellouli. L’« avant » est une **reconstitution** codée en HTML (`OldJelloulSite.tsx`), pas l’ancien site réel : le libellé « reconstitution » doit rester visible. Le badge « Refait en 24 h » est dans `COPY` en haut de `BeforeAfter.tsx`.
 - Démo de process et explorateur par service sur `/ia` (`src/ia/ProcessDemo.tsx`, `src/ia/AutomationExplorer.tsx`).
 
 ## Vitrine projets

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Check, GraduationCap, Lock, Send, X } from 'lucide-react';
+import BeforeAfter from './BeforeAfter/BeforeAfter';
 import { Mark } from './Logo';
 import Reveal from './Reveal';
 
@@ -646,6 +647,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
               ? 'Santé, juridique, finance, e-commerce, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.'
               : 'Healthcare, legal, finance, e-commerce, mobile apps and private platforms: projects designed, built and launched by 3geeks.'}
           </p>
+        </Reveal>
+
+        <Reveal className="mb-16 md:mb-20">
+          <BeforeAfter lang={lang} onOpenCase={() => setOpenCase(PROJECTS_DATA.find((p) => p.id === 'jellouli') ?? null)} />
         </Reveal>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
