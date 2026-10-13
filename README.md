@@ -1,10 +1,26 @@
 # 3geeks.fr — vitrine studio
 
-Landing du studio **3geeks** : sites et produits digitaux, faits en France.
+Site du studio **3geeks** : sites et produits digitaux, faits en France.
 
 - Prod : [https://www.3geeks.fr](https://www.3geeks.fr) (Coolify + Traefik, pas Vercel)
 - Repo : [Elias91120/WebGen](https://github.com/Elias91120/WebGen)
 - Ancien domaine Vercel (`web-gen-lyart.vercel.app`) : redirect permanent vers `www.3geeks.fr` (`vercel.json`)
+
+## Pages
+
+Site multi-pages (une entrée HTML par page, servie par `nginx.conf` sur `/page` et `/page/`) :
+
+| Page | HTML | Contenu |
+| --- | --- | --- |
+| Accueil `/` | `index.html` | Court, pour donner envie d’appeler en 30 s : hero, logos clients, « ce qu’on fait » (3 cartes), « comment ça marche » (3 étapes), 3 réalisations, contact |
+| Offres `/offres` | `offres/index.html` | Offres et Option Sérénité, engagements, méthode animée (`#methode`), passerelle IA |
+| Réalisations `/realisations` | `realisations/index.html` | Avant/après (`#avant-apres`), tous les projets (ancre = id du projet), lab, avis clients |
+| Équipe `/equipe` | `equipe/index.html` | Fondateurs, apporteurs d’affaires, pourquoi nous, expertises |
+| IA `/ia` | `ia/index.html` | Page autonome pour les entreprises (voir plus bas) |
+
+- Cadre commun (header, footer, assistant, réservation, mentions légales) : `src/site/SiteLayout.tsx`. Sections : `src/site/sections.tsx`. Pages : `src/pages/pages.tsx`, une entrée par page dans `src/pages/entries/`.
+- Nouvelle page : créer `<page>/index.html` (copie d’une page existante : titre, description, canonical, og), l’entrée dans `src/pages/entries/`, l’ajouter à `vite.config.ts` (`input`), à la regex de `nginx.conf`, au menu de `SiteLayout.tsx` et aux textes `site` de `src/i18n.ts`.
+- Garder l’accueil court : le détail va sur les pages dédiées.
 
 ## Page IA pour entreprises (`/ia`)
 

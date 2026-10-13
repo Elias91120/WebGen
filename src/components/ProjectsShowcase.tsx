@@ -26,6 +26,8 @@ import greenJardinMobile from '../assets/images/projects/green-jardin-mobile.jpg
 interface ProjectsShowcaseProps {
   lang: 'en' | 'fr';
   onContact?: () => void;
+  /** On /realisations the page intro (h1) replaces the section heading. */
+  showIntro?: boolean;
 }
 
 type Localized<T> = { fr: T; en: T };
@@ -413,7 +415,7 @@ const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase
   const coverClass = 'relative block aspect-[16/10] w-full overflow-hidden border-b border-white/[0.07] bg-ink text-left';
 
   return (
-    <article className="card group flex h-full flex-col overflow-hidden hover:-translate-y-1 hover:bg-surface-2">
+    <article id={project.id} className="card group flex h-full scroll-mt-24 flex-col overflow-hidden hover:-translate-y-1 hover:bg-surface-2">
       {project.caseStudy ? (
         <button type="button" onClick={() => onOpenCase(project)} className={coverClass} aria-label={`${fr ? 'Étude de cas' : 'Case study'} : ${project.title[lang]}`}>
           {visual}
@@ -631,7 +633,7 @@ const LabCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ projec
 /** Project shown in the before/after slider at the top of the section. */
 const BEFORE_AFTER_ID = 'jellouli';
 
-export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onContact }) => {
+export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onContact, showIntro = true }) => {
   const fr = lang === 'fr';
   const [openCase, setOpenCase] = useState<ProjectItem | null>(null);
   const closeCase = useCallback(() => setOpenCase(null), []);
@@ -642,8 +644,9 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
   const labProjects = PROJECTS_DATA.filter((p) => p.category === 'studio');
 
   return (
-    <section id="projets" className="relative border-t border-white/5 bg-surface/60 py-20 md:py-28">
+    <section id="projets" className={`relative border-t border-white/5 bg-surface/60 ${showIntro ? 'py-20 md:py-28' : 'pb-20 pt-12 md:pb-28 md:pt-16'}`}>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        {showIntro && (
         <Reveal className="mb-12 max-w-2xl md:mb-16">
           <span className="eyebrow">{fr ? 'Réalisations' : 'Selected work'}</span>
           <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">
@@ -655,8 +658,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
               : 'Healthcare, legal, finance, e-commerce, mobile apps and private platforms: projects designed, built and launched by 3geeks.'}
           </p>
         </Reveal>
+        )}
 
-        <Reveal className="mb-16 md:mb-20">
+        <Reveal className="mb-16 scroll-mt-24 md:mb-20">
+          <div id="avant-apres" className="scroll-mt-24" />
           <BeforeAfter lang={lang} onOpenCase={() => setOpenCase(PROJECTS_DATA.find((p) => p.id === BEFORE_AFTER_ID) ?? null)} />
         </Reveal>
 

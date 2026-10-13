@@ -126,14 +126,17 @@ const FounderCard: React.FC<{ founderKey: FounderKey; profile: FounderProfile; l
   );
 };
 
-export const TeamSection: React.FC<{ team: TeamCopy }> = ({ team }) => (
-  <section id="equipe" className="relative border-t border-white/5 py-20 md:py-28">
+/** `showIntro`: false on /equipe, where the page intro (h1) replaces the section heading. */
+export const TeamSection: React.FC<{ team: TeamCopy; showIntro?: boolean }> = ({ team, showIntro = true }) => (
+  <section id="equipe" className={`relative py-20 md:py-28 ${showIntro ? 'border-t border-white/5' : ''}`}>
     <div className="mx-auto max-w-7xl px-5 sm:px-8">
-      <Reveal className="mb-12 max-w-2xl md:mb-16">
-        <span className="eyebrow">{team.path}</span>
-        <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{team.title}</h2>
-        <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">{team.subtitle}</p>
-      </Reveal>
+      {showIntro && (
+        <Reveal className="mb-12 max-w-2xl md:mb-16">
+          <span className="eyebrow">{team.path}</span>
+          <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{team.title}</h2>
+          <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">{team.subtitle}</p>
+        </Reveal>
+      )}
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
         {(['elias', 'noam'] as const).map((key, i) => (

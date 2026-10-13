@@ -35,9 +35,12 @@ export default defineConfig(({ mode }) => {
       plugins: [react(), tailwindcss(), assistantApi(env)],
       build: {
         rollupOptions: {
-          // Two pages: the studio landing (/) and the AI services page (/ia, served from dist/ia/index.html).
+          // One HTML entry per page (dist/<page>/index.html, routed by nginx.conf).
           input: {
             main: path.resolve(__dirname, 'index.html'),
+            offres: path.resolve(__dirname, 'offres/index.html'),
+            realisations: path.resolve(__dirname, 'realisations/index.html'),
+            equipe: path.resolve(__dirname, 'equipe/index.html'),
             ia: path.resolve(__dirname, 'ia/index.html'),
           },
           output: {

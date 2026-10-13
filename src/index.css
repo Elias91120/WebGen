@@ -349,3 +349,7 @@ body {
   .scroll-cue { animation: none; }
   .ia-ring, .ia-spin-slow, .ia-travel, .ia-beam-spark { animation: none; }
 }
+
+/* Horizontal rows that scroll by swipe, without a visible scrollbar */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

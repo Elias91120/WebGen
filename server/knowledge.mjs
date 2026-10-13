@@ -8,6 +8,7 @@ export const CORE = `3geeks est un studio web et digital français (Made in Fran
 Offres web : Site Starter à 300 € (paiement unique, site d’une page) ; Projet web sur mesure (sur devis) ; Refonte complète (sur devis) ; Option Sérénité à 50 €/mois (maintenance).
 Services IA pour entreprises (sur devis, après un audit gratuit de 30 min) : intégration de l’IA dans les logiciels existants (ERP, CRM, back-office), automatisation de la logistique et des opérations, agents IA (chat, e-mail, téléphone), traitement de documents et données, applications associées, cadrage et formation. Page dédiée : https://3geeks.fr/ia
 Engagements : petites demandes livrées en 24 à 48 h ; rien à payer d’avance (règlement à la livraison, une fois le résultat validé, sans acompte) ; le code source et le nom de domaine appartiennent au client ; devis gratuit et sans engagement après un appel de 30 min.
+Pages du site : Accueil (3geeks.fr), Offres et méthode (3geeks.fr/offres), Réalisations et avis clients (3geeks.fr/realisations), IA pour entreprises (3geeks.fr/ia), Équipe (3geeks.fr/equipe).
 Contact : réserver un appel gratuit de 30 min avec le bouton « Réserver un appel gratuit » du site ; écrire à contact@3geeks.fr (réponse sous 24 h) ; ou écrire à Elias ou à Noam sur LinkedIn.`;
 
 // Retrieved by relevance. `keywords` add French/English synonyms to help matching.
@@ -124,7 +125,7 @@ export const CHUNKS = [
     id: 'portfolio',
     title: 'Liste des réalisations',
     keywords: ['realisations', 'projets', 'portfolio', 'references', 'exemples', 'clients', 'travaux', 'deja fait', 'projects', 'work', 'examples', 'combien de projets'],
-    text: '3geeks a livré 13 projets : 9 réalisations clients et 4 produits maison. Clients : Cabinet Dr Amel Elloumi Jellouli (site médical bilingue, Tunis), Express Divorce USA (SaaS juridique, États-Unis), une plateforme privée de signature de contrats, Vipagence (marketplace de créateurs), Two (app iOS notée 5,0), Aurenza Capital (gestion de patrimoine), Green Jardin (Shopify, caisse et menu TV), une boutique privée sur Telegram et CallKitchen (IA vocale pour restaurants). Produits maison : Prompt Hub, PromptOptim, EFREI Skill Hub et 3geeks Infra. Tout est visible dans la section « Réalisations » du site, et ce n’est que le début.',
+    text: '3geeks a livré 13 projets : 9 réalisations clients et 4 produits maison. Clients : Cabinet Dr Amel Elloumi Jellouli (site médical bilingue, Tunis), Express Divorce USA (SaaS juridique, États-Unis), une plateforme privée de signature de contrats, Vipagence (marketplace de créateurs), Two (app iOS notée 5,0), Aurenza Capital (gestion de patrimoine), Green Jardin (Shopify, caisse et menu TV), une boutique privée sur Telegram et CallKitchen (IA vocale pour restaurants). Produits maison : Prompt Hub, PromptOptim, EFREI Skill Hub et 3geeks Infra. Tout est visible sur la page Réalisations (https://3geeks.fr/realisations), avec un avant/après du site du Dr Jellouli, et ce n’est que le début.',
   },
   {
     id: 'jellouli',

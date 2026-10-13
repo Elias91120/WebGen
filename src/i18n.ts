@@ -132,6 +132,62 @@ export const translations = {
       chips: ["Accounting", "Logistics", "Customer service", "Sales", "HR", "Management"],
       cta: "Explore our AI solutions",
     },
+    site: {
+      nav: { home: "Home", offers: "Offers", work: "Work", ai: "AI for businesses", team: "Team", cta: "Book a call", method: "Process" },
+      pages: {
+        offers: {
+          title: "Offers & pricing — 3geeks",
+          description: "Starter website from €300, custom web projects, complete redesigns and the Peace-of-mind option. Free quote after a 30-minute call, nothing to pay upfront.",
+          path: "Offers",
+          h1: "Clear offers, a price as soon as possible.",
+          sub: "Pick the format that fits your project. If you're not sure, a free 30-minute call is enough to decide.",
+        },
+        work: {
+          title: "Our work — 3geeks",
+          description: "Websites, SaaS platforms, iOS apps, e-commerce and AI: projects designed, built and launched by 3geeks, with a before/after and client reviews.",
+          path: "Work",
+          h1: "What we've already built.",
+          sub: "Healthcare, legal, finance, e-commerce, mobile apps and private platforms: projects designed, built and launched by 3geeks.",
+        },
+        team: {
+          title: "Team — 3geeks",
+          description: "3geeks is co-founded by Elias Elloumi and Noam Leclapart-Jublot: background, certifications, expertise and business introducers.",
+          path: "Team",
+          h1: "Co-founded by Elias & Noam.",
+          sub: "3geeks is co-founded by Elias and Noam. Alongside them, a growing network of business introducers brings new opportunities.",
+        },
+      },
+      whatWeDo: {
+        path: "What we do",
+        title: "Three things, done well.",
+        items: [
+          { title: "Websites", desc: "Showcase site, redesign or online shop, designed to bring in contacts.", meta: "From €300", cta: "See the offers" },
+          { title: "Apps & platforms", desc: "Web platforms, customer areas, iOS apps, dashboards and integrations with your tools.", meta: "Custom quote", cta: "See the offers" },
+          { title: "AI & automation", desc: "AI plugged into the tools you already use: invoices, stock, customer service, reporting.", meta: "Free audit", cta: "Discover" },
+        ],
+      },
+      howItWorks: {
+        path: "How it works",
+        title: "Simple, fast, risk-free.",
+        steps: [
+          { t: "A free 30-minute call", d: "You explain your need, we send you a clear, free quote." },
+          { t: "We build, fast", d: "Small requests delivered in 24 to 48 h. For larger projects, the schedule is set from the start." },
+          { t: "You pay once you're happy", d: "Nothing upfront. The source code and the domain name are in your name." },
+        ],
+        more: "See our process",
+      },
+      featured: {
+        path: "Selected work",
+        title: "A few projects already live.",
+        more: "See all our work",
+        items: {
+          jellouli: "Bilingual medical website, rebuilt in 24 h.",
+          "express-divorce": "Legal SaaS platform, live in the United States.",
+          "two-app": "The iOS app for couples, rated 5.0 on the App Store.",
+        },
+      },
+      footer: { pages: "The studio" },
+    },
     services: {
       path: "Service plans",
       badge: "SOLUTIONS",
@@ -480,6 +536,62 @@ export const translations = {
       chipsLabel: "Choisissez votre domaine",
       chips: ["Compta", "Logistique", "Service client", "Commercial", "RH", "Direction"],
       cta: "Découvrir nos solutions IA",
+    },
+    site: {
+      nav: { home: "Accueil", offers: "Offres", work: "Réalisations", ai: "IA pour entreprises", team: "Équipe", cta: "Réserver un appel", method: "Méthode" },
+      pages: {
+        offers: {
+          title: "Offres et tarifs — 3geeks",
+          description: "Site Starter dès 300 €, projets web sur mesure, refonte complète et Option Sérénité. Devis gratuit après un appel de 30 min, rien à payer d’avance.",
+          path: "Offres",
+          h1: "Des offres claires, un prix dès que possible.",
+          sub: "Choisissez le format qui correspond à votre projet. Si vous hésitez, un appel gratuit de 30 min suffit pour décider.",
+        },
+        work: {
+          title: "Réalisations — 3geeks",
+          description: "Sites, plateformes SaaS, apps iOS, e-commerce et IA : des projets conçus, développés et lancés par 3geeks, avec un avant/après et les avis clients.",
+          path: "Réalisations",
+          h1: "Ce qu’on a déjà construit.",
+          sub: "Santé, juridique, finance, e-commerce, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.",
+        },
+        team: {
+          title: "Équipe — 3geeks",
+          description: "3geeks est cofondée par Elias Elloumi et Noam Leclapart-Jublot : parcours, certifications, expertises et apporteurs d’affaires.",
+          path: "Équipe",
+          h1: "3geeks, cofondée par Elias et Noam.",
+          sub: "3geeks est cofondée par Elias et Noam. À leurs côtés, un réseau grandissant d’apporteurs d’affaires fait émerger de nouvelles opportunités.",
+        },
+      },
+      whatWeDo: {
+        path: "Ce qu’on fait",
+        title: "Trois métiers, bien faits.",
+        items: [
+          { title: "Sites web", desc: "Site vitrine, refonte ou boutique en ligne, pensés pour vous apporter des contacts.", meta: "Dès 300 €", cta: "Voir les offres" },
+          { title: "Applications & plateformes", desc: "Plateformes web, espaces clients, apps iOS, tableaux de bord et intégrations à vos outils.", meta: "Sur devis", cta: "Voir les offres" },
+          { title: "IA & automatisation", desc: "L’IA branchée sur les outils que vous utilisez déjà : factures, stocks, service client, reporting.", meta: "Audit gratuit", cta: "Découvrir" },
+        ],
+      },
+      howItWorks: {
+        path: "Comment ça marche",
+        title: "Simple, rapide, sans risque.",
+        steps: [
+          { t: "Un appel gratuit de 30 min", d: "Vous nous expliquez votre besoin, on vous envoie un devis clair et gratuit." },
+          { t: "On construit, vite", d: "Petites demandes livrées en 24 à 48 h. Pour un projet plus large, le planning est fixé dès le départ." },
+          { t: "Vous payez une fois satisfait", d: "Rien d’avance. Le code source et le nom de domaine sont à votre nom." },
+        ],
+        more: "Voir notre méthode",
+      },
+      featured: {
+        path: "Réalisations",
+        title: "Quelques projets déjà en ligne.",
+        more: "Voir toutes nos réalisations",
+        items: {
+          jellouli: "Site médical bilingue, refait en 24 h.",
+          "express-divorce": "Plateforme SaaS juridique, en production aux États-Unis.",
+          "two-app": "L’app iOS des couples, notée 5,0 sur l’App Store.",
+        },
+      },
+      footer: { pages: "Le studio" },
     },
     services: {
       path: "Nos offres",
