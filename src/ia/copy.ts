@@ -324,9 +324,9 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         },
         {
           name: 'Assistant 3geeks',
-          title: 'L’assistant IA de ce site, hébergé en France',
-          desc: 'L’assistant en bas à droite répond à partir de notre base de connaissances, sur un modèle qui tourne sur nos propres serveurs. Testez-le : c’est ce qu’on peut déployer sur votre site ou en interne.',
-          tags: ['Modèle hébergé en France', 'RAG', 'Messages non conservés'],
+          title: 'L’assistant IA de ce site',
+          desc: 'L’assistant en bas à droite répond en une seconde à partir de notre base de connaissances, avec un modèle français de Mistral AI et un relais sur nos propres serveurs. Testez-le : c’est ce qu’on peut déployer sur votre site ou en interne.',
+          tags: ['Mistral AI', 'RAG', 'Relais sur nos serveurs'],
         },
         {
           name: 'Green Jardin',
@@ -646,9 +646,9 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         },
         {
           name: '3geeks assistant',
-          title: 'This site’s AI assistant, hosted in France',
-          desc: 'The assistant in the bottom right answers from our knowledge base, on a model running on our own servers. Try it: this is what we can deploy on your website or internally.',
-          tags: ['Model hosted in France', 'RAG', 'Messages not stored'],
+          title: 'This site’s AI assistant',
+          desc: 'The assistant in the bottom right answers in about a second from our knowledge base, with a French model from Mistral AI and a fallback on our own servers. Try it: this is what we can deploy on your website or internally.',
+          tags: ['Mistral AI', 'RAG', 'Fallback on our servers'],
         },
         {
           name: 'Green Jardin',

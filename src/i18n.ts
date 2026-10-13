@@ -309,7 +309,7 @@ export const translations = {
           },
           {
             title: "3. Services we rely on",
-            text: "Calls are booked through Calendly, which processes booking data under its own privacy policy. The site assistant is an AI run on 3geeks’ own servers: your messages are sent to it only to generate the answer, and their content is not stored. Please don’t share sensitive information with it."
+            text: "Calls are booked through Calendly, which processes booking data under its own privacy policy. The site assistant uses an AI model from Mistral AI, a French company, with 3geeks’ own servers as a fallback: your messages are sent to them only to generate the answer, and 3geeks does not store their content. Please don’t share sensitive information with it."
           },
           {
             title: "4. Your rights",
@@ -658,7 +658,7 @@ export const translations = {
           },
           {
             title: "3. Services utilisés",
-            text: "Les appels sont réservés via Calendly, qui traite les données de réservation selon sa propre politique de confidentialité. L’assistant du site est une IA exécutée sur les serveurs de 3geeks : vos messages lui sont transmis uniquement pour générer la réponse, et leur contenu n’est pas conservé. Merci de ne pas y partager d’informations sensibles."
+            text: "Les appels sont réservés via Calendly, qui traite les données de réservation selon sa propre politique de confidentialité. L’assistant du site utilise un modèle d’IA de Mistral AI, société française, avec les serveurs de 3geeks en relais : vos messages leur sont transmis uniquement pour générer la réponse, et 3geeks n’en conserve pas le contenu. Merci de ne pas y partager d’informations sensibles."
           },
           {
             title: "4. Vos droits",

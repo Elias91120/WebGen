@@ -12,7 +12,7 @@ const handleChat = createChatHandler({
   baseUrl: process.env.THREEGEEKS_API_BASE_URL || undefined,
   model: process.env.THREEGEEKS_MODEL || undefined,
   mistralKey,
-  mistralModel: process.env.MISTRAL_MODEL || undefined,
+  mistralModels: process.env.MISTRAL_MODELS ? process.env.MISTRAL_MODELS.split(',').map((m) => m.trim()).filter(Boolean) : undefined,
 });
 
 http

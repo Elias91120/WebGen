@@ -42,7 +42,7 @@ Pas de formulaire : tous les boutons « parler de mon projet » ouvrent le calen
 Le widget (`src/components/AiAgentWidget.tsx`) appelle `/api/chat`, servi par un petit serveur Node (`server/`) qui garde la clé de l’API Hub 3geeks côté serveur : elle n’apparaît jamais dans le JavaScript public.
 
 - **RAG** : `server/knowledge.mjs` = un bloc essentiel toujours envoyé + des fiches thématiques ; `server/chat.mjs` choisit les fiches utiles (BM25) pour chaque question. Le contexte du modèle étant limité, garder les fiches courtes. **Mettre à jour ces fiches quand le site change** (offres, projets, équipe, page IA : fiches `ai-services` et `ai-method`).
-- **Modèles** : Mistral (`mistral-small-latest`) en premier ; s’il refuse, plante ou ne répond pas en 8 s, le Hub prend le relais (`qwen2.5:7b-instruct` via le passthrough Ollama) et Mistral est mis de côté 1 min. Le visiteur ne voit pas la bascule ; le journal indique `provider` et `failures`. `THREEGEEKS_MODEL=gateway` fait passer le Hub par `/v1`.
+- **Modèles** : chaîne `ministral-14b-latest` → `ministral-8b-latest` (API Mistral, offre gratuite : seuls les « ministral » ont un quota, 30 et 188 req/min) → Hub (`qwen2.5:7b-instruct` via le passthrough Ollama). Un modèle qui refuse, plante ou ne répond pas en 8 s passe la main au suivant et est mis de côté 1 min. Le visiteur ne voit pas la bascule ; le journal indique `provider` et `failures`. `THREEGEEKS_MODEL=gateway` fait passer le Hub par `/v1`.
 - **Garde-fous** : limites par IP (nginx + Node) et globale par jour, refus des détournements (prompt injection, code, maths), réponses fixes pour l’adresse et le téléphone, filtre de sortie (fuite des consignes, blocs de code). Le contenu des messages n’est ni journalisé ni stocké.
 - **Prod** : nginx proxifie `/api/chat` vers `server/index.mjs` (lancé par `docker-start.sh`, port 127.0.0.1:8787).
 
@@ -59,8 +59,8 @@ Build : `npm run build` (Docker prod fait `npm ci` puis ce build).
 
 | Variable (Coolify, runtime uniquement) | Rôle |
 | --- | --- |
-| `MISTRAL_API_KEY` | Fournisseur principal de l’assistant (API Mistral, bien plus rapide que le Hub) |
-| `MISTRAL_MODEL` | Optionnel : défaut `mistral-small-latest` |
+| `MISTRAL_API_KEY` | Fournisseur principal de l’assistant (API Mistral, réponse en ~1,5 s contre 10-25 s pour le Hub) |
+| `MISTRAL_MODELS` | Optionnel : liste séparée par des virgules, défaut `ministral-14b-latest,ministral-8b-latest` |
 | `THREEGEEKS_API_KEY` | Token de l’API Hub (api.3geeks.fr) : secours si Mistral échoue |
 | `THREEGEEKS_MODEL` | Optionnel : autre modèle Ollama, ou `gateway` |
 | `THREEGEEKS_API_BASE_URL` | Optionnel : défaut `https://api.3geeks.fr` |

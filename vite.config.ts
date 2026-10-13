@@ -16,7 +16,7 @@ function assistantApi(env: Record<string, string>): Plugin {
         baseUrl: env.THREEGEEKS_API_BASE_URL || undefined,
         model: env.THREEGEEKS_MODEL || undefined,
         mistralKey: env.MISTRAL_API_KEY || '',
-        mistralModel: env.MISTRAL_MODEL || undefined,
+        mistralModels: env.MISTRAL_MODELS ? env.MISTRAL_MODELS.split(',').map((m) => m.trim()).filter(Boolean) : undefined,
       });
       server.middlewares.use('/api/chat', (req, res) => {
         handleChat(req, res);
