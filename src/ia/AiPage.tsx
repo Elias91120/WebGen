@@ -122,7 +122,7 @@ const AiPage: React.FC = () => {
           <a href="/ia" className="flex min-w-0 shrink-0 items-center gap-3" aria-label="3geeks">
             <Logo variant="wordmark" compact glow={false} />
             <span className="hidden rounded-full border border-brand-mint/30 bg-brand-mint/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-brand-mint sm:inline-flex">
-              IA
+              {fr ? 'IA' : 'AI'}
             </span>
           </a>
 

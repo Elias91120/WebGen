@@ -2,6 +2,10 @@ export type Lang = 'en' | 'fr';
 
 export const translations = {
   en: {
+    meta: {
+      title: "3geeks — Websites and digital tools | Made in France",
+      description: "3geeks, a French web studio. Clear, fast and polished websites, apps and digital tools to present your business and bring in leads. Starter website from €300, reply within 24h.",
+    },
     nav: {
       services: "Offers",
       method: "Process",
@@ -15,7 +19,7 @@ export const translations = {
     hero: {
       badge: "Web & digital studio · Made in France",
       titleStart: "Websites and digital tools",
-      titleEnd: "that make people contact you.",
+      titleEnd: "that make people want to contact you.",
       comment: "Start with a focused €300 website or a custom web project. Small requests delivered in 24 to 48 hours, and nothing to pay until you're happy.",
       ctaPrimary: "Book a free call",
       ctaSecondary: "See our offers",
@@ -191,9 +195,9 @@ export const translations = {
     reviews: {
       path: "Client feedback",
       title: "What clients say after delivery.",
-      r1: "Fast, structured and very clear communication. The final platform made our client process much smoother.",
-      r2: "The team translated our constraints into concrete decisions. We saw better traction within weeks.",
-      r3: "Our booking operations became far more reliable and easier to manage day to day."
+      r1: "A responsive team, a very clear process and clean execution. The new website made our customer acquisition much smoother.",
+      r2: "They understood our business quickly and suggested useful choices. We saw real progress.",
+      r3: "The system they set up is robust and simple to run. Our day-to-day is much calmer."
     },
     team: {
       path: "Founding team",
@@ -347,6 +351,10 @@ export const translations = {
     }
   },
   fr: {
+    meta: {
+      title: "3geeks — Création de sites web et outils digitaux | Made in France",
+      description: "3geeks — studio web français. Sites, applications et outils digitaux clairs, rapides et soignés pour présenter votre activité et générer des contacts. Site Starter dès 300 €, réponse sous 24h.",
+    },
     nav: {
       services: "Offres",
       method: "Méthode",
@@ -398,7 +406,7 @@ export const translations = {
       },
       p2: {
         title: "CallKitchen",
-        tag: "Automatisation telephonique restauration",
+        tag: "Automatisation téléphonique pour la restauration",
         desc: "Une landing page concrète pour un assistant téléphonique IA qui aide les restaurants à capter les appels manqués.",
         result1: "Produit expliqué clairement",
         result2: "Appel à l'action direct vers la démo",

@@ -14,8 +14,11 @@ const DOMAINS = [
     titleFr: 'Design produit',
     titleEn: 'Product design',
     descFr: 'Front-end réactif, pages créées dès le premier écran pour convaincre.',
-    descEn: 'Responsive front-end, pages crafted from the first screen to convince.',
-    skills: ['React & Next.js', 'UI/UX interactive', 'Tailwind CSS', 'TypeScript', 'Motion design', 'Swift iOS', 'Orchestration d’agents IA', 'Python & data'],
+    descEn: 'Responsive front-end and pages built to convince from the very first screen.',
+    skills: {
+      fr: ['React & Next.js', 'UI/UX interactive', 'Tailwind CSS', 'TypeScript', 'Motion design', 'Swift iOS', 'Orchestration d’agents IA', 'Python & data'],
+      en: ['React & Next.js', 'Interactive UI/UX', 'Tailwind CSS', 'TypeScript', 'Motion design', 'Swift iOS', 'AI agent orchestration', 'Python & data'],
+    },
   },
   {
     id: 'cloud-ia',
@@ -24,7 +27,10 @@ const DOMAINS = [
     titleEn: 'Cloud & generative AI',
     descFr: 'Infra cloud sécurisée et automatisations IA pour les entreprises.',
     descEn: 'Secure cloud infrastructure and AI automation for businesses.',
-    skills: ['Amazon Web Services', 'CloudFormation', 'IA générative (LLM)', 'Machine learning', 'Docker', 'Coolify & Traefik', 'PostgreSQL & vector DB', 'Sécurité & réseau'],
+    skills: {
+      fr: ['Amazon Web Services', 'CloudFormation', 'IA générative (LLM)', 'Machine learning', 'Docker', 'Coolify & Traefik', 'PostgreSQL & bases vectorielles', 'Sécurité & réseau'],
+      en: ['Amazon Web Services', 'CloudFormation', 'Generative AI (LLM)', 'Machine learning', 'Docker', 'Coolify & Traefik', 'PostgreSQL & vector DB', 'Security & networking'],
+    },
   },
   {
     id: 'business-ops',
@@ -33,7 +39,10 @@ const DOMAINS = [
     titleEn: 'Business strategy',
     descFr: 'Contact direct, décisions claires, sans jargon.',
     descEn: 'Direct contact, clear decisions, no jargon.',
-    skills: ['Cadrage produit', 'Réponse sous 24h', 'Gestion de projet agile', 'Bilingue FR / EN', 'Go-to-market', 'Conformité SaaS', 'Accompagnement sur mesure', 'Résolution de problèmes métier'],
+    skills: {
+      fr: ['Cadrage produit', 'Réponse sous 24h', 'Gestion de projet agile', 'Bilingue FR / EN', 'Go-to-market', 'Conformité SaaS', 'Accompagnement sur mesure', 'Résolution de problèmes métier'],
+      en: ['Product scoping', 'Reply within 24h', 'Agile project management', 'Bilingual FR / EN', 'Go-to-market', 'SaaS compliance', 'Tailored support', 'Business problem solving'],
+    },
   },
 ];
 
@@ -76,7 +85,7 @@ export const SkillsRadar: React.FC<SkillsRadarProps> = ({ lang }) => {
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate-400">{fr ? domain.descFr : domain.descEn}</p>
                   <div className="mt-6 flex flex-wrap gap-2">
-                    {domain.skills.map((skill) => (
+                    {domain.skills[lang].map((skill) => (
                       <span
                         key={skill}
                         className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-slate-300"

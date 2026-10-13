@@ -541,7 +541,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
             { name: 'Delivery notes and receipts', gain: 'Read and checked against the order', level: 'validate' },
             { name: 'Stock alerts and reordering', gain: 'Order suggested before you run out', level: 'auto' },
             { name: 'Shipment tracking', gain: 'Delays detected, customer notified', level: 'auto' },
-            { name: 'Route planning', gain: 'Optimised proposal, the planner adjusts', level: 'assist' },
+            { name: 'Route planning', gain: 'Optimized proposal, the planner adjusts', level: 'assist' },
           ],
         },
         {
@@ -557,9 +557,9 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           name: 'Sales',
           processes: [
             { name: 'Lead qualification', gain: 'Score and priority as soon as a contact arrives', level: 'auto' },
-            { name: 'CRM updates', gain: 'Emails and calls summarised in the customer record', level: 'auto' },
+            { name: 'CRM updates', gain: 'Emails and calls summarized in the customer record', level: 'auto' },
             { name: 'Quotes and proposals', gain: 'Draft generated from the need', level: 'validate' },
-            { name: 'Sales follow-ups', gain: 'Personalised follow-up, ready to send', level: 'validate' },
+            { name: 'Sales follow-ups', gain: 'Personalized follow-up, ready to send', level: 'validate' },
           ],
         },
         {
@@ -576,7 +576,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           processes: [
             { name: 'Weekly reporting', gain: 'Summary sent every Monday morning', level: 'auto' },
             { name: 'Dashboards', gain: 'All your data in one place, up to date', level: 'auto' },
-            { name: 'Long document summaries', gain: 'Contracts and tenders summarised', level: 'validate' },
+            { name: 'Long document summaries', gain: 'Contracts and tenders summarized', level: 'validate' },
             { name: 'Sales and stock forecasts', gain: 'Trends and alerts to help you decide', level: 'assist' },
           ],
         },
@@ -626,7 +626,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         {
           title: 'Scoping & training',
           desc: 'We identify the profitable use cases, set the data privacy rules and train your teams to use AI every day.',
-          bullets: ['Use-case audit and prioritisation', 'Privacy rules and access rights', 'Team training: prompts, good practice'],
+          bullets: ['Use-case audit and prioritization', 'Privacy rules and access rights', 'Team training: prompts, good practice'],
         },
       ],
     },

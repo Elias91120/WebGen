@@ -34,10 +34,11 @@ export interface ProjectItem {
   id: string;
   category: 'client' | 'studio';
   title: Localized<string>;
-  subtitle: string;
+  /** Small line under the cover: a domain, or a localized label. */
+  subtitle: string | Localized<string>;
   badge: Localized<string>;
   description: Localized<string>;
-  tags: string[];
+  tags: Localized<string[]>;
   /** Private projects have no link and never expose a URL or client name. */
   link?: string;
   cover?: string;
@@ -67,7 +68,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Site d’un cabinet de dermatologie à Tunis : expertises détaillées, cas cliniques documentés, visite vidéo du plateau laser et prise de rendez-vous en un clic, en français et en arabe.',
       en: 'Website for a dermatology practice in Tunis: detailed specialties, documented clinical cases, a video tour of the laser suite and one-click booking, in French and Arabic.'
     },
-    tags: ['Bilingue FR / AR', 'Cas cliniques', 'Prise de RDV'],
+    tags: { fr: ['Bilingue FR / AR','Cas cliniques','Prise de RDV'], en: ['Bilingual FR / AR','Clinical cases','Online booking'] },
     link: 'https://www.amel-jellouli-elloumi.com/',
     cover: jelloulCover,
     caseStudy: {
@@ -96,7 +97,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Plateforme SaaS en production aux États-Unis : un questionnaire guidé génère les formulaires de divorce propres à chaque État, avec sécurité des données et conformité multi-états.',
       en: 'Live SaaS platform in the United States: a guided questionnaire generates state-specific divorce forms, with data security and multi-state compliance.'
     },
-    tags: ['Next.js', 'Legal tech', '50 États'],
+    tags: { fr: ['Next.js','Legal tech','50 États'], en: ['Next.js','Legal tech','50 states'] },
     link: 'https://www.expressdivorceusa.co',
     cover: expressDivorceCover,
     caseStudy: {
@@ -125,7 +126,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Plateforme privée pour faire signer des accords aux États-Unis de façon conforme et professionnelle : liens de signature par rôle, suivi des statuts et PDF consolidé mis à jour à chaque signature.',
       en: 'Private platform to get agreements signed in the US in a compliant, professional way: per-role signing links, status tracking and a consolidated PDF updated with every signature.'
     },
-    tags: ['E-signature', 'PDF dynamique', 'Dashboard admin'],
+    tags: { fr: ['E-signature','PDF dynamique','Dashboard admin'], en: ['E-signature','Dynamic PDF','Admin dashboard'] },
     mockup: 'esign'
   },
   {
@@ -138,7 +139,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Site vitrine et parcours d’inscription pour une agence qui relie créateurs UGC, clippers et marques. Conçu et développé par 3geeks — le site, pas le casting.',
       en: 'Marketing site and sign-up flows for an agency connecting UGC creators, clippers and brands. Designed and built by 3geeks — the website, not the roster.'
     },
-    tags: ['React', 'Product site', 'Marketplace'],
+    tags: { fr: ['React','Site produit','Marketplace'], en: ['React','Product site','Marketplace'] },
     link: 'https://www.vipagence.net/',
     cover: vipagenceCover
   },
@@ -146,13 +147,13 @@ export const PROJECTS_DATA: ProjectItem[] = [
     id: 'two-app',
     category: 'client',
     title: { fr: 'Two', en: 'Two' },
-    subtitle: 'App Store · 5,0 ★',
+    subtitle: { fr: 'App Store · 5,0 ★', en: 'App Store · 5.0 ★' },
     badge: { fr: 'Mobile · App iOS', en: 'Mobile · iOS app' },
     description: {
       fr: 'L’app des couples, publiée sur l’App Store et notée 5,0 : souvenirs sur une carte, humeur du jour, calendrier partagé et CinéMatch pour choisir un film à deux.',
       en: 'The app for couples, live on the App Store and rated 5.0: memories on a map, daily mood, a shared calendar and CinéMatch to pick a movie together.'
     },
-    tags: ['iOS', 'Swift', 'App Store'],
+    tags: { fr: ['iOS','Swift','App Store'], en: ['iOS','Swift','App Store'] },
     link: 'https://apps.apple.com/fr/app/two/id6758867716',
     cover: twoCover,
     caseStudy: {
@@ -181,7 +182,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Vitrine d’un courtier en gestion de patrimoine à Boulogne-Billancourt : direction artistique sobre et haut de gamme, chiffres sourcés (AMF, Banque de France) et prise de contact directe.',
       en: 'Showcase site for a wealth management broker in Boulogne-Billancourt: understated premium art direction, figures sourced from the AMF and Banque de France, and direct contact.'
     },
-    tags: ['Direction artistique', 'Finance', 'Vitrine'],
+    tags: { fr: ['Direction artistique','Finance','Vitrine'], en: ['Art direction','Finance','Showcase site'] },
     link: 'https://mathis-mourot.vercel.app/',
     cover: aurenzaCover
   },
@@ -195,7 +196,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Boutique CBD en ligne et en magasin (Palaiseau) : vitrine Shopify avec Ino Digital, menu TV dynamique en temps réel, caisse POS avec balance et fidélité 14 %.',
       en: 'CBD shop online and in-store (Palaiseau): Shopify storefront with Ino Digital, real-time TV menu, gram-scale POS and loyalty sync.'
     },
-    tags: ['Shopify', 'POS', 'Firebase'],
+    tags: { fr: ['Shopify','Caisse POS','Firebase'], en: ['Shopify','POS','Firebase'] },
     link: 'https://green-jardin.fr',
     cover: greenJardinCover,
     caseStudy: {
@@ -224,7 +225,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Une mini-app de commande intégrée à Telegram, avec accès vérifié côté serveur, et un espace gérant installable sur iPhone pour suivre les commandes et modérer les membres en temps réel.',
       en: 'An ordering mini-app built into Telegram with server-side verified access, plus a manager space installable on iPhone to follow orders and moderate members in real time.'
     },
-    tags: ['Telegram Mini App', 'PWA', 'Docker'],
+    tags: { fr: ['Mini-app Telegram','PWA','Docker'], en: ['Telegram Mini App','PWA','Docker'] },
     mockup: 'telegram'
   },
   {
@@ -237,7 +238,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Landing page et réception téléphonique IA 24/7 pour restaurants : prise de commandes, réservations, FAQ menus, notifications SMS et tableau de bord cuisine.',
       en: 'Landing page for a 24/7 AI phone reception for restaurants: orders, bookings, menu FAQ, SMS notifications and a kitchen dashboard.'
     },
-    tags: ['AI Voice Agent', 'SaaS Landing', 'Restauration'],
+    tags: { fr: ['Agent vocal IA','Landing SaaS','Restauration'], en: ['AI voice agent','SaaS landing','Restaurants'] },
     link: 'https://call-kitchen-landing.vercel.app',
     cover: callKitchenCover
   },
@@ -251,7 +252,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'On héberge et opère nos produits sur une infra studio. Les outils internes restent internes — pas de détail public.',
       en: 'We host and operate our products on studio infrastructure. Internal tools stay internal — no public detail.'
     },
-    tags: ['Hosting', 'CI/CD', 'Private'],
+    tags: { fr: ['Hébergement','CI/CD','Privé'], en: ['Hosting','CI/CD','Private'] },
     useStudioMark: true
   },
   {
@@ -264,7 +265,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Outil beta qui transforme une idée floue en un plan d’exécution structuré par étapes et prompts contextualisés à utiliser dans votre IDE.',
       en: 'Beta tool that turns a short brief into phased steps and copy-paste prompts, orchestrated by specialized AI agents.'
     },
-    tags: ['Multi-agent', 'AI planning', 'Beta'],
+    tags: { fr: ['Multi-agent','Planification IA','Bêta'], en: ['Multi-agent','AI planning','Beta'] },
     link: 'https://prompt-hub.3geeks.fr/',
     image: promptHubImg
   },
@@ -273,12 +274,12 @@ export const PROJECTS_DATA: ProjectItem[] = [
     category: 'studio',
     title: { fr: 'PromptOptim', en: 'PromptOptim' },
     subtitle: 'prompt-optim.3geeks.fr',
-    badge: { fr: 'Green IT & sobriété numérique', en: 'Green IT & digital sobriety' },
+    badge: { fr: 'Green IT & sobriété numérique', en: 'Green IT & low-impact computing' },
     description: {
       fr: 'Optimiseur de prompts IA qui réduit la consommation de tokens, estime l’impact CO2 par requête et encourage une utilisation sobre et souveraine de l’IA.',
-      en: 'AI prompt optimization tool designed to reduce token usage, estimate CO2 impact and encourage sober AI usage.'
+      en: 'AI prompt optimization tool designed to reduce token usage, estimate the CO2 impact of each request and encourage frugal AI use.'
     },
-    tags: ['Green IT', 'Sobriété IA', 'Open tool'],
+    tags: { fr: ['Green IT','Sobriété IA','Outil ouvert'], en: ['Green IT','Frugal AI','Open tool'] },
     link: 'https://prompt-optim.3geeks.fr/',
     image: promptOptimImg
   },
@@ -292,7 +293,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       fr: 'Conçu pour une promo d’ingénieurs qui préparait un partiel de Python sur table : fiches de cours, exercices générés par IA à l’infini, détecteur de pièges et simulateur d’examen noté sur 20.',
       en: 'Built for an engineering class preparing a pen-and-paper Python exam: course sheets, endless AI-generated exercises, a trap detector and an exam simulator graded out of 20.'
     },
-    tags: ['IA générative', 'WebAssembly', 'Open source'],
+    tags: { fr: ['IA générative','WebAssembly','Open source'], en: ['Generative AI','WebAssembly','Open source'] },
     link: 'https://efrei-skill-hub.vercel.app/',
     icon: GraduationCap
   }
@@ -439,7 +440,7 @@ const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase
         <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{project.description[lang]}</p>
 
         <div className="mt-5 flex flex-wrap gap-1.5">
-          {project.tags.map((tag) => (
+          {project.tags[lang].map((tag) => (
             <span key={tag} className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
               {tag}
             </span>
@@ -449,7 +450,7 @@ const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase
         <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/[0.07] pt-4 text-xs">
           {project.link ? (
             <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex min-w-0 items-center gap-1 text-slate-400 transition-colors hover:text-white">
-              <span className="truncate">{project.subtitle}</span> <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{typeof project.subtitle === 'string' ? project.subtitle : project.subtitle[lang]}</span> <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
             </a>
           ) : (
             <span className="inline-flex items-center gap-1.5 text-slate-500">
@@ -617,7 +618,7 @@ const LabCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ projec
       <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{project.description[lang]}</p>
 
       <div className="mt-5 flex flex-wrap gap-1.5">
-        {project.tags.map((tag) => (
+        {project.tags[lang].map((tag) => (
           <span key={tag} className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
             {tag}
           </span>

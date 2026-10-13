@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 .env
 
+
+# Full-size source photos (kept locally, the site uses the optimised copies)
+src/assets/images/originals/

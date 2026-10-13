@@ -124,7 +124,7 @@ export const CHUNKS = [
     id: 'jellouli',
     title: 'Réalisation : Cabinet Dr Amel Elloumi Jellouli (santé)',
     keywords: ['jellouli', 'amel', 'elloumi', 'dermatologie', 'dermatologue', 'medecin', 'sante', 'medical', 'cabinet', 'clinique', 'tunis', 'tunisie', 'arabe', 'bilingue', 'laser', 'rendez-vous', 'rdv', 'docteur', 'health', 'doctor'],
-    text: 'Cabinet Dr Amel Elloumi Jellouli (santé, Tunis) : site d’un cabinet de dermatologie, bilingue français et arabe. Livré : pôles d’expertise détaillés (dermatologie, lasers, esthétique, chirurgie), 15 cas cliniques documentés et filtrables, visite vidéo du cabinet et du plateau laser, rendez-vous en un clic (appel, WhatsApp, e-mail, itinéraire). Résultat : un site crédible pour les patients, clair sur chaque soin et pensé d’abord pour le mobile. En ligne : https://www.amel-jellouli-elloumi.com/',
+    text: 'Cabinet Dr Amel Elloumi Jellouli (santé, Tunis) : site d’un cabinet de dermatologie, bilingue français et arabe. Livré : pôles d’expertise détaillés (dermatologie, lasers, esthétique, chirurgie), 15 cas cliniques documentés et filtrables, visite vidéo du cabinet et du plateau laser, rendez-vous en un clic (appel, WhatsApp, e-mail, itinéraire). Le site a été refait en 24 h. Résultat : un site crédible pour les patients, clair sur chaque soin et pensé d’abord pour le mobile. En ligne : https://www.amel-jellouli-elloumi.com/',
   },
   {
     id: 'express-divorce',

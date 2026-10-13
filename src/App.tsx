@@ -59,6 +59,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     persistLang(lang);
+    // index.html ships the French title and description; follow the chosen language.
+    document.title = translations[lang].meta.title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', translations[lang].meta.description);
   }, [lang]);
 
   useEffect(() => {
