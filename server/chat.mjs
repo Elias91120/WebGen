@@ -250,13 +250,18 @@ export async function* streamCompletion({ baseUrl, apiKey, model, messages, sign
     return;
   }
   // OpenAI-compatible gateway: model and limits follow the token's mode.
-  const res = await fetch(`${baseUrl}/v1/chat/completions`, {
+  yield* streamChatCompletions(`${baseUrl}/v1/chat/completions`, apiKey, { messages, stream: true, max_tokens: LIMITS.maxTokens, temperature }, signal, 'hub');
+}
+
+/** Streams an OpenAI-style /chat/completions endpoint (server-sent events). */
+async function* streamChatCompletions(url, apiKey, body, signal, label) {
+  const res = await fetch(url, {
     method: 'POST',
-    headers,
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     signal,
-    body: JSON.stringify({ messages, stream: true, max_tokens: LIMITS.maxTokens, temperature }),
+    body: JSON.stringify(body),
   });
-  if (!res.ok || !res.body) throw new Error(`hub ${res.status}`);
+  if (!res.ok || !res.body) throw new Error(`${label} ${res.status}`);
   for await (const line of readLines(res.body)) {
     if (!line.startsWith('data:')) continue;
     const payload = line.slice(5).trim();
@@ -264,6 +269,19 @@ export async function* streamCompletion({ baseUrl, apiKey, model, messages, sign
     const delta = JSON.parse(payload).choices?.[0]?.delta?.content;
     if (delta) yield delta;
   }
+}
+
+// --------------------------------------------------------------------------- //
+//  Upstream (Mistral API): primary provider, much faster than the hub
+// --------------------------------------------------------------------------- //
+export function streamMistral({ apiKey, model = 'mistral-small-latest', messages, signal, temperature = 0.2 }) {
+  return streamChatCompletions(
+    'https://api.mistral.ai/v1/chat/completions',
+    apiKey,
+    { model, messages, stream: true, max_tokens: LIMITS.maxTokens, temperature },
+    signal,
+    'mistral',
+  );
 }
 
 // --------------------------------------------------------------------------- //
@@ -329,9 +347,20 @@ function sendJson(res, status, payload) {
 
 const sendEvent = (res, event, data) => res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
 
-// qwen2.5 7B answers far better in French than the hub's default small model.
+// Providers, in order: Mistral (fast) when MISTRAL_API_KEY is set, then the 3geeks API Hub.
+// qwen2.5 7B answers far better in French than the hub's default small model;
 // THREEGEEKS_MODEL=gateway uses the token's mode on /v1 instead.
-export function createChatHandler({ apiKey, baseUrl = 'https://api.3geeks.fr', model = 'qwen2.5:7b-instruct', log = console.log }) {
+const MISTRAL_FIRST_TOKEN_MS = 8_000;
+const MISTRAL_COOLDOWN_MS = 60_000; // after a failure, go straight to the hub for a minute
+
+export function createChatHandler({
+  apiKey,
+  baseUrl = 'https://api.3geeks.fr',
+  model = 'qwen2.5:7b-instruct',
+  mistralKey = '',
+  mistralModel = 'mistral-small-latest',
+  log = console.log,
+}) {
   const perClient = new RateLimiter([
     { windowMs: 60_000, max: 8 },
     { windowMs: 60 * 60_000, max: 40 },
@@ -342,11 +371,34 @@ export function createChatHandler({ apiKey, baseUrl = 'https://api.3geeks.fr', m
     { windowMs: 24 * 60 * 60_000, max: 3000 },
   ]);
 
-  // Loads the model while the visitor types, so the first answer does not wait for it.
+  const providers = [];
+  if (mistralKey) {
+    providers.push({
+      name: 'mistral',
+      firstTokenMs: MISTRAL_FIRST_TOKEN_MS,
+      cooldownUntil: 0,
+      stream: (opts) => streamMistral({ apiKey: mistralKey, model: mistralModel, ...opts }),
+    });
+  }
+  if (apiKey) {
+    providers.push({
+      name: 'hub',
+      firstTokenMs: LIMITS.firstTokenMs,
+      cooldownUntil: 0,
+      stream: (opts) => streamCompletion({ baseUrl, apiKey, model, ...opts }),
+    });
+  }
+  // A provider in cooldown is skipped, unless it is the only one left.
+  const available = () => {
+    const ready = providers.filter((p) => p.cooldownUntil <= Date.now());
+    return ready.length ? ready : providers.slice(-1);
+  };
+
+  // Loads the hub model while the visitor types, when the hub is the one that will answer.
   let lastWarmup = 0;
   const warmUp = (res) => {
     res.writeHead(204).end();
-    if (!apiKey || model === 'gateway' || Date.now() - lastWarmup < 4 * 60_000) return;
+    if (available()[0]?.name !== 'hub' || model === 'gateway' || Date.now() - lastWarmup < 4 * 60_000) return;
     lastWarmup = Date.now();
     fetch(`${baseUrl}/api/ollama/generate`, {
       method: 'POST',
@@ -379,7 +431,7 @@ export function createChatHandler({ apiKey, baseUrl = 'https://api.3geeks.fr', m
       log(JSON.stringify({ at: new Date().toISOString(), outcome: 'rate_limited' }));
       return sendJson(res, 429, { error: 'rate_limited', message: TEXT[lang].rateLimited });
     }
-    if (!apiKey) return sendJson(res, 503, { error: 'not_configured', message: TEXT[lang].fallback });
+    if (!providers.length) return sendJson(res, 503, { error: 'not_configured', message: TEXT[lang].fallback });
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream; charset=utf-8',
@@ -397,51 +449,90 @@ export function createChatHandler({ apiKey, baseUrl = 'https://api.3geeks.fr', m
     }
 
     const { messages, chunks } = buildMessages(conversation, lang);
-    const controller = new AbortController();
-    res.on('close', () => controller.abort());
-    let timer = setTimeout(() => controller.abort(), LIMITS.firstTokenMs);
+    const visitor = new AbortController(); // aborted when the visitor leaves
+    res.on('close', () => visitor.abort());
+
+    /** Streams one provider; the attempt is aborted on timeout or when the visitor leaves. */
+    async function* run(provider, msgs, temperature) {
+      const attempt = new AbortController();
+      const stop = () => attempt.abort();
+      visitor.signal.addEventListener('abort', stop);
+      let timer = setTimeout(stop, provider.firstTokenMs);
+      let first = true;
+      try {
+        for await (const delta of provider.stream({ messages: msgs, signal: attempt.signal, temperature })) {
+          if (first) {
+            first = false;
+            clearTimeout(timer);
+            timer = setTimeout(stop, LIMITS.totalMs);
+          }
+          yield delta;
+        }
+      } finally {
+        clearTimeout(timer);
+        visitor.signal.removeEventListener('abort', stop);
+        attempt.abort();
+      }
+    }
 
     let raw = '';
     let sent = 0;
     let outcome = 'answered';
     let drifted = false;
+    let used = null;
+    const failures = [];
     try {
-      for await (const delta of streamCompletion({ baseUrl, apiKey, model, messages, signal: controller.signal })) {
-        if (!raw) {
-          clearTimeout(timer);
-          timer = setTimeout(() => controller.abort(), LIMITS.totalMs);
+      for (const provider of available()) {
+        raw = '';
+        drifted = false;
+        try {
+          for await (const delta of run(provider, messages, 0.2)) {
+            raw += delta;
+            const visible = visibleText(raw);
+            if (LEAK.test(visible)) {
+              sendEvent(res, 'replace', { t: TEXT[lang].refusal });
+              outcome = 'leak_blocked';
+              break;
+            }
+            if (CODE.test(visible)) {
+              sendEvent(res, 'replace', { t: TEXT[lang].code });
+              outcome = 'code_blocked';
+              break;
+            }
+            if (FOREIGN_SCRIPT.test(visible)) {
+              drifted = true;
+              break;
+            }
+            if (visible.length > sent) {
+              sendEvent(res, 'delta', { t: visible.slice(sent) });
+              sent = visible.length;
+            }
+            if (visible.length > LIMITS.answerChars) {
+              outcome = 'truncated';
+              break;
+            }
+          }
+        } catch (err) {
+          // Visitor gone, or part of an answer already shown: no switching provider.
+          if (visitor.signal.aborted || sent) throw err;
+          failures.push(`${provider.name}: ${String(err.message || err).slice(0, 80)}`);
+          if (provider.name === 'mistral') provider.cooldownUntil = Date.now() + MISTRAL_COOLDOWN_MS;
+          continue;
         }
-        raw += delta;
-        const visible = visibleText(raw);
-        if (LEAK.test(visible)) {
-          sendEvent(res, 'replace', { t: TEXT[lang].refusal });
-          outcome = 'leak_blocked';
-          break;
+        if (!sent && !drifted && outcome === 'answered' && !visibleText(raw).trim()) {
+          failures.push(`${provider.name}: empty`);
+          continue;
         }
-        if (CODE.test(visible)) {
-          sendEvent(res, 'replace', { t: TEXT[lang].code });
-          outcome = 'code_blocked';
-          break;
-        }
-        if (FOREIGN_SCRIPT.test(visible)) {
-          drifted = true;
-          break;
-        }
-        if (visible.length > sent) {
-          sendEvent(res, 'delta', { t: visible.slice(sent) });
-          sent = visible.length;
-        }
-        if (visible.length > LIMITS.answerChars) {
-          outcome = 'truncated';
-          break;
-        }
+        used = provider;
+        break;
       }
-      if (drifted) {
+
+      if (drifted && used) {
         // One silent retry, stricter on language; the visitor only sees the clean answer.
         const [system, ...rest] = messages;
         const retryMessages = [{ ...system, content: `${system.content}\n\n${LANGUAGE_REMINDER[lang]}` }, ...rest];
         let retry = '';
-        for await (const delta of streamCompletion({ baseUrl, apiKey, model, messages: retryMessages, signal: controller.signal, temperature: 0.6 })) {
+        for await (const delta of run(used, retryMessages, 0.6)) {
           retry += delta;
           if (retry.length > LIMITS.answerChars || FOREIGN_SCRIPT.test(retry)) break;
         }
@@ -455,19 +546,30 @@ export function createChatHandler({ apiKey, baseUrl = 'https://api.3geeks.fr', m
         }
         sent = 1;
       }
-      if (!sent && outcome === 'answered') {
+      if (!used) outcome = 'all_failed';
+      if (!sent && (outcome === 'answered' || outcome === 'all_failed')) {
         sendEvent(res, 'replace', { t: TEXT[lang].fallback });
-        outcome = 'empty';
+        if (outcome === 'answered') outcome = 'empty';
       }
       sendEvent(res, 'done', {});
     } catch (err) {
-      outcome = controller.signal.aborted && res.destroyed ? 'client_left' : `error: ${String(err.message || err).slice(0, 120)}`;
+      outcome = visitor.signal.aborted && res.destroyed ? 'client_left' : `error: ${String(err.message || err).slice(0, 120)}`;
       if (!res.destroyed) sendEvent(res, 'error', { t: TEXT[lang].fallback });
     } finally {
-      clearTimeout(timer);
-      controller.abort();
+      visitor.abort();
       if (!res.writableEnded) res.end();
-      log(JSON.stringify({ at: new Date().toISOString(), outcome, lang, chunks: chunks.map((c) => c.id), chars: raw.length, ms: Date.now() - started }));
+      log(
+        JSON.stringify({
+          at: new Date().toISOString(),
+          outcome,
+          provider: used?.name ?? null,
+          failures: failures.length ? failures : undefined,
+          lang,
+          chunks: chunks.map((c) => c.id),
+          chars: raw.length,
+          ms: Date.now() - started,
+        }),
+      );
     }
   };
 }
