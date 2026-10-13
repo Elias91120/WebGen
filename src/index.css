@@ -290,25 +290,51 @@ body {
   animation-delay: var(--rise-delay, 0ms);
 }
 
-/* Page IA : schéma d'intégration du hero (outils → couche IA → résultats) */
-@keyframes ia-chip-pulse {
-  0%, 100% { border-color: rgba(255, 255, 255, 0.1); box-shadow: none; }
-  50% { border-color: rgba(10, 239, 187, 0.55); box-shadow: 0 0 22px -6px rgba(10, 239, 187, 0.6); }
+/* Page IA : schéma animé du hero (données → IA → tâches automatiques) */
+@keyframes ia-ring {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.55); opacity: 0; }
 }
-.ia-chip {
-  animation: ia-chip-pulse 2.8s ease-in-out infinite;
-  animation-delay: var(--chip-delay, 0s);
+.ia-ring { animation: ia-ring 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+
+@keyframes ia-spin { to { transform: rotate(360deg); } }
+.ia-spin-slow { animation: ia-spin 6s linear infinite; }
+
+/* Convoyeur : chaque carte traverse la largeur et ralentit en passant la ligne de l'IA.
+   --card-w est défini sur le convoyeur (plus large sur mobile). */
+@keyframes ia-travel {
+  0% { left: calc(-1 * var(--card-w) - 3%); }
+  42% { left: calc(50% - var(--card-w) / 2 - 8%); }
+  58% { left: calc(50% - var(--card-w) / 2 + 8%); }
+  100% { left: 103%; }
 }
-@keyframes ia-flow {
-  from { background-position: 0 0; }
-  to { background-position: 24px 0; }
+.ia-travel { animation-name: ia-travel; animation-timing-function: linear; animation-iteration-count: infinite; }
+
+/* Bords du convoyeur en fondu */
+.ia-conveyor {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
 }
-.ia-flow {
-  display: block;
-  background-image: linear-gradient(90deg, rgba(10, 239, 187, 0) 0, rgba(10, 239, 187, 0.9) 50%, rgba(10, 239, 187, 0) 100%);
-  background-size: 24px 1px;
-  animation: ia-flow 1.2s linear infinite;
+
+/* Onglets défilants sur mobile : le bord droit s'estompe pour montrer qu'il y a une suite. */
+@media (max-width: 1023px) {
+  .ia-scroll-fade {
+    -webkit-mask-image: linear-gradient(to right, #000 85%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 85%, transparent 100%);
+    scrollbar-width: none;
+  }
+  .ia-scroll-fade::-webkit-scrollbar { display: none; }
 }
+
+@keyframes ia-beam-spark {
+  0% { top: -10%; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+.ia-beam-spark { animation: ia-beam-spark 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+
+.ia-paused .ia-ring, .ia-paused .ia-spin-slow, .ia-paused .ia-travel, .ia-paused .ia-beam-spark { animation-play-state: paused; }
 
 @keyframes scroll-cue {
   0%, 100% { transform: translateY(0); opacity: 0.4; }
@@ -321,5 +347,5 @@ body {
   .reveal { opacity: 1; transform: none; transition: none; }
   .hero-rise { opacity: 1; animation: none; }
   .scroll-cue { animation: none; }
-  .ia-chip, .ia-flow { animation: none; }
+  .ia-ring, .ia-spin-slow, .ia-travel, .ia-beam-spark { animation: none; }
 }

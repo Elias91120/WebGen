@@ -1,10 +1,22 @@
 // Texts of the AI & automation page (3geeks.fr/ia), aimed at companies that already have
 // a website and software, and want AI and automation inside the tools they use.
-// Keep server/knowledge.mjs (chunks `ai-services`, `ai-data`) in sync with this file.
+// Keep server/knowledge.mjs (chunks `ai-services`, `ai-method`, `ai-processes`) in sync with this file.
+
+export type AutomationLevel = 'auto' | 'validate' | 'assist';
+
+export interface DemoScenario {
+  tab: string;
+  trigger: { kind: 'email' | 'photo' | 'message' | 'schedule'; line1: string; line2: string; attachment?: string };
+  steps: string[];
+  fields: Array<{ k: string; v: string; status?: 'ok' | 'warn' }>;
+  result: string;
+  before: string;
+  after: string;
+}
 
 export interface AiCopy {
   meta: { title: string; description: string };
-  nav: { services: string; useCases: string; proof: string; method: string; cta: string; mainSite: string };
+  nav: { demo: string; explorer: string; services: string; proof: string; method: string; cta: string; mainSite: string };
   hero: {
     badge: string;
     titleStart: string;
@@ -13,21 +25,43 @@ export interface AiCopy {
     ctaPrimary: string;
     ctaSecondary: string;
     trust: Array<{ k: string; v: string }>;
-    diagram: { tools: string[]; core: string; coreSub: string; outcomes: string[] };
+    diagram: {
+      inLabel: string;
+      outLabel: string;
+      core: string;
+      coreSteps: string[];
+      caption: string;
+      /** Raw item on the left of the scan line, finished task on the right. */
+      items: Array<{ raw: string; rawSub: string; done: string; doneSub: string; tone?: 'warn' }>;
+    };
+  };
+  demo: {
+    path: string;
+    title: string;
+    subtitle: string;
+    badge: string;
+    incoming: string;
+    extracted: string;
+    pipeline: string;
+    before: string;
+    after: string;
+    replay: string;
+    scenarios: DemoScenario[];
+  };
+  explorer: {
+    path: string;
+    title: string;
+    subtitle: string;
+    levels: Record<AutomationLevel, { label: string; desc: string }>;
+    departments: Array<{ name: string; processes: Array<{ name: string; gain: string; level: AutomationLevel }> }>;
+    cta: string;
+    limits: { title: string; subtitle: string; items: Array<{ t: string; d: string }> };
   };
   services: {
     path: string;
     title: string;
     subtitle: string;
     items: Array<{ title: string; desc: string; bullets: string[] }>;
-  };
-  useCases: {
-    path: string;
-    title: string;
-    subtitle: string;
-    before: string;
-    after: string;
-    items: Array<{ sector: string; before: string; after: string }>;
   };
   proof: {
     path: string;
@@ -52,8 +86,9 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         'Intégrez l’IA dans vos logiciels existants (ERP, CRM, site, logistique) : agents IA, automatisation des opérations, traitement de documents, applications associées. Audit gratuit de 30 min, rien à payer d’avance.',
     },
     nav: {
+      demo: 'Démo',
+      explorer: 'Vos process',
       services: 'Services',
-      useCases: 'Cas d’usage',
       proof: 'Réalisations',
       method: 'Méthode',
       cta: 'Réserver un audit gratuit',
@@ -74,10 +109,166 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         { k: 'AWS', v: 'équipe certifiée cloud & machine learning' },
       ],
       diagram: {
-        tools: ['ERP / logiciel métier', 'CRM & e-mails', 'Site & e-commerce', 'Logistique & stocks'],
-        core: 'Couche IA 3geeks',
-        coreSub: 'agents · automatisations · données',
-        outcomes: ['Réponses clients 24h/24', 'Documents traités automatiquement', 'Alertes et tableaux de bord', 'Équipes libérées des ressaisies'],
+        inLabel: 'Ce qui arrive',
+        outLabel: 'Déjà fait',
+        core: 'IA 3geeks',
+        coreSteps: ['Lit', 'Comprend', 'Agit'],
+        caption: 'Vos e-mails, documents et données entrent. Les tâches sortent faites.',
+        items: [
+          { raw: 'Facture F-2481', rawSub: 'PDF reçu par e-mail', done: 'Saisie dans l’ERP', doneSub: '1 248 € · conforme' },
+          { raw: 'Photo BL-0932', rawSub: 'prise par le chauffeur', done: '2 colis manquants', doneSub: 'Responsable prévenu', tone: 'warn' },
+          { raw: 'Message client', rawSub: '« Où est mon colis ? »', done: 'Client répondu', doneSub: 'Livré jeudi' },
+          { raw: 'ventes.xlsx', rawSub: 'lundi 8 h 00', done: 'Rapport envoyé', doneSub: '3 points d’attention' },
+          { raw: 'Appel manqué', rawSub: 'samedi 21 h 40', done: 'Réservation prise', doneSub: 'SMS envoyé' },
+          { raw: 'Commande #10611', rawSub: 'depuis le site', done: 'Stock à jour', doneSub: 'Réassort proposé' },
+        ],
+      },
+    },
+    demo: {
+      path: 'Démo',
+      title: 'Regardez un process s’automatiser.',
+      subtitle: 'Un document arrive, l’IA le lit, le compare à vos outils et fait le travail. Vous gardez la main sur ce qui compte.',
+      badge: 'Exemple illustratif',
+      incoming: 'Ce qui arrive',
+      extracted: 'Ce que l’IA a compris',
+      pipeline: 'Ce qui se passe, tout seul',
+      before: 'Avant',
+      after: 'Avec l’IA',
+      replay: 'Rejouer',
+      scenarios: [
+        {
+          tab: 'Facture fournisseur',
+          trigger: { kind: 'email', line1: 'factures@transports-exemple.fr', line2: 'Facture F-2481 · octobre', attachment: 'F-2481.pdf' },
+          steps: ['Facture reçue par e-mail', 'Lecture du PDF par l’IA', 'Rapprochement avec la commande dans votre ERP', 'Écriture préparée, validée en 1 clic'],
+          fields: [
+            { k: 'Fournisseur', v: 'Transports Exemple' },
+            { k: 'N° de facture', v: 'F-2481' },
+            { k: 'Montant TTC', v: '1 248,00 €' },
+            { k: 'Commande liée', v: 'PO-4471 · conforme', status: 'ok' },
+          ],
+          result: 'Facture enregistrée dans l’ERP, la comptabilité est prévenue.',
+          before: 'Ressaisie à la main',
+          after: 'Validée en 1 clic',
+        },
+        {
+          tab: 'Bon de livraison',
+          trigger: { kind: 'photo', line1: 'Photo prise par le chauffeur', line2: 'BL-0932 · 14 colis annoncés' },
+          steps: ['Photo du bon envoyée depuis le téléphone', 'Lecture des références et des quantités', 'Comparaison avec la commande', 'Écart signalé, stock mis à jour'],
+          fields: [
+            { k: 'Bon de livraison', v: 'BL-0932' },
+            { k: 'Destination', v: 'Entrepôt Nord' },
+            { k: 'Colis reçus', v: '12 / 14', status: 'warn' },
+            { k: 'Stock', v: 'Mis à jour', status: 'ok' },
+          ],
+          result: 'Alerte envoyée au responsable : 2 colis manquants.',
+          before: 'Écart découvert des jours plus tard',
+          after: 'Écart détecté à la livraison',
+        },
+        {
+          tab: 'Question client',
+          trigger: { kind: 'message', line1: 'Message reçu à 23 h 12', line2: '« Bonjour, où en est ma commande 10582 ? »' },
+          steps: ['Question reçue sur le site, par e-mail ou au téléphone', 'Client et commande identifiés', 'Statut lu dans votre outil logistique', 'Réponse précise envoyée au client'],
+          fields: [
+            { k: 'Client', v: 'Mme Durand' },
+            { k: 'Commande', v: '#10582' },
+            { k: 'Statut', v: 'Expédiée', status: 'ok' },
+            { k: 'Livraison prévue', v: 'Jeudi' },
+          ],
+          result: 'Le client a sa réponse tout de suite, même la nuit.',
+          before: 'Réponse le lendemain',
+          after: 'Réponse immédiate, 24h/24',
+        },
+        {
+          tab: 'Reporting',
+          trigger: { kind: 'schedule', line1: 'Chaque lundi · 8 h 00', line2: 'ERP · CRM · fichiers Excel' },
+          steps: ['Déclenchement automatique le lundi matin', 'Collecte des chiffres dans tous vos outils', 'Calcul des indicateurs et des écarts', 'Synthèse envoyée à la direction'],
+          fields: [
+            { k: 'CA de la semaine', v: '84 300 €' },
+            { k: 'Commandes', v: '312' },
+            { k: 'Retards', v: '3', status: 'warn' },
+            { k: 'Stock critique', v: '2 références', status: 'warn' },
+          ],
+          result: 'Le rapport arrive dans votre boîte, avec les points d’attention.',
+          before: 'Une demi-journée sur Excel',
+          after: 'Prêt avant le café',
+        },
+      ],
+    },
+    explorer: {
+      path: 'Vos process',
+      title: 'Qu’est-ce qu’on peut automatiser chez vous ?',
+      subtitle: 'Choisissez un service de votre entreprise. Pour chaque tâche, on vous montre honnêtement ce que l’IA peut faire seule, et là où votre équipe garde la décision.',
+      levels: {
+        auto: { label: 'Automatique', desc: 'La tâche se fait toute seule.' },
+        validate: { label: 'Vous validez', desc: 'L’IA prépare, vous validez en 1 clic.' },
+        assist: { label: 'L’IA assiste', desc: 'L’IA prépare le dossier, l’humain décide.' },
+      },
+      departments: [
+        {
+          name: 'Administratif & compta',
+          processes: [
+            { name: 'Saisie des factures fournisseurs', gain: 'Lues et pré-saisies dans votre logiciel', level: 'validate' },
+            { name: 'Relances des impayés', gain: 'Envoyées au bon moment, avec le bon ton', level: 'auto' },
+            { name: 'Rapprochement bancaire', gain: 'Les écarts ressortent, le reste est rapproché', level: 'validate' },
+            { name: 'Notes de frais', gain: 'Justificatifs lus depuis une simple photo', level: 'validate' },
+          ],
+        },
+        {
+          name: 'Logistique & stocks',
+          processes: [
+            { name: 'Bons de livraison et réceptions', gain: 'Lus et comparés à la commande', level: 'validate' },
+            { name: 'Alertes de stock et réassort', gain: 'Commande proposée avant la rupture', level: 'auto' },
+            { name: 'Suivi des expéditions', gain: 'Retards détectés, client prévenu', level: 'auto' },
+            { name: 'Planification des tournées', gain: 'Proposition optimisée, le planificateur ajuste', level: 'assist' },
+          ],
+        },
+        {
+          name: 'Service client',
+          processes: [
+            { name: 'Questions fréquentes', gain: 'Réponses 24h/24 sur le site, par e-mail ou au téléphone', level: 'auto' },
+            { name: '« Où en est ma commande ? »', gain: 'Statut lu directement dans vos outils', level: 'auto' },
+            { name: 'Tri des demandes entrantes', gain: 'Chaque demande au bon interlocuteur', level: 'auto' },
+            { name: 'Réclamations et litiges', gain: 'Dossier préparé, votre équipe tranche', level: 'assist' },
+          ],
+        },
+        {
+          name: 'Commercial',
+          processes: [
+            { name: 'Qualification des prospects', gain: 'Score et priorité dès l’arrivée du contact', level: 'auto' },
+            { name: 'Mise à jour du CRM', gain: 'E-mails et appels résumés dans la fiche client', level: 'auto' },
+            { name: 'Devis et propositions', gain: 'Brouillon généré à partir du besoin', level: 'validate' },
+            { name: 'Relances commerciales', gain: 'Relance personnalisée, prête à envoyer', level: 'validate' },
+          ],
+        },
+        {
+          name: 'RH & équipes',
+          processes: [
+            { name: 'Questions internes (congés, procédures)', gain: 'Assistant interne qui répond à partir de vos documents', level: 'auto' },
+            { name: 'Accueil des nouveaux arrivants', gain: 'Accès, documents et étapes envoyés au bon moment', level: 'auto' },
+            { name: 'Plannings et absences', gain: 'Planning proposé selon vos contraintes', level: 'validate' },
+            { name: 'Tri des candidatures', gain: 'Synthèse des profils, la décision reste humaine', level: 'assist' },
+          ],
+        },
+        {
+          name: 'Direction',
+          processes: [
+            { name: 'Reporting hebdomadaire', gain: 'Synthèse envoyée chaque lundi matin', level: 'auto' },
+            { name: 'Tableaux de bord', gain: 'Toutes vos données au même endroit, à jour', level: 'auto' },
+            { name: 'Synthèse de documents longs', gain: 'Contrats et appels d’offres résumés', level: 'validate' },
+            { name: 'Prévisions ventes et stocks', gain: 'Tendances et alertes pour décider', level: 'assist' },
+          ],
+        },
+      ],
+      cta: 'Trouver mes gains rapides',
+      limits: {
+        title: 'Ce qu’on n’automatise pas',
+        subtitle: 'L’IA est très forte sur les tâches répétitives. Pour le reste, on vous le dit franchement.',
+        items: [
+          { t: 'Les décisions sensibles', d: 'Recrutement, litiges, sanctions : l’IA prépare, un humain décide.' },
+          { t: 'Ce qui vous engage sans relecture', d: 'Contrats et courriers juridiques passent toujours par une validation.' },
+          { t: 'Un process qui n’existe pas encore', d: 'Si les données sont éparpillées, on commence par les structurer.' },
+          { t: 'L’IA pour le principe', d: 'Si un simple script suffit, on fait le script. C’est moins cher.' },
+        ],
       },
     },
     services: {
@@ -114,45 +305,6 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           title: 'Cadrage & formation',
           desc: 'On identifie les cas d’usage rentables, on fixe les règles de confidentialité des données et on forme vos équipes à utiliser l’IA au quotidien.',
           bullets: ['Audit des cas d’usage et priorisation', 'Règles de confidentialité et droits d’accès', 'Formation des équipes : prompts, bons usages'],
-        },
-      ],
-    },
-    useCases: {
-      path: 'Cas d’usage',
-      title: 'Ce que ça change, concrètement.',
-      subtitle: 'Des exemples par secteur pour vous projeter. Chaque entreprise a ses propres gains rapides : on les trouve ensemble en 30 min.',
-      before: 'Aujourd’hui',
-      after: 'Avec 3geeks',
-      items: [
-        {
-          sector: 'Logistique & transport',
-          before: 'Les bons de livraison et les commandes sont ressaisis à la main, les retards se découvrent trop tard.',
-          after: 'Les documents sont lus automatiquement, les anomalies remontent en temps réel, les tournées se planifient en quelques clics.',
-        },
-        {
-          sector: 'Commerce & e-commerce',
-          before: 'Les mêmes questions clients reviennent chaque jour, les stocks sont tenus sur trois outils différents.',
-          after: 'Un assistant répond 24h/24, les stocks et les prix sont synchronisés entre le site, la caisse et les écrans.',
-        },
-        {
-          sector: 'Services & cabinets',
-          before: 'Contrats, devis et dossiers prennent des heures à rédiger et à suivre.',
-          after: 'Les documents sont pré-remplis et signés en ligne, les dossiers suivis dans un tableau de bord.',
-        },
-        {
-          sector: 'Restauration & hôtellerie',
-          before: 'Chaque appel manqué est une commande ou une réservation perdue.',
-          after: 'Une réception IA prend commandes et réservations à toute heure et prévient l’équipe par SMS.',
-        },
-        {
-          sector: 'Industrie & PME',
-          before: 'Les données existent, mais personne n’a le temps de les analyser.',
-          after: 'Tableaux de bord automatiques, prévisions de charge et alertes sur les indicateurs clés.',
-        },
-        {
-          sector: 'Équipes internes',
-          before: 'Chacun cherche l’information dans des dossiers, des e-mails et des procédures éparpillés.',
-          after: 'Un assistant interne répond à partir de vos documents, en citant ses sources et en respectant les droits d’accès.',
         },
       ],
     },
@@ -239,14 +391,14 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
     },
     footer: {
       blurb: 'IA et automatisation intégrées dans les outils de votre entreprise.',
-      webSite: 'Besoin d’un site ou d’une application ? Voir nos offres web',
+      webSite: 'Besoin d’un site ou d’une application ? Voir nos offres web',
       rights: 'Tous droits réservés.',
       tagline: 'Made in France',
       navigate: 'Navigation',
     },
     assistant: {
-      greeting: 'Bonjour ! Je suis l’assistant de 3geeks. Posez-moi vos questions sur l’intégration de l’IA dans vos outils, l’automatisation de vos opérations ou votre projet.',
-      suggestions: ['Que pouvez-vous automatiser dans ma logistique ?', 'Pouvez-vous intégrer l’IA à mon logiciel actuel ?', 'Où sont hébergées les données ?', 'Comment se passe le paiement ?'],
+      greeting: 'Bonjour ! Je suis l’assistant de 3geeks. Posez-moi vos questions sur l’intégration de l’IA dans vos outils, l’automatisation de vos opérations ou votre projet.',
+      suggestions: ['Que pouvez-vous automatiser dans ma logistique ?', 'Pouvez-vous intégrer l’IA à mon logiciel actuel ?', 'Où sont hébergées les données ?', 'Comment se passe le paiement ?'],
     },
   },
   en: {
@@ -256,8 +408,9 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         'Bring AI into the software you already use (ERP, CRM, website, logistics): AI agents, operations automation, document processing, companion apps. Free 30-minute audit, nothing to pay upfront.',
     },
     nav: {
+      demo: 'Demo',
+      explorer: 'Your processes',
       services: 'Services',
-      useCases: 'Use cases',
       proof: 'Work',
       method: 'Process',
       cta: 'Book a free audit',
@@ -278,10 +431,166 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         { k: 'AWS', v: 'cloud & machine learning certified team' },
       ],
       diagram: {
-        tools: ['ERP / business software', 'CRM & email', 'Website & e-commerce', 'Logistics & inventory'],
-        core: '3geeks AI layer',
-        coreSub: 'agents · automations · data',
-        outcomes: ['Customer answers 24/7', 'Documents processed automatically', 'Alerts and dashboards', 'Teams freed from re-typing'],
+        inLabel: 'Comes in',
+        outLabel: 'Done',
+        core: '3geeks AI',
+        coreSteps: ['Reads', 'Thinks', 'Acts'],
+        caption: 'Your emails, documents and data go in. The tasks come out done.',
+        items: [
+          { raw: 'Invoice F-2481', rawSub: 'PDF received by email', done: 'Entered in the ERP', doneSub: '€1,248 · matches' },
+          { raw: 'Photo DN-0932', rawSub: 'taken by the driver', done: '2 parcels missing', doneSub: 'Manager notified', tone: 'warn' },
+          { raw: 'Customer message', rawSub: '“Where is my parcel?”', done: 'Customer answered', doneSub: 'Arrives Thursday' },
+          { raw: 'sales.xlsx', rawSub: 'Monday 8:00 am', done: 'Report sent', doneSub: '3 points to watch' },
+          { raw: 'Missed call', rawSub: 'Saturday 9:40 pm', done: 'Booking taken', doneSub: 'SMS sent' },
+          { raw: 'Order #10611', rawSub: 'from the website', done: 'Stock updated', doneSub: 'Reorder suggested' },
+        ],
+      },
+    },
+    demo: {
+      path: 'Demo',
+      title: 'Watch a process automate itself.',
+      subtitle: 'A document comes in, the AI reads it, checks it against your tools and does the work. You stay in control of what matters.',
+      badge: 'Illustrative example',
+      incoming: 'What comes in',
+      extracted: 'What the AI understood',
+      pipeline: 'What happens, on its own',
+      before: 'Before',
+      after: 'With AI',
+      replay: 'Replay',
+      scenarios: [
+        {
+          tab: 'Supplier invoice',
+          trigger: { kind: 'email', line1: 'invoices@transport-example.com', line2: 'Invoice F-2481 · October', attachment: 'F-2481.pdf' },
+          steps: ['Invoice received by email', 'PDF read by the AI', 'Matched with the order in your ERP', 'Entry prepared, approved in 1 click'],
+          fields: [
+            { k: 'Supplier', v: 'Transport Example' },
+            { k: 'Invoice no.', v: 'F-2481' },
+            { k: 'Total incl. VAT', v: '€1,248.00' },
+            { k: 'Linked order', v: 'PO-4471 · matches', status: 'ok' },
+          ],
+          result: 'Invoice recorded in the ERP, accounting is notified.',
+          before: 'Re-typed by hand',
+          after: 'Approved in 1 click',
+        },
+        {
+          tab: 'Delivery note',
+          trigger: { kind: 'photo', line1: 'Photo taken by the driver', line2: 'DN-0932 · 14 parcels announced' },
+          steps: ['Photo of the note sent from the phone', 'References and quantities read', 'Compared with the order', 'Gap flagged, stock updated'],
+          fields: [
+            { k: 'Delivery note', v: 'DN-0932' },
+            { k: 'Destination', v: 'North warehouse' },
+            { k: 'Parcels received', v: '12 / 14', status: 'warn' },
+            { k: 'Stock', v: 'Updated', status: 'ok' },
+          ],
+          result: 'Alert sent to the manager: 2 parcels missing.',
+          before: 'Gap found days later',
+          after: 'Gap caught on delivery',
+        },
+        {
+          tab: 'Customer question',
+          trigger: { kind: 'message', line1: 'Message received at 11:12 pm', line2: '“Hi, where is my order 10582?”' },
+          steps: ['Question received on the website, by email or by phone', 'Customer and order identified', 'Status read from your logistics tool', 'Precise answer sent to the customer'],
+          fields: [
+            { k: 'Customer', v: 'Mrs Durand' },
+            { k: 'Order', v: '#10582' },
+            { k: 'Status', v: 'Shipped', status: 'ok' },
+            { k: 'Expected delivery', v: 'Thursday' },
+          ],
+          result: 'The customer gets the answer right away, even at night.',
+          before: 'Answer the next day',
+          after: 'Instant answer, 24/7',
+        },
+        {
+          tab: 'Reporting',
+          trigger: { kind: 'schedule', line1: 'Every Monday · 8:00 am', line2: 'ERP · CRM · Excel files' },
+          steps: ['Triggered automatically on Monday morning', 'Figures collected from all your tools', 'Indicators and gaps computed', 'Summary sent to management'],
+          fields: [
+            { k: 'Weekly revenue', v: '€84,300' },
+            { k: 'Orders', v: '312' },
+            { k: 'Delays', v: '3', status: 'warn' },
+            { k: 'Low stock', v: '2 items', status: 'warn' },
+          ],
+          result: 'The report lands in your inbox, with the points to watch.',
+          before: 'Half a day in Excel',
+          after: 'Ready before coffee',
+        },
+      ],
+    },
+    explorer: {
+      path: 'Your processes',
+      title: 'What could we automate for you?',
+      subtitle: 'Pick a team in your company. For each task, we show you honestly what AI can do on its own, and where your team keeps the decision.',
+      levels: {
+        auto: { label: 'Automatic', desc: 'The task runs on its own.' },
+        validate: { label: 'You approve', desc: 'AI prepares, you approve in 1 click.' },
+        assist: { label: 'AI assists', desc: 'AI prepares the file, a person decides.' },
+      },
+      departments: [
+        {
+          name: 'Admin & accounting',
+          processes: [
+            { name: 'Supplier invoice entry', gain: 'Read and pre-filled in your software', level: 'validate' },
+            { name: 'Payment reminders', gain: 'Sent at the right time, in the right tone', level: 'auto' },
+            { name: 'Bank reconciliation', gain: 'Gaps stand out, the rest is matched', level: 'validate' },
+            { name: 'Expense reports', gain: 'Receipts read from a simple photo', level: 'validate' },
+          ],
+        },
+        {
+          name: 'Logistics & inventory',
+          processes: [
+            { name: 'Delivery notes and receipts', gain: 'Read and checked against the order', level: 'validate' },
+            { name: 'Stock alerts and reordering', gain: 'Order suggested before you run out', level: 'auto' },
+            { name: 'Shipment tracking', gain: 'Delays detected, customer notified', level: 'auto' },
+            { name: 'Route planning', gain: 'Optimised proposal, the planner adjusts', level: 'assist' },
+          ],
+        },
+        {
+          name: 'Customer service',
+          processes: [
+            { name: 'Frequent questions', gain: '24/7 answers on the website, by email or phone', level: 'auto' },
+            { name: '“Where is my order?”', gain: 'Status read straight from your tools', level: 'auto' },
+            { name: 'Incoming request triage', gain: 'Each request to the right person', level: 'auto' },
+            { name: 'Complaints and disputes', gain: 'File prepared, your team decides', level: 'assist' },
+          ],
+        },
+        {
+          name: 'Sales',
+          processes: [
+            { name: 'Lead qualification', gain: 'Score and priority as soon as a contact arrives', level: 'auto' },
+            { name: 'CRM updates', gain: 'Emails and calls summarised in the customer record', level: 'auto' },
+            { name: 'Quotes and proposals', gain: 'Draft generated from the need', level: 'validate' },
+            { name: 'Sales follow-ups', gain: 'Personalised follow-up, ready to send', level: 'validate' },
+          ],
+        },
+        {
+          name: 'HR & teams',
+          processes: [
+            { name: 'Internal questions (leave, procedures)', gain: 'Internal assistant answering from your documents', level: 'auto' },
+            { name: 'Onboarding new hires', gain: 'Access, documents and steps sent at the right time', level: 'auto' },
+            { name: 'Schedules and absences', gain: 'Schedule proposed from your constraints', level: 'validate' },
+            { name: 'Screening applications', gain: 'Profile summaries, the decision stays human', level: 'assist' },
+          ],
+        },
+        {
+          name: 'Management',
+          processes: [
+            { name: 'Weekly reporting', gain: 'Summary sent every Monday morning', level: 'auto' },
+            { name: 'Dashboards', gain: 'All your data in one place, up to date', level: 'auto' },
+            { name: 'Long document summaries', gain: 'Contracts and tenders summarised', level: 'validate' },
+            { name: 'Sales and stock forecasts', gain: 'Trends and alerts to help you decide', level: 'assist' },
+          ],
+        },
+      ],
+      cta: 'Find my quick wins',
+      limits: {
+        title: 'What we don’t automate',
+        subtitle: 'AI is excellent at repetitive tasks. For the rest, we tell you straight.',
+        items: [
+          { t: 'Sensitive decisions', d: 'Hiring, disputes, sanctions: AI prepares, a person decides.' },
+          { t: 'Anything binding without review', d: 'Contracts and legal letters always go through approval.' },
+          { t: 'A process that doesn’t exist yet', d: 'If the data is scattered, we start by structuring it.' },
+          { t: 'AI for its own sake', d: 'If a simple script does the job, we write the script. It costs less.' },
+        ],
       },
     },
     services: {
@@ -318,45 +627,6 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           title: 'Scoping & training',
           desc: 'We identify the profitable use cases, set the data privacy rules and train your teams to use AI every day.',
           bullets: ['Use-case audit and prioritisation', 'Privacy rules and access rights', 'Team training: prompts, good practice'],
-        },
-      ],
-    },
-    useCases: {
-      path: 'Use cases',
-      title: 'What it changes, concretely.',
-      subtitle: 'Examples by sector to picture it. Every company has its own quick wins: we find them together in 30 minutes.',
-      before: 'Today',
-      after: 'With 3geeks',
-      items: [
-        {
-          sector: 'Logistics & transport',
-          before: 'Delivery notes and orders are re-typed by hand, delays are discovered too late.',
-          after: 'Documents are read automatically, anomalies surface in real time, routes are planned in a few clicks.',
-        },
-        {
-          sector: 'Retail & e-commerce',
-          before: 'The same customer questions come back every day, stock is tracked in three different tools.',
-          after: 'An assistant answers 24/7, stock and prices stay in sync between the website, the till and the screens.',
-        },
-        {
-          sector: 'Services & firms',
-          before: 'Contracts, quotes and files take hours to write and follow up.',
-          after: 'Documents are pre-filled and signed online, files are tracked in a dashboard.',
-        },
-        {
-          sector: 'Restaurants & hospitality',
-          before: 'Every missed call is a lost order or booking.',
-          after: 'An AI reception takes orders and bookings at any hour and notifies the team by SMS.',
-        },
-        {
-          sector: 'Industry & SMEs',
-          before: 'The data exists, but nobody has time to analyse it.',
-          after: 'Automatic dashboards, workload forecasts and alerts on key indicators.',
-        },
-        {
-          sector: 'Internal teams',
-          before: 'Everyone hunts for information across scattered folders, emails and procedures.',
-          after: 'An internal assistant answers from your documents, citing sources and respecting access rights.',
         },
       ],
     },

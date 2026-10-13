@@ -20,7 +20,6 @@ import {
   Menu,
   Plug,
   Smartphone,
-  Sparkles,
   Truck,
   X,
 } from 'lucide-react';
@@ -36,11 +35,15 @@ import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
 import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
 import { detectLang, persistLang } from '../lib/lang';
+import AutomationExplorer from './AutomationExplorer';
 import { aiCopy } from './copy';
+import AiConveyor from './AiConveyor';
+import ProcessDemo from './ProcessDemo';
 
-const NAV_LINKS: Array<{ id: string; key: 'services' | 'useCases' | 'proof' | 'method' }> = [
+const NAV_LINKS: Array<{ id: string; key: 'demo' | 'explorer' | 'services' | 'proof' | 'method' }> = [
+  { id: 'demo', key: 'demo' },
+  { id: 'vos-process', key: 'explorer' },
   { id: 'services', key: 'services' },
-  { id: 'cas-usage', key: 'useCases' },
   { id: 'realisations', key: 'proof' },
   { id: 'methode', key: 'method' },
 ];
@@ -115,7 +118,7 @@ const AiPage: React.FC = () => {
             </span>
           </a>
 
-          <div className="hidden items-center gap-8 lg:flex">
+          <div className="hidden items-center gap-6 lg:flex xl:gap-8">
             {NAV_LINKS.map((link) => (
               <button
                 key={link.id}
@@ -232,52 +235,15 @@ const AiPage: React.FC = () => {
                 <button type="button" data-booking="ia-hero" onClick={() => book('hero')} className="btn btn-primary">
                   {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
                 </button>
-                <button type="button" onClick={() => scrollToSection('services')} className="btn btn-ghost">
+                <button type="button" onClick={() => scrollToSection('demo')} className="btn btn-ghost">
                   {t.hero.ctaSecondary}
                 </button>
               </div>
             </div>
 
-            {/* Integration diagram: existing tools → 3geeks AI layer → outcomes */}
+            {/* Motion piece: raw items cross the AI line and come out as finished tasks */}
             <div className="hero-rise" style={{ ['--rise-delay' as string]: '600ms' }}>
-              <div className="card-featured p-5 shadow-[0_40px_100px_-40px_rgba(10,239,187,0.45)] sm:p-7">
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-5">
-                  <ul className="space-y-2.5">
-                    {t.hero.diagram.tools.map((tool, i) => (
-                      <li
-                        key={tool}
-                        className="ia-chip rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs font-medium text-slate-200 sm:text-sm"
-                        style={{ ['--chip-delay' as string]: `${i * 0.35}s` }}
-                      >
-                        {tool}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="ia-flow h-px w-6 sm:w-10" aria-hidden="true" />
-                    <div className="flex h-24 w-24 flex-col items-center justify-center rounded-2xl bg-brand-gradient text-center text-ink shadow-[0_0_50px_-10px_rgba(10,239,187,0.8)] sm:h-28 sm:w-28">
-                      <Sparkles className="h-6 w-6" />
-                      <span className="mt-1.5 px-1 font-display text-[11px] font-semibold leading-tight sm:text-xs">{t.hero.diagram.core}</span>
-                    </div>
-                    <span className="ia-flow h-px w-6 sm:w-10" aria-hidden="true" />
-                  </div>
-
-                  <ul className="space-y-2.5">
-                    {t.hero.diagram.outcomes.map((outcome, i) => (
-                      <li
-                        key={outcome}
-                        className="ia-chip flex items-start gap-2 rounded-xl border border-brand-mint/25 bg-brand-mint/[0.07] px-3 py-2.5 text-xs font-medium text-white sm:text-sm"
-                        style={{ ['--chip-delay' as string]: `${0.7 + i * 0.35}s` }}
-                      >
-                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-mint" strokeWidth={3} />
-                        {outcome}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <p className="mt-5 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500">{t.hero.diagram.coreSub}</p>
-              </div>
+              <AiConveyor diagram={t.hero.diagram} />
             </div>
           </div>
 
@@ -290,6 +256,34 @@ const AiPage: React.FC = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------------ */}
+        {/* DÉMO : un process qui s'automatise                           */}
+        {/* ------------------------------------------------------------ */}
+        <section id="demo" className="relative py-20 md:py-28">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <Reveal className="mb-10 max-w-2xl md:mb-12">
+              <span className="eyebrow">{t.demo.path}</span>
+              <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.demo.title}</h2>
+              <p className="mt-5 text-base text-slate-400 md:text-lg">{t.demo.subtitle}</p>
+            </Reveal>
+            <ProcessDemo copy={t.demo} />
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------------ */}
+        {/* VOS PROCESS : quoi automatiser, par service                  */}
+        {/* ------------------------------------------------------------ */}
+        <section id="vos-process" className="relative overflow-hidden border-y border-white/5 bg-surface/60 py-20 md:py-28">
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+            <Reveal className="mb-10 max-w-2xl md:mb-12">
+              <span className="eyebrow">{t.explorer.path}</span>
+              <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.explorer.title}</h2>
+              <p className="mt-5 text-base text-slate-400 md:text-lg">{t.explorer.subtitle}</p>
+            </Reveal>
+            <AutomationExplorer copy={t.explorer} onBook={() => book('explorer')} />
           </div>
         </section>
 
@@ -334,40 +328,6 @@ const AiPage: React.FC = () => {
           </div>
         </section>
 
-        {/* ------------------------------------------------------------ */}
-        {/* CAS D'USAGE                                                   */}
-        {/* ------------------------------------------------------------ */}
-        <section id="cas-usage" className="relative overflow-hidden border-y border-white/5 bg-surface/60 py-20 md:py-28">
-          <SectionLines variant="a" />
-          <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-            <Reveal className="mb-12 max-w-2xl md:mb-16">
-              <span className="eyebrow">{t.useCases.path}</span>
-              <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{t.useCases.title}</h2>
-              <p className="mt-5 text-base text-slate-400 md:text-lg">{t.useCases.subtitle}</p>
-            </Reveal>
-
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              {t.useCases.items.map((item, i) => (
-                <Reveal key={item.sector} delay={i * 70}>
-                  <article className="card h-full p-6 md:p-7">
-                    <h3 className="font-display text-lg font-semibold text-white">{item.sector}</h3>
-                    <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                      <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] p-4">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{t.useCases.before}</p>
-                        <p className="mt-2 text-sm leading-relaxed text-slate-400">{item.before}</p>
-                      </div>
-                      <div className="relative rounded-xl border border-brand-mint/25 bg-brand-mint/[0.06] p-4">
-                        <ArrowRight className="absolute -left-4 top-1/2 hidden h-4 w-4 -translate-y-1/2 text-brand-mint sm:block" aria-hidden="true" />
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-mint">{t.useCases.after}</p>
-                        <p className="mt-2 text-sm leading-relaxed text-slate-100">{item.after}</p>
-                      </div>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* ------------------------------------------------------------ */}
         {/* RÉALISATIONS                                                  */}
