@@ -627,11 +627,17 @@ const LabCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ projec
   );
 };
 
+/** Project shown in the before/after slider at the top of the section. */
+const BEFORE_AFTER_ID = 'jellouli';
+
 export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onContact }) => {
   const fr = lang === 'fr';
   const [openCase, setOpenCase] = useState<ProjectItem | null>(null);
   const closeCase = useCallback(() => setOpenCase(null), []);
-  const clientProjects = PROJECTS_DATA.filter((p) => p.category === 'client');
+  // The Jellouli site already leads the section in the before/after, so its card goes last in the grid.
+  const clientProjects = PROJECTS_DATA.filter((p) => p.category === 'client').sort(
+    (a, b) => Number(a.id === BEFORE_AFTER_ID) - Number(b.id === BEFORE_AFTER_ID),
+  );
   const labProjects = PROJECTS_DATA.filter((p) => p.category === 'studio');
 
   return (
@@ -650,7 +656,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
         </Reveal>
 
         <Reveal className="mb-16 md:mb-20">
-          <BeforeAfter lang={lang} onOpenCase={() => setOpenCase(PROJECTS_DATA.find((p) => p.id === 'jellouli') ?? null)} />
+          <BeforeAfter lang={lang} onOpenCase={() => setOpenCase(PROJECTS_DATA.find((p) => p.id === BEFORE_AFTER_ID) ?? null)} />
         </Reveal>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
