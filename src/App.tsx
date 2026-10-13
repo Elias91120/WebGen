@@ -14,6 +14,7 @@ import {
   Menu,
   ShieldCheck,
   Smartphone,
+  Sparkles,
   Star,
   Store,
   Timer,
@@ -34,22 +35,7 @@ import SkillsRadar from './components/SkillsRadar';
 import TeamSection, { FOUNDERS, LinkedInIcon } from './components/TeamSection';
 import { Lang, translations } from './i18n';
 import { openBooking } from './lib/booking';
-
-const LANG_STORAGE_KEY = '3geeks-lang';
-
-/** Langue mémorisée, sinon celle du navigateur (français par défaut pour la France). */
-function detectLang(): Lang {
-  try {
-    const saved = localStorage.getItem(LANG_STORAGE_KEY);
-    if (saved === 'fr' || saved === 'en') return saved;
-  } catch {
-    /* stockage indisponible */
-  }
-  if (typeof navigator !== 'undefined' && navigator.language) {
-    return navigator.language.toLowerCase().startsWith('fr') ? 'fr' : 'en';
-  }
-  return 'fr';
-}
+import { detectLang, persistLang } from './lib/lang';
 
 const NAV_LINKS: Array<{ id: string; key: 'services' | 'method' | 'projects' | 'expertise' | 'team' | 'reviews' }> = [
   { id: 'services', key: 'services' },
@@ -70,12 +56,7 @@ const App: React.FC = () => {
   const [legalTab, setLegalTab] = useState<'privacy' | 'terms' | 'legal'>('legal');
 
   useEffect(() => {
-    document.documentElement.lang = lang;
-    try {
-      localStorage.setItem(LANG_STORAGE_KEY, lang);
-    } catch {
-      /* ignore */
-    }
+    persistLang(lang);
   }, [lang]);
 
   useEffect(() => {
@@ -171,6 +152,12 @@ const App: React.FC = () => {
                 {t.nav[link.key]}
               </button>
             ))}
+            <a
+              href="/ia"
+              className="inline-flex items-center gap-1.5 rounded-full border border-brand-mint/30 bg-brand-mint/10 px-3 py-1 text-xs font-semibold text-brand-mint transition hover:border-brand-mint/60 hover:bg-brand-mint/15"
+            >
+              <Sparkles className="h-3.5 w-3.5" /> {t.nav.ai}
+            </a>
           </div>
 
           <div className="hidden items-center gap-3 lg:flex">
@@ -222,6 +209,10 @@ const App: React.FC = () => {
                   <ArrowRight className="h-4 w-4 text-slate-500" />
                 </button>
               ))}
+              <a href="/ia" className="flex items-center justify-between border-b border-white/5 py-4 text-left text-base font-medium text-brand-mint">
+                <span className="inline-flex items-center gap-2"><Sparkles className="h-4 w-4" /> {t.nav.ai}</span>
+                <ArrowRight className="h-4 w-4 text-slate-500" />
+              </a>
             </div>
             <button type="button" data-booking="menu" onClick={() => book('menu')} className="btn btn-primary mt-6 w-full">
               {t.nav.cta}
@@ -678,6 +669,11 @@ const App: React.FC = () => {
                   </button>
                 </li>
               ))}
+              <li>
+                <a href="/ia" className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-mint transition-colors hover:text-white">
+                  <Sparkles className="h-3.5 w-3.5" /> {t.nav.ai}
+                </a>
+              </li>
             </ul>
           </div>
 

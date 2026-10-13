@@ -9,6 +9,7 @@ export const translations = {
       expertise: "Expertise",
       team: "Team",
       reviews: "Reviews",
+      ai: "AI for businesses",
       cta: "Let's talk",
     },
     hero: {
@@ -334,6 +335,7 @@ export const translations = {
       expertise: "Expertise",
       team: "Équipe",
       reviews: "Avis",
+      ai: "IA pour entreprises",
       cta: "Parler de mon projet",
     },
     hero: {

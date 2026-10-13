@@ -5,6 +5,9 @@ import { openBooking, prepareBooking } from '../lib/booking';
 
 interface AiAgentWidgetProps {
   lang: 'en' | 'fr';
+  /** Page-specific opening message and suggested questions (the AI services page uses its own). */
+  greeting?: string;
+  suggestions?: string[];
 }
 
 interface ChatMessage {
@@ -122,8 +125,8 @@ function renderRich(raw: string) {
   return nodes;
 }
 
-export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang }) => {
-  const copy = COPY[lang];
+export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, greeting, suggestions }) => {
+  const copy = { ...COPY[lang], greeting: greeting ?? COPY[lang].greeting, suggestions: suggestions ?? COPY[lang].suggestions };
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
