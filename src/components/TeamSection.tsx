@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowUpRight, Briefcase, ShieldCheck, Users, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowUpRight, Briefcase, ChevronDown, ShieldCheck, Users, Zap } from 'lucide-react';
 import Reveal from './Reveal';
 import { translations } from '../i18n';
 
@@ -48,10 +48,16 @@ export const LinkedInIcon: React.FC<{ className?: string }> = ({ className = 'h-
   </svg>
 );
 
+// Certifications shown before "show more" (same for both founders).
+const CERTS_VISIBLE = 3;
+
 const sectionTitle = 'flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-300';
 
 const FounderCard: React.FC<{ founderKey: FounderKey; profile: FounderProfile; labels: TeamCopy['labels'] }> = ({ founderKey, profile, labels }) => {
   const founder = FOUNDERS[founderKey];
+  const [allCerts, setAllCerts] = useState(false);
+  const hidden = profile.certifications.length - CERTS_VISIBLE;
+  const certs = allCerts ? profile.certifications : profile.certifications.slice(0, CERTS_VISIBLE);
 
   return (
     <article className="card flex h-full flex-col p-6 md:p-8">
@@ -96,7 +102,7 @@ const FounderCard: React.FC<{ founderKey: FounderKey; profile: FounderProfile; l
           <span className="ml-auto tabular-nums text-slate-500">{profile.certifications.length}</span>
         </h4>
         <ul className="mt-3 space-y-3.5">
-          {profile.certifications.map((c) => (
+          {certs.map((c) => (
             <li key={c.title + c.issuer} className="border-l-2 border-brand-mint/40 pl-3">
               <p className="text-sm font-medium leading-snug text-white">{c.title}</p>
               <p className="mt-0.5 text-xs text-slate-500">
@@ -106,7 +112,7 @@ const FounderCard: React.FC<{ founderKey: FounderKey; profile: FounderProfile; l
               </p>
               {c.skill && <p className="mt-0.5 text-xs text-slate-400">{labels.skills} {c.skill}</p>}
               {c.link ? (
-                <a href={c.link} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-brand-mint transition-colors hover:text-white">
+                <a href={c.link} target="_blank" rel="noopener noreferrer" className="-mb-2 inline-flex min-h-10 items-center gap-1 text-xs font-semibold text-brand-mint transition-colors hover:text-white">
                   {labels.viewCredential} <ArrowUpRight className="h-3 w-3" />
                 </a>
               ) : c.credentialId && (
@@ -115,6 +121,17 @@ const FounderCard: React.FC<{ founderKey: FounderKey; profile: FounderProfile; l
             </li>
           ))}
         </ul>
+        {hidden > 0 && (
+          <button
+            type="button"
+            onClick={() => setAllCerts((v) => !v)}
+            aria-expanded={allCerts}
+            className="mt-3 inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors hover:text-white"
+          >
+            {allCerts ? labels.showLess : hidden === 1 ? labels.showMoreOne : labels.showMore.replace('{n}', String(hidden))}
+            <ChevronDown className={`h-4 w-4 transition-transform ${allCerts ? 'rotate-180' : ''}`} />
+          </button>
+        )}
       </div>
 
       <div className="mt-auto pt-8">

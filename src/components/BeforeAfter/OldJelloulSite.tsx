@@ -159,9 +159,9 @@ const OldJelloulSite: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
           </div>
 
           <div style={{ flex: 1, fontSize: 15, lineHeight: 1.45 }}>
-            <h1 style={{ color: '#1d3f73', fontSize: 28, margin: '0 0 6px', textDecoration: 'underline' }}>
+            <div style={{ color: '#1d3f73', fontSize: 28, margin: '0 0 6px', textDecoration: 'underline' }}>
               {fr ? 'Bienvenue !' : 'Welcome!'}
-            </h1>
+            </div>
             <p style={{ textAlign: 'justify', margin: '0 0 12px' }}>
               {fr
                 ? 'Bienvenue sur le site internet du Cabinet de Dermatologie du Docteur Amel Elloumi Jellouli. Le cabinet prend en charge les maladies de la peau, des cheveux et des ongles chez l’adulte et chez l’enfant. Vous trouverez sur ce site toutes les informations concernant le cabinet, les soins proposés et les modalités pour prendre rendez-vous. N’hésitez pas à nous contacter pour toute question.'
@@ -186,7 +186,7 @@ const OldJelloulSite: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
               </div>
             </div>
 
-            <h2 style={{ color: '#1d3f73', fontSize: 22, margin: '22px 0 8px', borderBottom: '1px dotted #1d3f73' }}>{fr ? 'Nos soins' : 'Our treatments'}</h2>
+            <div style={{ color: '#1d3f73', fontSize: 22, margin: '22px 0 8px', borderBottom: '1px dotted #1d3f73' }}>{fr ? 'Nos soins' : 'Our treatments'}</div>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
               <tbody>
                 {(fr
@@ -201,10 +201,10 @@ const OldJelloulSite: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
               </tbody>
             </table>
 
-            <h2 style={{ color: '#1d3f73', fontSize: 22, margin: '22px 0 8px', borderBottom: '1px dotted #1d3f73' }}>{fr ? 'Plan d’accès' : 'Directions'}</h2>
+            <div style={{ color: '#1d3f73', fontSize: 22, margin: '22px 0 8px', borderBottom: '1px dotted #1d3f73' }}>{fr ? 'Plan d’accès' : 'Directions'}</div>
             <ImagePlaceholder label="plan.gif" height={240} />
 
-            <h2 style={{ color: '#1d3f73', fontSize: 22, margin: '22px 0 8px', borderBottom: '1px dotted #1d3f73' }}>{fr ? 'Contact' : 'Contact'}</h2>
+            <div style={{ color: '#1d3f73', fontSize: 22, margin: '22px 0 8px', borderBottom: '1px dotted #1d3f73' }}>{fr ? 'Contact' : 'Contact'}</div>
             <p style={{ margin: 0 }}>
               {fr ? 'Pour nous contacter, merci de remplir le ' : 'To contact us, please fill in the '}
               <a style={{ color: LINK, textDecoration: 'underline' }}>{fr ? 'formulaire de contact' : 'contact form'}</a>.

@@ -160,7 +160,7 @@ const AiPage: React.FC = () => {
             <button
               type="button"
               onClick={toggleLang}
-              className="rounded-full border border-white/10 px-3 py-1.5 text-xs font-semibold text-slate-300"
+              className="flex h-10 items-center rounded-full border border-white/10 px-3.5 text-xs font-semibold text-slate-300"
               aria-label={fr ? 'Switch to English' : 'Passer en français'}
             >
               {lang.toUpperCase()}
@@ -178,7 +178,7 @@ const AiPage: React.FC = () => {
         </nav>
 
         {isMenuOpen && (
-          <div className="border-t border-white/[0.07] bg-ink px-5 pb-6 pt-4 lg:hidden">
+          <div className="h-[calc(100svh-4rem)] overflow-y-auto border-t border-white/[0.07] bg-ink px-5 pb-6 pt-4 md:h-[calc(100svh-5rem)] lg:hidden">
             <div className="flex flex-col">
               {NAV_LINKS.map((link) => (
                 <button
@@ -544,7 +544,7 @@ const AiPage: React.FC = () => {
           <div>
             <Logo variant="wordmark" compact glow={false} />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-slate-400">{t.footer.blurb}</p>
-            <a href="/" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-mint transition-colors hover:text-white">
+            <a href="/offres" className="mt-4 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-brand-mint transition-colors hover:text-white">
               {t.footer.webSite} <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
             <p className="mt-5 text-sm font-medium text-brand-lime">{t.footer.tagline}</p>

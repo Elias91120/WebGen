@@ -236,7 +236,7 @@ const BeforeAfter: React.FC<{ lang: 'fr' | 'en'; onOpenCase?: () => void }> = ({
               {copy.caseStudy} <ArrowRight className="h-4 w-4" />
             </button>
           )}
-          <a href={LIVE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-300 transition-colors hover:text-white">
+          <a href={LIVE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-slate-300 transition-colors hover:text-white">
             {copy.live} <ArrowUpRight className="h-4 w-4" />
           </a>
         </div>

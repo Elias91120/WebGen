@@ -146,7 +146,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
             <button
               type="button"
               onClick={toggleLang}
-              className="rounded-full border border-white/10 px-3 py-1.5 text-xs font-semibold text-slate-300"
+              className="flex h-10 items-center rounded-full border border-white/10 px-3.5 text-xs font-semibold text-slate-300"
               aria-label={fr ? 'Switch to English' : 'Passer en français'}
             >
               {lang.toUpperCase()}
@@ -164,7 +164,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
         </nav>
 
         {isMenuOpen && (
-          <div className="border-t border-white/[0.07] bg-ink px-5 pb-6 pt-4 lg:hidden">
+          <div className="h-[calc(100svh-4rem)] overflow-y-auto border-t border-white/[0.07] bg-ink px-5 pb-6 pt-4 md:h-[calc(100svh-5rem)] lg:hidden">
             <div className="flex flex-col">
               {[{ key: 'home' as const, href: '/', page: 'home' as PageId }, ...NAV].map((link) => (
                 <a

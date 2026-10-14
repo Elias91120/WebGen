@@ -247,7 +247,7 @@ const ProcessDemo: React.FC<{ copy: AiCopy['demo'] }> = ({ copy }) => {
             <button
               type="button"
               onClick={() => setTick(0)}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 transition-colors hover:text-white"
+              className="-my-2 inline-flex min-h-10 items-center gap-1.5 px-1 text-xs font-semibold text-slate-400 transition-colors hover:text-white"
             >
               <RotateCcw className="h-3.5 w-3.5" /> {copy.replay}
             </button>

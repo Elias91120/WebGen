@@ -451,7 +451,7 @@ const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase
 
         <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/[0.07] pt-4 text-xs">
           {project.link ? (
-            <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex min-w-0 items-center gap-1 text-slate-400 transition-colors hover:text-white">
+            <a href={project.link} target="_blank" rel="noopener noreferrer" className="-my-2 inline-flex min-h-10 min-w-0 items-center gap-1 text-slate-400 transition-colors hover:text-white">
               <span className="truncate">{typeof project.subtitle === 'string' ? project.subtitle : project.subtitle[lang]}</span> <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
             </a>
           ) : (
@@ -460,7 +460,7 @@ const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase
             </span>
           )}
           {project.caseStudy && (
-            <button type="button" onClick={() => onOpenCase(project)} className="inline-flex shrink-0 items-center gap-1 font-semibold text-brand-mint transition-colors hover:text-white">
+            <button type="button" onClick={() => onOpenCase(project)} className="-my-2 inline-flex min-h-10 shrink-0 items-center gap-1 font-semibold text-brand-mint transition-colors hover:text-white">
               {fr ? 'Étude de cas' : 'Case study'} <ArrowRight className="h-3.5 w-3.5" />
             </button>
           )}

@@ -119,7 +119,7 @@ export const Hero: React.FC<Props> = ({ lang, t, book }) => (
     </div>
 
     <div className="relative z-10 border-t border-white/[0.08] bg-ink/40 backdrop-blur-md">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-5 px-5 py-6 sm:px-8 md:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-5 px-5 py-6 sm:px-8 lg:grid-cols-4">
         {t.hero.trust.map((item) => (
           <div key={item.v} className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-3">
             <span className="shrink-0 whitespace-nowrap font-display text-2xl font-semibold text-white md:text-3xl">
@@ -216,7 +216,7 @@ export const HowItWorks: React.FC<Props> = ({ t, book }) => {
           <button type="button" data-booking="how-it-works" onClick={() => book('how-it-works')} className="btn btn-primary">
             {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
           </button>
-          <a href="/offres#methode" className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-300 transition-colors hover:text-white">
+          <a href="/offres#methode" className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-slate-300 transition-colors hover:text-white">
             {c.more} <ArrowRight className="h-4 w-4" />
           </a>
         </Reveal>
@@ -238,7 +238,7 @@ export const FeaturedWork: React.FC<Props> = ({ lang, t }) => {
         <div className="mb-8 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between">
           <Heading path={c.path} title={c.title} />
           <Reveal>
-            <a href="/realisations" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors hover:text-white">
+            <a href="/realisations" className="inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-brand-mint transition-colors hover:text-white">
               {c.more} <ArrowRight className="h-4 w-4" />
             </a>
           </Reveal>
