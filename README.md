@@ -40,12 +40,12 @@ Page du jeu du lab (code du jeu : dépôt séparé, `Desktop/Manif`). Elle est a
 - Page : `src/game/GameSections.tsx`, textes FR/EN `src/game/copy.ts`, dans le cadre commun (`SiteLayout`, page `game`).
 - Médias : bande-annonce `public/videos/17-octobre-trailer.mp4` (31 s, 1080p, ~10 Mo), captures et affiche dans
   `public/images/17-octobre/` (WebP 1600 et 640 px), image de partage `og.jpg` (1200 × 630).
-- **Téléchargement** : la bêta est privée, derrière un code d'accès. Le .zip n'est PAS dans ce dépôt : il est servi par
-  l'app Coolify `17-octobre-fichiers` (`services/17-octobre/`, Node sans dépendance, volume persistant `/data`),
-  routée par Traefik sur `https://www.3geeks.fr/17-octobre/fichiers` (la requête n'atteint jamais le nginx du site).
-  Elle sert `version.json` (public : version, date, taille, notes, lu par la page et par le jeu), vérifie le code
-  (`/verifier`, limité par visiteur) et envoie le .zip (`/telecharger`, compté dans `stats.json`).
-- Variables Coolify de cette app : `DOWNLOAD_CODE` (le code donné aux amis ; plusieurs séparés par des virgules),
+- **Téléchargement** : libre depuis le 14/10 (un code d'accès ne revient que si `DOWNLOAD_CODE` est rempli). Le .zip
+  n'est PAS dans ce dépôt : il est servi par l'app Coolify `17-octobre-fichiers` (`services/17-octobre/`, Node sans
+  dépendance, volume persistant `/data`), routée par Traefik sur `https://www.3geeks.fr/17-octobre/fichiers` (la
+  requête n'atteint jamais le nginx du site). Elle sert `version.json` (public : version, date, taille, notes, lu par
+  la page et par le jeu) et le .zip (`/telecharger`, compté dans `stats.json`).
+- Variables Coolify de cette app : `DOWNLOAD_CODE` (vide : téléchargement libre ; sinon le code, plusieurs séparés par des virgules),
   `UPLOAD_TOKEN` (envoi des versions). Une nouvelle version s'envoie depuis le dépôt du jeu : `tools/publish.ps1`.
 - Elle héberge aussi le **relais du duel en ligne** (`relay.mjs`, WebSocket sans dépendance) sur
   `wss://www.3geeks.fr/17-octobre/fichiers/relais` : un code de 4 lettres réunit deux joueurs de la même version, le

@@ -1,10 +1,10 @@
 /**
  * The /17-octobre page: our video game, from the 3geeks lab. Trailer, what the game is, screenshots, how it was made,
- * and the private beta download (behind an access code, served by the game's file server on the Mac Mini:
+ * and the beta download (free since 14/10, served by the game's file server on the Mac Mini:
  * services/17-octobre, routed by Traefik on /17-octobre/fichiers).
  */
-import { ArrowRight, Dices, Download, Flag, Lock, Moon, Play, Shield, Smile, Swords, X } from 'lucide-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import { ArrowRight, Dices, Download, Flag, Moon, Play, Shield, Smile, Swords, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 import Reveal from '../components/Reveal';
 import type { Lang } from '../i18n';
@@ -41,15 +41,12 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
   const c = GAME_COPY[lang];
   const [shot, setShot] = useState<number | null>(null);
   const [info, setInfo] = useState<VersionInfo | null>(null);
-  const [code, setCode] = useState('');
-  const [state, setState] = useState<'idle' | 'checking' | 'bad'>('idle');
 
   useEffect(() => {
     fetch(`${FILES}/version.json`, { cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => v && setInfo(v))
       .catch(() => {});
-    if (new URLSearchParams(window.location.search).get('code') === 'faux') setState('bad');
   }, []);
 
   useEffect(() => {
@@ -62,28 +59,6 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [shot, c.gallery.length]);
-
-  const submit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      const value = code.trim();
-      if (!value) return;
-      setState('checking');
-      try {
-        const r = await fetch(`${FILES}/verifier?code=${encodeURIComponent(value)}`, { cache: 'no-store' });
-        const ok = r.ok && (await r.json()).ok === true;
-        if (!ok) {
-          setState('bad');
-          return;
-        }
-        setState('idle');
-        window.location.href = `${FILES}/telecharger?code=${encodeURIComponent(value)}`;
-      } catch {
-        setState('bad');
-      }
-    },
-    [code],
-  );
 
   return (
     <>
@@ -267,37 +242,10 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                 {info?.size ? ` · ${Math.round(info.size / 1048576)} ${c.size}` : ''}
               </p>
               {info ? (
-                <form onSubmit={submit} className="mt-6">
-                  <label htmlFor="code" className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                    {c.codeLabel}
-                  </label>
-                  <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-                    <div className="relative flex-1">
-                      <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                      <input
-                        id="code"
-                        value={code}
-                        onChange={(e) => {
-                          setCode(e.target.value);
-                          if (state === 'bad') setState('idle');
-                        }}
-                        placeholder={c.codePlaceholder}
-                        autoComplete="off"
-                        autoCapitalize="characters"
-                        spellCheck={false}
-                        className="w-full rounded-xl border border-white/10 bg-ink py-3 pl-10 pr-4 text-sm uppercase tracking-wider text-white placeholder:normal-case placeholder:tracking-normal placeholder:text-slate-600 focus:border-brand-mint/60 focus:outline-none"
-                      />
-                    </div>
-                    <button type="submit" className="btn btn-primary justify-center" disabled={state === 'checking'}>
-                      <Download className="h-4 w-4" /> {state === 'checking' ? c.checking : c.download}
-                    </button>
-                  </div>
-                  {state === 'bad' && (
-                    <p className="mt-3 text-sm text-rose-300" role="alert">
-                      {c.badCode}
-                    </p>
-                  )}
-                </form>
+                <a href={`${FILES}/telecharger`} className="btn btn-primary mt-6 justify-center" download>
+                  <Download className="h-4 w-4" /> {c.download}
+                  {info.size ? <span className="opacity-70">· {Math.round(info.size / 1048576)} {c.size}</span> : null}
+                </a>
               ) : (
                 <p className="mt-6 text-sm text-slate-400">{c.notYet}</p>
               )}

@@ -151,7 +151,7 @@ export const translations = {
         },
         game: {
           title: "17 OCTOBRE — the 3geeks lab video game",
-          description: "17 OCTOBRE, the 3geeks lab video game: a satirical, cartoon real-time strategy game. Lead the Yellow Vest marches through Paris, or switch to the riot police. Trailer, screenshots and private beta for Windows.",
+          description: "17 OCTOBRE, the 3geeks lab video game: a satirical, cartoon real-time strategy game. Lead the Yellow Vest marches through Paris, or switch to the riot police. Trailer, screenshots, and the free beta for Windows.",
           path: "Video game",
           h1: "17 OCTOBRE",
           sub: "A satirical, cartoon real-time strategy game.",
@@ -566,7 +566,7 @@ export const translations = {
         },
         game: {
           title: "17 OCTOBRE — le jeu vidéo du lab 3geeks",
-          description: "17 OCTOBRE, le jeu vidéo du lab 3geeks : stratégie en temps réel satirique et cartoon. Mène les cortèges de Gilets Jaunes dans Paris, ou passe côté CRS. Bande-annonce, captures et bêta privée pour Windows.",
+          description: "17 OCTOBRE, le jeu vidéo du lab 3geeks : stratégie en temps réel satirique et cartoon. Mène les cortèges de Gilets Jaunes dans Paris, ou passe côté CRS. Bande-annonce, captures, et la bêta à télécharger gratuitement pour Windows.",
           path: "Jeu vidéo",
           h1: "17 OCTOBRE",
           sub: "Un jeu de stratégie en temps réel, satirique et cartoon.",

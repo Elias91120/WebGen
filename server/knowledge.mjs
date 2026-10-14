@@ -131,7 +131,7 @@ export const CHUNKS = [
     id: '17-octobre',
     title: 'Le jeu vidéo du lab : 17 OCTOBRE',
     keywords: ['jeu', 'jeu video', '17 octobre', 'octobre', 'game', 'video game', 'rts', 'strategie', 'gilets jaunes', 'crs', 'manif', 'manifestation', 'steam', 'godot', 'pixel', 'telecharger', 'beta', 'download'],
-    text: '17 OCTOBRE est le jeu vidéo du lab 3geeks : un jeu de stratégie en temps réel, satirique et cartoon, où l’on mène des cortèges de Gilets Jaunes dans Paris face aux CRS, ou l’inverse. Campagne de huit Actes, campagne côté CRS avec un budget absurde, escarmouches, défi du jour, et un duel en ligne en préparation. Ton non violent : les coups font baisser le moral. Fait sous Godot 4, ville et personnages générés par le code, sons et voix créés avec l’IA. Bêta privée pour Windows (code d’accès entre amis), bientôt gratuit sur Steam. Page : https://3geeks.fr/17-octobre',
+    text: '17 OCTOBRE est le jeu vidéo du lab 3geeks : un jeu de stratégie en temps réel, satirique et cartoon, où l’on mène des cortèges de Gilets Jaunes dans Paris face aux CRS, ou l’inverse. Campagne de huit Actes, campagne côté CRS avec un budget absurde, escarmouches, défi du jour, et un duel en ligne à deux (un code de 4 lettres pour inviter un ami). Ton non violent : les coups font baisser le moral. Fait sous Godot 4, ville et personnages générés par le code, bruitages créés avec l’IA. Bêta gratuite pour Windows, à télécharger sur la page du jeu, bientôt sur Steam. Page : https://3geeks.fr/17-octobre',
   },
   {
     id: 'jellouli',

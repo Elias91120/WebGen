@@ -1,13 +1,13 @@
 // 17 OCTOBRE — the game's file server (www.3geeks.fr/17-octobre/fichiers), on the Mac Mini.
 //
-// Serves the private beta download of the game (a Windows .zip) behind an access code, plus a public
+// Serves the beta download of the game (a Windows .zip; free since 14/10, an access code only if DOWNLOAD_CODE is set), plus a public
 // version.json that the game reads to say "a new version is out". New builds are uploaded from Elias's PC
 // with tools/publish.ps1 (game repo), authenticated by a token. It also hosts the online duel relay (relay.mjs).
 //
 //   GET  /health                        {"status":"ok"}
 //   GET  /version.json                  current version, date, size, release notes (public)
 //   GET  /verifier?code=XXXX            {"ok": true|false} (rate limited per visitor)
-//   GET  /telecharger?code=XXXX         the zip (attachment), or back to the page with ?code=faux
+//   GET  /telecharger[?code=XXXX]       the zip (attachment) ; with DOWNLOAD_CODE set, a wrong code goes back to the page
 //   PUT  /upload/<name>                 Authorization: Bearer <UPLOAD_TOKEN> — stores a file in DATA_DIR
 //   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms
 //   WS   /relais                        the online duel relay (relay.mjs)
@@ -53,8 +53,9 @@ function authorized(req) {
   return TOKEN.length >= 16 && h.startsWith('Bearer ') && same(h.slice(7), TOKEN);
 }
 
-/** Checks an access code; false once a visitor made too many wrong guesses. */
+/** Checks an access code (none configured: the download is free); false once a visitor made too many wrong guesses. */
 function codeOk(req, code) {
+  if (CODES.length === 0) return true;
   const ip = visitor(req);
   const now = Date.now();
   const a = attempts.get(ip);
