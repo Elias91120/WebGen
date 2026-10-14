@@ -103,8 +103,8 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
             <div className="card overflow-hidden p-0 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
               <video
                 className="block aspect-video w-full bg-black"
-                src="/videos/17-octobre-trailer.mp4"
-                poster={`${IMG}/poster.jpg`}
+                src="/videos/17-octobre-bande-annonce.mp4"
+                poster={`${IMG}/poster-2.jpg`}
                 controls
                 playsInline
                 preload="metadata"
