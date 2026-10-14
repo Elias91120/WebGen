@@ -8,8 +8,10 @@
 //   GET  /version.json                  current version, date, size, release notes (public)
 //   GET  /verifier?code=XXXX            {"ok": true|false} (rate limited per visitor)
 //   GET  /telecharger[?code=XXXX]       the zip (attachment) ; with DOWNLOAD_CODE set, a wrong code goes back to the page
+//   GET  /telechargements               {"total": N} downloads so far, every version (public)
+//   GET  /telechargements/direct        the same total, live (Server-Sent Events: on connect, then on each download)
 //   PUT  /upload/<name>                 Authorization: Bearer <UPLOAD_TOKEN> — stores a file in DATA_DIR
-//   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms
+//   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms, live viewers
 //   WS   /relais                        the online duel relay (relay.mjs)
 //
 // Paths work with or without the /17-octobre/fichiers prefix (Traefik may or may not strip it).
@@ -35,8 +37,13 @@ const NAME_RE = /^[A-Za-z0-9][A-Za-z0-9._-]{0,120}$/;
 const MAX_UPLOAD = 1024 * 1024 * 1024; // 1 GB
 const ATTEMPTS = 20; // wrong codes per visitor per window
 const WINDOW_MS = 10 * 60 * 1000;
+const MAX_WATCHERS = 2000; // open live counters
+const KEEPALIVE_MS = 25 * 1000; // a comment on each live counter, well under Cloudflare's 100 s idle cut
 
 const attempts = new Map(); // ip -> {n, until}
+const watchers = new Set(); // open /telechargements/direct responses
+let stats = {}; // file -> downloads, read once at start (loadStats), saved on each download
+let saving = Promise.resolve();
 
 function visitor(req) {
   return String(req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '?').split(',')[0].trim();
@@ -83,16 +90,42 @@ async function readVersion() {
   }
 }
 
-async function bumpStat(file) {
-  const path = join(DATA, 'stats.json');
-  let stats = {};
+async function loadStats() {
   try {
-    stats = JSON.parse(await fs.readFile(path, 'utf8'));
+    stats = JSON.parse(await fs.readFile(join(DATA, 'stats.json'), 'utf8')) || {};
   } catch {
     stats = {};
   }
+}
+
+const totalDownloads = () => Object.values(stats).reduce((n, v) => n + (Number(v) || 0), 0);
+
+/** Counts a download, tells every live counter, and saves (one write at a time, through a temp file: never half a file). */
+function bumpStat(file) {
   stats[file] = (stats[file] || 0) + 1;
-  await fs.writeFile(path, JSON.stringify(stats, null, 2));
+  const event = `data: ${totalDownloads()}\n\n`;
+  for (const w of watchers) w.write(event);
+  const path = join(DATA, 'stats.json');
+  saving = saving
+    .then(async () => {
+      await fs.writeFile(`${path}.part`, JSON.stringify(stats, null, 2));
+      await fs.rename(`${path}.part`, path);
+    })
+    .catch((e) => console.error('stats not saved:', e.message));
+}
+
+/** The live counter: an event stream that sends the total now, then again after each download. */
+function watch(req, res) {
+  if (watchers.size >= MAX_WATCHERS) return send(res, 503, { error: 'busy' });
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream; charset=utf-8',
+    'Cache-Control': 'no-store',
+    'X-Accel-Buffering': 'no',
+    'Access-Control-Allow-Origin': '*',
+  });
+  res.write(`retry: 10000\ndata: ${totalDownloads()}\n\n`);
+  watchers.add(res);
+  res.on('close', () => watchers.delete(res));
 }
 
 async function download(req, res, url) {
@@ -116,7 +149,7 @@ async function download(req, res, url) {
     'Cache-Control': 'no-store',
   });
   createReadStream(path).pipe(res);
-  bumpStat(v.file).catch(() => {});
+  bumpStat(v.file);
 }
 
 async function upload(req, res, name) {
@@ -153,14 +186,14 @@ const server = createServer(async (req, res) => {
     }
     if (req.method === 'GET' && path === '/verifier') return send(res, 200, { ok: codeOk(req, url.searchParams.get('code')) });
     if (req.method === 'GET' && path === '/telecharger') return await download(req, res, url);
+    if (req.method === 'GET' && path === '/telechargements') {
+      return send(res, 200, { total: totalDownloads() }, 'application/json; charset=utf-8', { 'Access-Control-Allow-Origin': '*' });
+    }
+    if (req.method === 'GET' && path === '/telechargements/direct') return watch(req, res);
     if (req.method === 'PUT' && path.startsWith('/upload/')) return await upload(req, res, decodeURIComponent(path.slice(8)));
     if (req.method === 'GET' && path === '/stats') {
       if (!authorized(req)) return send(res, 401, { error: 'unauthorized' });
-      try {
-        return send(res, 200, { ...JSON.parse(await fs.readFile(join(DATA, 'stats.json'), 'utf8')), relay: relayStats() });
-      } catch {
-        return send(res, 200, { relay: relayStats() });
-      }
+      return send(res, 200, { ...stats, relay: relayStats(), watchers: watchers.size });
     }
     send(res, 404, { error: 'not found' });
   } catch (e) {
@@ -170,6 +203,11 @@ const server = createServer(async (req, res) => {
 
 attachRelay(server, PREFIX);
 
+setInterval(() => {
+  for (const w of watchers) w.write(': ping\n\n');
+}, KEEPALIVE_MS).unref();
+
+await loadStats();
 server.listen(PORT, () => {
-  console.log(`17 OCTOBRE file server on :${PORT}, data in ${DATA}, ${CODES.length} access code(s)${TOKEN ? '' : ', NO upload token set'}`);
+  console.log(`17 OCTOBRE file server on :${PORT}, data in ${DATA}, ${totalDownloads()} download(s), ${CODES.length} access code(s)${TOKEN ? '' : ', NO upload token set'}`);
 });

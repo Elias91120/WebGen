@@ -45,6 +45,10 @@ Page du jeu du lab (code du jeu : dépôt séparé, `Desktop/Manif`). Elle est a
   dépendance, volume persistant `/data`), routée par Traefik sur `https://www.3geeks.fr/17-octobre/fichiers` (la
   requête n'atteint jamais le nginx du site). Elle sert `version.json` (public : version, date, taille, notes, lu par
   la page et par le jeu) et le .zip (`/telecharger`, compté dans `stats.json`).
+- **Compteur de téléchargements en direct** à côté des boutons de téléchargement : le total (toutes versions) est
+  public sur `/telechargements` (`{"total": N}`) et poussé en direct sur `/telechargements/direct` (Server-Sent
+  Events : le total à la connexion puis à chaque téléchargement, un ping toutes les 25 s pour Cloudflare). La page
+  (`useDownloadCount` dans `GameSections.tsx`) ferme le flux quand l'onglet est caché et le rouvre au retour.
 - Variables Coolify de cette app : `DOWNLOAD_CODE` (vide : téléchargement libre ; sinon le code, plusieurs séparés par des virgules),
   `UPLOAD_TOKEN` (envoi des versions). Une nouvelle version s'envoie depuis le dépôt du jeu : `tools/publish.ps1`.
 - Elle héberge aussi le **relais du duel en ligne** (`relay.mjs`, WebSocket sans dépendance) sur

@@ -37,10 +37,76 @@ function formatDate(iso: string | undefined, lang: Lang): string {
   return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+/**
+ * The beta's download count, live: the file server pushes the total on connect and after each download
+ * (Server-Sent Events). Closed while the tab is hidden, reopened when it comes back. Null until known.
+ */
+function useDownloadCount(): number | null {
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (typeof EventSource === 'undefined') return;
+    let es: EventSource | null = null;
+    let retry: number | undefined;
+    const open = () => {
+      if (es || document.hidden) return;
+      const source = new EventSource(`${FILES}/telechargements/direct`);
+      source.onmessage = (e) => {
+        const n = Number(e.data);
+        if (Number.isFinite(n) && n >= 0) setCount(n);
+      };
+      source.onerror = () => {
+        // A dropped stream is retried by the browser itself; an error response (server redeploying) is not.
+        if (source.readyState === EventSource.CLOSED && es === source) {
+          es = null;
+          retry = window.setTimeout(open, 30_000);
+        }
+      };
+      es = source;
+    };
+    const close = () => {
+      window.clearTimeout(retry);
+      es?.close();
+      es = null;
+    };
+    const onVisibility = () => (document.hidden ? close() : open());
+    open();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      close();
+    };
+  }, []);
+
+  return count;
+}
+
+const DownloadCount: React.FC<{ n: number; lang: Lang; words: string[]; title: string }> = ({ n, lang, words, title }) => {
+  const locale = lang === 'fr' ? 'fr-FR' : 'en-GB';
+  const word = new Intl.PluralRules(locale).select(n) === 'one' ? words[0] : words[1];
+  return (
+    <span className="inline-flex items-center gap-2 whitespace-nowrap text-sm text-slate-400" title={title}>
+      <span className="relative flex h-2 w-2" aria-hidden="true">
+        <span className="live-ring absolute inset-0 rounded-full bg-brand-mint" />
+        <span className="relative h-2 w-2 rounded-full bg-brand-mint" />
+      </span>
+      <span>
+        {/* keyed on the number: each new download replays the little rise */}
+        <span key={n} className="count-bump font-semibold tabular-nums text-white">
+          {n.toLocaleString(locale)}
+        </span>{' '}
+        {word}
+      </span>
+    </span>
+  );
+};
+
 export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void }> = ({ lang, book }) => {
   const c = GAME_COPY[lang];
   const [shot, setShot] = useState<number | null>(null);
   const [info, setInfo] = useState<VersionInfo | null>(null);
+  const downloads = useDownloadCount();
+  const count = downloads !== null && <DownloadCount n={downloads} lang={lang} words={c.downloads} title={c.downloadsLive} />;
 
   useEffect(() => {
     fetch(`${FILES}/version.json`, { cache: 'no-store' })
@@ -83,10 +149,11 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
             <p className="hero-rise mt-4 max-w-xl text-base leading-relaxed text-slate-400 md:text-lg" style={{ ['--rise-delay' as string]: '260ms' }}>
               {c.lead}
             </p>
-            <div className="hero-rise mt-8 flex flex-wrap gap-3" style={{ ['--rise-delay' as string]: '320ms' }}>
+            <div className="hero-rise mt-8 flex flex-wrap items-center gap-x-4 gap-y-3" style={{ ['--rise-delay' as string]: '320ms' }}>
               <a href="#telecharger" className="btn btn-primary">
                 <Download className="h-4 w-4" /> {c.ctaDownload}
               </a>
+              {count}
               <a href="#bande-annonce" className="btn btn-ghost lg:hidden">
                 <Play className="h-4 w-4" /> {c.ctaTrailer}
               </a>
@@ -242,10 +309,14 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                 {info?.size ? ` · ${Math.round(info.size / 1048576)} ${c.size}` : ''}
               </p>
               {info ? (
-                <a href={`${FILES}/telecharger`} className="btn btn-primary mt-6 justify-center" download>
-                  <Download className="h-4 w-4" /> {c.download}
-                  {info.size ? <span className="opacity-70">· {Math.round(info.size / 1048576)} {c.size}</span> : null}
-                </a>
+                <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+                  <a href={`${FILES}/telecharger`} className="btn btn-primary justify-center whitespace-normal text-center" download>
+                    <Download className="h-4 w-4" /> {c.download}
+                    {/* the size is also on the line above: dropped on phones, where it pushed the button past the card */}
+                    {info.size ? <span className="hidden opacity-70 sm:inline">· {Math.round(info.size / 1048576)} {c.size}</span> : null}
+                  </a>
+                  {count}
+                </div>
               ) : (
                 <p className="mt-6 text-sm text-slate-400">{c.notYet}</p>
               )}

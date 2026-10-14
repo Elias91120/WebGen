@@ -336,6 +336,14 @@ body {
 
 .ia-paused .ia-ring, .ia-paused .ia-spin-slow, .ia-paused .ia-travel, .ia-paused .ia-beam-spark { animation-play-state: paused; }
 
+/* Page 17 OCTOBRE : compteur de téléchargements en direct (point qui pulse, chiffre qui monte à chaque téléchargement) */
+.live-ring { animation: ia-ring 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+@keyframes count-bump {
+  from { opacity: 0; transform: translateY(0.4em); }
+  to { opacity: 1; transform: none; }
+}
+.count-bump { display: inline-block; animation: count-bump 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+
 @keyframes scroll-cue {
   0%, 100% { transform: translateY(0); opacity: 0.4; }
   50% { transform: translateY(6px); opacity: 1; }
@@ -348,6 +356,7 @@ body {
   .hero-rise { opacity: 1; animation: none; }
   .scroll-cue { animation: none; }
   .ia-ring, .ia-spin-slow, .ia-travel, .ia-beam-spark { animation: none; }
+  .live-ring, .count-bump { animation: none; }
 }
 
 /* Horizontal rows that scroll by swipe, without a visible scrollbar */
