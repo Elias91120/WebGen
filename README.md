@@ -17,6 +17,7 @@ Site multi-pages (une entrée HTML par page, servie par `nginx.conf` sur `/page`
 | Réalisations `/realisations` | `realisations/index.html` | Avant/après (`#avant-apres`), tous les projets (ancre = id du projet), lab, avis clients |
 | Équipe `/equipe` | `equipe/index.html` | Fondateurs, apporteurs d’affaires, pourquoi nous, expertises |
 | IA `/ia` | `ia/index.html` | Page autonome pour les entreprises (voir plus bas) |
+| 17 OCTOBRE `/17-octobre` | `17-octobre/index.html` | Notre jeu vidéo : bande-annonce, captures, fabrication, bêta privée à télécharger (voir plus bas) |
 
 - Cadre commun (header, footer, assistant, réservation, mentions légales) : `src/site/SiteLayout.tsx`. Sections : `src/site/sections.tsx`. Pages : `src/pages/pages.tsx`, une entrée par page dans `src/pages/entries/`.
 - Nouvelle page : créer `<page>/index.html` (copie d’une page existante : titre, description, canonical, og), l’entrée dans `src/pages/entries/`, l’ajouter à `vite.config.ts` (`input`), à la regex de `nginx.conf`, au menu de `SiteLayout.tsx` et aux textes `site` de `src/i18n.ts`.
@@ -31,6 +32,22 @@ Page à envoyer aux entreprises qui ont déjà un site : [www.3geeks.fr/ia](http
 - Réutilise le design, la réservation Calendly (sources `ia-*`), l’assistant (accueil et suggestions IA) et les mentions légales du site principal. Le site principal y renvoie depuis la navigation (« IA pour entreprises »).
 - Pas de prix affiché : services sur devis après l’audit gratuit de 30 min.
 - Le site principal y mène depuis la section « IA & automatisation » (`src/components/AiTeaser.tsx`, même convoyeur animé). Chaque domaine ouvre `/ia?service=<n>#vos-process` sur le bon service (ordre des `departments` dans `src/ia/copy.ts`).
+
+## Le jeu vidéo : 17 OCTOBRE (`/17-octobre`)
+
+Page du jeu du lab (code du jeu : dépôt séparé, `Desktop/Manif`). Elle est aussi en vedette dans « Le lab 3geeks » des Réalisations.
+
+- Page : `src/game/GameSections.tsx`, textes FR/EN `src/game/copy.ts`, dans le cadre commun (`SiteLayout`, page `game`).
+- Médias : bande-annonce `public/videos/17-octobre-trailer.mp4` (31 s, 1080p, ~10 Mo), captures et affiche dans
+  `public/images/17-octobre/` (WebP 1600 et 640 px), image de partage `og.jpg` (1200 × 630).
+- **Téléchargement** : la bêta est privée, derrière un code d'accès. Le .zip n'est PAS dans ce dépôt : il est servi par
+  l'app Coolify `17-octobre-fichiers` (`services/17-octobre/`, Node sans dépendance, volume persistant `/data`),
+  routée par Traefik sur `https://www.3geeks.fr/17-octobre/fichiers` (la requête n'atteint jamais le nginx du site).
+  Elle sert `version.json` (public : version, date, taille, notes, lu par la page et par le jeu), vérifie le code
+  (`/verifier`, limité par visiteur) et envoie le .zip (`/telecharger`, compté dans `stats.json`).
+- Variables Coolify de cette app : `DOWNLOAD_CODE` (le code donné aux amis ; plusieurs séparés par des virgules),
+  `UPLOAD_TOKEN` (envoi des versions). Une nouvelle version s'envoie depuis le dépôt du jeu : `tools/publish.ps1`.
+- Plus tard, cette app hébergera aussi le relais du duel en ligne.
 
 ## Motion design
 

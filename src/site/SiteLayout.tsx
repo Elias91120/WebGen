@@ -1,5 +1,5 @@
 /**
- * Shared frame of the studio pages (/, /offres, /realisations, /equipe): header with the page
+ * Shared frame of the studio pages (/, /offres, /realisations, /equipe, /17-octobre): header with the page
  * links, footer, assistant, booking calendar and legal notices. The /ia page has its own frame.
  * Each page passes its id; the layout handles the language, the page title and anchors.
  */
@@ -15,7 +15,7 @@ import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
 import { detectLang, persistLang } from '../lib/lang';
 
-export type PageId = 'home' | 'offers' | 'work' | 'team';
+export type PageId = 'home' | 'offers' | 'work' | 'team' | 'game';
 export type Copy = (typeof translations)['fr'];
 
 export interface PageContext {
@@ -105,7 +105,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
 
           <div className="hidden items-center gap-7 lg:flex">
             {NAV.map((link) => {
-              const active = link.page === page;
+              const active = link.page === page || (page === 'game' && link.page === 'work'); // (the game lives in the work)
               return link.key === 'ai' ? (
                 <a
                   key={link.key}

@@ -125,7 +125,13 @@ export const CHUNKS = [
     id: 'portfolio',
     title: 'Liste des réalisations',
     keywords: ['realisations', 'projets', 'portfolio', 'references', 'exemples', 'clients', 'travaux', 'deja fait', 'projects', 'work', 'examples', 'combien de projets'],
-    text: '3geeks a livré 13 projets : 9 réalisations clients et 4 produits maison. Clients : Cabinet Dr Amel Elloumi Jellouli (site médical bilingue, Tunis), Express Divorce USA (SaaS juridique, États-Unis), une plateforme privée de signature de contrats, Vipagence (marketplace de créateurs), Two (app iOS notée 5,0), Aurenza Capital (gestion de patrimoine), Green Jardin (Shopify, caisse et menu TV), une boutique privée sur Telegram et CallKitchen (IA vocale pour restaurants). Produits maison : Prompt Hub, PromptOptim, EFREI Skill Hub et 3geeks Infra. Tout est visible sur la page Réalisations (https://3geeks.fr/realisations), avec un avant/après du site du Dr Jellouli, et ce n’est que le début.',
+    text: '3geeks a livré 13 projets : 9 réalisations clients et 4 produits maison. Clients : Cabinet Dr Amel Elloumi Jellouli (site médical bilingue, Tunis), Express Divorce USA (SaaS juridique, États-Unis), une plateforme privée de signature de contrats, Vipagence (marketplace de créateurs), Two (app iOS notée 5,0), Aurenza Capital (gestion de patrimoine), Green Jardin (Shopify, caisse et menu TV), une boutique privée sur Telegram et CallKitchen (IA vocale pour restaurants). Produits maison : Prompt Hub, PromptOptim, EFREI Skill Hub et 3geeks Infra ; et un jeu vidéo, 17 OCTOBRE (https://3geeks.fr/17-octobre). Tout est visible sur la page Réalisations (https://3geeks.fr/realisations), avec un avant/après du site du Dr Jellouli, et ce n’est que le début.',
+  },
+  {
+    id: '17-octobre',
+    title: 'Le jeu vidéo du lab : 17 OCTOBRE',
+    keywords: ['jeu', 'jeu video', '17 octobre', 'octobre', 'game', 'video game', 'rts', 'strategie', 'gilets jaunes', 'crs', 'manif', 'manifestation', 'steam', 'godot', 'pixel', 'telecharger', 'beta', 'download'],
+    text: '17 OCTOBRE est le jeu vidéo du lab 3geeks : un jeu de stratégie en temps réel, satirique et cartoon, où l’on mène des cortèges de Gilets Jaunes dans Paris face aux CRS, ou l’inverse. Campagne de huit Actes, campagne côté CRS avec un budget absurde, escarmouches, défi du jour, et un duel en ligne en préparation. Ton non violent : les coups font baisser le moral. Fait sous Godot 4, ville et personnages générés par le code, sons et voix créés avec l’IA. Bêta privée pour Windows (code d’accès entre amis), bientôt gratuit sur Steam. Page : https://3geeks.fr/17-octobre',
   },
   {
     id: 'jellouli',

@@ -4,6 +4,9 @@ import BeforeAfter from './BeforeAfter/BeforeAfter';
 import { Mark } from './Logo';
 import Reveal from './Reveal';
 
+// Our video game (featured lab card), from the /17-octobre page
+const GAME_COVER = '/images/17-octobre/nuit-640.webp';
+
 // Small logos (lab cards)
 import promptHubImg from '../assets/images/prompt-hub.png';
 import promptOptimImg from '../assets/images/prompt-optim.png';
@@ -683,8 +686,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-400 md:text-base">
                   {fr
-                    ? `${clientProjects.length} réalisations clients et ${labProjects.length} produits maison : chaque projet élargit ce qu’on sait construire. Le prochain peut être le vôtre.`
-                    : `${clientProjects.length} client projects and ${labProjects.length} in-house products: every project widens what we can build. The next one could be yours.`}
+                    ? `${clientProjects.length} réalisations clients, ${labProjects.length} produits maison et un jeu vidéo : chaque projet élargit ce qu’on sait construire. Le prochain peut être le vôtre.`
+                    : `${clientProjects.length} client projects, ${labProjects.length} in-house products and a video game: every project widens what we can build. The next one could be yours.`}
                 </p>
               </div>
               <button type="button" data-booking="projects" onClick={onContact} className="btn btn-primary shrink-0">
@@ -702,6 +705,46 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
           <span className="hidden text-sm text-slate-500 sm:block">
             {fr ? 'Nos propres produits et outils' : 'Our own products and tools'}
           </span>
+        </Reveal>
+
+        <Reveal className="mb-5">
+          <a
+            id="17-octobre"
+            href="/17-octobre"
+            className="card group grid scroll-mt-24 overflow-hidden hover:-translate-y-1 hover:bg-surface-2 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
+          >
+            <div className="relative aspect-[16/9] overflow-hidden border-b border-white/[0.07] bg-ink md:aspect-auto md:border-b-0 md:border-r">
+              <img
+                src={GAME_COVER}
+                alt={fr ? '17 OCTOBRE : une manif vue d’en haut, la nuit' : '17 OCTOBRE: a street protest seen from above, at night'}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                style={{ imageRendering: 'pixelated' }}
+              />
+              <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-ink/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 backdrop-blur">
+                {fr ? 'Jeu vidéo · bêta' : 'Video game · beta'}
+              </span>
+            </div>
+            <div className="flex flex-col p-6 md:p-8">
+              <p className="text-xs font-medium text-brand-mint/90">{fr ? 'Jeu vidéo · stratégie en temps réel' : 'Video game · real-time strategy'}</p>
+              <h3 className="mt-1.5 font-display text-2xl font-bold tracking-tight text-[#FCC200]">17 OCTOBRE</h3>
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">
+                {fr
+                  ? 'Notre jeu : une manif vue d’en haut, satirique et cartoon. Des centaines de personnages simulés, une ville de Paris entièrement dessinée par le code, une campagne de huit Actes, le camp CRS, et bientôt le duel en ligne. Bientôt sur Steam.'
+                  : 'Our game: a street protest seen from above, satirical and cartoonish. Hundreds of simulated characters, a Paris drawn entirely by code, an eight-Act campaign, the riot police side, and an online duel on the way. Coming to Steam.'}
+              </p>
+              <div className="mt-5 flex flex-wrap gap-1.5">
+                {(fr ? ['Godot 4', 'Simulation de foule', 'Pixel art généré', 'Steam'] : ['Godot 4', 'Crowd simulation', 'Generated pixel art', 'Steam']).map((tag) => (
+                  <span key={tag} className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors group-hover:text-white">
+                {fr ? 'Bande-annonce et bêta' : 'Trailer and beta'} <ArrowRight className="h-4 w-4" />
+              </span>
+            </div>
+          </a>
         </Reveal>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">

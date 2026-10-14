@@ -23,6 +23,7 @@ import {
   WhatWeDo,
   WhyUs,
 } from '../site/sections';
+import GameSections from '../game/GameSections';
 import SiteLayout, { PageId } from '../site/SiteLayout';
 import '../index.css';
 
@@ -83,7 +84,14 @@ export const TeamPage: React.FC = () => (
   </SiteLayout>
 );
 
-const PAGES: Record<PageId, React.FC> = { home: HomePage, offers: OffersPage, work: WorkPage, team: TeamPage };
+/** Our video game (/17-octobre), from the lab: trailer, screenshots and the private beta download. */
+export const GamePage: React.FC = () => (
+  <SiteLayout page="game">
+    {(ctx) => <GameSections lang={ctx.lang} book={ctx.book} />}
+  </SiteLayout>
+);
+
+const PAGES: Record<PageId, React.FC> = { home: HomePage, offers: OffersPage, work: WorkPage, team: TeamPage, game: GamePage };
 
 /** Each HTML entry calls this with its page id. */
 export function mount(page: PageId) {

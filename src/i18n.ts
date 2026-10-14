@@ -149,6 +149,13 @@ export const translations = {
           h1: "What we've already built.",
           sub: "Healthcare, legal, finance, e-commerce, mobile apps and private platforms: projects designed, built and launched by 3geeks.",
         },
+        game: {
+          title: "17 OCTOBRE — the 3geeks lab video game",
+          description: "17 OCTOBRE, the 3geeks lab video game: a satirical, cartoon real-time strategy game. Lead the Yellow Vest marches through Paris, or switch to the riot police. Trailer, screenshots and private beta for Windows.",
+          path: "Video game",
+          h1: "17 OCTOBRE",
+          sub: "A satirical, cartoon real-time strategy game.",
+        },
         team: {
           title: "Team — 3geeks",
           description: "3geeks is co-founded by Elias Elloumi and Noam Leclapart-Jublot: background, certifications, expertise and business introducers.",
@@ -556,6 +563,13 @@ export const translations = {
           path: "Réalisations",
           h1: "Ce qu’on a déjà construit.",
           sub: "Santé, juridique, finance, e-commerce, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.",
+        },
+        game: {
+          title: "17 OCTOBRE — le jeu vidéo du lab 3geeks",
+          description: "17 OCTOBRE, le jeu vidéo du lab 3geeks : stratégie en temps réel satirique et cartoon. Mène les cortèges de Gilets Jaunes dans Paris, ou passe côté CRS. Bande-annonce, captures et bêta privée pour Windows.",
+          path: "Jeu vidéo",
+          h1: "17 OCTOBRE",
+          sub: "Un jeu de stratégie en temps réel, satirique et cartoon.",
         },
         team: {
           title: "Équipe — 3geeks",
