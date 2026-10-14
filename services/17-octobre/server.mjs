@@ -2,17 +2,19 @@
 //
 // Serves the private beta download of the game (a Windows .zip) behind an access code, plus a public
 // version.json that the game reads to say "a new version is out". New builds are uploaded from Elias's PC
-// with tools/publish.ps1 (game repo), authenticated by a token. Later it will also host the online duel relay.
+// with tools/publish.ps1 (game repo), authenticated by a token. It also hosts the online duel relay (relay.mjs).
 //
 //   GET  /health                        {"status":"ok"}
 //   GET  /version.json                  current version, date, size, release notes (public)
 //   GET  /verifier?code=XXXX            {"ok": true|false} (rate limited per visitor)
 //   GET  /telecharger?code=XXXX         the zip (attachment), or back to the page with ?code=faux
 //   PUT  /upload/<name>                 Authorization: Bearer <UPLOAD_TOKEN> — stores a file in DATA_DIR
-//   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts
+//   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms
+//   WS   /relais                        the online duel relay (relay.mjs)
 //
 // Paths work with or without the /17-octobre/fichiers prefix (Traefik may or may not strip it).
 // Env: UPLOAD_TOKEN, DOWNLOAD_CODE (comma-separated list allowed), DATA_DIR (default /data), PORT (default 3000).
+// Arguments --port=N and --data=DIR override PORT and DATA_DIR (local tests).
 // No dependencies: node:http and node:fs only.
 
 import { createReadStream, createWriteStream, promises as fs } from 'node:fs';
@@ -20,8 +22,11 @@ import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { timingSafeEqual } from 'node:crypto';
 
-const PORT = Number(process.env.PORT || 3000);
-const DATA = process.env.DATA_DIR || '/data';
+import { attachRelay, relayStats } from './relay.mjs';
+
+const arg = (name) => (process.argv.find((a) => a.startsWith(`--${name}=`)) || '').split('=').slice(1).join('=');
+const PORT = Number(arg('port') || process.env.PORT || 3000);
+const DATA = arg('data') || process.env.DATA_DIR || '/data';
 const TOKEN = process.env.UPLOAD_TOKEN || '';
 const CODES = (process.env.DOWNLOAD_CODE || '').split(',').map((c) => c.trim().toUpperCase()).filter(Boolean);
 const PREFIX = '/17-octobre/fichiers';
@@ -151,9 +156,9 @@ const server = createServer(async (req, res) => {
     if (req.method === 'GET' && path === '/stats') {
       if (!authorized(req)) return send(res, 401, { error: 'unauthorized' });
       try {
-        return send(res, 200, JSON.parse(await fs.readFile(join(DATA, 'stats.json'), 'utf8')));
+        return send(res, 200, { ...JSON.parse(await fs.readFile(join(DATA, 'stats.json'), 'utf8')), relay: relayStats() });
       } catch {
-        return send(res, 200, {});
+        return send(res, 200, { relay: relayStats() });
       }
     }
     send(res, 404, { error: 'not found' });
@@ -161,6 +166,8 @@ const server = createServer(async (req, res) => {
     send(res, 500, { error: 'server error' });
   }
 });
+
+attachRelay(server, PREFIX);
 
 server.listen(PORT, () => {
   console.log(`17 OCTOBRE file server on :${PORT}, data in ${DATA}, ${CODES.length} access code(s)${TOKEN ? '' : ', NO upload token set'}`);
