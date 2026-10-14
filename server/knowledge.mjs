@@ -107,7 +107,7 @@ export const CHUNKS = [
     id: 'elias',
     title: 'Parcours et certifications d’Elias Elloumi',
     keywords: ['elias', 'elloumi', 'parcours', 'experience', 'formation', 'etudes', 'diplome', 'certifications', 'certif', 'clevai', 'nokia', 'ece', 'liora', 'datascientest', 'aws academy', 'prompt engineering', 'linkedin', 'cv'],
-    text: 'Elias Elloumi est développeur Data & IA en alternance chez ClevAI (depuis 2026), après une alternance chez Nokia (2025-2026). Il suit un Master Data & Intelligence Artificielle à l’ECE Paris (2026-2028), après un Bachelor Informatique à l’ECE Paris (2023-2026). Certifications : IA & GenAI Prompt Engineering niveau 1 (Liora, 2026) ; AWS Academy Graduate Machine Learning Foundations (AWS, 2026) ; AWS Academy Graduate Cloud Architecting (AWS, 2026) ; Programming for Data Science niveau 2 (Liora) ; IA & GenAI Prompt Engineering (DataScientest, 2025) ; Python pour les Data Scientists niveau 1 (DataScientest). LinkedIn : https://www.linkedin.com/in/elias-eloumi/',
+    text: 'Elias Elloumi est développeur Data & IA en alternance chez ClevAI (depuis 2026), après une alternance chez Nokia (2025-2026). Il suit un Master Data & Intelligence Artificielle à l’ECE Paris (2026-2028), après un Bachelor Informatique à l’ECE Paris (2023-2026). Certifications : IA & GenAI Prompt Engineering niveau 1 (Liora, 2026) ; AWS Academy Graduate Machine Learning Foundations (AWS, 2026) ; AWS Academy Graduate Cloud Architecting (AWS, 2026) ; Programming for Data Science niveau 2 (Liora) ; IA & GenAI Prompt Engineering (DataScientest, 2025) ; Python pour les Data Scientists niveau 1 (DataScientest). LinkedIn : https://www.linkedin.com/in/elias-elloumi/',
   },
   {
     id: 'noam',
@@ -197,7 +197,7 @@ export const CHUNKS = [
     id: 'contact',
     title: 'Contact et prise de rendez-vous',
     keywords: ['contact', 'contacter', 'joindre', 'appeler', 'appel', 'telephone', 'numero', 'mail', 'email', 'e-mail', 'rendez-vous', 'rdv', 'calendly', 'reserver', 'discuter', 'parler', 'echanger', 'linkedin', 'whatsapp', 'adresse', 'bureau', 'locaux', 'ou etes-vous', 'bases', 'rencontrer', 'visio', 'call', 'meeting', 'phone', 'book'],
-    text: 'Pour parler de votre projet : réservez un appel gratuit de 30 min avec le bouton « Réserver un appel gratuit » du site (via Calendly) ; écrivez à contact@3geeks.fr (réponse sous 24 h) ; ou contactez Elias (https://www.linkedin.com/in/elias-eloumi/) ou Noam (https://www.linkedin.com/in/noam-leclapart-jublot/) sur LinkedIn. 3geeks est un studio français : les échanges se font par téléphone lors de l’appel réservé (les détails de l’appel sont confirmés à la réservation), par e-mail ou sur LinkedIn.',
+    text: 'Pour parler de votre projet : réservez un appel gratuit de 30 min avec le bouton « Réserver un appel gratuit » du site (via Calendly) ; écrivez à contact@3geeks.fr (réponse sous 24 h) ; ou contactez Elias (https://www.linkedin.com/in/elias-elloumi/) ou Noam (https://www.linkedin.com/in/noam-leclapart-jublot/) sur LinkedIn. 3geeks est un studio français : les échanges se font par téléphone lors de l’appel réservé (les détails de l’appel sont confirmés à la réservation), par e-mail ou sur LinkedIn.',
   },
   {
     id: 'languages',

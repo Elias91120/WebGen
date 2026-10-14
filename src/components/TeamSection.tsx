@@ -13,7 +13,7 @@ type FounderKey = 'elias' | 'noam';
 
 // Both co-founders share the exact same card and contact treatment.
 export const FOUNDERS: Record<FounderKey, { name: string; image: string; linkedin: string }> = {
-  elias: { name: 'Elias Elloumi', image: eliasImg, linkedin: 'https://www.linkedin.com/in/elias-eloumi/' },
+  elias: { name: 'Elias Elloumi', image: eliasImg, linkedin: 'https://www.linkedin.com/in/elias-elloumi/' },
   noam: { name: 'Noam Leclapart-Jublot', image: noamImg, linkedin: 'https://www.linkedin.com/in/noam-leclapart-jublot/' },
 };
 
