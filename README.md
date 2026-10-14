@@ -47,7 +47,11 @@ Page du jeu du lab (code du jeu : dépôt séparé, `Desktop/Manif`). Elle est a
   (`/verifier`, limité par visiteur) et envoie le .zip (`/telecharger`, compté dans `stats.json`).
 - Variables Coolify de cette app : `DOWNLOAD_CODE` (le code donné aux amis ; plusieurs séparés par des virgules),
   `UPLOAD_TOKEN` (envoi des versions). Une nouvelle version s'envoie depuis le dépôt du jeu : `tools/publish.ps1`.
-- Plus tard, cette app hébergera aussi le relais du duel en ligne.
+- Elle héberge aussi le **relais du duel en ligne** (`relay.mjs`, WebSocket sans dépendance) sur
+  `wss://www.3geeks.fr/17-octobre/fichiers/relais` : un code de 4 lettres réunit deux joueurs de la même version, le
+  relais leur donne la même graine puis transmet leurs ordres sans les lire. Tester : `node services/17-octobre/test-relay.mjs`
+  (local) ou `node services/17-octobre/test-relay.mjs wss://www.3geeks.fr/17-octobre/fichiers/relais` (production).
+- Pas de webhook pour cette app : après un changement dans `services/17-octobre`, redéployer à la main dans Coolify.
 
 ## Motion design
 
