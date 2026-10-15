@@ -31,7 +31,9 @@ let path = '';
 let saving = Promise.resolve();
 const posts = new Map(); // visitor -> {n, until}
 
-export const scoreOf = (f) => f.crs + 50 * f.niveau + 2 * Math.min(f.temps, 1200) + (f.victoire ? 5000 : 0);
+// (0.9.0: the run goes on after the Prefect — RER to the next world — so each extra world reached is worth 3000)
+export const scoreOf = (f) =>
+  f.crs + 50 * f.niveau + 2 * Math.min(f.temps, 1800) + (f.victoire ? 5000 : 0) + 3000 * Math.max(0, (f.mondes || 1) - 1);
 
 const hash = (token) => createHash('sha256').update(token).digest('hex').slice(0, 32);
 const keyOf = (name) => name.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -66,7 +68,7 @@ function top() {
   return {
     top: ranked().slice(0, TOP).map((p, k) => ({
       rang: k + 1, nom: p.nom, perso: p.perso, score: p.score, niveau: p.niveau, temps: p.temps, crs: p.crs,
-      victoire: p.victoire, date: p.date.slice(0, 10),
+      victoire: p.victoire, mondes: p.mondes || 1, date: p.date.slice(0, 10),
     })),
     joueurs: Object.keys(board.joueurs).length,
   };
@@ -75,10 +77,15 @@ function top() {
 /** The facts of a manif, checked; a message if they can't be. */
 function facts(m) {
   const int = (v) => (Number.isInteger(v) ? v : NaN);
-  const f = { niveau: int(m.niveau), temps: int(m.temps), crs: int(m.crs), victoire: m.victoire === true };
-  if (!(f.niveau >= 1 && f.niveau <= 200 && f.temps >= 0 && f.temps <= 3600 && f.crs >= 0 && f.crs <= 50000)) return null;
+  const f = {
+    niveau: int(m.niveau), temps: int(m.temps), crs: int(m.crs), victoire: m.victoire === true,
+    mondes: m.mondes === undefined ? 1 : int(m.mondes),
+  };
+  if (!(f.niveau >= 1 && f.niveau <= 200 && f.temps >= 0 && f.temps <= 7200 && f.crs >= 0 && f.crs <= 80000)) return null;
+  if (!(f.mondes >= 1 && f.mondes <= 12)) return null;
   if (f.crs > 40 * f.temps + 50 || f.niveau > 12 + f.temps / 6) return null; // (plus vite que le jeu ne le permet)
   if (f.victoire && (f.temps < 600 || f.niveau < 10)) return null; // (le Préfet n'arrive qu'à 10 min)
+  if (f.mondes > 1 && (!f.victoire || f.temps < 600 + 130 * (f.mondes - 1))) return null; // (un monde de plus = un Préfet, puis 2 min de RER)
   return f;
 }
 
