@@ -2,7 +2,9 @@
 //
 // Serves the beta download of the game (a Windows .zip; free since 14/10, an access code only if DOWNLOAD_CODE is set), plus a public
 // version.json that the game reads to say "a new version is out". New builds are uploaded from Elias's PC
-// with tools/publish.ps1 (game repo), authenticated by a token. It also hosts the online duel relay (relay.mjs).
+// with tools/publish.ps1 (game repo), authenticated by a token. It also hosts the online duel relay (relay.mjs), the shared
+// world of the Manif mode (monde.mjs: everyone online in the same Paris, proximity voice chat) and its leaderboard
+// (classement.mjs).
 //
 //   GET  /health                        {"status":"ok"}
 //   GET  /version.json                  current version, date, size, release notes (public)
@@ -11,11 +13,15 @@
 //   GET  /telechargements               {"total": N} downloads so far, every version (public)
 //   GET  /telechargements/direct        the same total, live (Server-Sent Events: on connect, then on each download)
 //   PUT  /upload/<name>                 Authorization: Bearer <UPLOAD_TOKEN> — stores a file in DATA_DIR
-//   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms, live viewers
+//   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms, live viewers,
+//                                       players online, leaderboard size
+//   GET|POST|DELETE /classement         the Manif mode's leaderboard (classement.mjs)
 //   WS   /relais                        the online duel relay (relay.mjs)
+//   WS   /monde                         the Manif mode's shared world (monde.mjs)
 //
 // Paths work with or without the /17-octobre/fichiers prefix (Traefik may or may not strip it).
-// Env: UPLOAD_TOKEN, DOWNLOAD_CODE (comma-separated list allowed), DATA_DIR (default /data), PORT (default 3000).
+// Env: UPLOAD_TOKEN, DOWNLOAD_CODE (comma-separated list allowed), DATA_DIR (default /data), PORT (default 3000),
+// MONDE_MAX (players in the shared world at once, default 100).
 // Arguments --port=N and --data=DIR override PORT and DATA_DIR (local tests).
 // No dependencies: node:http and node:fs only.
 
@@ -24,7 +30,9 @@ import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { timingSafeEqual } from 'node:crypto';
 
-import { attachRelay, relayStats } from './relay.mjs';
+import { boardStats, classement, loadBoard } from './classement.mjs';
+import { mondeStats, mondeUpgrade, startMonde } from './monde.mjs';
+import { relayStats, relayUpgrade, startRelay } from './relay.mjs';
 
 const arg = (name) => (process.argv.find((a) => a.startsWith(`--${name}=`)) || '').split('=').slice(1).join('=');
 const PORT = Number(arg('port') || process.env.PORT || 3000);
@@ -193,21 +201,32 @@ const server = createServer(async (req, res) => {
     if (req.method === 'PUT' && path.startsWith('/upload/')) return await upload(req, res, decodeURIComponent(path.slice(8)));
     if (req.method === 'GET' && path === '/stats') {
       if (!authorized(req)) return send(res, 401, { error: 'unauthorized' });
-      return send(res, 200, { ...stats, relay: relayStats(), watchers: watchers.size });
+      return send(res, 200, { ...stats, relay: relayStats(), watchers: watchers.size, monde: mondeStats(), classement: boardStats() });
     }
+    if (await classement(req, res, url, path, { send, visitor, authorized })) return;
     send(res, 404, { error: 'not found' });
   } catch (e) {
     send(res, 500, { error: 'server error' });
   }
 });
 
-attachRelay(server, PREFIX);
+// the WebSockets: the duel relay and the Manif world (anything else is refused)
+server.on('upgrade', (req, socket) => {
+  let path = new URL(req.url || '/', 'http://local').pathname;
+  if (path.startsWith(PREFIX)) path = path.slice(PREFIX.length) || '/';
+  if (path === '/relais') return relayUpgrade(req, socket);
+  if (path === '/monde') return mondeUpgrade(req, socket);
+  socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+});
+startRelay();
+startMonde();
 
 setInterval(() => {
   for (const w of watchers) w.write(': ping\n\n');
 }, KEEPALIVE_MS).unref();
 
 await loadStats();
+await loadBoard(DATA);
 server.listen(PORT, () => {
   console.log(`17 OCTOBRE file server on :${PORT}, data in ${DATA}, ${totalDownloads()} download(s), ${CODES.length} access code(s)${TOKEN ? '' : ', NO upload token set'}`);
 });
