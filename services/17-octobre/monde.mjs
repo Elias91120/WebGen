@@ -9,8 +9,10 @@
 //   → {"op":"hello","name":"Elias","perso":"jojo","version":"0.1.0","voice":true}
 //   ← {"op":"welcome","id":7,"count":12,"view":120,"voice":30}   or {"op":"error","msg":"..."}, then the server closes
 //   → {"op":"p","x":-160.2,"y":0,"z":18.4,"f":3.14,"a":1,"lv":12}   where I am: facing, animation (0 still, 1 run,
-//                                                                  2 slide, 3 in the air), level ; 20 a second at most
-//   ← {"op":"s","p":[[id,x,y,z,f,a],...]}       every 100 ms: the others within VIEW m (the 40 nearest at most)
+//                                                                  2 slide, 3 in the air, 4 paused: in a menu), level ;
+//                                                                  20 a second at most
+//   ← {"op":"s","p":[[id,x,y,z,f,a,lv],...]}    every 100 ms: the others within VIEW m (the 40 nearest at most);
+//                                                  (lv since 0.8.2: older games read the first six fields only)
 //   ← {"op":"in","id":7,"name":"Elias","perso":"jojo","lv":12,"voice":true}   someone comes into view
 //   ← {"op":"out","id":7}                       someone leaves the view, or the server
 //   ← {"op":"n","count":12}                     how many players are online (every 5 s)
@@ -120,7 +122,7 @@ class Player extends WsConn {
     this.y = num(m.y, -50, 100);
     this.z = num(m.z, -1000, 1000);
     this.f = num(m.f, -10, 10);
-    this.a = Math.round(num(m.a, 0, 3));
+    this.a = Math.round(num(m.a, 0, 4));
     this.lv = Math.round(num(m.lv, 1, 999));
     this.placed = true;
   }
@@ -173,7 +175,7 @@ function tick() {
     }
     if (p.near.length) {
       const r = (v) => Math.round(v * 100) / 100;
-      p.send({ op: 's', p: p.near.map((q) => [q.id, r(q.x), r(q.y), r(q.z), r(q.f), q.a]) });
+      p.send({ op: 's', p: p.near.map((q) => [q.id, r(q.x), r(q.y), r(q.z), r(q.f), q.a, q.lv]) });
     }
     if (ticks % COUNT_EVERY === 0) p.send({ op: 'n', count: players.size });
   }

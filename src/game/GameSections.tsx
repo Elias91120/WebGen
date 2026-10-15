@@ -10,7 +10,9 @@ import Reveal from '../components/Reveal';
 import type { Lang } from '../i18n';
 import { GAME_COPY } from './copy';
 
-const FILES = '/17-octobre/fichiers';
+// Absolute: the file server is routed on www.3geeks.fr, and the page is also served on 3geeks.fr (the canonical URL),
+// where a relative path answered the site's own HTML and the download button never showed. The server allows any origin.
+const FILES = 'https://www.3geeks.fr/17-octobre/fichiers';
 const IMG = '/images/17-octobre';
 const GAME_YELLOW = '#FCC200'; // the game's title colour (its own art direction)
 
@@ -182,7 +184,75 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
         </div>
       </section>
 
-      {/* What the game is */}
+      {/* Two games in one: Les Actes (the original) and the Manif (3D, online) */}
+      <section id="deux-jeux" className="relative scroll-mt-20 border-b border-white/5 py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <Heading path={c.modesPath} title={c.modesTitle} sub={c.modesSub} />
+          <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-2">
+            {c.modes.map((m, i) => (
+              <Reveal key={m.id} delay={i * 100}>
+                <article className="card flex h-full flex-col overflow-hidden p-0">
+                  <div className="relative bg-black">
+                    {m.id === 'manif' ? (
+                      <div className="flex items-center justify-center bg-[radial-gradient(ellipse_70%_90%_at_50%_0%,rgba(252,194,0,0.16),transparent_70%)] px-6 pt-6">
+                        {/* the vertical video, as on a phone: muted, loops, no controls needed */}
+                        <video
+                          className="block aspect-[9/16] w-full max-w-[280px] rounded-t-2xl border border-b-0 border-white/10 bg-black object-cover"
+                          src="/videos/17-octobre-manif.mp4"
+                          poster={`${IMG}/manif-poster.jpg`}
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                          preload="metadata"
+                          aria-label={c.manifVideoLabel}
+                        />
+                      </div>
+                    ) : (
+                      <img
+                        src={`${IMG}/melee.webp`}
+                        alt={c.gallery.find((g) => g.src === 'melee')?.alt ?? m.title}
+                        loading="lazy"
+                        className="block aspect-video w-full object-cover"
+                        style={{ imageRendering: 'pixelated' }}
+                      />
+                    )}
+                    <span
+                      className="absolute left-4 top-4 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider"
+                      style={m.id === 'manif' ? { background: GAME_YELLOW, color: '#1a1200' } : { background: 'rgba(0,0,0,0.6)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
+                    >
+                      {m.tag}
+                    </span>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6 md:p-8">
+                    <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: GAME_YELLOW }}>{m.kind}</span>
+                    <h3 className="mt-2 font-display text-3xl font-bold text-white md:text-4xl">{m.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-slate-400 md:text-base">{m.d}</p>
+                    <ul className="mt-5 space-y-2 text-sm leading-relaxed text-slate-300">
+                      {m.points.map((p) => (
+                        <li key={p} className="flex gap-2">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: GAME_YELLOW }} />
+                          {p}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-6 flex flex-wrap gap-3 pt-2">
+                      <a href="#telecharger" className="btn btn-primary">
+                        <Download className="h-4 w-4" /> {c.ctaDownload}
+                      </a>
+                      <a href={m.id === 'manif' ? '#deux-jeux' : '#bande-annonce'} className="btn btn-ghost">
+                        <Play className="h-4 w-4" /> {m.cta}
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* What Les Actes are */}
       <section className="relative border-b border-white/5 py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <Heading path={c.featuresPath} title={c.featuresTitle} sub={c.featuresSub} />
