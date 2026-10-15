@@ -3,7 +3,7 @@
  * and the beta download (free since 14/10, served by the game's file server on the Mac Mini:
  * services/17-octobre, routed by Traefik on /17-octobre/fichiers).
  */
-import { ArrowRight, Dices, Download, Flag, Moon, Play, Shield, Smile, Swords, X } from 'lucide-react';
+import { ArrowRight, Dices, Download, Flag, Moon, Play, Shield, Smile, Swords, X, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import Reveal from '../components/Reveal';
@@ -14,7 +14,7 @@ const FILES = '/17-octobre/fichiers';
 const IMG = '/images/17-octobre';
 const GAME_YELLOW = '#FCC200'; // the game's title colour (its own art direction)
 
-const ICONS: Record<string, React.ElementType> = { flag: Flag, shield: Shield, dice: Dices, swords: Swords, moon: Moon, smile: Smile };
+const ICONS: Record<string, React.ElementType> = { flag: Flag, shield: Shield, dice: Dices, swords: Swords, moon: Moon, smile: Smile, zap: Zap };
 
 interface VersionInfo {
   version: string;
