@@ -1,5 +1,17 @@
 {
   "_lisezmoi": "Des parties réelles que le serveur a refusées autrefois, ajoutées à la main et vérifiées comme une partie envoyée (voir classement.mjs) : nom, perso (jojo, gege, mimi, karim, nadia), niveau, temps (secondes), crs, victoire, mondes, date, note. La vraie joueuse reprend son nom à sa prochaine partie.",
-  "manif": [],
+  "manif": [
+    {
+      "nom": "Marion",
+      "perso": "jojo",
+      "niveau": 130,
+      "temps": 2480,
+      "crs": 93966,
+      "victoire": true,
+      "mondes": 4,
+      "date": "2026-10-16",
+      "note": "Refusée le 16/10 par l'ancienne limite (80 000 CRS). L'écran de fin (photo d'Elias) : la manif a gagné, niveau 130, monde 4, 93 966 CRS dispersés, 165 objets cassés, 9 Préfets. Le temps n'est pas sur la photo : 41:20 est le minimum que permettent les règles (quatre mondes, trois trajets en RER, 3:14 d'essaims à la fin), à corriger si Marion donne le sien (RECORDS, « plus longue manif ») ; le score n'en dépend pas. Le perso : Jojo, de mémoire."
+    }
+  ],
   "campagne": []
 }
