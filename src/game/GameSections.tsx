@@ -188,24 +188,24 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
       <section id="deux-jeux" className="relative scroll-mt-20 border-b border-white/5 py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <Heading path={c.modesPath} title={c.modesTitle} sub={c.modesSub} />
-          <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {c.modes.map((m, i) => (
               <Reveal key={m.id} delay={i * 100}>
                 <article className="card flex h-full flex-col overflow-hidden p-0">
                   <div className="relative bg-black">
-                    {m.id === 'manif' ? (
+                    {m.id === 'manif' || m.id === 'campagne' ? (
                       <div className="flex items-center justify-center bg-[radial-gradient(ellipse_70%_90%_at_50%_0%,rgba(252,194,0,0.16),transparent_70%)] px-6 pt-6">
-                        {/* the vertical video, as on a phone: muted, loops, no controls needed */}
+                        {/* the vertical video, as on a phone: muted, loops, no controls needed (the Campagne: the teaser) */}
                         <video
                           className="block aspect-[9/16] w-full max-w-[280px] rounded-t-2xl border border-b-0 border-white/10 bg-black object-cover"
-                          src="/videos/17-octobre-manif.mp4"
-                          poster={`${IMG}/manif-poster.jpg`}
+                          src={m.id === 'manif' ? '/videos/17-octobre-manif.mp4' : '/videos/17-octobre-campagne.mp4'}
+                          poster={m.id === 'manif' ? `${IMG}/manif-poster.jpg` : `${IMG}/campagne-poster.jpg`}
                           autoPlay
                           muted
                           loop
                           playsInline
                           preload="metadata"
-                          aria-label={c.manifVideoLabel}
+                          aria-label={m.id === 'manif' ? c.manifVideoLabel : c.campagneVideoLabel}
                         />
                       </div>
                     ) : (
@@ -219,7 +219,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                     )}
                     <span
                       className="absolute left-4 top-4 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider"
-                      style={m.id === 'manif' ? { background: GAME_YELLOW, color: '#1a1200' } : { background: 'rgba(0,0,0,0.6)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
+                      style={m.id !== 'actes' ? { background: GAME_YELLOW, color: '#1a1200' } : { background: 'rgba(0,0,0,0.6)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
                     >
                       {m.tag}
                     </span>
@@ -240,7 +240,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                       <a href="#telecharger" className="btn btn-primary">
                         <Download className="h-4 w-4" /> {c.ctaDownload}
                       </a>
-                      <a href={m.id === 'manif' ? '#deux-jeux' : '#bande-annonce'} className="btn btn-ghost">
+                      <a href={m.id === 'actes' ? '#bande-annonce' : '#deux-jeux'} className="btn btn-ghost">
                         <Play className="h-4 w-4" /> {m.cta}
                       </a>
                     </div>
