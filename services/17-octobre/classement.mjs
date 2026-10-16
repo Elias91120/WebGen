@@ -12,20 +12,29 @@
 // A player is a secret token kept by the game (no account, no password, no e-mail); the first token to use a name owns
 // it on that board (case and accents ignored). Only each player's best run is kept. The Manif score is computed here
 // from the facts, never taken from the game:
-//   score = CRS dispersés + 50 × niveau + 2 × secondes tenues (20 min au plus) + 5 000 si Monsieur le Préfet est vaincu
+//   score = CRS dispersés + 50 × niveau + 2 × secondes tenues (30 min au plus) + 5 000 si Monsieur le Préfet est vaincu
+//           + 3 000 par monde de plus atteint par le RER
 // The Campagne score is the BORDEL total the game counted, bounded by what a soirée can produce (a cheap guard, not an
 // anti-cheat, like the Manif's). Tokens are stored hashed.
 // Stored in DATA_DIR/classement.json (manif) and DATA_DIR/casseurs.json (campagne), written through a temp file, one
 // write at a time.
+//
+// Runs added by hand: ajouts.json next to this file (AJOUTS_FILE overrides it), {"manif": [{nom, perso, niveau, temps,
+// crs, victoire, mondes, date, note}], "campagne": [...]}: a real run the server once refused (16/10: a Manif of 93 966
+// CRS, over the old 80 000 limit), vouched for by Elias. Each one enters its board at start, checked like a posted run,
+// if nobody holds the name yet; the first real player who then posts with that name takes it over and keeps the better
+// of the two runs (the board remembers the taken names: `pris`).
 
 import { createHash } from 'node:crypto';
 import { promises as fs } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { cleanName } from './noms.mjs';
 
 const TOKEN_RE = /^[0-9a-f]{32}$/;
 const MODES = { manif: 'classement.json', campagne: 'casseurs.json' };
+const AJOUTS = process.env.AJOUTS_FILE || join(dirname(fileURLToPath(import.meta.url)), 'ajouts.json');
 const PERSOS = {
   manif: new Set(['jojo', 'gege', 'mimi', 'karim', 'nadia']),
   campagne: new Set(['elias', 'noam', 'eden']),
@@ -59,6 +68,37 @@ export async function loadBoard(dir) {
       boards[mode] = b && typeof b.joueurs === 'object' ? b : { joueurs: {} };
     } catch {
       boards[mode] = { joueurs: {} };
+    }
+  }
+  await loadAjouts();
+}
+
+/** The runs added by hand (see the top of this file): each one enters its board if its name is free. */
+async function loadAjouts() {
+  let a;
+  try {
+    a = JSON.parse(await fs.readFile(AJOUTS, 'utf8'));
+  } catch {
+    return;
+  }
+  for (const mode of Object.keys(MODES)) {
+    const board = boards[mode];
+    for (const r of Array.isArray(a && a[mode]) ? a[mode] : []) {
+      const nom = cleanName(r && r.nom);
+      const f = nom && (mode === 'campagne' ? factsCampagne(r) : factsManif(r));
+      if (!f) {
+        console.error(`classement (${mode}): ajout refusé`, JSON.stringify(r));
+        continue;
+      }
+      const cle = keyOf(nom);
+      if ((board.pris || []).includes(cle) || Object.values(board.joueurs).some((p) => p.cle === cle)) continue;
+      const { score, ...facts } = f;
+      const date = new Date(r.date || Date.now());
+      board.joueurs[`ajout:${cle}`] = {
+        nom, cle, perso: PERSOS[mode].has(r.perso) ? r.perso : DEFAULT_PERSO[mode], score, ...facts,
+        date: (Number.isNaN(date.getTime()) ? new Date() : date).toISOString(), parties: 1, ajout: true,
+      };
+      console.log(`classement (${mode}): ajouté à la main : ${nom}, ${score}`);
     }
   }
 }
@@ -108,15 +148,19 @@ function top(mode) {
 
 const int = (v) => (Number.isInteger(v) ? v : NaN);
 
-/** The facts of a manif, checked; null if they can't be. */
+/**
+ * The facts of a manif, checked; null if they can't be. (16/10: no more fixed cap on the CRS, 80 000 refused a real run
+ * of 93 966 in the 4th world: after each Prefect the swarms double every minute, up to the horde's 390 at once; a run
+ * is bounded by its pace instead, 100 CRS a second on average at most, and may last 6 hours.)
+ */
 function factsManif(m) {
   const f = {
     niveau: int(m.niveau), temps: int(m.temps), crs: int(m.crs), victoire: m.victoire === true,
     mondes: m.mondes === undefined ? 1 : int(m.mondes),
   };
-  if (!(f.niveau >= 1 && f.niveau <= 200 && f.temps >= 0 && f.temps <= 7200 && f.crs >= 0 && f.crs <= 80000)) return null;
+  if (!(f.niveau >= 1 && f.niveau <= 999 && f.temps >= 0 && f.temps <= 21600 && f.crs >= 0)) return null;
   if (!(f.mondes >= 1 && f.mondes <= 12)) return null;
-  if (f.crs > 40 * f.temps + 50 || f.niveau > 12 + f.temps / 6) return null; // (plus vite que le jeu ne le permet)
+  if (f.crs > 100 * f.temps + 50 || f.niveau > 12 + f.temps / 6) return null; // (plus vite que le jeu ne le permet)
   if (f.victoire && (f.temps < 600 || f.niveau < 10)) return null; // (le Préfet n'arrive qu'à 10 min)
   if (f.mondes > 1 && (!f.victoire || f.temps < 600 + 130 * (f.mondes - 1))) return null; // (un monde de plus = un Préfet, puis 2 min de RER)
   return { ...f, score: scoreOf(f) };
@@ -174,7 +218,18 @@ async function post(req, res, ctx) {
   const id = hash(m.jeton);
   const cle = keyOf(nom);
   const owner = Object.entries(board.joueurs).find(([k, p]) => p.cle === cle && k !== id);
-  if (owner) return ctx.send(res, 409, { ok: false, msg: `Le pseudo « ${nom} » est déjà pris : choisis-en un autre.` });
+  if (owner && !owner[1].ajout) return ctx.send(res, 409, { ok: false, msg: `Le pseudo « ${nom} » est déjà pris : choisis-en un autre.` });
+  if (owner) {
+    // (un score ajouté à la main : le vrai joueur reprend le nom, et la meilleure des deux parties)
+    const [k, p] = owner;
+    delete board.joueurs[k];
+    board.pris = [...new Set([...(board.pris || []), cle])];
+    const mine = board.joueurs[id];
+    if (!mine || p.score > mine.score) {
+      const { ajout, ...run } = p;
+      board.joueurs[id] = { ...run, parties: (mine ? mine.parties : 0) + (run.parties || 1) };
+    }
+  }
   const { score, ...facts } = f;
   const old = board.joueurs[id];
   const record = !old || score > old.score;
