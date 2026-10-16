@@ -1,17 +1,22 @@
-// 17 OCTOBRE — the Manif mode's leaderboard (served by the file server on /17-octobre/fichiers/classement).
+// 17 OCTOBRE — the leaderboards (served by the file server on /17-octobre/fichiers/classement).
+// Two boards: the Manif mode (default) and the Campagne mode ("les casseurs de Paname", since 0.10.0).
 //
-//   GET    /classement               {"top":[{rang,nom,perso,score,niveau,temps,crs,victoire,date}],"joueurs":N}   (public)
-//   POST   /classement               {"nom","jeton","perso","niveau","temps","crs","victoire","version"}
-//                                      → {"ok":true,"score":S,"rang":R,"joueurs":N,"meilleur":B,"record":true|false}
+//   GET    /classement                {"top":[{rang,nom,perso,score,niveau,temps,crs,victoire,mondes,date}],"joueurs":N}
+//   GET    /classement?mode=campagne  {"mode":"campagne","top":[{rang,nom,perso,score,coups,serie,duree,fin,plus_gros,date}],"joueurs":N}
+//   POST   /classement                {"nom","jeton","perso","niveau","temps","crs","victoire","mondes","version"}          (manif)
+//                                     {"mode":"campagne","nom","jeton","perso","bordel","coups","serie","duree","fin","plus_gros","version"}
+//                                      → {"ok":true,"mode","score":S,"rang":R,"joueurs":N,"meilleur":B,"record":true|false}
 //                                      or {"ok":false,"msg":"..."} (name taken, refused, too many tries...)
-//   DELETE /classement?nom=X          Authorization: Bearer <UPLOAD_TOKEN> — removes a name (moderation)
+//   DELETE /classement?nom=X[&mode=campagne]   Authorization: Bearer <UPLOAD_TOKEN> — removes a name (moderation)
 //
 // A player is a secret token kept by the game (no account, no password, no e-mail); the first token to use a name owns
-// it (case and accents ignored). Only each player's best manif is kept. The score is computed here from the facts,
-// never taken from the game:
+// it on that board (case and accents ignored). Only each player's best run is kept. The Manif score is computed here
+// from the facts, never taken from the game:
 //   score = CRS dispersés + 50 × niveau + 2 × secondes tenues (20 min au plus) + 5 000 si Monsieur le Préfet est vaincu
-// Facts that can't happen in a manif are refused (a cheap guard, not an anti-cheat). Tokens are stored hashed.
-// Stored in DATA_DIR/classement.json, written through a temp file, one write at a time.
+// The Campagne score is the BORDEL total the game counted, bounded by what a soirée can produce (a cheap guard, not an
+// anti-cheat, like the Manif's). Tokens are stored hashed.
+// Stored in DATA_DIR/classement.json (manif) and DATA_DIR/casseurs.json (campagne), written through a temp file, one
+// write at a time.
 
 import { createHash } from 'node:crypto';
 import { promises as fs } from 'node:fs';
@@ -20,16 +25,24 @@ import { join } from 'node:path';
 import { cleanName } from './noms.mjs';
 
 const TOKEN_RE = /^[0-9a-f]{32}$/;
-const PERSOS = new Set(['jojo', 'gege', 'mimi', 'karim', 'nadia']);
+const MODES = { manif: 'classement.json', campagne: 'casseurs.json' };
+const PERSOS = {
+  manif: new Set(['jojo', 'gege', 'mimi', 'karim', 'nadia']),
+  campagne: new Set(['elias', 'noam', 'eden']),
+};
+const DEFAULT_PERSO = { manif: 'jojo', campagne: 'elias' };
+const FINS = new Set(['interpellé', 'aube', 'quitté']);
 const TOP = 50;
 const POSTS = 20; // per visitor per window
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_BODY = 2048;
 
-let board = { joueurs: {} }; // hash(token) -> {nom, cle, perso, score, niveau, temps, crs, victoire, date, parties}
-let path = '';
+const boards = { manif: { joueurs: {} }, campagne: { joueurs: {} } }; // mode -> {joueurs: hash(token) -> player}
+const paths = {};
 let saving = Promise.resolve();
 const posts = new Map(); // visitor -> {n, until}
+
+const modeOf = (v) => (v === 'campagne' ? 'campagne' : 'manif');
 
 // (0.9.0: the run goes on after the Prefect — RER to the next world — so each extra world reached is worth 3000)
 export const scoreOf = (f) =>
@@ -39,44 +52,64 @@ const hash = (token) => createHash('sha256').update(token).digest('hex').slice(0
 const keyOf = (name) => name.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
 export async function loadBoard(dir) {
-  path = join(dir, 'classement.json');
-  try {
-    board = JSON.parse(await fs.readFile(path, 'utf8'));
-    if (!board || typeof board.joueurs !== 'object') board = { joueurs: {} };
-  } catch {
-    board = { joueurs: {} };
+  for (const [mode, file] of Object.entries(MODES)) {
+    paths[mode] = join(dir, file);
+    try {
+      const b = JSON.parse(await fs.readFile(paths[mode], 'utf8'));
+      boards[mode] = b && typeof b.joueurs === 'object' ? b : { joueurs: {} };
+    } catch {
+      boards[mode] = { joueurs: {} };
+    }
   }
 }
 
-export const boardStats = () => ({ joueurs: Object.keys(board.joueurs).length });
+export const boardStats = () => ({
+  joueurs: Object.keys(boards.manif.joueurs).length,
+  casseurs: Object.keys(boards.campagne.joueurs).length,
+});
 
-function save() {
+function save(mode) {
+  const path = paths[mode];
+  const data = JSON.stringify(boards[mode]);
   saving = saving
     .then(async () => {
       await fs.mkdir(join(path, '..'), { recursive: true });
-      await fs.writeFile(`${path}.part`, JSON.stringify(board));
+      await fs.writeFile(`${path}.part`, data);
       await fs.rename(`${path}.part`, path);
     })
-    .catch((e) => console.error('classement not saved:', e.message));
+    .catch((e) => console.error(`classement (${mode}) not saved:`, e.message));
 }
 
-function ranked() {
-  return Object.values(board.joueurs).sort((a, b) => b.score - a.score || a.date.localeCompare(b.date));
+function ranked(mode) {
+  return Object.values(boards[mode].joueurs).sort((a, b) => b.score - a.score || a.date.localeCompare(b.date));
 }
 
-function top() {
+function top(mode) {
+  const list = ranked(mode).slice(0, TOP);
+  const joueurs = Object.keys(boards[mode].joueurs).length;
+  if (mode === 'campagne') {
+    return {
+      mode,
+      top: list.map((p, k) => ({
+        rang: k + 1, nom: p.nom, perso: p.perso, score: p.score, coups: p.coups, serie: p.serie, duree: p.duree,
+        fin: p.fin, plus_gros: p.plus_gros, date: p.date.slice(0, 10),
+      })),
+      joueurs,
+    };
+  }
   return {
-    top: ranked().slice(0, TOP).map((p, k) => ({
+    top: list.map((p, k) => ({
       rang: k + 1, nom: p.nom, perso: p.perso, score: p.score, niveau: p.niveau, temps: p.temps, crs: p.crs,
       victoire: p.victoire, mondes: p.mondes || 1, date: p.date.slice(0, 10),
     })),
-    joueurs: Object.keys(board.joueurs).length,
+    joueurs,
   };
 }
 
-/** The facts of a manif, checked; a message if they can't be. */
-function facts(m) {
-  const int = (v) => (Number.isInteger(v) ? v : NaN);
+const int = (v) => (Number.isInteger(v) ? v : NaN);
+
+/** The facts of a manif, checked; null if they can't be. */
+function factsManif(m) {
   const f = {
     niveau: int(m.niveau), temps: int(m.temps), crs: int(m.crs), victoire: m.victoire === true,
     mondes: m.mondes === undefined ? 1 : int(m.mondes),
@@ -86,7 +119,23 @@ function facts(m) {
   if (f.crs > 40 * f.temps + 50 || f.niveau > 12 + f.temps / 6) return null; // (plus vite que le jeu ne le permet)
   if (f.victoire && (f.temps < 600 || f.niveau < 10)) return null; // (le Préfet n'arrive qu'à 10 min)
   if (f.mondes > 1 && (!f.victoire || f.temps < 600 + 130 * (f.mondes - 1))) return null; // (un monde de plus = un Préfet, puis 2 min de RER)
-  return f;
+  return { ...f, score: scoreOf(f) };
+}
+
+/** The facts of a soirée of the Campagne, checked; null if a soirée can't produce them. */
+function factsCampagne(m) {
+  const f = {
+    bordel: int(m.bordel), coups: int(m.coups), serie: int(m.serie), duree: int(m.duree),
+    fin: String(m.fin || '').slice(0, 24),
+  };
+  if (!(f.bordel >= 0 && f.bordel <= 500000 && f.coups >= 0 && f.coups <= 5000 && f.serie >= 0 && f.serie <= 60)) return null;
+  if (!(f.duree >= 10 && f.duree <= 4000)) return null; // (une soirée : 51 min au plus, 21 h 30 → 6 h)
+  if (f.bordel > 400 * f.duree + 2000 || f.coups > 4 * f.duree + 20) return null; // (plus vite que le jeu ne le permet)
+  if (!FINS.has(f.fin)) f.fin = 'interpellé';
+  const pg = m.plus_gros && typeof m.plus_gros === 'object' ? m.plus_gros : {};
+  const points = int(pg.points);
+  f.plus_gros = { quoi: String(pg.quoi || '').slice(0, 40), points: points >= 0 && points <= f.bordel ? points : 0 };
+  return { ...f, score: f.bordel };
 }
 
 function tooMany(visitor) {
@@ -111,48 +160,58 @@ async function post(req, res, ctx) {
   } catch {
     return ctx.send(res, 400, { ok: false, msg: 'illisible' });
   }
+  const mode = modeOf(m && m.mode);
   const nom = cleanName(m && m.nom);
   if (!nom) return ctx.send(res, 400, { ok: false, msg: 'Ce pseudo ne passe pas : 2 à 16 lettres ou chiffres, et rien d’insultant.' });
   if (!TOKEN_RE.test(String(m.jeton || ''))) return ctx.send(res, 400, { ok: false, msg: 'jeton invalide' });
-  const f = facts(m);
-  if (!f) return ctx.send(res, 400, { ok: false, msg: 'Cette manif ne tient pas debout : score refusé.' });
+  const f = mode === 'campagne' ? factsCampagne(m) : factsManif(m);
+  if (!f) {
+    return ctx.send(res, 400, {
+      ok: false, msg: mode === 'campagne' ? 'Cette soirée ne tient pas debout : score refusé.' : 'Cette manif ne tient pas debout : score refusé.',
+    });
+  }
+  const board = boards[mode];
   const id = hash(m.jeton);
   const cle = keyOf(nom);
   const owner = Object.entries(board.joueurs).find(([k, p]) => p.cle === cle && k !== id);
   if (owner) return ctx.send(res, 409, { ok: false, msg: `Le pseudo « ${nom} » est déjà pris : choisis-en un autre.` });
-  const score = scoreOf(f);
+  const { score, ...facts } = f;
   const old = board.joueurs[id];
   const record = !old || score > old.score;
   const parties = (old ? old.parties : 0) + 1;
   if (record) {
     board.joueurs[id] = {
-      nom, cle, perso: PERSOS.has(m.perso) ? m.perso : 'jojo', score, ...f, date: new Date().toISOString(), parties,
+      nom, cle, perso: PERSOS[mode].has(m.perso) ? m.perso : DEFAULT_PERSO[mode], score, ...facts,
+      date: new Date().toISOString(), parties,
     };
   } else {
     old.nom = nom; // (on peut changer de pseudo ; le meilleur score reste)
     old.cle = cle;
     old.parties = parties;
   }
-  save();
-  const list = ranked();
+  save(mode);
+  const list = ranked(mode);
   const rang = list.findIndex((p) => p === board.joueurs[id]) + 1;
-  ctx.send(res, 200, { ok: true, score, rang, joueurs: list.length, meilleur: board.joueurs[id].score, record });
+  ctx.send(res, 200, { ok: true, mode, score, rang, joueurs: list.length, meilleur: board.joueurs[id].score, record });
 }
 
 function remove(req, res, url, ctx) {
   if (!ctx.authorized(req)) return ctx.send(res, 401, { error: 'unauthorized' });
+  const mode = modeOf(url.searchParams.get('mode'));
+  const board = boards[mode];
   const cle = keyOf(String(url.searchParams.get('nom') || ''));
   const before = Object.keys(board.joueurs).length;
   for (const [k, p] of Object.entries(board.joueurs)) if (p.cle === cle) delete board.joueurs[k];
-  save();
-  ctx.send(res, 200, { ok: true, removed: before - Object.keys(board.joueurs).length });
+  save(mode);
+  ctx.send(res, 200, { ok: true, mode, removed: before - Object.keys(board.joueurs).length });
 }
 
 /** The leaderboard's routes; false if `path` isn't one of them. ctx: {send, visitor, authorized}. */
 export async function classement(req, res, url, path, ctx) {
   if (path !== '/classement') return false;
-  if (req.method === 'GET') ctx.send(res, 200, top(), 'application/json; charset=utf-8', { 'Access-Control-Allow-Origin': '*' });
-  else if (req.method === 'POST') await post(req, res, ctx);
+  if (req.method === 'GET') {
+    ctx.send(res, 200, top(modeOf(url.searchParams.get('mode'))), 'application/json; charset=utf-8', { 'Access-Control-Allow-Origin': '*' });
+  } else if (req.method === 'POST') await post(req, res, ctx);
   else if (req.method === 'DELETE') remove(req, res, url, ctx);
   else ctx.send(res, 405, { error: 'method not allowed' });
   return true;

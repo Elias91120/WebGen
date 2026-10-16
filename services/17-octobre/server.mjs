@@ -15,7 +15,8 @@
 //   PUT  /upload/<name>                 Authorization: Bearer <UPLOAD_TOKEN> — stores a file in DATA_DIR
 //   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms, live viewers,
 //                                       players online, leaderboard size
-//   GET|POST|DELETE /classement         the Manif mode's leaderboard (classement.mjs)
+//   GET|POST|DELETE /classement         the leaderboards (classement.mjs): the Manif mode by default, the Campagne
+//                                       mode's casseurs with ?mode=campagne (GET) or {"mode":"campagne"} (POST)
 //   WS   /relais                        the online duel relay (relay.mjs)
 //   WS   /monde                         the Manif mode's shared world (monde.mjs)
 //
