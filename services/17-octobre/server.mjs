@@ -13,6 +13,7 @@
 //   GET  /telechargements               {"total": N} downloads so far, every version (public)
 //   GET  /telechargements/direct        the same total, live (Server-Sent Events: on connect, then on each download)
 //   PUT  /upload/<name>                 Authorization: Bearer <UPLOAD_TOKEN> — stores a file in DATA_DIR
+//   PUT  /upload/<name>?offset=X&total=T  the same, in pieces under Cloudflare's 100 MB body limit (the zip since 0.11.0)
 //   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms, live viewers,
 //                                       players online, leaderboard size
 //   GET|POST|DELETE /classement         the leaderboards (classement.mjs): the Manif mode by default, the Campagne
@@ -161,9 +162,54 @@ async function download(req, res, url) {
   bumpStat(v.file);
 }
 
-async function upload(req, res, name) {
+/**
+ * An upload in pieces (?offset=X&total=T): Cloudflare refuses any request body over 100 MB, and the game's zip is bigger
+ * since 0.11.0. Each piece is appended to `.<name>.part` at its offset (offset 0 starts over; a piece that does not land
+ * where the file ends gets 409 with the size already received, so the sender can resume); the last piece renames the
+ * whole file into place, so a half-sent build is never served.
+ */
+async function uploadPiece(req, res, name, offset, total) {
+  if (!Number.isSafeInteger(offset) || !Number.isSafeInteger(total) || offset < 0 || total <= 0 || total > MAX_UPLOAD || offset >= total) {
+    return send(res, 400, { error: 'bad offset/total' });
+  }
+  await fs.mkdir(DATA, { recursive: true });
+  const tmp = join(DATA, `.${name}.part`);
+  let have = 0;
+  if (offset > 0) {
+    try {
+      have = (await fs.stat(tmp)).size;
+    } catch {
+      have = 0;
+    }
+    if (have !== offset) {
+      req.resume();
+      return send(res, 409, { error: 'offset mismatch', received: have });
+    }
+  }
+  const out = createWriteStream(tmp, { flags: offset === 0 ? 'w' : 'a' });
+  let received = 0;
+  req.on('data', (chunk) => {
+    received += chunk.length;
+    if (offset + received > total) req.destroy();
+  });
+  req.pipe(out);
+  out.on('finish', async () => {
+    const now = offset + received;
+    if (now === total) {
+      await fs.rename(tmp, join(DATA, name));
+      return send(res, 200, { ok: true, name, size: now, done: true });
+    }
+    send(res, 200, { ok: true, name, received: now, done: false });
+  });
+  out.on('error', () => send(res, 500, { error: 'write failed' }));
+}
+
+async function upload(req, res, name, url) {
   if (!authorized(req)) return send(res, 401, { error: 'unauthorized' });
   if (!NAME_RE.test(name)) return send(res, 400, { error: 'bad name' });
+  if (url && url.searchParams.has('offset')) {
+    return uploadPiece(req, res, name, Number(url.searchParams.get('offset')), Number(url.searchParams.get('total')));
+  }
   const size = Number(req.headers['content-length'] || 0);
   if (size > MAX_UPLOAD) return send(res, 413, { error: 'too large' });
   await fs.mkdir(DATA, { recursive: true });
@@ -199,7 +245,7 @@ const server = createServer(async (req, res) => {
       return send(res, 200, { total: totalDownloads() }, 'application/json; charset=utf-8', { 'Access-Control-Allow-Origin': '*' });
     }
     if (req.method === 'GET' && path === '/telechargements/direct') return watch(req, res);
-    if (req.method === 'PUT' && path.startsWith('/upload/')) return await upload(req, res, decodeURIComponent(path.slice(8)));
+    if (req.method === 'PUT' && path.startsWith('/upload/')) return await upload(req, res, decodeURIComponent(path.slice(8)), url);
     if (req.method === 'GET' && path === '/stats') {
       if (!authorized(req)) return send(res, 401, { error: 'unauthorized' });
       return send(res, 200, { ...stats, relay: relayStats(), watchers: watchers.size, monde: mondeStats(), classement: boardStats() });
