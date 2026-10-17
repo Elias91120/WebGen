@@ -195,11 +195,11 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                   <div className="relative bg-black">
                     {m.id === 'manif' || m.id === 'campagne' ? (
                       <div className="flex items-center justify-center bg-[radial-gradient(ellipse_70%_90%_at_50%_0%,rgba(252,194,0,0.16),transparent_70%)] px-6 pt-6">
-                        {/* the vertical video, as on a phone: muted, loops, no controls needed (the Campagne: the teaser) */}
+                        {/* the vertical video, as on a phone: muted, loops, no controls needed (the Campagne: the launch trailer; ?v= skips Cloudflare's 7-day copy when it changes) */}
                         <video
                           className="block aspect-[9/16] w-full max-w-[280px] rounded-t-2xl border border-b-0 border-white/10 bg-black object-cover"
-                          src={m.id === 'manif' ? '/videos/17-octobre-manif.mp4' : '/videos/17-octobre-campagne.mp4'}
-                          poster={m.id === 'manif' ? `${IMG}/manif-poster.jpg` : `${IMG}/campagne-poster.jpg`}
+                          src={m.id === 'manif' ? '/videos/17-octobre-manif.mp4' : '/videos/17-octobre-campagne.mp4?v=0110'}
+                          poster={m.id === 'manif' ? `${IMG}/manif-poster.jpg` : `${IMG}/campagne-poster.jpg?v=0110`}
                           autoPlay
                           muted
                           loop
