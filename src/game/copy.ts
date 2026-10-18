@@ -41,7 +41,7 @@ export const GAME_COPY = {
     videos: [
       { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0120b', poster: '/images/17-octobre/campagne-telephone-640.webp', label: 'La 0.12.0 : la Campagne t’explique tout' },
       { src: '/videos/17-octobre-campagne-sans-voix.mp4', poster: '/images/17-octobre/campagne-poster.jpg?v=0110', label: 'La Campagne, le trailer de sortie' },
-      { src: '/videos/17-octobre-manif.mp4', poster: '/images/17-octobre/manif-poster.jpg', label: 'La Manif, seul contre la horde' },
+      { src: '/videos/17-octobre-manif-musique.mp4', poster: '/images/17-octobre/manif-poster.jpg', label: 'La Manif, seul contre la horde' },
     ],
     trailerLabel: 'Bande-annonce de 17 OCTOBRE, Les Actes (44 s)',
     modesPath: 'Trois jeux en un',
@@ -195,7 +195,7 @@ export const GAME_COPY = {
     videos: [
       { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0120b', poster: '/images/17-octobre/campagne-telephone-640.webp', label: '0.12.0: the Campagne explains it all' },
       { src: '/videos/17-octobre-campagne-sans-voix.mp4', poster: '/images/17-octobre/campagne-poster.jpg?v=0110', label: 'The Campagne, launch trailer' },
-      { src: '/videos/17-octobre-manif.mp4', poster: '/images/17-octobre/manif-poster.jpg', label: 'The Manif, alone against the horde' },
+      { src: '/videos/17-octobre-manif-musique.mp4', poster: '/images/17-octobre/manif-poster.jpg', label: 'The Manif, alone against the horde' },
     ],
     trailerLabel: '17 OCTOBRE trailer, Les Actes (44 s)',
     modesPath: 'Three games in one',
