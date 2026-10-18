@@ -13,6 +13,12 @@ import { GAME_COPY } from './copy';
 // Absolute: the file server is routed on www.3geeks.fr, and the page is also served on 3geeks.fr (the canonical URL),
 // where a relative path answered the site's own HTML and the download button never showed. The server allows any origin.
 const FILES = 'https://www.3geeks.fr/17-octobre/fichiers';
+// The backup site (3geeks-secours.vercel.app, scripts/secours.ps1) carries a snapshot of the last version and of the
+// download count, with a mirror of the zip (a release of this repo): when the Mac Mini is down, the page still shows
+// the version and its download button. Only the backup has it; on the main site the file server answers first.
+const SNAPSHOT = '/secours/17-octobre.json';
+// The mirror's downloads (GitHub counts them) are added to the server's: none is lost while the Mac Mini is down.
+const MIRROR_RELEASES = 'https://api.github.com/repos/Elias91120/WebGen/releases?per_page=30';
 const IMG = '/images/17-octobre';
 const GAME_YELLOW = '#FCC200'; // the game's title colour (its own art direction)
 
@@ -25,6 +31,8 @@ interface VersionInfo {
   notes?: string[];
   titre?: string;
   video_mp4?: string; // the version's video on the file server ("actus/actus_0.12.0.mp4"), since 0.12.0
+  miroir?: string; // the backup's snapshot only: the zip's mirror, a release of this repo on GitHub
+  telechargements?: number; // the backup's snapshot only: the server's count when the snapshot was taken
 }
 
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -155,6 +163,25 @@ function useDownloadCount(): number | null {
   return count;
 }
 
+/** The downloads of the zip's mirror (the 17-octobre-* releases of this repo, counted by GitHub); 0 until known. */
+function useMirrorCount(): number {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    fetch(MIRROR_RELEASES, { headers: { Accept: 'application/vnd.github+json' } })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((releases: Array<{ tag_name?: string; assets?: Array<{ name?: string; download_count?: number }> }>) => {
+        let total = 0;
+        for (const release of Array.isArray(releases) ? releases : []) {
+          if (!release.tag_name?.startsWith('17-octobre-')) continue;
+          for (const asset of release.assets ?? []) if (asset.name?.endsWith('.zip')) total += asset.download_count ?? 0;
+        }
+        setCount(total);
+      })
+      .catch(() => {});
+  }, []);
+  return count;
+}
+
 const DownloadCount: React.FC<{ n: number; lang: Lang; words: string[]; title: string }> = ({ n, lang, words, title }) => {
   const locale = lang === 'fr' ? 'fr-FR' : 'en-GB';
   const word = new Intl.PluralRules(locale).select(n) === 'one' ? words[0] : words[1];
@@ -179,12 +206,22 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
   const c = GAME_COPY[lang];
   const [shot, setShot] = useState<number | null>(null);
   const [info, setInfo] = useState<VersionInfo | null>(null);
-  const downloads = useDownloadCount();
+  const server = useDownloadCount();
+  const mirror = useMirrorCount();
+  // (the server's live count; when it is down, the backup's snapshot of it; plus the mirror's downloads)
+  const base = server ?? info?.telechargements ?? null;
+  const downloads = base === null ? null : base + mirror;
   const count = downloads !== null && <DownloadCount n={downloads} lang={lang} words={c.downloads} title={c.downloadsLive} />;
 
   useEffect(() => {
+    // the file server's version.json; if the Mac Mini does not answer, the backup's snapshot (absent from the main site)
+    const snapshot = () =>
+      fetch(SNAPSHOT, { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : null))
+        .catch(() => null);
     fetch(`${FILES}/version.json`, { cache: 'no-store' })
-      .then((r) => (r.ok ? r.json() : null))
+      .then((r) => (r.ok ? r.json() : snapshot()))
+      .catch(() => snapshot())
       .then((v) => v && setInfo(v))
       .catch(() => {});
   }, []);
@@ -574,7 +611,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
               </p>
               {info ? (
                 <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-                  <a href={`${FILES}/telecharger`} className="btn btn-primary justify-center whitespace-normal text-center" download>
+                  <a href={info.miroir ?? `${FILES}/telecharger`} className="btn btn-primary justify-center whitespace-normal text-center" download>
                     <Download className="h-4 w-4" /> {c.download}
                     {/* the size is also on the line above: dropped on phones, where it pushed the button past the card */}
                     {info.size ? <span className="hidden opacity-70 sm:inline">· {Math.round(info.size / 1048576)} {c.size}</span> : null}
