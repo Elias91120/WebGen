@@ -288,8 +288,8 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
             <div className="card overflow-hidden p-0 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
               <video
                 className="block aspect-video w-full bg-black"
-                src={info?.video_mp4 ? `${FILES}/${info.video_mp4}` : '/videos/17-octobre-nouveautes.mp4?v=0120'}
-                poster={`${IMG}/nouveautes-0120.jpg`}
+                src={info?.video_mp4 ? `${FILES}/${info.video_mp4}` : '/videos/17-octobre-nouveautes.mp4?v=0120b'}
+                poster={`${IMG}/nouveautes-0120.jpg?v=b`}
                 controls
                 playsInline
                 preload="metadata"
@@ -339,7 +339,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                         Manif : des parties d'Elias ; la Campagne : son ouverture) */}
                     <video
                       className="block aspect-video w-full bg-black object-cover"
-                      src={`/videos/17-octobre-mode-${m.id}.mp4?v=0120`}
+                      src={`/videos/17-octobre-mode-${m.id}.mp4?v=0120b`}
                       poster={m.id === 'actes' ? `${IMG}/melee-640.webp` : m.id === 'manif' ? `${IMG}/manif-horde-640.webp` : `${IMG}/campagne-mumie-640.webp`}
                       autoPlay
                       muted

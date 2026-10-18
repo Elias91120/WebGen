@@ -39,7 +39,7 @@ export const GAME_COPY = {
     videosTitle: 'Comme sur ton téléphone.',
     videosSub: 'Les vidéos de la bande, en vertical : la dernière mise à jour, le trailer de sortie de la Campagne, et la Manif.',
     videos: [
-      { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0120', poster: '/images/17-octobre/campagne-digere-640.webp', label: 'La 0.12.0 : la Campagne t’explique tout' },
+      { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0120b', poster: '/images/17-octobre/campagne-telephone-640.webp', label: 'La 0.12.0 : la Campagne t’explique tout' },
       { src: '/videos/17-octobre-campagne.mp4?v=0110', poster: '/images/17-octobre/campagne-poster.jpg?v=0110', label: 'La Campagne, le trailer de sortie' },
       { src: '/videos/17-octobre-manif.mp4', poster: '/images/17-octobre/manif-poster.jpg', label: 'La Manif, seul contre la horde' },
     ],
@@ -110,7 +110,7 @@ export const GAME_COPY = {
     galleryTitle: 'Paris, pixel par pixel.',
     gallery: [
       { src: 'campagne-mumie', alt: 'La Campagne : la Mumie détale, la rue s’excite' },
-      { src: 'campagne-digere', alt: 'La Campagne : « il digère », filmé au téléphone' },
+      { src: 'campagne-telephone', alt: 'La Campagne : « il digère », filmé au téléphone' },
       { src: 'manif-horde', alt: 'La Manif : seul contre la horde, place de la République' },
       { src: 'manif-canon', alt: 'La Manif : le canon à eau prend position à la Bastille' },
       { src: 'manif-prefet', alt: 'La Manif : Monsieur le Préfet descend en personne' },
@@ -193,7 +193,7 @@ export const GAME_COPY = {
     videosTitle: 'Just like on your phone.',
     videosSub: 'The crew’s videos, vertical: the latest update, the Campagne launch trailer, and the Manif.',
     videos: [
-      { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0120', poster: '/images/17-octobre/campagne-digere-640.webp', label: '0.12.0: the Campagne explains it all' },
+      { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0120b', poster: '/images/17-octobre/campagne-telephone-640.webp', label: '0.12.0: the Campagne explains it all' },
       { src: '/videos/17-octobre-campagne.mp4?v=0110', poster: '/images/17-octobre/campagne-poster.jpg?v=0110', label: 'The Campagne, launch trailer' },
       { src: '/videos/17-octobre-manif.mp4', poster: '/images/17-octobre/manif-poster.jpg', label: 'The Manif, alone against the horde' },
     ],
@@ -264,7 +264,7 @@ export const GAME_COPY = {
     galleryTitle: 'Paris, pixel by pixel.',
     gallery: [
       { src: 'campagne-mumie', alt: 'The Campagne: the municipal cop runs for it, the street cheers' },
-      { src: 'campagne-digere', alt: 'The Campagne: "il digère", filmed on the phone' },
+      { src: 'campagne-telephone', alt: 'The Campagne: "il digère", filmed on the phone' },
       { src: 'manif-horde', alt: 'The Manif: alone against the horde, Place de la République' },
       { src: 'manif-canon', alt: 'The Manif: the water cannon takes position at the Bastille' },
       { src: 'manif-prefet', alt: 'The Manif: Monsieur le Préfet comes down in person' },
