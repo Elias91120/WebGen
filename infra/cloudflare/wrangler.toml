@@ -1,0 +1,9 @@
+# La bascule de secours de 3geeks.fr (voir secours-worker.js) ; déployée par scripts/bascule-secours.bat.
+name = "3geeks-secours"
+main = "secours-worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+routes = [
+  { pattern = "3geeks.fr/*", zone_name = "3geeks.fr" },
+  { pattern = "www.3geeks.fr/*", zone_name = "3geeks.fr" },
+]
