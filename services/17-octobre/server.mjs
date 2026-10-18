@@ -10,7 +10,8 @@
 //   GET  /health                        {"status":"ok"}
 //   GET  /version.json                  current version, date, size, release notes (public)
 //   GET  /verifier?code=XXXX            {"ok": true|false} (rate limited per visitor)
-//   GET  /telecharger[?code=XXXX]       the zip (attachment) ; with DOWNLOAD_CODE set, a wrong code goes back to the page
+//   GET  /telecharger[?code=XXXX][&os=macos]  the zip (attachment), Windows by default, the Mac package with os=macos ;
+//                                        with DOWNLOAD_CODE set, a wrong code goes back to the page
 //   GET  /telechargements               {"total": N} downloads so far, every version (public)
 //   GET  /telechargements/direct        the same total, live (Server-Sent Events: on connect, then on each download)
 //   GET  /actus/actus_<version>.<ext>   a version's video, its "what's new" (mp4 for the page, ogv for the game ; byte ranges)
@@ -157,8 +158,12 @@ async function download(req, res, url) {
     return res.end();
   }
   const v = await readVersion();
-  if (!v || !NAME_RE.test(String(v.file || ''))) return send(res, 503, { error: 'no build yet' });
-  const path = join(DATA, v.file);
+  // The platform asked for. ?os=macos serves the Mac package; anything else serves the Windows zip, which is what
+  // every client before the Mac release asks for and what version.json's own "file" still names. Both are counted,
+  // each under its own file name, so the total on the page covers the two.
+  const file = url.searchParams.get('os') === 'macos' ? v?.fichiers?.macos?.file : v?.file;
+  if (!v || !NAME_RE.test(String(file || ''))) return send(res, 503, { error: 'no build yet' });
+  const path = join(DATA, file);
   let st;
   try {
     st = await fs.stat(path);
@@ -168,11 +173,11 @@ async function download(req, res, url) {
   res.writeHead(200, {
     'Content-Type': 'application/zip',
     'Content-Length': st.size,
-    'Content-Disposition': `attachment; filename="${v.file}"`,
+    'Content-Disposition': `attachment; filename="${file}"`,
     'Cache-Control': 'no-store',
   });
   createReadStream(path).pipe(res);
-  bumpStat(v.file);
+  bumpStat(file);
 }
 
 const ACTUS_RE = /^actus_[A-Za-z0-9._-]{1,80}\.(mp4|ogv|webm|jpg|png)$/;

@@ -31,6 +31,9 @@ interface VersionInfo {
   notes?: string[];
   titre?: string;
   video_mp4?: string; // the version's video on the file server ("actus/actus_0.12.0.mp4"), since 0.12.0
+  // Both platforms, since the Mac release. "file" and "size" above stay the Windows zip, so a client from before
+  // it (the 0.13.0 game's update notice, an old cached page) keeps working untouched.
+  fichiers?: { windows?: { file: string; size: number }; macos?: { file: string; size: number } };
   miroir?: string; // the backup's snapshot only: the zip's mirror, a release of this repo on GitHub
   telechargements?: number; // the backup's snapshot only: the server's count when the snapshot was taken
 }
@@ -212,6 +215,8 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
   const base = server ?? info?.telechargements ?? null;
   const downloads = base === null ? null : base + mirror;
   const count = downloads !== null && <DownloadCount n={downloads} lang={lang} words={c.downloads} title={c.downloadsLive} />;
+  // the Mac package of this version, when there is one (versions up to 0.13.0 came out for Windows only)
+  const mac = info?.fichiers?.macos ?? null;
 
   useEffect(() => {
     // the file server's version.json; if the Mac Mini does not answer, the backup's snapshot (absent from the main site)
@@ -607,7 +612,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
               </div>
               <p className="mt-1 text-sm text-slate-500">
                 {c.system}
-                {info?.size ? ` · ${Math.round(info.size / 1048576)} ${c.size}` : ''}
+                {mac ? ` · ${c.systemMac}` : info?.size ? ` · ${Math.round(info.size / 1048576)} ${c.size}` : ''}
               </p>
               {info ? (
                 <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -616,6 +621,14 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                     {/* the size is also on the line above: dropped on phones, where it pushed the button past the card */}
                     {info.size ? <span className="hidden opacity-70 sm:inline">· {Math.round(info.size / 1048576)} {c.size}</span> : null}
                   </a>
+                  {/* The Mac package, when the version has one. The backup site has no mirror of it: there, the
+                      button only shows if the file server answered, which is also the only place it can be had. */}
+                  {mac && (
+                    <a href={`${FILES}/telecharger?os=macos`} className="btn btn-ghost justify-center whitespace-normal text-center" download>
+                      <Download className="h-4 w-4" /> {c.downloadMac}
+                      <span className="hidden opacity-70 sm:inline">· {Math.round(mac.size / 1048576)} {c.size}</span>
+                    </a>
+                  )}
                   {count}
                 </div>
               ) : (
