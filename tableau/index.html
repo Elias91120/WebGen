@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>17 OCTOBRE · Tableau de bord</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<!--
+  Le tableau de bord de 17 OCTOBRE (Elias, 18/10 : « joueurs connectés, joueurs qui ont joué cette semaine, les meilleurs
+  scores, sur tous les jeux… savoir lequel marche, et se focus sur un… si les gens mettent à jour… l'activité sur notre
+  site : quelle page, au bout de combien de temps ils partent, à quel endroit »). Les chiffres viennent de /api/stats (la
+  fonction Vercel, protégée par le mot de passe) ; aucun nom de joueur ici sauf les pseudos publics des classements.
+-->
+<style>
+:root {
+  --fond: #0a0e1c;
+  --panneau: #111733;
+  --panneau-2: #172045;
+  --trait: #26315e;
+  --texte: #eef1fb;
+  --doux: #8f99bd;
+  --or: #fcc200;
+  --actes: #fcc200;
+  --manif: #ff5a3c;
+  --campagne: #4ea1ff;
+  --site: #b58cff;
+  --bon: #3ddc97;
+  --alerte: #ff6b6b;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--fond);
+  background-image: radial-gradient(ellipse 60% 50% at 85% -10%, rgba(252, 194, 0, .10), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 0% 0%, rgba(78, 161, 255, .08), transparent 70%);
+  background-attachment: fixed;
+  color: var(--texte);
+  font: 15px/1.45 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, .gros, .marque { font-family: Anton, Impact, "Arial Narrow", sans-serif; font-weight: 400; letter-spacing: .02em; }
+h2 { font-size: 26px; margin: 0 0 4px; text-transform: uppercase; }
+h2 small { font: 600 13px Inter, sans-serif; color: var(--doux); text-transform: none; letter-spacing: 0; margin-left: 8px; }
+.sous { color: var(--doux); margin: 0 0 16px; font-size: 14px; }
+a { color: var(--or); }
+button, input { font: inherit; }
+
+header {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 12px max(16px, calc((100vw - 1180px) / 2));
+  background: rgba(10, 14, 28, .86); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--trait);
+}
+.marque { font-size: 24px; line-height: 1; }
+.marque span { color: var(--or); }
+.marque em { font: 600 12px Inter, sans-serif; color: var(--doux); font-style: normal; display: block; margin-top: 4px; letter-spacing: .04em; text-transform: uppercase; }
+.etat { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--doux); font-size: 13px; }
+.etat b { color: var(--texte); }
+.periode { display: inline-flex; border: 1px solid var(--trait); border-radius: 999px; overflow: hidden; }
+.periode button { background: none; border: 0; color: var(--doux); padding: 6px 12px; cursor: pointer; font-weight: 600; font-size: 13px; }
+.periode button[aria-pressed="true"] { background: var(--or); color: #1a1200; }
+.bouton { background: var(--panneau-2); border: 1px solid var(--trait); color: var(--texte); border-radius: 999px; padding: 6px 12px; cursor: pointer; font-size: 13px; font-weight: 600; }
+.bouton:hover { border-color: var(--or); }
+
+main { max-width: 1180px; margin: 0 auto; padding: 20px 16px 60px; }
+section { margin: 0 0 34px; }
+.grille { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.carte { background: var(--panneau); border: 1px solid var(--trait); border-radius: 14px; padding: 16px; min-width: 0; }
+.carte h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--doux); font-weight: 800; }
+.gros { font-size: 46px; line-height: 1; }
+.gros small { font: 600 14px Inter, sans-serif; color: var(--doux); letter-spacing: 0; margin-left: 6px; }
+.detail { color: var(--doux); font-size: 13px; margin-top: 8px; }
+.puces { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.puce { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; background: var(--panneau-2); font-size: 12px; font-weight: 600; }
+.puce i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.deux { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+
+/* le verdict : quel jeu marche */
+.verdict { position: relative; overflow: hidden; background: linear-gradient(120deg, var(--panneau-2), var(--panneau)); border: 1px solid var(--trait); border-radius: 18px; padding: 22px; }
+.verdict .titre { font-family: Anton, Impact, sans-serif; font-size: clamp(28px, 5vw, 48px); line-height: 1.05; text-transform: uppercase; margin: 6px 0 10px; }
+.verdict .etiquette { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--or); }
+.parts { display: flex; height: 16px; border-radius: 999px; overflow: hidden; background: var(--panneau-2); margin: 14px 0 8px; }
+.parts i { display: block; height: 100%; }
+.legende { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--doux); }
+.legende b { color: var(--texte); }
+
+/* les tableaux */
+.defile { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 9px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--trait); }
+th { color: var(--doux); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 800; }
+th:first-child, td:first-child, th.g, td.g { text-align: left; }
+tr.sorties td { white-space: normal; text-align: left; color: var(--doux); font-size: 13px; padding-top: 0; }
+tr.avec-sorties td { border-bottom: 0; }
+td.nom { max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+tr.tete td { font-weight: 800; }
+.jeu { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; }
+.jeu i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.vide { color: var(--doux); font-style: italic; padding: 10px 0; }
+.ok { color: var(--bon); font-weight: 800; }
+
+/* l'histogramme des 30 jours */
+.histo { display: flex; align-items: stretch; gap: 3px; height: 180px; padding-top: 6px; }
+.col { flex: 1; min-width: 0; display: flex; flex-direction: column; cursor: pointer; }
+.pile { flex: 1; display: flex; flex-direction: column-reverse; border-radius: 4px 4px 0 0; overflow: hidden; }
+.pile i { display: block; width: 100%; }
+.col .jour { height: 16px; font-size: 10px; color: var(--doux); text-align: center; line-height: 16px; overflow: hidden; }
+.col:hover .pile, .col.choisie .pile { background: rgba(252, 194, 0, .12); }
+.col.choisie .jour { color: var(--or); }
+.lecture { min-height: 20px; font-size: 13px; color: var(--doux); margin-top: 8px; }
+.lecture b { color: var(--texte); }
+
+/* les barres horizontales */
+.barres { display: grid; gap: 8px; }
+.barre { display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; gap: 10px; align-items: center; font-size: 13px; }
+.barre .lib { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.barre .fond { height: 10px; background: var(--panneau-2); border-radius: 999px; overflow: hidden; }
+.barre .fond i { display: block; height: 100%; border-radius: 999px; }
+.barre .val { font-weight: 800; min-width: 44px; text-align: right; }
+
+.bandeau { border-radius: 12px; padding: 12px 14px; margin: 0 0 18px; font-size: 14px; border: 1px solid; }
+.bandeau.alerte { background: rgba(255, 107, 107, .08); border-color: rgba(255, 107, 107, .5); color: #ffd0d0; }
+.bandeau.info { background: rgba(252, 194, 0, .07); border-color: rgba(252, 194, 0, .35); color: #ffe9a3; }
+
+/* l'entrée */
+#entree { min-height: 70vh; display: grid; place-items: center; }
+#entree form { width: min(420px, 100%); background: var(--panneau); border: 1px solid var(--trait); border-radius: 18px; padding: 26px; }
+#entree h1 { font-size: 34px; margin: 0 0 4px; }
+#entree h1 span { color: var(--or); }
+#entree label { display: block; font-size: 13px; color: var(--doux); margin: 18px 0 6px; }
+#entree input[type=password] { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--trait); background: var(--fond); color: var(--texte); font-size: 16px; }
+#entree input[type=password]:focus { outline: 2px solid var(--or); border-color: transparent; }
+#entree .souvenir { display: flex; gap: 8px; align-items: center; margin: 12px 0 18px; font-size: 13px; color: var(--doux); }
+#entree button { width: 100%; padding: 12px; border-radius: 10px; border: 0; background: var(--or); color: #1a1200; font-weight: 800; font-size: 15px; cursor: pointer; }
+#entree .erreur { color: var(--alerte); font-size: 13px; min-height: 18px; margin-top: 10px; }
+
+footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait); padding-top: 16px; }
+[hidden] { display: none !important; }
+
+@media (max-width: 560px) {
+  .gros { font-size: 38px; }
+  .histo { height: 140px; gap: 2px; }
+  .col .jour { font-size: 9px; }
+  .col .jour .mm { display: none; }
+  header { position: static; padding: 10px 16px; }
+  .marque { font-size: 20px; }
+  th, td { padding: 8px 6px; }
+}
+</style>
+</head>
+<body>
+<header id="entete" hidden>
+  <div class="marque">17 <span>OCTOBRE</span><em>Tableau de bord</em></div>
+  <div class="etat">
+    <div class="periode" role="group" aria-label="Période">
+      <button type="button" data-periode="7" aria-pressed="true">7 jours</button>
+      <button type="button" data-periode="30" aria-pressed="false">30 jours</button>
+    </div>
+    <span id="lu">…</span>
+    <button class="bouton" type="button" id="actualiser">Actualiser</button>
+    <button class="bouton" type="button" id="sortir">Sortir</button>
+  </div>
+</header>
+
+<main>
+  <div id="entree">
+    <form id="formulaire" autocomplete="on">
+      <h1>17 <span>OCTOBRE</span></h1>
+      <div class="sous">Le tableau de bord de l'équipe : les joueurs, les jeux, les mises à jour, le site.</div>
+      <input type="text" name="username" value="3geeks" autocomplete="username" hidden>
+      <label for="mdp">Mot de passe</label>
+      <input type="password" id="mdp" autocomplete="current-password" required>
+      <div class="souvenir"><input type="checkbox" id="garder" checked><label for="garder" style="margin:0">Rester connecté sur cet appareil</label></div>
+      <button type="submit">Entrer</button>
+      <div class="erreur" id="erreur" role="alert"></div>
+    </form>
+  </div>
+
+  <div id="tableau" hidden>
+    <div id="bandeaux"></div>
+
+    <section>
+      <div class="verdict" id="verdict"></div>
+    </section>
+
+    <section>
+      <h2>En ce moment</h2>
+      <p class="sous">Les joueurs en jeu (un signe toutes les 5 minutes), les duels des Actes, la page du jeu ouverte.</p>
+      <div class="grille" id="maintenant"></div>
+    </section>
+
+    <section>
+      <h2 id="titre-periode">Cette semaine</h2>
+      <p class="sous">Des joueurs distincts : chaque installation du jeu compte une fois, quel que soit le nombre de parties.</p>
+      <div class="grille" id="periode"></div>
+    </section>
+
+    <section>
+      <h2>Les trois jeux <small id="jeux-periode"></small></h2>
+      <p class="sous">Le temps de jeu compte aussi les parties jamais finies (≈ 5 min par signe) : c'est le meilleur juge de ce qui plaît.</p>
+      <div class="carte defile" id="jeux"></div>
+    </section>
+
+    <section>
+      <h2>Les 30 derniers jours</h2>
+      <p class="sous">Les joueurs de chaque jeu, jour par jour. Touchez une colonne pour lire le jour.</p>
+      <div class="carte">
+        <div class="histo" id="histo-jeux"></div>
+        <div class="lecture" id="lecture-jeux"></div>
+        <div class="legende" style="margin-top:8px" id="legende-jeux"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Les mises à jour</h2>
+      <p class="sous">Sur quelle version jouent-ils, et combien ont téléchargé chaque version.</p>
+      <div class="deux">
+        <div class="carte" id="versions"></div>
+        <div class="carte" id="telechargements"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Les meilleurs scores</h2>
+      <p class="sous">Les classements mondiaux, tels que les joueurs les voient dans le jeu.</p>
+      <div class="deux">
+        <div class="carte defile" id="scores-manif"></div>
+        <div class="carte defile" id="scores-campagne"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Le site <small id="site-periode"></small></h2>
+      <p class="sous">3geeks.fr et la page du jeu : ce qu'ils regardent, combien de temps, et où ils s'en vont.</p>
+      <div class="grille" id="site-chiffres"></div>
+      <div class="carte" style="margin-top:12px">
+        <h3>Les visiteurs, jour par jour</h3>
+        <div class="histo" id="histo-site" style="height:120px"></div>
+        <div class="lecture" id="lecture-site"></div>
+      </div>
+      <div class="carte defile" style="margin-top:12px" id="pages"></div>
+      <div class="deux" style="margin-top:12px">
+        <div class="carte" id="provenances"></div>
+        <div class="carte" id="appareils"></div>
+      </div>
+    </section>
+
+    <footer>
+      Mesure anonyme : un numéro tiré au hasard par installation du jeu (jamais un nom ni une adresse), un numéro de visite
+      par onglet sur le site, aucun cookie, « ne pas me suivre » respecté ; les joueurs qui coupent « Statistiques anonymes »
+      dans les options ne comptent pas. Les jeux mesurent à partir de la 0.13.0, le site à partir du 18 octobre.
+      Les chiffres se rafraîchissent seuls chaque minute.
+    </footer>
+  </div>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const CLE = '17o-tableau';
+  const JEUX = [
+    { cle: 'actes', nom: 'Les Actes', couleur: 'var(--actes)', genre: 'stratégie 2D' },
+    { cle: 'manif', nom: 'La Manif', couleur: 'var(--manif)', genre: 'roguelite 3D' },
+    { cle: 'campagne', nom: 'La Campagne', couleur: 'var(--campagne)', genre: 'Paris en monde ouvert' },
+  ];
+  const PAGES = { '/': 'Accueil 3Geeks', '/17-octobre': 'Page du jeu', '/offres': 'Offres', '/realisations': 'Réalisations',
+    '/equipe': 'Équipe', '/ia': 'IA' };
+  const SECTIONS = { haut: 'le haut de la page', bas: 'le bas de la page', 'deux-jeux': 'les modes', equipe: "l'équipe",
+    nouveautes: '« Quoi de neuf »', telecharger: '« Télécharger »', videos: 'les vidéos', 'ce-quon-fait': "ce qu'on fait",
+    services: 'les services', methode: 'la méthode', avis: 'les avis', contact: 'le contact', projets: 'les projets',
+    skills: 'les compétences', ia: "l'IA", demo: 'la démo', realisations: 'les réalisations', 'vos-process': 'vos process' };
+
+  let motDePasse = '';
+  let donnees = null;
+  let periode = 7;
+  let minuterie = 0;
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const nb = (n) => (Number(n) || 0).toLocaleString('fr-FR');
+  const pc = (a, b) => (b ? Math.round((100 * a) / b) : 0);
+  const somme = (liste, f) => liste.reduce((s, x) => s + (Number(f(x)) || 0), 0);
+
+  function duree(s) {
+    s = Math.round(Number(s) || 0);
+    if (s < 60) return `${s} s`;
+    if (s < 3600) {
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return r && m < 10 ? `${m} min ${String(r).padStart(2, '0')}` : `${m} min`;
+    }
+    const h = Math.floor(s / 3600);
+    const m = Math.round((s % 3600) / 60);
+    return m ? `${h} h ${String(m).padStart(2, '0')}` : `${h} h`;
+  }
+
+  const jourCourt = (d) => `${d.slice(8, 10)}/${d.slice(5, 7)}`;
+  const nomPage = (p) => PAGES[p] || p;
+  const nomSection = (s) => SECTIONS[s] || s.replace(/-/g, ' ');
+  const comparerVersions = (a, b) => {
+    const x = a.split('.').map(Number);
+    const y = b.split('.').map(Number);
+    for (let k = 0; k < Math.max(x.length, y.length); k += 1) if ((x[k] || 0) !== (y[k] || 0)) return (x[k] || 0) - (y[k] || 0);
+    return 0;
+  };
+
+  // ── le mot de passe ───────────────────────────────────────────────────────────────────────────────────────────────
+  function memoire(f) { try { return f(); } catch { return null; } }
+  function entrer(message) {
+    $('entete').hidden = true;
+    $('tableau').hidden = true;
+    $('entree').hidden = false;
+    $('erreur').textContent = message || '';
+    $('mdp').focus();
+  }
+
+  $('formulaire').addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    motDePasse = $('mdp').value;
+    if ($('garder').checked) memoire(() => localStorage.setItem(CLE, motDePasse));
+    charger(true);
+  });
+  $('sortir').addEventListener('click', () => {
+    motDePasse = '';
+    memoire(() => localStorage.removeItem(CLE));
+    $('mdp').value = '';
+    entrer('');
+  });
+  $('actualiser').addEventListener('click', () => charger(false));
+  for (const b of document.querySelectorAll('[data-periode]')) {
+    b.addEventListener('click', () => {
+      periode = Number(b.dataset.periode);
+      for (const x of document.querySelectorAll('[data-periode]')) x.setAttribute('aria-pressed', String(x === b));
+      if (donnees) dessiner();
+    });
+  }
+
+  async function charger(depuisFormulaire) {
+    if (!motDePasse) return entrer('');
+    $('lu').textContent = 'lecture…';
+    let r;
+    try {
+      r = await fetch('/api/stats', { headers: { 'x-mot-de-passe': motDePasse }, cache: 'no-store' });
+    } catch {
+      $('lu').textContent = 'hors ligne ?';
+      return;
+    }
+    if (r.status === 401) {
+      memoire(() => localStorage.removeItem(CLE));
+      motDePasse = '';
+      return entrer(depuisFormulaire ? 'Ce n’est pas le bon mot de passe.' : '');
+    }
+    if (!r.ok) {
+      $('lu').textContent = `erreur ${r.status}`;
+      return;
+    }
+    donnees = await r.json();
+    $('entree').hidden = true;
+    $('entete').hidden = false;
+    $('tableau').hidden = false;
+    dessiner();
+    clearInterval(minuterie);
+    minuterie = setInterval(() => { if (document.visibilityState === 'visible') charger(false); }, 60000);
+  }
+
+  // ── les chiffres de la période ───────────────────────────────────────────────────────────────────────────────────
+  function jours() {
+    const t = donnees.tableau;
+    return t && Array.isArray(t.jours) ? t.jours.slice(-periode) : [];
+  }
+
+  function statsJeu(cle, liste) {
+    const m = liste.map((j) => (j.modes && j.modes[cle]) || {});
+    const parties = somme(m, (x) => x.parties);
+    const fins = somme(m, (x) => x.fins);
+    const battements = somme(m, (x) => x.battements);
+    const dureeFinies = somme(m, (x) => (x.duree_moyenne || 0) * (x.fins || 0));
+    const ensemble = periode === 7 ? (donnees.tableau.semaine || {}) : (donnees.tableau.mois || {});
+    return {
+      joueurs: (ensemble.par_jeu || {})[cle] || 0,
+      parties,
+      fins,
+      victoires: somme(m, (x) => x.victoires),
+      meilleur: Math.max(0, ...m.map((x) => x.meilleur || 0)),
+      duree_moyenne: fins ? dureeFinies / fins : 0,
+      // (le temps de jeu ≈ 5 min par signe, plus la moitié d'un intervalle par partie : celles qui durent moins de 5 min)
+      temps: battements * 300 + parties * 150,
+    };
+  }
+
+  // ── le dessin ─────────────────────────────────────────────────────────────────────────────────────────────────────
+  function dessiner() {
+    const d = donnees;
+    const t = d.tableau || {};
+    const lu = new Date(d.lu || Date.now());
+    $('lu').innerHTML = `version en ligne <b>${esc(d.version ? d.version.version : '?')}</b> · lu à ${lu.toLocaleTimeString('fr-FR')}`;
+    const mot = periode === 7 ? 'Cette semaine' : 'Ces 30 jours';
+    $('titre-periode').textContent = mot;
+    $('jeux-periode').textContent = periode === 7 ? 'les 7 derniers jours' : 'les 30 derniers jours';
+    $('site-periode').textContent = periode === 7 ? 'les 7 derniers jours' : 'les 30 derniers jours';
+
+    // (les sources qui ne répondent pas : on le dit, on montre le reste)
+    const bandeaux = [];
+    if (t.erreur) bandeaux.push(`<div class="bandeau alerte">Le serveur du jeu (le Mac Mini) ne donne pas la mesure : ${esc(t.erreur)}. Les autres chiffres restent affichés s'ils répondent.</div>`);
+    if (d.serveur && d.serveur.erreur) bandeaux.push(`<div class="bandeau alerte">Les téléchargements ne répondent pas : ${esc(d.serveur.erreur)}.</div>`);
+    $('bandeaux').innerHTML = bandeaux.join('');
+
+    const liste = jours();
+    const stats = Object.fromEntries(JEUX.map((j) => [j.cle, statsJeu(j.cle, liste)]));
+    dessinerVerdict(stats, mot);
+    dessinerMaintenant();
+    dessinerPeriode(liste);
+    dessinerJeux(stats);
+    dessinerHisto();
+    dessinerVersions();
+    dessinerScores();
+    dessinerSite(liste);
+  }
+
+  function dessinerVerdict(stats, mot) {
+    const total = somme(JEUX, (j) => stats[j.cle].temps);
+    const parties = somme(JEUX, (j) => stats[j.cle].parties);
+    if (!parties) {
+      $('verdict').innerHTML = `<div class="etiquette">Quel jeu marche ?</div>
+        <div class="titre">Pas encore de parties mesurées</div>
+        <div class="detail" style="font-size:14px">La mesure part avec la <b>0.13.0</b> : les versions d'avant n'envoient rien.
+        En attendant, les téléchargements et les classements sont plus bas, et le site se mesure déjà.</div>`;
+      return;
+    }
+    const ordre = [...JEUX].sort((a, b) => stats[b.cle].temps - stats[a.cle].temps || stats[b.cle].joueurs - stats[a.cle].joueurs);
+    const premier = ordre[0];
+    const s = stats[premier.cle];
+    const part = pc(s.temps, total);
+    const net = ordre.length > 1 && stats[ordre[1].cle].temps * 1.25 < s.temps;
+    $('verdict').innerHTML = `<div class="etiquette">${esc(mot)}, le jeu qui marche</div>
+      <div class="titre" style="color:${premier.couleur}">${esc(premier.nom)}</div>
+      <div class="detail" style="font-size:14px"><b style="color:var(--texte)">${part} %</b> du temps de jeu ·
+        ${nb(s.joueurs)} joueur${s.joueurs > 1 ? 's' : ''} · ${nb(s.parties)} partie${s.parties > 1 ? 's' : ''} ·
+        ≈ ${duree(s.temps)} de jeu${net ? '' : ' · <i>de peu : à confirmer sur 30 jours</i>'}</div>
+      <div class="parts">${ordre.map((j) => `<i style="width:${pc(stats[j.cle].temps, total)}%;background:${j.couleur}" title="${esc(j.nom)}"></i>`).join('')}</div>
+      <div class="legende">${ordre.map((j) => `<span><span class="jeu"><i style="background:${j.couleur}"></i>${esc(j.nom)}</span> <b>${pc(stats[j.cle].temps, total)} %</b> · ${nb(stats[j.cle].joueurs)} joueurs</span>`).join('')}</div>`;
+  }
+
+  function carte(titre, valeur, unite, detail, puces) {
+    return `<div class="carte"><h3>${titre}</h3><div class="gros">${valeur}${unite ? `<small>${unite}</small>` : ''}</div>
+      ${detail ? `<div class="detail">${detail}</div>` : ''}${puces ? `<div class="puces">${puces}</div>` : ''}</div>`;
+  }
+
+  const puce = (couleur, texte) => `<span class="puce"><i style="background:${couleur}"></i>${texte}</span>`;
+
+  function dessinerMaintenant() {
+    const d = donnees;
+    const m = (d.tableau && d.tableau.maintenant) || { connectes: 0, par_jeu: {} };
+    const srv = d.serveur && !d.serveur.erreur ? d.serveur : null;
+    const relais = (srv && srv.relay) || {};
+    const parJeu = JEUX.map((j) => puce(j.couleur, `${esc(j.nom)} ${nb((m.par_jeu || {})[j.cle] || 0)}`)).join('');
+    $('maintenant').innerHTML = [
+      carte('En jeu', nb(m.connectes), m.connectes > 1 ? 'joueurs' : 'joueur', '', parJeu),
+      carte('Duels des Actes', nb(relais.rooms || 0), (relais.rooms || 0) > 1 ? 'salons' : 'salon',
+        `${nb(relais.connections || 0)} joueur${(relais.connections || 0) > 1 ? 's' : ''} sur le relais en ligne`),
+      carte('Sur la page du jeu', srv ? nb(srv.watchers || 0) : '–', '', 'onglets ouverts sur le compteur de téléchargements'),
+      carte('Version en ligne', esc(d.version ? d.version.version : '?'), '',
+        d.version ? `publiée le ${esc(new Date(d.version.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }))}${d.version.titre ? ` : « ${esc(d.version.titre)} »` : ''}` : ''),
+    ].join('');
+  }
+
+  function telechargements() {
+    const srv = donnees.serveur;
+    if (!srv || srv.erreur) return [];
+    return Object.entries(srv)
+      .map(([f, n]) => { const v = /^17_OCTOBRE_v([0-9.]+)_windows\.zip$/.exec(f); return v ? { version: v[1], n: Number(n) || 0 } : null; })
+      .filter(Boolean)
+      .sort((a, b) => comparerVersions(b.version, a.version));
+  }
+
+  function dessinerPeriode(liste) {
+    const t = donnees.tableau || {};
+    const ens = periode === 7 ? (t.semaine || {}) : (t.mois || {});
+    const lancements = somme(liste, (j) => j.lancements);
+    const parties = somme(liste, (j) => somme(JEUX, (g) => (j.modes && j.modes[g.cle] && j.modes[g.cle].parties) || 0));
+    const tele = telechargements();
+    const parJeu = JEUX.map((j) => puce(j.couleur, `${esc(j.nom)} ${nb((ens.par_jeu || {})[j.cle] || 0)}`)).join('');
+    $('periode').innerHTML = [
+      carte('Joueurs', nb(ens.joueurs || 0), '', `${nb(lancements)} lancements du jeu · ${nb(parties)} parties`, parJeu),
+      carte('Visiteurs du site', nb(ens.visiteurs || 0), '', `${nb(somme(liste, (j) => j.site && j.site.vues))} pages vues`),
+      carte('Téléchargements', tele.length ? nb(somme(tele, (x) => x.n)) : '–', '', 'depuis la première version (tous les zips)'),
+    ].join('');
+  }
+
+  function dessinerJeux(stats) {
+    const lignes = JEUX.map((j) => {
+      const s = stats[j.cle];
+      const fin = s.parties ? `${pc(s.fins, s.parties)} %` : '–';
+      const vic = s.fins ? `${pc(s.victoires, s.fins)} %` : '–';
+      return `<tr><td><span class="jeu"><i style="background:${j.couleur}"></i>${esc(j.nom)}</span><div class="detail" style="margin:2px 0 0">${esc(j.genre)}</div></td>
+        <td>${nb(s.joueurs)}</td><td>${nb(s.parties)}</td><td>${s.parties ? `≈ ${duree(s.temps)}` : '–'}</td>
+        <td>${s.fins ? duree(s.duree_moyenne) : '–'}</td><td>${fin}</td><td>${vic}</td><td>${s.meilleur ? nb(s.meilleur) : '–'}</td></tr>`;
+    }).join('');
+    $('jeux').innerHTML = `<table><thead><tr><th>Jeu</th><th>Joueurs</th><th>Parties</th><th>Temps de jeu</th><th>Une partie</th>
+      <th>Menées au bout</th><th>Victoires</th><th>Meilleur score</th></tr></thead><tbody>${lignes}</tbody></table>
+      <div class="detail">« Une partie » : la durée moyenne des parties menées au bout. « Menées au bout » : la Manif finie (gagnée ou
+      perdue), la soirée de la Campagne jusqu'à l'aube ou l'interpellation, le duel des Actes jusqu'au bout (gagné, perdu ou abandonné).</div>`;
+  }
+
+  // (un histogramme en colonnes : chaque jour, les séries empilées ; toucher une colonne la lit)
+  function histo(idHisto, idLecture, tousJours, series, lire) {
+    const max = Math.max(1, ...tousJours.map((j) => somme(series, (s) => s.valeur(j))));
+    $(idHisto).innerHTML = tousJours.map((j, k) => {
+      const morceaux = series.map((s) => {
+        const v = s.valeur(j);
+        return v ? `<i style="height:${(100 * v) / max}%;background:${s.couleur}"></i>` : '';
+      }).join('');
+      const etiquette = k % 5 === 4 || k === tousJours.length - 1 ? `${j.date.slice(8, 10)}<span class="mm">/${j.date.slice(5, 7)}</span>` : '';
+      return `<div class="col" data-k="${k}" title="${esc(lire(j))}"><div class="pile">${morceaux}</div><div class="jour">${etiquette}</div></div>`;
+    }).join('');
+    const choisir = (k) => {
+      for (const c of $(idHisto).children) c.classList.toggle('choisie', c.dataset.k === String(k));
+      $(idLecture).innerHTML = lire(tousJours[k], true);
+    };
+    for (const c of $(idHisto).children) {
+      c.addEventListener('click', () => choisir(Number(c.dataset.k)));
+      c.addEventListener('mouseenter', () => choisir(Number(c.dataset.k)));
+    }
+    if (tousJours.length) choisir(tousJours.length - 1);
+  }
+
+  function dessinerHisto() {
+    const tous = (donnees.tableau && donnees.tableau.jours) || [];
+    const series = JEUX.map((j) => ({ couleur: j.couleur, valeur: (x) => (x.modes && x.modes[j.cle] && x.modes[j.cle].joueurs) || 0 }));
+    histo('histo-jeux', 'lecture-jeux', tous, series, (x, html) => {
+      const morceaux = JEUX.map((j) => {
+        const v = (x.modes && x.modes[j.cle] && x.modes[j.cle].joueurs) || 0;
+        return html ? `${esc(j.nom)} <b>${v}</b>` : `${j.nom} ${v}`;
+      }).join(' · ');
+      return html ? `<b>${jourCourt(x.date)}</b> : ${morceaux} · ${nb(x.lancements)} lancements` : `${jourCourt(x.date)} : ${morceaux}`;
+    });
+    $('legende-jeux').innerHTML = JEUX.map((j) => `<span class="jeu"><i style="background:${j.couleur}"></i>${esc(j.nom)}</span>`).join('');
+  }
+
+  function barres(lignes, couleur, vide) {
+    if (!lignes.length) return `<div class="vide">${vide}</div>`;
+    const max = Math.max(1, ...lignes.map((l) => l.n));
+    return `<div class="barres">${lignes.map((l) => `<div class="barre"><span class="lib" title="${esc(l.lib)}">${l.html || esc(l.lib)}</span>
+      <span class="fond"><i style="width:${(100 * l.n) / max}%;background:${l.couleur || couleur}"></i></span><span class="val">${l.val || nb(l.n)}</span></div>`).join('')}</div>`;
+  }
+
+  function dessinerVersions() {
+    const t = donnees.tableau || {};
+    const ens = periode === 7 ? (t.semaine || {}) : (t.mois || {});
+    const enLigne = donnees.version ? donnees.version.version : '';
+    const versions = Object.entries(ens.versions || {}).filter(([v]) => v !== '?').sort((a, b) => comparerVersions(b[0], a[0]));
+    const tous = somme(versions, (x) => x[1]);
+    const ajour = versions.filter(([v]) => enLigne && comparerVersions(v, enLigne) >= 0).reduce((s, x) => s + x[1], 0);
+    $('versions').innerHTML = `<h3>Sur quelle version ils jouent</h3>
+      ${tous ? `<div class="gros">${pc(ajour, tous)} %<small>à jour (${esc(enLigne)} ou plus)</small></div><div style="margin-top:14px">` : ''}
+      ${barres(versions.map(([v, n]) => ({ lib: `v${v}`, n, val: `${nb(n)} · ${pc(n, tous)} %`, couleur: enLigne && comparerVersions(v, enLigne) >= 0 ? 'var(--bon)' : 'var(--doux)' })),
+        'var(--doux)', 'Pas encore de joueur mesuré (la mesure part avec la 0.13.0).')}${tous ? '</div>' : ''}`;
+    const tele = telechargements();
+    $('telechargements').innerHTML = `<h3>Les téléchargements, version par version</h3>
+      ${barres(tele.map((x) => ({ lib: `v${x.version}`, n: x.n, couleur: x.version === enLigne ? 'var(--or)' : 'var(--campagne)' })),
+        'var(--campagne)', 'Le serveur des téléchargements ne répond pas.')}
+      ${tele.length ? `<div class="detail">En or : la version en ligne. Le jeu prévient de chaque nouvelle version au lancement.</div>` : ''}`;
+  }
+
+  function dessinerScores() {
+    const c = donnees.classement || {};
+    const manif = c.manif && Array.isArray(c.manif.top) ? c.manif : null;
+    const camp = c.campagne && Array.isArray(c.campagne.top) ? c.campagne : null;
+    const temps = (s) => `${Math.floor((s || 0) / 60)}:${String(Math.round(s || 0) % 60).padStart(2, '0')}`;
+    $('scores-manif').innerHTML = `<h3><span class="jeu"><i style="background:var(--manif)"></i>La Manif</span>${manif ? ` · ${nb(manif.joueurs)} joueurs classés` : ''}</h3>
+      ${manif && manif.top.length ? `<table><thead><tr><th>#</th><th class="g">Pseudo</th><th>Score</th><th>Niveau</th><th>Temps</th><th>Fin</th></tr></thead><tbody>
+      ${manif.top.slice(0, 10).map((p) => `<tr${p.rang === 1 ? ' class="tete"' : ''}><td>${p.rang}</td><td class="nom g">${esc(p.nom)}</td><td>${nb(p.score)}</td>
+        <td>${nb(p.niveau)}</td><td>${temps(p.temps)}</td><td>${p.victoire ? '<span class="ok">gagnée</span>' : 'perdue'}</td></tr>`).join('')}</tbody></table>`
+      : '<div class="vide">Le classement ne répond pas, ou personne encore.</div>'}`;
+    $('scores-campagne').innerHTML = `<h3><span class="jeu"><i style="background:var(--campagne)"></i>La Campagne</span>${camp ? ` · ${nb(camp.joueurs)} casseur${camp.joueurs > 1 ? 's' : ''} classé${camp.joueurs > 1 ? 's' : ''}` : ''}</h3>
+      ${camp && camp.top.length ? `<table><thead><tr><th>#</th><th class="g">Pseudo</th><th>Bordel</th><th>Durée</th><th>Fin</th><th>Le plus gros</th></tr></thead><tbody>
+      ${camp.top.slice(0, 10).map((p) => `<tr${p.rang === 1 ? ' class="tete"' : ''}><td>${p.rang}</td><td class="nom g">${esc(p.nom)}</td><td>${nb(p.score)}</td>
+        <td>${temps(p.duree)}</td><td>${esc(p.fin)}</td><td>${p.plus_gros ? `${esc(p.plus_gros.quoi)} (${nb(p.plus_gros.points)})` : '–'}</td></tr>`).join('')}</tbody></table>`
+      : '<div class="vide">Le classement ne répond pas, ou personne encore.</div>'}
+      <div class="detail">Les Actes n'ont pas de classement : leurs parties comptent dans « Les trois jeux ».</div>`;
+  }
+
+  function dessinerSite(liste) {
+    const t = donnees.tableau || {};
+    const ens = periode === 7 ? (t.semaine || {}) : (t.mois || {});
+    // (les pages de la période, additionnées : les moyennes pondérées par les départs mesurés)
+    const pages = {};
+    const sorties = {};
+    const provenances = {};
+    const appareils = {};
+    for (const j of liste) {
+      const s = j.site || {};
+      for (const [p, pg] of Object.entries(s.pages || {})) {
+        const a = (pages[p] ||= { vues: 0, quittes: 0, duree: 0, scroll: 0 });
+        const q = pg.quittes ?? (pg.duree_moyenne || pg.scroll_moyen ? pg.vues : 0);
+        a.vues += pg.vues || 0;
+        a.quittes += q;
+        a.duree += (pg.duree_moyenne || 0) * q;
+        a.scroll += (pg.scroll_moyen || 0) * q;
+      }
+      for (const [k, n] of Object.entries(s.sorties || {})) sorties[k] = (sorties[k] || 0) + n;
+      for (const [k, n] of Object.entries(s.referents || {})) provenances[k] = (provenances[k] || 0) + n;
+      for (const [k, n] of Object.entries(s.appareils || {})) appareils[k] = (appareils[k] || 0) + n;
+    }
+    const vues = somme(liste, (j) => j.site && j.site.vues);
+    const quittes = somme(Object.values(pages), (a) => a.quittes);
+    const dureeMoy = quittes ? somme(Object.values(pages), (a) => a.duree) / quittes : 0;
+    const scrollMoy = quittes ? somme(Object.values(pages), (a) => a.scroll) / quittes : 0;
+    const jeu = pages['/17-octobre'];
+    $('site-chiffres').innerHTML = [
+      carte('Visiteurs', nb(ens.visiteurs || 0), '', `${nb(vues)} pages vues`),
+      carte('Temps sur une page', quittes ? duree(dureeMoy) : '–', '', 'en moyenne, avant de partir ou de changer d’onglet'),
+      carte('Jusqu’où ils descendent', quittes ? `${Math.round(scrollMoy)} %` : '–', '', 'de la page, en moyenne'),
+      carte('La page du jeu', jeu ? nb(jeu.vues) : '0', 'vues', jeu && jeu.quittes ? `${duree(jeu.duree / jeu.quittes)} en moyenne · descendent à ${Math.round(jeu.scroll / jeu.quittes)} %` : ''),
+    ].join('');
+
+    const tous = (t.jours) || [];
+    histo('histo-site', 'lecture-site', tous, [{ couleur: 'var(--site)', valeur: (x) => (x.site && x.site.visiteurs) || 0 }],
+      (x, html) => (html ? `<b>${jourCourt(x.date)}</b> : <b>${nb(x.site && x.site.visiteurs)}</b> visiteurs · ${nb(x.site && x.site.vues)} pages vues`
+        : `${jourCourt(x.date)} : ${(x.site && x.site.visiteurs) || 0} visiteurs`));
+
+    const lignes = Object.entries(pages).sort((a, b) => b[1].vues - a[1].vues);
+    // (sous chaque page, la ligne qui compte : d'où ils partent ; elle tient sur un téléphone)
+    $('pages').innerHTML = `<h3>Les pages, et où ils s'en vont</h3>${lignes.length ? `<table><thead><tr><th>Page</th><th>Vues</th><th>Temps moyen</th><th>Descendent à</th></tr></thead><tbody>
+      ${lignes.map(([p, a]) => {
+        const partis = Object.entries(sorties).filter(([k]) => k.startsWith(`${p}#`)).map(([k, n]) => [k.slice(p.length + 1), n]).sort((x, y) => y[1] - x[1]);
+        const nPartis = somme(partis, (x) => x[1]);
+        const ou = partis.slice(0, 3).map(([s, n]) => `${esc(nomSection(s))} <b style="color:var(--texte)">${pc(n, nPartis)} %</b>`).join(' · ');
+        return `<tr${ou ? ' class="avec-sorties"' : ''}><td><b>${esc(nomPage(p))}</b> <span class="detail">${esc(p)}</span></td><td>${nb(a.vues)}</td>
+          <td>${a.quittes ? duree(a.duree / a.quittes) : '–'}</td><td>${a.quittes ? `${Math.round(a.scroll / a.quittes)} %` : '–'}</td></tr>
+          ${ou ? `<tr class="sorties"><td colspan="4">Partent surtout depuis ${ou}</td></tr>` : ''}`;
+      }).join('')}</tbody></table>` : '<div class="vide">Aucune visite mesurée sur la période.</div>'}`;
+
+    const prov = Object.entries(provenances).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    const totalProv = somme(prov, (x) => x[1]);
+    $('provenances').innerHTML = `<h3>D'où ils viennent</h3>${barres(prov.map(([k, n]) => ({ lib: k === 'direct' ? 'en direct (lien tapé, appli, favori)' : k, n,
+      val: `${pc(n, totalProv)} %` })), 'var(--site)', 'Aucune visite mesurée sur la période.')}`;
+    const mobile = appareils.mobile || 0;
+    const bureau = appareils.bureau || 0;
+    $('appareils').innerHTML = `<h3>Téléphone ou ordinateur</h3>${mobile + bureau ? `
+      <div class="gros">${pc(mobile, mobile + bureau)} %<small>sur téléphone</small></div>
+      <div class="parts"><i style="width:${pc(mobile, mobile + bureau)}%;background:var(--site)"></i><i style="width:${pc(bureau, mobile + bureau)}%;background:var(--campagne)"></i></div>
+      <div class="legende"><span><span class="jeu"><i style="background:var(--site)"></i>téléphone</span> <b>${nb(mobile)}</b></span><span><span class="jeu"><i style="background:var(--campagne)"></i>ordinateur</span> <b>${nb(bureau)}</b></span></div>
+      <div class="detail">Le jeu ne se joue que sur ordinateur : une visite sur téléphone, c'est quelqu'un qu'il faut faire revenir.</div>`
+      : '<div class="vide">Aucune visite mesurée sur la période.</div>'}`;
+  }
+
+  // ── au lancement ──────────────────────────────────────────────────────────────────────────────────────────────────
+  motDePasse = memoire(() => localStorage.getItem(CLE)) || '';
+  if (motDePasse) charger(false); else entrer('');
+})();
+</script>
+</body>
+</html>

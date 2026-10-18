@@ -383,7 +383,7 @@ export const translations = {
           },
           {
             title: "5. Cookies",
-            text: "This site sets no advertising or tracking cookies. Your language choice is stored in your browser only. The booking calendar is provided by Calendly: it starts loading when you point at a booking button or when the assistant offers a call, and Calendly may then set its own technical cookies."
+            text: "This site sets no advertising or tracking cookies. Your language choice is stored in your browser only. The booking calendar is provided by Calendly: it starts loading when you point at a booking button or when the assistant offers a call, and Calendly may then set its own technical cookies. To know which pages interest our visitors, the site counts visits anonymously, without cookies: the page viewed, the site you came from, mobile or desktop, then the time spent, how far down you scrolled and the section on screen when you left, tied to a random visit number kept only for the tab. No name, no IP address is stored; nothing is sent if your browser asks not to be tracked. The 17 OCTOBRE game counts its sessions the same way (a random number, never a name), and can be switched off in its options."
           }
         ],
         terms: [
@@ -798,7 +798,7 @@ export const translations = {
           },
           {
             title: "5. Cookies",
-            text: "Ce site ne dépose aucun cookie publicitaire ni de suivi. Votre choix de langue est seulement mémorisé dans votre navigateur. Le calendrier de réservation est fourni par Calendly : il commence à se charger quand vous pointez un bouton de réservation ou quand l’assistant vous propose un appel, et Calendly peut alors déposer ses propres cookies techniques."
+            text: "Ce site ne dépose aucun cookie publicitaire ni de suivi. Votre choix de langue est seulement mémorisé dans votre navigateur. Le calendrier de réservation est fourni par Calendly : il commence à se charger quand vous pointez un bouton de réservation ou quand l’assistant vous propose un appel, et Calendly peut alors déposer ses propres cookies techniques. Pour savoir quelles pages intéressent nos visiteurs, le site compte les visites de façon anonyme, sans cookie : la page vue, le site d’où vous venez, mobile ou ordinateur, puis le temps passé, jusqu’où vous êtes descendu et la section à l’écran quand vous êtes parti, rattachés à un numéro de visite tiré au hasard, gardé le temps de l’onglet. Aucun nom, aucune adresse IP n’est enregistré ; rien n’est envoyé si votre navigateur demande à ne pas être suivi. Le jeu 17 OCTOBRE compte ses parties de la même façon (un numéro tiré au hasard, jamais un nom), et cela se coupe dans ses options."
           }
         ],
         terms: [

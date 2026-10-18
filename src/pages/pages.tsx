@@ -25,6 +25,7 @@ import {
 } from '../site/sections';
 import GameSections from '../game/GameSections';
 import SiteLayout, { PageId } from '../site/SiteLayout';
+import { demarrerMesure } from '../lib/mesure';
 import '../index.css';
 
 export const HomePage: React.FC = () => (
@@ -98,6 +99,7 @@ export function mount(page: PageId) {
   const root = document.getElementById('root');
   if (!root) throw new Error('Could not find root element to mount to');
   const Page = PAGES[page];
+  demarrerMesure();   // (la mesure d'audience, anonyme et sans cookie : src/lib/mesure.ts)
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
       <Page />

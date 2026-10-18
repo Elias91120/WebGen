@@ -1,0 +1,6 @@
+{
+  "name": "17-octobre-tableau",
+  "private": true,
+  "description": "Le tableau de bord de 17 OCTOBRE (Vercel) : la page, et api/stats qui lit le serveur du jeu",
+  "type": "module"
+}

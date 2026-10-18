@@ -27,3 +27,6 @@ dist-ssr
 
 # Full-size source photos (kept locally, the site uses the optimised copies)
 src/assets/images/originals/
+
+# (le lien local de Vercel : tableau/ et le site de secours)
+.vercel
