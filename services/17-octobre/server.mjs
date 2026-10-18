@@ -2,9 +2,10 @@
 //
 // Serves the beta download of the game (a Windows .zip; free since 14/10, an access code only if DOWNLOAD_CODE is set), plus a public
 // version.json that the game reads to say "a new version is out". New builds are uploaded from Elias's PC
-// with tools/publish.ps1 (game repo), authenticated by a token. It also hosts the online duel relay (relay.mjs), the shared
-// world of the Manif mode (monde.mjs: everyone online in the same Paris, proximity voice chat) and its leaderboard
-// (classement.mjs).
+// with tools/publish.ps1 (game repo), authenticated by a token. It also hosts the online duel relay of Les Actes
+// (relay.mjs) and the leaderboards (classement.mjs). The Manif mode's shared world (everyone online in the same Paris,
+// proximity voice chat) is gone since 18/10: it loaded the Mac Mini too much (Elias); old games that still knock on
+// /monde get a 410 and play offline.
 //
 //   GET  /health                        {"status":"ok"}
 //   GET  /version.json                  current version, date, size, release notes (public)
@@ -16,15 +17,14 @@
 //   PUT  /upload/<name>                 Authorization: Bearer <UPLOAD_TOKEN> — stores a file in DATA_DIR
 //   PUT  /upload/<name>?offset=X&total=T  the same, in pieces under Cloudflare's 100 MB body limit (the zip since 0.11.0)
 //   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms, live viewers,
-//                                       players online, leaderboard size
+//                                       leaderboard size
 //   GET|POST|DELETE /classement         the leaderboards (classement.mjs): the Manif mode by default, the Campagne
 //                                       mode's casseurs with ?mode=campagne (GET) or {"mode":"campagne"} (POST)
 //   WS   /relais                        the online duel relay (relay.mjs)
-//   WS   /monde                         the Manif mode's shared world (monde.mjs)
+//   WS   /monde                         gone (410): the Manif mode's shared world, removed on 18/10
 //
 // Paths work with or without the /17-octobre/fichiers prefix (Traefik may or may not strip it).
-// Env: UPLOAD_TOKEN, DOWNLOAD_CODE (comma-separated list allowed), DATA_DIR (default /data), PORT (default 3000),
-// MONDE_MAX (players in the shared world at once, default 100).
+// Env: UPLOAD_TOKEN, DOWNLOAD_CODE (comma-separated list allowed), DATA_DIR (default /data), PORT (default 3000).
 // Arguments --port=N and --data=DIR override PORT and DATA_DIR (local tests).
 // No dependencies: node:http and node:fs only.
 
@@ -34,7 +34,6 @@ import { join } from 'node:path';
 import { timingSafeEqual } from 'node:crypto';
 
 import { boardStats, classement, loadBoard } from './classement.mjs';
-import { mondeStats, mondeUpgrade, startMonde } from './monde.mjs';
 import { relayStats, relayUpgrade, startRelay } from './relay.mjs';
 
 const arg = (name) => (process.argv.find((a) => a.startsWith(`--${name}=`)) || '').split('=').slice(1).join('=');
@@ -290,7 +289,7 @@ const server = createServer(async (req, res) => {
     if (req.method === 'PUT' && path.startsWith('/upload/')) return await upload(req, res, decodeURIComponent(path.slice(8)), url);
     if (req.method === 'GET' && path === '/stats') {
       if (!authorized(req)) return send(res, 401, { error: 'unauthorized' });
-      return send(res, 200, { ...stats, relay: relayStats(), watchers: watchers.size, monde: mondeStats(), classement: boardStats() });
+      return send(res, 200, { ...stats, relay: relayStats(), watchers: watchers.size, classement: boardStats() });
     }
     if (await classement(req, res, url, path, { send, visitor, authorized })) return;
     send(res, 404, { error: 'not found' });
@@ -299,16 +298,15 @@ const server = createServer(async (req, res) => {
   }
 });
 
-// the WebSockets: the duel relay and the Manif world (anything else is refused)
+// the WebSockets: the duel relay of Les Actes only (the Manif world is gone: a 410, the old games play offline)
 server.on('upgrade', (req, socket) => {
   let path = new URL(req.url || '/', 'http://local').pathname;
   if (path.startsWith(PREFIX)) path = path.slice(PREFIX.length) || '/';
   if (path === '/relais') return relayUpgrade(req, socket);
-  if (path === '/monde') return mondeUpgrade(req, socket);
+  if (path === '/monde') return socket.end('HTTP/1.1 410 Gone\r\nConnection: close\r\n\r\n');
   socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
 startRelay();
-startMonde();
 
 setInterval(() => {
   for (const w of watchers) w.write(': ping\n\n');

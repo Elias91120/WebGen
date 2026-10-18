@@ -1,17 +1,17 @@
 /**
  * Texts of the /17-octobre page (our video game, from the 3geeks lab), French and English.
  * The game itself is in French for now. Since 0.8.2 the download holds two games: Les Actes (the original real-time
- * strategy) and the Manif (a 3D roguelite, online), behind one menu.
+ * strategy) and the Manif (a 3D roguelite), behind one menu.
  */
 export const GAME_COPY = {
   fr: {
     eyebrow: 'Le lab 3geeks · jeu vidéo',
     title: '17 OCTOBRE',
     tagline: 'Un jeu, trois façons de descendre dans la rue.',
-    lead: 'Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, en ligne avec tout le monde. Et depuis le 17 octobre, la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.',
+    lead: 'Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS. Et depuis le 17 octobre, la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.',
     ctaDownload: 'Télécharger (gratuit)',
     ctaTrailer: 'Voir la bande-annonce',
-    facts: ['Windows', 'Gratuit', '3 jeux en 1', 'En ligne', 'Manette et Steam Deck', 'Bientôt sur Steam'],
+    facts: ['Windows', 'Gratuit', '3 jeux en 1', 'Duel en ligne', 'Manette et Steam Deck', 'Bientôt sur Steam'],
     statDownloads: 'téléchargements',
     statViews: 130000,
     statViewsLabel: 'vues le 17 octobre',
@@ -66,12 +66,12 @@ export const GAME_COPY = {
         id: 'manif',
         tag: 'Nouveau',
         title: 'La Manif',
-        kind: 'Roguelite · 3D · en ligne',
+        kind: 'Roguelite · 3D',
         d: 'Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis en RER jusqu’aux cités. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.',
         points: [
           'Les mondes : bats Monsieur le Préfet, tiens face aux essaims, prends le RER B vers Sevran-Beaudottes ou Massy',
           'La Police municipale, les CRS, la BAC en civil et en T-Max, le canon à eau, et le Préfet en personne',
-          'En ligne : tout le monde dans le même Paris, chat vocal de proximité, classement mondial',
+          'Le classement mondial : ton score face à ceux des autres joueurs',
         ],
         cta: 'Voir la vidéo',
         videoLabel: 'La Manif : le Préfet et les essaims, en vidéo',
@@ -150,7 +150,7 @@ export const GAME_COPY = {
       'Dézippe le dossier, puis double-clique sur 17_OCTOBRE.exe : après l’hommage, le menu te laisse choisir Les Actes, la Manif ou la Campagne.',
       'Windows peut afficher « Windows a protégé votre ordinateur » : le jeu n’est pas encore signé. Clique sur « Informations complémentaires », puis « Exécuter quand même ».',
       'Si Windows refuse d’ouvrir le zip (« accès refusé au dossier compressé »), c’est l’antivirus qui retient le fichier, ou le jeu encore ouvert : ferme le jeu, attends 30 secondes, clic droit sur le zip → Propriétés → coche « Débloquer » → OK, puis « Extraire tout… » vers le Bureau. Toujours refusé : Sécurité Windows → Historique de protection → « Autoriser », ou 7-Zip.',
-      'Dans la Manif, au premier « Jouer », choisis un pseudo (et le micro si tu veux) pour jouer en ligne avec tout le monde. Dans la Campagne, choisis qui descend, lis les commandes, et « Une soirée ! ».',
+      'Dans la Manif, choisis ton pseudo pour le classement mondial, puis ton perso. Dans la Campagne, choisis qui descend, lis les commandes, et « Une soirée ! ».',
     ],
     steamTitle: 'Bientôt sur Steam',
     steam: 'Gratuit. La page Steam arrive : on la mettra ici dès qu’elle sera en ligne.',
@@ -162,10 +162,10 @@ export const GAME_COPY = {
     eyebrow: '3geeks lab · video game',
     title: '17 OCTOBRE',
     tagline: 'One game, three ways to take to the streets.',
-    lead: 'Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, online with everyone. And since 17 October, the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.',
+    lead: 'Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police. And since 17 October, the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.',
     ctaDownload: 'Download (free)',
     ctaTrailer: 'Watch the trailer',
-    facts: ['Windows', 'Free', '3 games in 1', 'Online', 'Gamepad & Steam Deck', 'Coming to Steam'],
+    facts: ['Windows', 'Free', '3 games in 1', 'Online duel', 'Gamepad & Steam Deck', 'Coming to Steam'],
     statDownloads: 'downloads',
     statViews: 130000,
     statViewsLabel: 'views on 17 October',
@@ -220,12 +220,12 @@ export const GAME_COPY = {
         id: 'manif',
         tag: 'New',
         title: 'La Manif',
-        kind: 'Roguelite · 3D · online',
+        kind: 'Roguelite · 3D',
         d: 'Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then by RER out to the housing estates. Your weapons fire on their own; you jump, slide and power up.',
         points: [
           'Worlds: beat the Prefect, hold against the swarms, take the RER B to Sevran-Beaudottes or Massy',
           'The municipal police, the riot police, the plain-clothes BAC on foot and on scooters, the water cannon, and the Prefect himself',
-          'Online: everyone in the same Paris, proximity voice chat, a world leaderboard',
+          'A world leaderboard: your score against everyone else’s',
         ],
         cta: 'Watch the video',
         videoLabel: 'The Manif: the Prefect and the swarms, on video',
@@ -304,7 +304,7 @@ export const GAME_COPY = {
       'Unzip the folder, then double-click 17_OCTOBRE.exe: after the tribute, the menu lets you pick Les Actes, the Manif or the Campagne.',
       'Windows may show "Windows protected your PC": the game is not signed yet. Click "More info", then "Run anyway".',
       'If Windows refuses to open the zip ("access denied to the compressed folder"), the antivirus is holding the file, or the game is still running: close the game, wait 30 seconds, right-click the zip → Properties → tick "Unblock" → OK, then "Extract all…" to the Desktop. Still refused: Windows Security → Protection history → "Allow", or 7-Zip.',
-      'In the Manif, on your first "Play", pick a nickname (and the microphone if you like) to play online with everyone. In the Campagne, pick who goes out, read the controls, and hit "Une soirée !".',
+      'In the Manif, pick your nickname for the world leaderboard, then your character. In the Campagne, pick who goes out, read the controls, and hit "Une soirée !".',
     ],
     steamTitle: 'Coming to Steam',
     steam: 'Free. The Steam page is on its way: we will link it here as soon as it is live.',
