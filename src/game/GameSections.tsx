@@ -3,8 +3,8 @@
  * and the beta download (free since 14/10, served by the game's file server on the Mac Mini:
  * services/17-octobre, routed by Traefik on /17-octobre/fichiers).
  */
-import { ArrowRight, Dices, Download, Flag, Moon, Play, Shield, Smile, Swords, X, Zap } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { ArrowRight, Dices, Download, Flag, Instagram, Moon, Play, Shield, Smile, Sparkles, Swords, X, Zap } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Reveal from '../components/Reveal';
 import type { Lang } from '../i18n';
@@ -23,7 +23,71 @@ interface VersionInfo {
   date?: string;
   size?: number;
   notes?: string[];
+  titre?: string;
+  video_mp4?: string; // the version's video on the file server ("actus/actus_0.12.0.mp4"), since 0.12.0
 }
+
+const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * A number that counts up to its target the first time it is known (1.6 s, eased), then glides to each new value
+ * (the live download counter: each download moves it on). Null until the target is known.
+ */
+function useCountUp(target: number | null, ms = 1600): number | null {
+  const [value, setValue] = useState<number | null>(null);
+  const from = useRef(0);
+  useEffect(() => {
+    if (target === null) return;
+    if (reducedMotion()) {
+      from.current = target;
+      setValue(target);
+      return;
+    }
+    const a = from.current;
+    const duration = a === 0 ? ms : 450;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const e = 1 - Math.pow(1 - t, 3);
+      setValue(Math.round(a + (target - a) * e));
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else from.current = target;
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, ms]);
+  return value;
+}
+
+/** One figure of the hero strip: a big number that counts up, and what it counts. */
+const Stat: React.FC<{ n: number | null; label: string; lang: Lang; prefix?: string; suffix?: string; live?: boolean }> = ({
+  n,
+  label,
+  lang,
+  prefix = '',
+  suffix = '',
+  live = false,
+}) => {
+  const v = useCountUp(n);
+  const locale = lang === 'fr' ? 'fr-FR' : 'en-GB';
+  return (
+    <div className="stat-tile">
+      <span className="flex items-center gap-2">
+        <span className="font-display text-3xl font-bold tabular-nums sm:text-4xl" style={{ color: GAME_YELLOW }}>
+          {v === null ? '…' : `${prefix}${v.toLocaleString(locale)}${suffix}`}
+        </span>
+        {live && (
+          <span className="relative flex h-2 w-2" aria-hidden="true">
+            <span className="live-ring absolute inset-0 rounded-full bg-brand-mint" />
+            <span className="relative h-2 w-2 rounded-full bg-brand-mint" />
+          </span>
+        )}
+      </span>
+      <span className="mt-1 block text-xs uppercase tracking-wider text-slate-400">{label}</span>
+    </div>
+  );
+};
 
 const Heading: React.FC<{ path: string; title: string; sub?: string }> = ({ path, title, sub }) => (
   <Reveal className="max-w-2xl">
@@ -73,6 +137,14 @@ function useDownloadCount(): number | null {
     };
     const onVisibility = () => (document.hidden ? close() : open());
     open();
+    // (sans le direct, un navigateur qui le bloque, un proxy : le total une fois, quand même)
+    fetch(`${FILES}/telechargements`, { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        const n = Number(d?.total);
+        if (Number.isFinite(n) && n >= 0) setCount((c) => (c === null ? n : c));
+      })
+      .catch(() => {});
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
       document.removeEventListener('visibilitychange', onVisibility);
@@ -140,10 +212,14 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
           <div>
             <span className="eyebrow hero-rise" style={{ ['--rise-delay' as string]: '60ms' }}>{c.eyebrow}</span>
             <h1
-              className="hero-rise mt-4 font-display text-6xl font-bold tracking-tight sm:text-7xl md:text-8xl"
-              style={{ ['--rise-delay' as string]: '140ms', color: GAME_YELLOW }}
+              className="hero-rise relative mt-4 inline-block font-display text-6xl font-bold tracking-tight sm:text-7xl md:text-8xl"
+              style={{ ['--rise-delay' as string]: '140ms' }}
             >
-              {c.title}
+              <span className="title-shine">{c.title}</span>
+              {/* « 2026 », tamponné de travers, comme sur l'écran titre du jeu */}
+              <span className="stamp-2026 absolute -right-6 -top-5 font-display text-2xl font-bold sm:-right-10 sm:text-3xl" aria-hidden="true">
+                2026
+              </span>
             </h1>
             <p className="hero-rise mt-4 text-lg font-semibold text-white md:text-xl" style={{ ['--rise-delay' as string]: '200ms' }}>
               {c.tagline}
@@ -181,6 +257,72 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
               />
             </div>
           </div>
+          {/* les chiffres, qui montent jusqu'au vrai nombre (le compteur de téléchargements est en direct) */}
+          <div className="hero-rise grid grid-cols-2 gap-3 md:grid-cols-4 lg:col-span-2" style={{ ['--rise-delay' as string]: '440ms' }}>
+            <Stat n={downloads} label={c.statDownloads} lang={lang} live />
+            <Stat n={c.statViews} label={c.statViewsLabel} lang={lang} prefix="+" />
+            <Stat n={3} label={c.statGames} lang={lang} />
+            <Stat n={0} label={c.statPrice} lang={lang} suffix=" €" />
+          </div>
+        </div>
+      </section>
+
+      {/* Les revendications de la Campagne, en bande qui défile, comme une banderole */}
+      <div className="relative z-10 overflow-hidden py-6" aria-label={c.marqueeLabel}>
+        <div className="marquee-band">
+          <div className="marquee-track font-display">
+            {[...c.marquee, ...c.marquee].map((t, i) => (
+              <span key={i} className="flex items-center">
+                {t}
+                <span className="mx-6 inline-block h-2.5 w-2.5 rotate-45 bg-[#120d00]" aria-hidden="true" />
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Quoi de neuf : la dernière version, sa vidéo (la même que dans le menu du jeu), ce qu'elle change */}
+      <section id="nouveautes" className="relative scroll-mt-20 border-b border-white/5 py-16 md:py-24">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-14">
+          <Reveal>
+            <div className="card overflow-hidden p-0 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
+              <video
+                className="block aspect-video w-full bg-black"
+                src={info?.video_mp4 ? `${FILES}/${info.video_mp4}` : '/videos/17-octobre-nouveautes.mp4?v=0120'}
+                poster={`${IMG}/nouveautes-0120.jpg`}
+                controls
+                playsInline
+                preload="metadata"
+                aria-label={c.newsVideoLabel}
+              />
+            </div>
+          </Reveal>
+          <div>
+            <Reveal>
+              <span className="eyebrow">
+                <Sparkles className="mr-1 inline h-3.5 w-3.5" /> {c.newsPath}
+                {info ? ` · ${c.version} ${info.version}` : ''}
+              </span>
+              <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{info?.titre ?? c.newsTitle}</h2>
+              {info?.date && <p className="mt-3 text-sm text-slate-400">{c.published} {formatDate(info.date, lang)}</p>}
+              <p className="mt-4 text-base leading-relaxed text-slate-400">{c.newsSub}</p>
+            </Reveal>
+            {info?.notes && info.notes.length > 0 && (
+              <Reveal className="mt-6" delay={80}>
+                <ul className="space-y-2.5 text-sm leading-relaxed text-slate-300 md:text-base">
+                  {info.notes.slice(0, 6).map((n) => (
+                    <li key={n} className="flex gap-2.5">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rotate-45" style={{ background: GAME_YELLOW }} />
+                      {n}
+                    </li>
+                  ))}
+                </ul>
+                <a href="#telecharger" className="btn btn-primary mt-8">
+                  <Download className="h-4 w-4" /> {c.ctaDownload}
+                </a>
+              </Reveal>
+            )}
+          </div>
         </div>
       </section>
 
@@ -193,30 +335,19 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
               <Reveal key={m.id} delay={i * 100}>
                 <article className="card flex h-full flex-col overflow-hidden p-0">
                   <div className="relative bg-black">
-                    {m.id === 'manif' || m.id === 'campagne' ? (
-                      <div className="flex items-center justify-center bg-[radial-gradient(ellipse_70%_90%_at_50%_0%,rgba(252,194,0,0.16),transparent_70%)] px-6 pt-6">
-                        {/* the vertical video, as on a phone: muted, loops, no controls needed (the Campagne: the launch trailer; ?v= skips Cloudflare's 7-day copy when it changes) */}
-                        <video
-                          className="block aspect-[9/16] w-full max-w-[280px] rounded-t-2xl border border-b-0 border-white/10 bg-black object-cover"
-                          src={m.id === 'manif' ? '/videos/17-octobre-manif.mp4' : '/videos/17-octobre-campagne.mp4?v=0110'}
-                          poster={m.id === 'manif' ? `${IMG}/manif-poster.jpg` : `${IMG}/campagne-poster.jpg?v=0110`}
-                          autoPlay
-                          muted
-                          loop
-                          playsInline
-                          preload="metadata"
-                          aria-label={m.id === 'manif' ? c.manifVideoLabel : c.campagneVideoLabel}
-                        />
-                      </div>
-                    ) : (
-                      <img
-                        src={`${IMG}/melee.webp`}
-                        alt={c.gallery.find((g) => g.src === 'melee')?.alt ?? m.title}
-                        loading="lazy"
-                        className="block aspect-video w-full object-cover"
-                        style={{ imageRendering: 'pixelated' }}
-                      />
-                    )}
+                    {/* la boucle du mode, la même que sous sa carte dans le menu du jeu : muette, en boucle (Les Actes et la
+                        Manif : des parties d'Elias ; la Campagne : son ouverture) */}
+                    <video
+                      className="block aspect-video w-full bg-black object-cover"
+                      src={`/videos/17-octobre-mode-${m.id}.mp4?v=0120`}
+                      poster={m.id === 'actes' ? `${IMG}/melee-640.webp` : m.id === 'manif' ? `${IMG}/manif-horde-640.webp` : `${IMG}/campagne-mumie-640.webp`}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      aria-label={m.videoLabel}
+                    />
                     <span
                       className="absolute left-4 top-4 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider"
                       style={m.id !== 'actes' ? { background: GAME_YELLOW, color: '#1a1200' } : { background: 'rgba(0,0,0,0.6)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
@@ -240,12 +371,75 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                       <a href="#telecharger" className="btn btn-primary">
                         <Download className="h-4 w-4" /> {c.ctaDownload}
                       </a>
-                      <a href={m.id === 'actes' ? '#bande-annonce' : '#deux-jeux'} className="btn btn-ghost">
+                      <a href={m.id === 'actes' ? '#bande-annonce' : '#videos'} className="btn btn-ghost">
                         <Play className="h-4 w-4" /> {m.cta}
                       </a>
                     </div>
                   </div>
                 </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* L'équipe : Elias et Noam font le jeu, Eden le teste ; tous les trois sont dans la Campagne (leurs têtes modelées,
+          rendues en jeu : jamais leurs photos), et le concours pour y entrer */}
+      <section id="equipe" className="relative scroll-mt-20 overflow-hidden border-b border-white/5 py-16 md:py-24">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_15%_20%,rgba(252,194,0,0.10),transparent_70%),radial-gradient(ellipse_50%_60%_at_100%_100%,rgba(255,140,38,0.08),transparent_70%)]"
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+          <Heading path={c.teamPath} title={c.teamTitle} sub={c.teamSub} />
+          <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {c.team.map((t, i) => (
+              <Reveal key={t.id} delay={i * 90}>
+                <article className="team-card group card h-full overflow-hidden p-0">
+                  <div className="relative overflow-hidden bg-[#0a0e1c]">
+                    <img
+                      src={`${IMG}/equipe-${t.id}.webp`}
+                      alt={t.alt}
+                      loading="lazy"
+                      className="block aspect-square w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                    />
+                    <span className="absolute left-4 top-4 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider" style={{ background: GAME_YELLOW, color: '#1a1200' }}>
+                      {t.role}
+                    </span>
+                    {t.note && <span className="absolute bottom-3 right-4 text-[11px] text-white/70">{t.note}</span>}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-display text-3xl font-bold text-white">{t.name}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-400">{t.d}</p>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="card mt-8 flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between md:p-8" delay={120}>
+            <div className="max-w-3xl">
+              <h3 className="font-display text-2xl font-bold" style={{ color: GAME_YELLOW }}>{c.joinTitle}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-300 md:text-base">{c.join}</p>
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">{c.joinNote}</p>
+            </div>
+            <a href="https://www.instagram.com/dix.sept.octobre/" target="_blank" rel="noopener noreferrer" className="btn btn-primary shrink-0">
+              <Instagram className="h-4 w-4" /> {c.joinCta}
+            </a>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Les vidéos, en vertical, comme sur un téléphone */}
+      <section id="videos" className="relative scroll-mt-20 border-b border-white/5 py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <Heading path={c.videosPath} title={c.videosTitle} sub={c.videosSub} />
+          <div className="mt-12 grid grid-cols-1 justify-items-center gap-8 sm:grid-cols-3">
+            {c.videos.map((v, i) => (
+              <Reveal key={v.src} delay={i * 90} className="w-full max-w-[300px]">
+                <figure className="phone-frame">
+                  <video className="block aspect-[9/16] w-full rounded-[1.6rem] bg-black object-cover" src={v.src} poster={v.poster} controls playsInline preload="metadata" aria-label={v.label} />
+                </figure>
+                <figcaption className="mt-3 text-center text-sm text-slate-300">{v.label}</figcaption>
               </Reveal>
             ))}
           </div>

@@ -12,6 +12,7 @@
 //   GET  /telecharger[?code=XXXX]       the zip (attachment) ; with DOWNLOAD_CODE set, a wrong code goes back to the page
 //   GET  /telechargements               {"total": N} downloads so far, every version (public)
 //   GET  /telechargements/direct        the same total, live (Server-Sent Events: on connect, then on each download)
+//   GET  /actus/actus_<version>.<ext>   a version's video, its "what's new" (mp4 for the page, ogv for the game ; byte ranges)
 //   PUT  /upload/<name>                 Authorization: Bearer <UPLOAD_TOKEN> — stores a file in DATA_DIR
 //   PUT  /upload/<name>?offset=X&total=T  the same, in pieces under Cloudflare's 100 MB body limit (the zip since 0.11.0)
 //   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN> — download counts, relay rooms, live viewers,
@@ -162,6 +163,46 @@ async function download(req, res, url) {
   bumpStat(v.file);
 }
 
+const ACTUS_RE = /^actus_[A-Za-z0-9._-]{1,80}\.(mp4|ogv|webm|jpg|png)$/;
+const ACTUS_TYPES = { mp4: 'video/mp4', ogv: 'video/ogg', webm: 'video/webm', jpg: 'image/jpeg', png: 'image/png' };
+
+/**
+ * A version's video (its "what's new"), uploaded with the build by tools/publish.ps1 as actus_<version>.<ext>: the
+ * page plays the .mp4, the game's update notice downloads the .ogv. Byte ranges are honoured (a browser seeks with
+ * them, and Safari will not play a video without them); cached a day, the name changes with each version.
+ */
+async function actus(req, res, name) {
+  if (!ACTUS_RE.test(name)) return send(res, 404, { error: 'not found' });
+  const path = join(DATA, name);
+  let st;
+  try {
+    st = await fs.stat(path);
+  } catch {
+    return send(res, 404, { error: 'not found' });
+  }
+  const headers = {
+    'Content-Type': ACTUS_TYPES[name.split('.').pop()],
+    'Accept-Ranges': 'bytes',
+    'Cache-Control': 'public, max-age=86400',
+    'Access-Control-Allow-Origin': '*',
+  };
+  const m = /^bytes=(\d*)-(\d*)$/.exec(String(req.headers.range || ''));
+  if (m && (m[1] !== '' || m[2] !== '')) {
+    let start = m[1] === '' ? Math.max(0, st.size - Number(m[2])) : Number(m[1]);
+    let end = m[1] !== '' && m[2] !== '' ? Math.min(Number(m[2]), st.size - 1) : st.size - 1;
+    if (start >= st.size || start > end) {
+      res.writeHead(416, { 'Content-Range': `bytes */${st.size}`, ...headers });
+      return res.end();
+    }
+    res.writeHead(206, { ...headers, 'Content-Range': `bytes ${start}-${end}/${st.size}`, 'Content-Length': end - start + 1 });
+    if (req.method === 'HEAD') return res.end();
+    return createReadStream(path, { start, end }).pipe(res);
+  }
+  res.writeHead(200, { ...headers, 'Content-Length': st.size });
+  if (req.method === 'HEAD') return res.end();
+  createReadStream(path).pipe(res);
+}
+
 /**
  * An upload in pieces (?offset=X&total=T): Cloudflare refuses any request body over 100 MB, and the game's zip is bigger
  * since 0.11.0. Each piece is appended to `.<name>.part` at its offset (offset 0 starts over; a piece that does not land
@@ -245,6 +286,7 @@ const server = createServer(async (req, res) => {
       return send(res, 200, { total: totalDownloads() }, 'application/json; charset=utf-8', { 'Access-Control-Allow-Origin': '*' });
     }
     if (req.method === 'GET' && path === '/telechargements/direct') return watch(req, res);
+    if ((req.method === 'GET' || req.method === 'HEAD') && path.startsWith('/actus/')) return await actus(req, res, decodeURIComponent(path.slice(7)));
     if (req.method === 'PUT' && path.startsWith('/upload/')) return await upload(req, res, decodeURIComponent(path.slice(8)), url);
     if (req.method === 'GET' && path === '/stats') {
       if (!authorized(req)) return send(res, 401, { error: 'unauthorized' });
