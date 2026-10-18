@@ -80,8 +80,14 @@ try {
 
     # 2. le miroir du zip : une release publique de ce dépôt, une fois par version
     $tag = "17-octobre-$($info.version)"
+    # (une nouvelle version n'a pas encore de miroir : gh répond « release not found » sur stderr ; sous Windows PowerShell,
+    # avec « Stop », cette réponse redirigée devenait une erreur fatale : le 18/10, à la sortie de la 0.13.0)
+    $eap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     & gh release view $tag -R $Depot --json tagName *> $null
-    if ($LASTEXITCODE -ne 0) {
+    $existe = $LASTEXITCODE -eq 0
+    $ErrorActionPreference = $eap
+    if (-not $existe) {
         $zipLocal = Join-Path $Manif "build\$($info.file)"
         if (-not (Test-Path $zipLocal)) { throw "Le miroir $tag manque, et $($info.file) n'est pas dans Manif/build." }
         $notesMiroir = Join-Path $env:TEMP "17octobre_miroir.md"
