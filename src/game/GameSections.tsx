@@ -288,7 +288,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
             <div className="card overflow-hidden p-0 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
               <video
                 className="block aspect-video w-full bg-black"
-                src={info?.video_mp4 ? `${FILES}/${info.video_mp4}` : '/videos/17-octobre-nouveautes.mp4?v=0120b'}
+                src={`/videos/17-octobre-nouveautes.mp4?v=${info?.version ?? '0120b'}`}
                 poster={`${IMG}/nouveautes-0120.jpg?v=b`}
                 controls
                 playsInline
