@@ -39,7 +39,7 @@ export const GAME_COPY = {
     videosTitle: 'Comme sur ton téléphone.',
     videosSub: 'Les vidéos de la bande, en vertical : la dernière mise à jour, le trailer de sortie de la Campagne, et la Manif.',
     videos: [
-      { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0120c', poster: '/images/17-octobre/campagne-telephone-640.webp', label: 'La 0.12.0 : la Campagne t’explique tout' },
+      { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0130', poster: '/images/17-octobre/nouveautes-0130-vertical.webp', label: 'La 0.13.0 : la soirée qui raconte' },
       { src: '/videos/17-octobre-campagne-sans-voix.mp4', poster: '/images/17-octobre/campagne-poster.jpg?v=0110', label: 'La Campagne, le trailer de sortie' },
       { src: '/videos/17-octobre-manif-musique.mp4', poster: '/images/17-octobre/manif-poster.jpg', label: 'La Manif, seul contre la horde' },
     ],
@@ -78,12 +78,12 @@ export const GAME_COPY = {
       },
       {
         id: 'campagne',
-        tag: 'Nouveau : la 0.12',
+        tag: 'Nouveau : la 0.13',
         title: 'La Campagne',
-        kind: 'Monde ouvert · première personne · bêta (0.12) · déconseillé aux moins de 12 ans',
+        kind: 'Monde ouvert · première personne · bêta (0.13) · déconseillé aux moins de 12 ans',
         d: 'Ce soir, Paris descend dans la rue pour la justice et pour la paix. Une soirée dans le 11e, en réalisme rétro PS2, avec cinq revendications, de la vérité sur le 17 octobre 1961 à « Macaron, écoute la rue ». Le but : être le plus gros fouteur de bordel de Paname, au pouvoir, jamais aux gens. Une fiction satirique : dans la vraie vie, la violence n’est pas un jeu.',
         points: [
-          'Tout est indiqué : une cinématique d’ouverture, des quêtes guidées, la balise et la carte, la planque de Noam et Eden',
+          'La soirée raconte, du premier pétard à l’Élysée : la bande t’écrit par SMS, la pluie et l’orage, le scooter, la BAC à semer',
           'On entre partout : les halls, les escaliers, les appartements, les caves, les toits de zinc, le métro',
           'Le commissariat et le déguisement : en CRS, glisse-toi dans leur ligne (« T’es de quelle compagnie ? » « La 17e ! »)',
           'Le direct de 17 INFO piraté, le cortège et sa banderole, le feu d’artifice, et au bout, le coup d’État à l’Élysée',
@@ -193,7 +193,7 @@ export const GAME_COPY = {
     videosTitle: 'Just like on your phone.',
     videosSub: 'The crew’s videos, vertical: the latest update, the Campagne launch trailer, and the Manif.',
     videos: [
-      { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0120c', poster: '/images/17-octobre/campagne-telephone-640.webp', label: '0.12.0: the Campagne explains it all' },
+      { src: '/videos/17-octobre-nouveautes-vertical.mp4?v=0130', poster: '/images/17-octobre/nouveautes-0130-vertical.webp', label: '0.13.0: the evening that tells a story' },
       { src: '/videos/17-octobre-campagne-sans-voix.mp4', poster: '/images/17-octobre/campagne-poster.jpg?v=0110', label: 'The Campagne, launch trailer' },
       { src: '/videos/17-octobre-manif-musique.mp4', poster: '/images/17-octobre/manif-poster.jpg', label: 'The Manif, alone against the horde' },
     ],
@@ -232,12 +232,12 @@ export const GAME_COPY = {
       },
       {
         id: 'campagne',
-        tag: 'New: 0.12',
+        tag: 'New: 0.13',
         title: 'La Campagne',
-        kind: 'Open world · first person · beta (0.12) · not recommended under 12',
+        kind: 'Open world · first person · beta (0.13) · not recommended under 12',
         d: 'Tonight, Paris takes to the streets for justice and for peace. One night in the 11th arrondissement, in retro PS2 realism, with five demands, from the truth about 17 October 1961 to "Macaron, listen to the street". The goal: be the biggest troublemaker in Paname, against the powerful, never against people. A satirical fiction: in real life, violence is not a game.',
         points: [
-          'Everything is shown: an opening cutscene, guided quests, the marker and the map, Noam and Eden’s hideout',
+          'The night tells a story, from the first banger to the Élysée: the crew texts you, rain and storms, the scooter, the BAC to shake off',
           'Go inside everywhere: halls, staircases, flats, cellars, the zinc rooftops, the metro',
           'The police station and the disguise: in riot gear, slip into their line ("Which company are you?" "The 17th!")',
           'The hijacked 17 INFO broadcast, the march and its banner, the fireworks, and at the end, the coup at the Élysée',
