@@ -180,7 +180,7 @@ const Slider: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
         </motion.div>
 
         {/* Labels */}
-        <motion.span style={{ opacity: beforeLabel }} className="pointer-events-none absolute bottom-3 left-3 rounded-full bg-black/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-200 backdrop-blur sm:text-[11px]">
+        <motion.span style={{ opacity: beforeLabel }} className="pointer-events-none absolute bottom-3 left-3 rounded-full bg-ink/95 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 sm:text-[11px]">
           {copy.before}
         </motion.span>
         <motion.span style={{ opacity: afterLabel }} className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-brand-mint/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-ink sm:text-[11px]">

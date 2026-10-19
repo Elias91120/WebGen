@@ -163,6 +163,27 @@ export const translations = {
           h1: "Co-founded by Elias & Noam.",
           sub: "3geeks is co-founded by Elias and Noam. Alongside them, a growing network of business introducers brings new opportunities.",
         },
+        legalNotice: {
+          title: "Legal notice — 3geeks",
+          description: "Legal notice of 3geeks.fr: publisher, publication directors, hosting and intellectual property.",
+          path: "Legal information",
+          h1: "Legal notice",
+          sub: "Who publishes this site, where it is hosted, and who owns its content.",
+        },
+        privacy: {
+          title: "Privacy policy — 3geeks",
+          description: "How 3geeks handles your personal data: what we receive, why, how long we keep it, our providers and your GDPR rights.",
+          path: "Legal information",
+          h1: "Privacy policy",
+          sub: "What we receive, why, for how long, and how to exercise your rights.",
+        },
+        terms: {
+          title: "Terms of sale — 3geeks",
+          description: "3geeks terms of sale: quotes, prices, payment, delivery, intellectual property, liability, withdrawal and mediation.",
+          path: "Legal information",
+          h1: "Terms of sale",
+          sub: "The rules that apply to every 3geeks project, from the quote to delivery.",
+        },
       },
       whatWeDo: {
         path: "What we do",
@@ -349,73 +370,119 @@ export const translations = {
       blurb: "Websites and digital tools that make people want to contact you."
     },
     legal: {
-      title: "Legal Information",
+      title: "Legal information",
       tabs: {
-        legal: "Legal Notice",
-        privacy: "Privacy Policy",
-        terms: "T&Cs"
+        legal: "Legal notice",
+        privacy: "Privacy",
+        terms: "Terms"
       },
+      updated: "Last updated: 19 October 2026",
+      prevails: "This English version is provided for convenience. The French version is the only legally binding one.",
       content: {
         legal: [
           {
-            title: "1. Website editor",
-            text: "This website is published by 3geeks, a web studio co-founded by Elias Elloumi and Noam Leclapart-Jublot.\nPublication directors: Elias Elloumi and Noam Leclapart-Jublot.\nContact: contact@3geeks.fr"
+            title: "1. Website publisher",
+            text: "3geeks.fr is published by 3geeks, [LEGAL FORM TO BE COMPLETED] with a share capital of [SHARE CAPITAL TO BE COMPLETED], being registered with the Trade and Companies Register of [REGISTRY CITY TO BE COMPLETED].\nSIREN: [SIREN TO BE COMPLETED]\nEU VAT number: [VAT NUMBER TO BE COMPLETED]\nRegistered office: [REGISTERED OFFICE ADDRESS TO BE COMPLETED]\nCo-founders: Elias Elloumi and Noam Leclapart-Jublot\nContact: contact@3geeks.fr · [PHONE TO BE COMPLETED]"
           },
           {
-            title: "2. Hosting",
-            text: "The website runs on servers operated by 3geeks and is delivered through the Cloudflare network (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA)."
+            title: "2. Publication directors",
+            text: "Elias Elloumi and Noam Leclapart-Jublot, co-founders of 3geeks."
           },
           {
-            title: "3. Intellectual property",
-            text: "The content of this site (texts, visuals, logo, brand video) belongs to 3geeks. Client logos and screenshots of client projects belong to their respective owners and are shown as references."
+            title: "3. Hosting",
+            text: "The website is hosted on a server operated by 3geeks, located at [HOSTING ADDRESS TO BE COMPLETED], and delivered through the network of Cloudflare, Inc. (101 Townsend St, San Francisco, CA 94107, USA; cloudflare.com)."
+          },
+          {
+            title: "4. Intellectual property",
+            text: "The content of this site (texts, visuals, logo, brand video) belongs to 3geeks. Client logos and screenshots of client projects belong to their respective owners and are shown as references, with their agreement."
+          },
+          {
+            title: "5. Reporting",
+            text: "To report content or ask a question about this site: contact@3geeks.fr."
           }
         ],
         privacy: [
           {
-            title: "1. What we receive",
+            title: "1. Data controller",
+            text: "3geeks (details in the legal notice), reachable at contact@3geeks.fr for any question about your data."
+          },
+          {
+            title: "2. What we receive",
             text: "This site has no contact form and does not track you. We only receive what you choose to send us: an email to contact@3geeks.fr, a LinkedIn message, a call booked through Calendly (name, email, phone number and the details you share), or the questions you ask the site assistant."
           },
           {
-            title: "2. How we use it",
-            text: "Only to answer you, prepare your quote and follow up on our work together. Your data is never sold or passed on to third parties."
+            title: "3. Why, and on what basis",
+            text: "Answering you and preparing a quote: steps taken at your request before a contract (GDPR article 6.1.b).\nDelivering and following up the work: performance of the contract (article 6.1.b).\nKeeping invoices: legal obligation (article 6.1.c).\nYour data is never sold or used for advertising."
           },
           {
-            title: "3. Services we rely on",
-            text: "Calls are booked through Calendly, which processes booking data under its own privacy policy. The site assistant uses an AI model from Mistral AI, a French company, with 3geeks’ own servers as a fallback: your messages are sent to them only to generate the answer, and 3geeks does not store their content. Please don’t share sensitive information with it."
+            title: "4. How long we keep it",
+            text: "Requests and conversations that lead nowhere: 3 years after the last contact.\nClients: for the duration of the relationship, then 10 years for accounting records (invoices).\nMessages written to the site assistant: 3geeks does not keep their content."
           },
           {
-            title: "4. Your rights",
-            text: "Under the GDPR, you can access, correct or delete your data by writing to contact@3geeks.fr. You can also file a complaint with the CNIL (cnil.fr)."
+            title: "5. Recipients and providers",
+            text: "Your data is read only by Elias and Noam, co-founders of 3geeks. We rely on Calendly (call booking, United States), Mistral AI (site assistant, France) and Cloudflare (site delivery, United States). When data leaves the European Union, the transfer is covered by the safeguards provided by the GDPR (European Commission standard contractual clauses or the EU–US Data Privacy Framework)."
           },
           {
-            title: "5. Cookies",
+            title: "6. Your rights",
+            text: "Under the GDPR, you can access, correct or erase your data, restrict or object to its processing, or ask for its portability, by writing to contact@3geeks.fr. We answer within one month. You can also file a complaint with the CNIL (cnil.fr)."
+          },
+          {
+            title: "7. Cookies and audience measurement",
             text: "This site sets no advertising or tracking cookies. Your language choice is stored in your browser only. The booking calendar is provided by Calendly: it starts loading when you point at a booking button or when the assistant offers a call, and Calendly may then set its own technical cookies. To know which pages interest our visitors, the site counts visits anonymously, without cookies: the page viewed, the site you came from, mobile or desktop, then the time spent, how far down you scrolled and the section on screen when you left, tied to a random visit number kept only for the tab. No name, no IP address is stored; nothing is sent if your browser asks not to be tracked. The 17 OCTOBRE game counts its sessions the same way (a random number, never a name), and can be switched off in its options."
           }
         ],
         terms: [
           {
-            title: "1. Purpose",
-            text: "These conditions govern the web development services provided by 3geeks."
+            title: "1. Scope",
+            text: "These terms apply to all 3geeks services (details in the legal notice): creation and redesign of websites, web and mobile apps and platforms, AI integration and automation, maintenance (Peace-of-mind option). They apply to business clients and consumers alike. The specific terms of the accepted quote prevail over these terms. For a public contract, the contract documents prevail."
           },
           {
-            title: "2. Quote",
-            text: "Every project starts with a free call and a free, no-commitment quote."
+            title: "2. Quote and order",
+            text: "Every project starts with a free call and a free, no-commitment quote. The quote sets out the work, the price, the schedule and the deliverables; it is valid for [VALIDITY PERIOD TO BE SET] from the date it is sent. The order becomes firm when the quote is accepted in writing (signature, \"approved\" or acceptance email)."
           },
           {
             title: "3. Price",
-            text: "Prices are in euros. The price billed is the one set in the accepted quote."
+            text: "Prices are in euros. [VAT REGIME TO BE SET]. The price billed is the one in the accepted quote; any additional work is quoted separately."
           },
           {
             title: "4. Payment",
-            text: "Nothing is paid upfront: payment is due on delivery, once the client has approved the result."
+            text: "No deposit is required: the invoice is issued on delivery, after the client's acceptance check (section 6). It is payable within [PAYMENT TERM TO BE SET, e.g. 30 days] of its issue date, by bank transfer. No discount is granted for early payment. The Peace-of-mind option is billed monthly, in arrears."
           },
           {
-            title: "5. Delivery",
-            text: "Small requests are usually delivered within 24 to 48 hours. For larger projects, the schedule is agreed in the quote and may depend on the client's responsiveness."
+            title: "5. Late payment",
+            text: "Business clients: any late payment automatically incurs, without prior notice, penalties at the European Central Bank's most recent refinancing rate plus 10 percentage points, and a fixed recovery fee of €40 (French Commercial Code, articles L441-10 and D441-5). If actual recovery costs are higher, further compensation may be claimed on proof.\nConsumers: interest at the legal rate may apply after formal notice."
           },
           {
-            title: "6. Ownership",
-            text: "Once paid, the source code and the domain name belong to the client."
+            title: "6. Schedule, delivery and acceptance",
+            text: "Small requests are usually delivered within 24 to 48 hours, as an indication. For larger projects, the schedule is set in the quote and assumes the client provides content (texts, images, access) and approvals on time. On delivery, the client has [ACCEPTANCE PERIOD TO BE SET, e.g. 8 days] to report defects in writing; 3geeks fixes them at no cost. Without written reservations within that period, or as soon as the client asks for the site to go live, the work is deemed accepted."
+          },
+          {
+            title: "7. Intellectual property and reversibility",
+            text: "Upon full payment, 3geeks assigns to the client the economic rights in the work developed specifically for them (reproduction, representation, adaptation and use), worldwide and for the full legal term of protection. The source code, access credentials and domain name are handed over to the client, in their name. Open-source components remain under their own licences; 3geeks' generic tools and libraries remain its property and are licensed to the client for the project, with no time limit. Unless the client refuses in writing or a confidentiality agreement applies, 3geeks may cite the project as a reference."
+          },
+          {
+            title: "8. Maintenance (Peace-of-mind option)",
+            text: "The Peace-of-mind option (€50 per month) covers uptime monitoring, security updates and small content edits each month. It has no minimum term and can be cancelled at any time by email, with [NOTICE PERIOD TO BE SET, e.g. 1 month] notice."
+          },
+          {
+            title: "9. Liability",
+            text: "3geeks has a best-efforts obligation. It is not liable for indirect damage (loss of business, revenue, or data the client did not back up), nor for failures of third-party services chosen by the client (host, registrar, external tools). For business clients, 3geeks' total liability is capped at the amount paid for the service concerned. These limits do not reduce the rights the law guarantees to consumers."
+          },
+          {
+            title: "10. Personal data",
+            text: "How we process client and prospect data is described in the privacy policy. When 3geeks processes personal data on the client's behalf (for example data about the users of their site), the parties sign a data processing agreement in line with GDPR article 28."
+          },
+          {
+            title: "11. Right of withdrawal (consumers)",
+            text: "A consumer who concludes the contract at a distance (online, by phone or by email) has 14 days from the conclusion of the contract to withdraw, without giving a reason or paying a penalty (French Consumer Code, article L221-18), by writing to contact@3geeks.fr or using the standard withdrawal form. If they expressly ask for the work to start before that period ends, they pay for the part already done; if they ask for it to be fully performed before the period ends and expressly waive their right, they can no longer withdraw (articles L221-25 and L221-28)."
+          },
+          {
+            title: "12. Consumer mediation",
+            text: "In case of dispute, a consumer can turn free of charge to the consumer mediator 3geeks belongs to: [MEDIATOR TO BE APPOINTED: name, postal address, website], after first sending 3geeks a written complaint that was not resolved (French Consumer Code, articles L611-1 and following)."
+          },
+          {
+            title: "13. Governing law and disputes",
+            text: "These terms are governed by French law. The parties first seek an amicable solution. Failing that, for business clients, the courts of [REGISTERED OFFICE CITY TO BE COMPLETED] have sole jurisdiction; for consumers, the statutory rules on jurisdiction apply."
           }
         ]
       },
@@ -583,6 +650,27 @@ export const translations = {
           path: "Équipe",
           h1: "3geeks, cofondée par Elias et Noam.",
           sub: "3geeks est cofondée par Elias et Noam. À leurs côtés, un réseau grandissant d’apporteurs d’affaires fait émerger de nouvelles opportunités.",
+        },
+        legalNotice: {
+          title: "Mentions légales — 3geeks",
+          description: "Mentions légales de 3geeks.fr : éditeur, directeurs de la publication, hébergement et propriété intellectuelle.",
+          path: "Informations légales",
+          h1: "Mentions légales",
+          sub: "Qui édite ce site, où il est hébergé et à qui appartiennent ses contenus.",
+        },
+        privacy: {
+          title: "Politique de confidentialité — 3geeks",
+          description: "Comment 3geeks traite vos données personnelles : ce que nous recevons, pourquoi, combien de temps, nos prestataires et vos droits RGPD.",
+          path: "Informations légales",
+          h1: "Politique de confidentialité",
+          sub: "Ce que nous recevons, pourquoi, pendant combien de temps, et comment exercer vos droits.",
+        },
+        terms: {
+          title: "Conditions générales de vente — 3geeks",
+          description: "CGV de 3geeks : devis, prix, paiement, délais, propriété intellectuelle, responsabilité, rétractation et médiation.",
+          path: "Informations légales",
+          h1: "Conditions générales de vente",
+          sub: "Les règles qui s’appliquent à chaque projet 3geeks, du devis à la livraison.",
         },
       },
       whatWeDo: {
@@ -772,71 +860,117 @@ export const translations = {
     legal: {
       title: "Informations légales",
       tabs: {
-        legal: "Mentions Légales",
-        privacy: "Politique de Confidentialité",
+        legal: "Mentions légales",
+        privacy: "Confidentialité",
         terms: "CGV"
       },
+      updated: "Dernière mise à jour : 19 octobre 2026",
+      prevails: "",
       content: {
         legal: [
           {
             title: "1. Éditeur du site",
-            text: "Ce site est édité par 3geeks, studio web cofondé par Elias Elloumi et Noam Leclapart-Jublot.\nDirecteurs de la publication : Elias Elloumi et Noam Leclapart-Jublot.\nContact : contact@3geeks.fr"
+            text: "Le site 3geeks.fr est édité par 3geeks, [FORME JURIDIQUE À COMPLÉTER] au capital de [CAPITAL SOCIAL À COMPLÉTER], en cours d’immatriculation au registre du commerce et des sociétés de [VILLE DU GREFFE À COMPLÉTER].\nSIREN : [SIREN À COMPLÉTER]\nNuméro de TVA intracommunautaire : [NUMÉRO DE TVA À COMPLÉTER]\nSiège social : [ADRESSE DU SIÈGE À COMPLÉTER]\nCofondateurs : Elias Elloumi et Noam Leclapart-Jublot\nContact : contact@3geeks.fr · [TÉLÉPHONE À COMPLÉTER]"
           },
           {
-            title: "2. Hébergement",
-            text: "Le site est hébergé sur des serveurs exploités par 3geeks et distribué via le réseau Cloudflare (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis)."
+            title: "2. Directeurs de la publication",
+            text: "Elias Elloumi et Noam Leclapart-Jublot, cofondateurs de 3geeks."
           },
           {
-            title: "3. Propriété intellectuelle",
-            text: "Les contenus de ce site (textes, visuels, logo, vidéo de marque) appartiennent à 3geeks. Les logos et captures des projets clients restent la propriété de leurs titulaires et sont présentés à titre de références."
+            title: "3. Hébergement",
+            text: "Le site est hébergé sur un serveur exploité par 3geeks, situé à [ADRESSE DE L’HÉBERGEMENT À COMPLÉTER], et diffusé via le réseau de Cloudflare, Inc. (101 Townsend St, San Francisco, CA 94107, États-Unis ; cloudflare.com)."
+          },
+          {
+            title: "4. Propriété intellectuelle",
+            text: "Les contenus de ce site (textes, visuels, logo, vidéo de marque) appartiennent à 3geeks. Les logos et captures des projets clients restent la propriété de leurs titulaires et sont présentés à titre de références, avec leur accord."
+          },
+          {
+            title: "5. Signalement",
+            text: "Pour signaler un contenu ou poser une question sur ce site : contact@3geeks.fr."
           }
         ],
         privacy: [
           {
-            title: "1. Ce que nous recevons",
+            title: "1. Responsable du traitement",
+            text: "3geeks (coordonnées dans les mentions légales), joignable à contact@3geeks.fr pour toute question sur vos données."
+          },
+          {
+            title: "2. Ce que nous recevons",
             text: "Ce site n’a pas de formulaire et ne vous suit pas. Nous recevons uniquement ce que vous choisissez de nous envoyer : un e-mail à contact@3geeks.fr, un message LinkedIn, un appel réservé via Calendly (nom, e-mail, numéro de téléphone et les informations que vous partagez) ou les questions posées à l’assistant du site."
           },
           {
-            title: "2. Utilisation",
-            text: "Uniquement pour vous répondre, préparer votre devis et assurer le suivi de notre collaboration. Vos données ne sont jamais vendues ni transmises à des tiers."
+            title: "3. Pourquoi, et sur quelle base",
+            text: "Vous répondre et préparer un devis : mesures précontractuelles prises à votre demande (article 6.1.b du RGPD).\nRéaliser et suivre la prestation : exécution du contrat (article 6.1.b).\nConserver les factures : obligation légale (article 6.1.c).\nVos données ne sont jamais vendues ni utilisées pour de la publicité."
           },
           {
-            title: "3. Services utilisés",
-            text: "Les appels sont réservés via Calendly, qui traite les données de réservation selon sa propre politique de confidentialité. L’assistant du site utilise un modèle d’IA de Mistral AI, société française, avec les serveurs de 3geeks en relais : vos messages leur sont transmis uniquement pour générer la réponse, et 3geeks n’en conserve pas le contenu. Merci de ne pas y partager d’informations sensibles."
+            title: "4. Durées de conservation",
+            text: "Demandes et échanges sans suite : 3 ans après le dernier contact.\nClients : pendant la relation, puis 10 ans pour les pièces comptables (factures).\nMessages écrits à l’assistant du site : 3geeks n’en conserve pas le contenu."
           },
           {
-            title: "4. Vos droits",
-            text: "Conformément au RGPD, vous pouvez accéder à vos données, les rectifier ou les supprimer en écrivant à contact@3geeks.fr. Vous pouvez aussi adresser une réclamation à la CNIL (cnil.fr)."
+            title: "5. Destinataires et prestataires",
+            text: "Vos données sont lues uniquement par Elias et Noam, cofondateurs de 3geeks. Nous nous appuyons sur : Calendly (réservation des appels, États-Unis), Mistral AI (assistant du site, France) et Cloudflare (diffusion du site, États-Unis). Lorsque des données quittent l’Union européenne, le transfert est encadré par les garanties prévues par le RGPD (clauses contractuelles types de la Commission européenne ou cadre de protection des données UE–États-Unis)."
           },
           {
-            title: "5. Cookies",
+            title: "6. Vos droits",
+            text: "Conformément au RGPD, vous pouvez accéder à vos données, les rectifier, les effacer, en limiter l’usage, vous opposer à leur traitement ou en demander la portabilité, en écrivant à contact@3geeks.fr. Nous répondons sous un mois. Vous pouvez aussi adresser une réclamation à la CNIL (cnil.fr)."
+          },
+          {
+            title: "7. Cookies et mesure d’audience",
             text: "Ce site ne dépose aucun cookie publicitaire ni de suivi. Votre choix de langue est seulement mémorisé dans votre navigateur. Le calendrier de réservation est fourni par Calendly : il commence à se charger quand vous pointez un bouton de réservation ou quand l’assistant vous propose un appel, et Calendly peut alors déposer ses propres cookies techniques. Pour savoir quelles pages intéressent nos visiteurs, le site compte les visites de façon anonyme, sans cookie : la page vue, le site d’où vous venez, mobile ou ordinateur, puis le temps passé, jusqu’où vous êtes descendu et la section à l’écran quand vous êtes parti, rattachés à un numéro de visite tiré au hasard, gardé le temps de l’onglet. Aucun nom, aucune adresse IP n’est enregistré ; rien n’est envoyé si votre navigateur demande à ne pas être suivi. Le jeu 17 OCTOBRE compte ses parties de la même façon (un numéro tiré au hasard, jamais un nom), et cela se coupe dans ses options."
           }
         ],
         terms: [
           {
-            title: "1. Objet",
-            text: "Les présentes conditions régissent les prestations de développement web réalisées par 3geeks."
+            title: "1. Objet et champ d’application",
+            text: "Les présentes conditions générales de vente (CGV) s’appliquent à toutes les prestations de 3geeks (coordonnées dans les mentions légales) : création et refonte de sites, applications et plateformes web ou mobiles, intégration d’IA et automatisation, maintenance (Option Sérénité). Elles s’adressent aux clients professionnels comme aux particuliers. Les conditions particulières du devis accepté prévalent sur les présentes CGV. Pour un marché public, les pièces du marché (notamment le CCAP) prévalent."
           },
           {
-            title: "2. Devis",
-            text: "Chaque projet commence par un appel et un devis gratuits, sans engagement."
+            title: "2. Devis et commande",
+            text: "Chaque projet commence par un appel et un devis gratuits, sans engagement. Le devis précise la prestation, le prix, le planning et les livrables ; il est valable [DURÉE DE VALIDITÉ À PRÉCISER] à compter de son envoi. La commande est ferme à l’acceptation écrite du devis (signature, « bon pour accord » ou e-mail d’acceptation)."
           },
           {
             title: "3. Prix",
-            text: "Les prix sont indiqués en euros. Le prix facturé est celui fixé dans le devis accepté."
+            text: "Les prix sont indiqués en euros. [RÉGIME DE TVA À PRÉCISER : prix HT avec TVA au taux en vigueur, ou « TVA non applicable, article 293 B du CGI »]. Le prix facturé est celui du devis accepté ; tout travail supplémentaire fait l’objet d’un devis complémentaire."
           },
           {
             title: "4. Paiement",
-            text: "Rien n’est payé d’avance : le règlement intervient à la livraison, une fois le résultat validé par le client."
+            text: "Aucun acompte n’est demandé : la facture est émise à la livraison, après la recette par le client (article 6). Elle est payable à [DÉLAI DE PAIEMENT À PRÉCISER, par exemple 30 jours] à compter de sa date d’émission, par virement. Aucun escompte n’est accordé en cas de paiement anticipé. L’Option Sérénité est facturée chaque mois, à terme échu."
           },
           {
-            title: "5. Livraison",
-            text: "Les petites demandes sont généralement livrées en 24 à 48 h. Pour les projets plus larges, le planning est fixé dans le devis et peut dépendre de la réactivité du client."
+            title: "5. Retard de paiement",
+            text: "Clients professionnels : tout retard de paiement entraîne de plein droit, sans rappel préalable, des pénalités au taux d’intérêt appliqué par la Banque centrale européenne à son opération de refinancement la plus récente, majoré de 10 points de pourcentage, ainsi qu’une indemnité forfaitaire pour frais de recouvrement de 40 € (articles L441-10 et D441-5 du Code de commerce). Si les frais réellement engagés dépassent ce montant, une indemnisation complémentaire peut être demandée sur justificatif.\nClients particuliers : en cas de retard, des intérêts au taux légal peuvent être appliqués après mise en demeure."
           },
           {
-            title: "6. Propriété",
-            text: "Une fois la prestation réglée, le code source et le nom de domaine appartiennent au client."
+            title: "6. Délais, livraison et recette",
+            text: "Les petites demandes sont généralement livrées en 24 à 48 h, à titre indicatif. Pour les projets plus larges, le planning figure dans le devis ; il suppose que le client fournisse à temps les contenus (textes, images, accès) et ses validations. À la livraison, le client dispose de [DÉLAI DE RECETTE À PRÉCISER, par exemple 8 jours] pour signaler les anomalies par écrit ; 3geeks les corrige sans frais. Sans réserve écrite dans ce délai, ou dès la mise en ligne demandée par le client, la prestation est réputée acceptée."
+          },
+          {
+            title: "7. Propriété intellectuelle et réversibilité",
+            text: "Dès le paiement complet, 3geeks cède au client les droits patrimoniaux sur les développements réalisés spécifiquement pour lui (reproduction, représentation, adaptation et exploitation), pour le monde entier et pour toute la durée légale de protection. Le code source, les accès et le nom de domaine sont remis au client, à son nom. Les composants open source restent soumis à leurs propres licences ; les outils et bibliothèques génériques de 3geeks restent sa propriété et sont concédés au client, sans limite de durée, pour le projet. Sauf refus écrit du client ou accord de confidentialité, 3geeks peut citer le projet comme référence."
+          },
+          {
+            title: "8. Maintenance (Option Sérénité)",
+            text: "L’Option Sérénité (50 € par mois) comprend la surveillance de la disponibilité, les mises à jour de sécurité et de petites modifications de contenu chaque mois. Elle est sans engagement de durée et résiliable à tout moment par e-mail, avec un préavis de [PRÉAVIS À PRÉCISER, par exemple 1 mois]."
+          },
+          {
+            title: "9. Responsabilité",
+            text: "3geeks est tenue d’une obligation de moyens. Sa responsabilité ne peut être engagée pour les dommages indirects (perte d’exploitation, de chiffre d’affaires, ou de données que le client n’a pas sauvegardées), ni pour les défaillances des services tiers choisis par le client (hébergeur, registraire, outils externes). Pour les clients professionnels, la responsabilité totale de 3geeks est limitée au montant payé pour la prestation concernée. Ces limites ne réduisent pas les droits que la loi garantit aux consommateurs."
+          },
+          {
+            title: "10. Données personnelles",
+            text: "Le traitement des données des clients et des prospects est décrit dans la politique de confidentialité. Lorsque 3geeks traite des données personnelles pour le compte du client (par exemple les données des utilisateurs de son site), les parties signent un accord de sous-traitance conforme à l’article 28 du RGPD."
+          },
+          {
+            title: "11. Droit de rétractation (clients particuliers)",
+            text: "Le client particulier qui conclut le contrat à distance (en ligne, par téléphone ou par e-mail) dispose de 14 jours à compter de la conclusion du contrat pour se rétracter, sans motif ni pénalité (article L221-18 du Code de la consommation), en l’indiquant à contact@3geeks.fr ou au moyen du formulaire type de rétractation. S’il demande expressément que la prestation commence avant la fin de ce délai, il paie la part déjà réalisée ; s’il demande qu’elle soit entièrement exécutée avant la fin du délai et renonce expressément à son droit, il ne peut plus se rétracter (articles L221-25 et L221-28 du Code de la consommation)."
+          },
+          {
+            title: "12. Médiation de la consommation",
+            text: "En cas de litige, le client particulier peut recourir gratuitement au médiateur de la consommation dont relève 3geeks : [MÉDIATEUR À DÉSIGNER : nom, adresse postale, site internet], après avoir adressé à 3geeks une réclamation écrite restée sans solution (articles L611-1 et suivants du Code de la consommation)."
+          },
+          {
+            title: "13. Droit applicable et litiges",
+            text: "Les présentes CGV sont soumises au droit français. Les parties cherchent d’abord une solution amiable. À défaut, pour les clients professionnels, les tribunaux de [VILLE DU SIÈGE À COMPLÉTER] sont seuls compétents ; pour les clients particuliers, les règles légales de compétence s’appliquent."
           }
         ]
       },

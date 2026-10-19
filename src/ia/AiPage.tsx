@@ -27,12 +27,12 @@ import React, { useEffect, useState } from 'react';
 
 import AiAgentWidget from '../components/AiAgentWidget';
 import BookingModal from '../components/BookingModal';
-import LegalModals from '../components/LegalModals';
 import Logo from '../components/Logo';
 import Reveal from '../components/Reveal';
 import SectionLines from '../components/SectionLines';
 import SpaceSwitch from '../components/SpaceSwitch';
 import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
+import { LEGAL_LINKS } from '../site/legalLinks';
 import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
 import { detectLang, persistLang } from '../lib/lang';
@@ -57,8 +57,6 @@ const AiPage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [lang, setLang] = useState<Lang>(detectLang);
   const [scrolled, setScrolled] = useState(false);
-  const [legalModalOpen, setLegalModalOpen] = useState(false);
-  const [legalTab, setLegalTab] = useState<'privacy' | 'terms' | 'legal'>('legal');
 
   const t = aiCopy[lang];
   const legal = translations[lang].legal;
@@ -92,11 +90,6 @@ const AiPage: React.FC = () => {
     };
   }, [isMenuOpen]);
 
-  const openLegal = (tab: 'privacy' | 'terms' | 'legal') => {
-    setLegalTab(tab);
-    setLegalModalOpen(true);
-  };
-
   // Every call-to-action books the free audit call on Calendly (source = button, for Calendly stats).
   const book = (source: string) => {
     setIsMenuOpen(false);
@@ -112,6 +105,13 @@ const AiPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-ink font-sans text-slate-100">
+      {/* Skip link (RGAA 12.7): first thing the keyboard reaches, visible only when focused. */}
+      <a
+        href="#contenu"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-brand-mint focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-ink"
+      >
+        {fr ? 'Aller au contenu' : 'Skip to content'}
+      </a>
       {/* ------------------------------------------------------------ */}
       {/* NAVIGATION                                                    */}
       {/* ------------------------------------------------------------ */}
@@ -147,6 +147,7 @@ const AiPage: React.FC = () => {
               onClick={toggleLang}
               className="flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-white/25 hover:text-white"
               aria-label={fr ? 'Switch to English' : 'Passer en français'}
+              lang={fr ? 'en' : 'fr'}
             >
               <Globe className="h-3.5 w-3.5 text-brand-mint" /> {lang.toUpperCase()}
             </button>
@@ -161,6 +162,7 @@ const AiPage: React.FC = () => {
               onClick={toggleLang}
               className="hidden h-10 items-center rounded-full border border-white/10 px-3.5 text-xs font-semibold text-slate-300 sm:flex"
               aria-label={fr ? 'Switch to English' : 'Passer en français'}
+              lang={fr ? 'en' : 'fr'}
             >
               {lang.toUpperCase()}
             </button>
@@ -206,7 +208,7 @@ const AiPage: React.FC = () => {
         )}
       </header>
 
-      <main>
+      <main id="contenu" tabIndex={-1} className="outline-none">
         {/* ------------------------------------------------------------ */}
         {/* HERO                                                          */}
         {/* ------------------------------------------------------------ */}
@@ -536,7 +538,6 @@ const AiPage: React.FC = () => {
 
         <AiAgentWidget lang={lang} greeting={t.assistant.greeting} suggestions={t.assistant.suggestions} />
         <BookingModal lang={lang} />
-        <LegalModals translations={legal} isOpen={legalModalOpen} onClose={() => setLegalModalOpen(false)} initialTab={legalTab} />
       </main>
 
       {/* ------------------------------------------------------------ */}
@@ -554,7 +555,7 @@ const AiPage: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{t.footer.navigate}</h4>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{t.footer.navigate}</p>
             <ul className="mt-5 space-y-3">
               {NAV_LINKS.map((link) => (
                 <li key={link.id}>
@@ -567,7 +568,7 @@ const AiPage: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Contact</h4>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Contact</p>
             <ul className="mt-5 space-y-3 text-sm">
               <li>
                 <a href="mailto:contact@3geeks.fr" className="text-slate-300 transition-colors hover:text-white">
@@ -588,11 +589,13 @@ const AiPage: React.FC = () => {
         <div className="border-t border-white/[0.06]">
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-6 pb-24 text-xs text-slate-500 sm:px-8 md:flex-row md:pb-6 md:pr-64">
             <span>© {new Date().getFullYear()} 3geeks. {t.footer.rights}</span>
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              <button type="button" onClick={() => openLegal('legal')} className="transition-colors hover:text-white">{legal.tabs.legal}</button>
-              <button type="button" onClick={() => openLegal('privacy')} className="transition-colors hover:text-white">{legal.tabs.privacy}</button>
-              <button type="button" onClick={() => openLegal('terms')} className="transition-colors hover:text-white">{legal.tabs.terms}</button>
-            </div>
+            <nav aria-label={legal.title} className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              {LEGAL_LINKS.map((link) => (
+                <a key={link.href} href={link.href} className="transition-colors hover:text-white">
+                  {legal.tabs[link.tab]}
+                </a>
+              ))}
+            </nav>
           </div>
         </div>
       </footer>

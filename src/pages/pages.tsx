@@ -24,6 +24,7 @@ import {
   WhyUs,
 } from '../site/sections';
 import GameSections from '../game/GameSections';
+import LegalContent from '../site/LegalPage';
 import SiteLayout, { PageId } from '../site/SiteLayout';
 import { demarrerMesure } from '../lib/mesure';
 import '../index.css';
@@ -92,7 +93,21 @@ export const GamePage: React.FC = () => (
   </SiteLayout>
 );
 
-const PAGES: Record<PageId, React.FC> = { home: HomePage, offers: OffersPage, work: WorkPage, team: TeamPage, game: GamePage };
+/** Legal pages (/mentions-legales, /confidentialite, /cgv), each on its own address. */
+const legalPage = (page: 'legalNotice' | 'privacy' | 'terms'): React.FC => () => (
+  <SiteLayout page={page}>{(ctx) => <LegalContent {...ctx} page={page} />}</SiteLayout>
+);
+
+const PAGES: Record<PageId, React.FC> = {
+  home: HomePage,
+  offers: OffersPage,
+  work: WorkPage,
+  team: TeamPage,
+  game: GamePage,
+  legalNotice: legalPage('legalNotice'),
+  privacy: legalPage('privacy'),
+  terms: legalPage('terms'),
+};
 
 /** Each HTML entry calls this with its page id. */
 export function mount(page: PageId) {

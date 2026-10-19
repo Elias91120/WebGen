@@ -47,10 +47,7 @@ export const PageIntro: React.FC<{ path: string; title: string; sub: string }> =
     />
     <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
       <span className="eyebrow hero-rise" style={{ ['--rise-delay' as string]: '60ms' }}>{path}</span>
-      <h1
-        className="hero-rise section-title mt-4 max-w-3xl text-[2.1rem] sm:text-5xl md:text-6xl"
-        style={{ ['--rise-delay' as string]: '140ms' }}
-      >
+      <h1 className="section-title mt-4 max-w-3xl text-[2.1rem] sm:text-5xl md:text-6xl">
         {title}
       </h1>
       <p className="hero-rise mt-5 max-w-2xl text-base leading-relaxed text-slate-400 md:text-lg" style={{ ['--rise-delay' as string]: '240ms' }}>
@@ -95,10 +92,8 @@ export const Hero: React.FC<Props> = ({ lang, t, book }) => (
           {t.hero.badge}
         </div>
 
-        <h1
-          className="hero-rise mt-6 font-display text-[2.15rem] font-semibold leading-[1.06] tracking-tight text-white drop-shadow-[0_2px_24px_rgba(8,9,13,0.8)] sm:text-6xl lg:text-[2.9rem] xl:text-[3.25rem]"
-          style={{ ['--rise-delay' as string]: '220ms' }}
-        >
+        {/* No entrance animation on the title: it is the largest element of the page (LCP). */}
+        <h1 className="mt-6 font-display text-[2.15rem] font-semibold leading-[1.06] tracking-tight text-white drop-shadow-[0_2px_24px_rgba(8,9,13,0.8)] sm:text-6xl lg:text-[2.9rem] xl:text-[3.25rem]">
           {t.hero.titleStart} <span className="text-gradient">{t.hero.titleEnd}</span>
         </h1>
 
@@ -423,7 +418,7 @@ export const MethodSection: React.FC<Props> = ({ t }) => (
 /* Work page                                                           */
 /* ------------------------------------------------------------------ */
 
-export const Reviews: React.FC<Props> = ({ t }) => {
+export const Reviews: React.FC<Props> = ({ t, lang }) => {
   const reviews = [
     { text: t.reviews.r1, name: 'Adrien', meta: t.reviews.meta.r1, initial: 'A' },
     { text: t.reviews.r2, name: 'Henry F.', meta: t.reviews.meta.r2, initial: 'H' },
@@ -437,7 +432,7 @@ export const Reviews: React.FC<Props> = ({ t }) => {
           {reviews.map((review, i) => (
             <Reveal key={review.name} delay={i * 90}>
               <figure className="card flex h-full flex-col p-7">
-                <div className="flex gap-1 text-brand-lime" aria-label="5/5">
+                <div className="flex gap-1 text-brand-lime" role="img" aria-label={lang === 'fr' ? 'Note : 5 sur 5' : 'Rating: 5 out of 5'}>
                   {[1, 2, 3, 4, 5].map((n) => (
                     <Star key={n} className="h-4 w-4 fill-current" />
                   ))}

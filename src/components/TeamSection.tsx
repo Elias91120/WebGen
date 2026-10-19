@@ -152,6 +152,8 @@ export const TeamSection: React.FC<{ team: TeamCopy; showIntro?: boolean }> = ({
           <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">{team.subtitle}</p>
         </Reveal>
       )}
+      {/* On /equipe the page h1 replaces the section heading: keep an h2 for the outline (RGAA 9.1). */}
+      {!showIntro && <h2 className="sr-only">{team.path}</h2>}
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
         {(['elias', 'noam'] as const).map((key, i) => (

@@ -8,15 +8,15 @@ import React, { useEffect, useState } from 'react';
 
 import AiAgentWidget from '../components/AiAgentWidget';
 import BookingModal from '../components/BookingModal';
-import LegalModals from '../components/LegalModals';
 import Logo from '../components/Logo';
 import SpaceSwitch from '../components/SpaceSwitch';
 import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
 import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
 import { detectLang, persistLang } from '../lib/lang';
+import { LEGAL_LINKS } from './legalLinks';
 
-export type PageId = 'home' | 'offers' | 'work' | 'team' | 'game';
+export type PageId = 'home' | 'offers' | 'work' | 'team' | 'game' | 'legalNotice' | 'privacy' | 'terms';
 export type Copy = (typeof translations)['fr'];
 
 export interface PageContext {
@@ -43,8 +43,6 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
   const [lang, setLang] = useState<Lang>(detectLang);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [legalModalOpen, setLegalModalOpen] = useState(false);
-  const [legalTab, setLegalTab] = useState<'privacy' | 'terms' | 'legal'>('legal');
 
   const t = translations[lang] as Copy;
   const fr = lang === 'fr';
@@ -83,15 +81,18 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
     setIsMenuOpen(false);
     openBooking(source);
   };
-  const openLegal = (tab: 'privacy' | 'terms' | 'legal') => {
-    setLegalTab(tab);
-    setLegalModalOpen(true);
-  };
   const toggleLang = () => setLang((prev) => (prev === 'en' ? 'fr' : 'en'));
   const nav = t.site.nav;
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-ink font-sans text-slate-100">
+      {/* Skip link (RGAA 12.7): first thing the keyboard reaches, visible only when focused. */}
+      <a
+        href="#contenu"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-brand-mint focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-ink"
+      >
+        {fr ? 'Aller au contenu' : 'Skip to content'}
+      </a>
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           scrolled || isMenuOpen || page !== 'home'
@@ -130,6 +131,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
               onClick={toggleLang}
               className="flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-white/25 hover:text-white"
               aria-label={fr ? 'Switch to English' : 'Passer en français'}
+              lang={fr ? 'en' : 'fr'}
             >
               <Globe className="h-3.5 w-3.5 text-brand-mint" /> {lang.toUpperCase()}
             </button>
@@ -144,6 +146,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
               onClick={toggleLang}
               className="hidden h-10 items-center rounded-full border border-white/10 px-3.5 text-xs font-semibold text-slate-300 sm:flex"
               aria-label={fr ? 'Switch to English' : 'Passer en français'}
+              lang={fr ? 'en' : 'fr'}
             >
               {lang.toUpperCase()}
             </button>
@@ -194,7 +197,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
         )}
       </header>
 
-      <main>{children({ lang, t, book })}</main>
+      <main id="contenu" tabIndex={-1} className="outline-none">{children({ lang, t, book })}</main>
 
       <footer className="border-t border-white/[0.07] bg-surface">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[minmax(0,2fr)_1fr_1fr]">
@@ -205,7 +208,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{t.site.footer.pages}</h4>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{t.site.footer.pages}</p>
             <ul className="mt-5 space-y-3 text-sm">
               {[
                 { label: nav.home, href: '/' },
@@ -229,7 +232,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Contact</h4>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Contact</p>
             <ul className="mt-5 space-y-3 text-sm">
               <li>
                 <a href="mailto:contact@3geeks.fr" className="text-slate-300 transition-colors hover:text-white">
@@ -255,18 +258,24 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
         <div className="border-t border-white/[0.06]">
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-6 pb-24 text-xs text-slate-500 sm:px-8 md:flex-row md:pb-6 md:pr-64">
             <span>© {new Date().getFullYear()} 3geeks. {t.footer.rights}</span>
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              <button type="button" onClick={() => openLegal('legal')} className="transition-colors hover:text-white">{t.legal.tabs.legal}</button>
-              <button type="button" onClick={() => openLegal('privacy')} className="transition-colors hover:text-white">{t.legal.tabs.privacy}</button>
-              <button type="button" onClick={() => openLegal('terms')} className="transition-colors hover:text-white">{t.legal.tabs.terms}</button>
-            </div>
+            <nav aria-label={t.legal.title} className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              {LEGAL_LINKS.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  aria-current={link.page === page ? 'page' : undefined}
+                  className="transition-colors hover:text-white"
+                >
+                  {t.legal.tabs[link.tab]}
+                </a>
+              ))}
+            </nav>
           </div>
         </div>
       </footer>
 
       <AiAgentWidget lang={lang} />
       <BookingModal lang={lang} />
-      <LegalModals translations={t.legal} isOpen={legalModalOpen} onClose={() => setLegalModalOpen(false)} initialTab={legalTab} />
     </div>
   );
 };

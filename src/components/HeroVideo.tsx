@@ -1,3 +1,4 @@
+import { Pause, Play } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface HeroVideoProps {
@@ -45,10 +46,24 @@ function useVideoPolicy() {
 export const HeroVideoCard: React.FC<HeroVideoProps> = ({ lang, className = '' }) => {
   const { allowed, wide } = useVideoPolicy();
   const [ready, setReady] = useState(false);
+  // Moving content that lasts more than 5 s must be pausable (RGAA 13.8): the visitor's choice wins
+  // over the on-screen autoplay below.
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => setReady(false), [lang, wide]);
+
+  const togglePause = () => {
+    const video = videoRef.current;
+    const next = !pausedRef.current;
+    pausedRef.current = next;
+    setPaused(next);
+    if (!video) return;
+    if (next) video.pause();
+    else video.play().catch(() => undefined);
+  };
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -59,30 +74,32 @@ export const HeroVideoCard: React.FC<HeroVideoProps> = ({ lang, className = '' }
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
     if (typeof IntersectionObserver === 'undefined') {
-      video.play().catch(() => undefined);
+      if (!pausedRef.current) video.play().catch(() => undefined);
       return;
     }
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) video.play().catch(() => undefined);
+      if (entry.isIntersecting && !pausedRef.current) video.play().catch(() => undefined);
       else video.pause();
     });
     observer.observe(wrap);
     return () => observer.disconnect();
   }, [allowed, lang, wide]);
 
+  const fr = lang === 'fr';
+
   return (
     <div
       ref={wrapRef}
       className={`relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-ink shadow-[0_30px_80px_-30px_rgba(10,239,187,0.45)] lg:rounded-3xl lg:shadow-[0_40px_120px_-40px_rgba(10,239,187,0.55)] ${className}`}
-      aria-hidden="true"
     >
+      <div className="absolute inset-0" aria-hidden="true">
       <img src={POSTER} alt="" width={1280} height={720} decoding="async" className="absolute inset-0 h-full w-full object-cover" />
       {allowed && (
         <video
           key={`${lang}-${wide ? 'hd' : 'sd'}`}
           ref={videoRef}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`}
-          autoPlay
+          autoPlay={!paused}
           muted
           loop
           playsInline
@@ -101,6 +118,18 @@ export const HeroVideoCard: React.FC<HeroVideoProps> = ({ lang, className = '' }
         </video>
       )}
       <div className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-brand-mint/20" />
+      </div>
+      {allowed && (
+        <button
+          type="button"
+          onClick={togglePause}
+          aria-pressed={paused}
+          className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-ink/85 text-white backdrop-blur transition-colors hover:border-brand-mint/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-mint"
+          aria-label={paused ? (fr ? 'Lire la vidéo' : 'Play the video') : (fr ? 'Mettre la vidéo en pause' : 'Pause the video')}
+        >
+          {paused ? <Play className="h-4 w-4" aria-hidden="true" /> : <Pause className="h-4 w-4" aria-hidden="true" />}
+        </button>
+      )}
     </div>
   );
 };

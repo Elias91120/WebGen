@@ -43,6 +43,9 @@ export default defineConfig(({ mode }) => {
             equipe: path.resolve(__dirname, 'equipe/index.html'),
             ia: path.resolve(__dirname, 'ia/index.html'),
             game: path.resolve(__dirname, '17-octobre/index.html'),
+            mentionsLegales: path.resolve(__dirname, 'mentions-legales/index.html'),
+            confidentialite: path.resolve(__dirname, 'confidentialite/index.html'),
+            cgv: path.resolve(__dirname, 'cgv/index.html'),
           },
           output: {
             // Stable vendor chunks: better long-term caching, app code changes don't bust them.

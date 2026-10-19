@@ -558,6 +558,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
           </p>
         </Reveal>
         )}
+        {/* On /realisations the page h1 replaces the section heading: keep an h2 for the outline (RGAA 9.1). */}
+        {!showIntro && <h2 className="sr-only">{fr ? 'Nos réalisations' : 'Our work'}</h2>}
 
         <Reveal className="mb-16 scroll-mt-24 md:mb-20">
           <div id="avant-apres" className="scroll-mt-24" />

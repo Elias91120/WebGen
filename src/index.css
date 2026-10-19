@@ -4,6 +4,9 @@
 /* Design tokens — palette issue du logo 3geeks (lime → menthe)        */
 /* ------------------------------------------------------------------ */
 @theme {
+  /* Secondary grey, lightened so small text reaches 4.5:1 on every dark surface (RGAA 3.2):
+     Tailwind's #62748e only gave 3.99:1 on the surface colour. */
+  --color-slate-500: #7a8ca6;
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Poppins', 'Inter', system-ui, sans-serif;
 
