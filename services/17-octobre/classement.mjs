@@ -53,9 +53,12 @@ const posts = new Map(); // visitor -> {n, until}
 
 const modeOf = (v) => (v === 'campagne' ? 'campagne' : 'manif');
 
-// (0.9.0: the run goes on after the Prefect — RER to the next world — so each extra world reached is worth 3000)
+// (0.9.0: the run goes on after the Prefect — RER to the next world — so each extra world reached is worth 3000;
+// jalon 44: the 5th world, the Élysée castle, is terminal — taking it, the real end of the game, is worth 20 000 more)
+export const ELYSEE_BONUS = 20000;
 export const scoreOf = (f) =>
-  f.crs + 50 * f.niveau + 2 * Math.min(f.temps, 1800) + (f.victoire ? 5000 : 0) + 3000 * Math.max(0, (f.mondes || 1) - 1);
+  f.crs + 50 * f.niveau + 2 * Math.min(f.temps, 1800) + (f.victoire ? 5000 : 0) + 3000 * Math.max(0, (f.mondes || 1) - 1)
+  + (f.elysee ? ELYSEE_BONUS : 0);
 
 const hash = (token) => createHash('sha256').update(token).digest('hex').slice(0, 32);
 const keyOf = (name) => name.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -140,7 +143,7 @@ function top(mode) {
   return {
     top: list.map((p, k) => ({
       rang: k + 1, nom: p.nom, perso: p.perso, score: p.score, niveau: p.niveau, temps: p.temps, crs: p.crs,
-      victoire: p.victoire, mondes: p.mondes || 1, date: p.date.slice(0, 10),
+      victoire: p.victoire, mondes: p.mondes || 1, elysee: p.elysee === true, date: p.date.slice(0, 10),
     })),
     joueurs,
   };
@@ -156,13 +159,14 @@ const int = (v) => (Number.isInteger(v) ? v : NaN);
 function factsManif(m) {
   const f = {
     niveau: int(m.niveau), temps: int(m.temps), crs: int(m.crs), victoire: m.victoire === true,
-    mondes: m.mondes === undefined ? 1 : int(m.mondes),
+    mondes: m.mondes === undefined ? 1 : int(m.mondes), elysee: m.elysee === true,
   };
   if (!(f.niveau >= 1 && f.niveau <= 999 && f.temps >= 0 && f.temps <= 21600 && f.crs >= 0)) return null;
   if (!(f.mondes >= 1 && f.mondes <= 12)) return null;
   if (f.crs > 100 * f.temps + 50 || f.niveau > 12 + f.temps / 6) return null; // (plus vite que le jeu ne le permet)
   if (f.victoire && (f.temps < 600 || f.niveau < 10)) return null; // (le Préfet n'arrive qu'à 10 min)
   if (f.mondes > 1 && (!f.victoire || f.temps < 600 + 130 * (f.mondes - 1))) return null; // (un monde de plus = un Préfet, puis 2 min de RER)
+  if (f.elysee && (f.mondes < 5 || !f.victoire)) return null; // (l'Élysée n'est que le 5e monde, après quatre Préfets)
   return { ...f, score: scoreOf(f) };
 }
 

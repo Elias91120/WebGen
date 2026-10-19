@@ -49,6 +49,12 @@ try {
   r = await manif('Troplongue', token(), { niveau: 300, temps: 6 * 3600, crs: 1500000, victoire: true, mondes: 9 });
   check(r.ok, `une partie de six heures passe (${r.ok ? r.score : r.msg})`);
 
+  // jalon 44: the Élysée taken (the 5th world, the real end) is worth 20 000 more; claimed before the 5th world, refused
+  r = await manif('Roidesos', token(), { niveau: 90, temps: 2700, crs: 60000, victoire: true, mondes: 5, elysee: true });
+  check(r.ok && r.score === 60000 + 4500 + 3600 + 5000 + 12000 + 20000, `l'Élysée pris vaut 20 000 de plus (${r.ok ? r.score : r.msg})`);
+  r = await manif('Fauxroi', token(), { niveau: 60, temps: 1500, crs: 20000, victoire: true, mondes: 3, elysee: true });
+  check(!r.ok && r.code === 400, "l'Élysée annoncé au monde 3 est refusé");
+
   // what the game can't produce is refused
   r = await manif('Tricheur', token(), { niveau: 40, temps: 600, crs: 1000000, victoire: true });
   check(!r.ok && r.code === 400, 'un million de CRS en dix minutes est refusé');
