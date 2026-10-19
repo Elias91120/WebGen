@@ -1,6 +1,8 @@
 import { ArrowUpRight, X } from 'lucide-react';
 import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 
+import { useModalFocus } from '../lib/useModalFocus';
+
 import { bookingUrl, closeBooking, getBookingState, prepareBooking, subscribeBooking } from '../lib/booking';
 
 const COPY = {
@@ -37,6 +39,8 @@ const BookingModal: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
   const [ready, setReady] = useState(false);
   const [slow, setSlow] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalFocus(open, dialogRef);
 
   // Intent: hovering, touching or focusing any booking button starts loading the calendar.
   useEffect(() => {
@@ -84,6 +88,7 @@ const BookingModal: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
 
   return (
     <div
+      ref={dialogRef}
       className={`fixed inset-0 z-[70] bg-ink/85 backdrop-blur-sm transition-opacity duration-200 ${
         open ? 'opacity-100' : 'pointer-events-none invisible opacity-0'
       }`}

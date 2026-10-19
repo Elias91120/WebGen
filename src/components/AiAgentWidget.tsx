@@ -2,6 +2,7 @@ import { Bot, CalendarCheck, Mail, RotateCcw, Send, Sparkles, X } from 'lucide-r
 import React, { useEffect, useRef, useState } from 'react';
 
 import { openBooking, prepareBooking } from '../lib/booking';
+import { useModalFocus } from '../lib/useModalFocus';
 
 interface AiAgentWidgetProps {
   lang: 'en' | 'fr';
@@ -135,6 +136,8 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, greeting, su
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
   const warmedUp = useRef(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalFocus(isOpen, dialogRef);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
@@ -243,6 +246,7 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, greeting, su
 
       {isOpen && (
         <div
+          ref={dialogRef}
           className="fixed inset-0 z-50 flex items-end justify-center bg-ink/70 p-0 backdrop-blur-sm sm:items-center sm:p-4"
           onClick={() => setIsOpen(false)}
           role="dialog"

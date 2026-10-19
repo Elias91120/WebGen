@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, Check, Gamepad2, GraduationCap, Lock, X } fro
 import BeforeAfter from './BeforeAfter/BeforeAfter';
 import { Mark } from './Logo';
 import Reveal from './Reveal';
+import { useModalFocus } from '../lib/useModalFocus';
 
 // Small logos (lab cards)
 import promptHubImg from '../assets/images/prompt-hub.png';
@@ -372,6 +373,8 @@ const CaseStudyModal: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onClos
   const fr = lang === 'fr';
   const study = project.caseStudy!;
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalFocus(true, dialogRef);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -387,6 +390,7 @@ const CaseStudyModal: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onClos
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-[60] flex items-end justify-center bg-ink/80 backdrop-blur-sm sm:items-center sm:p-6"
       onClick={onClose}
       role="dialog"
