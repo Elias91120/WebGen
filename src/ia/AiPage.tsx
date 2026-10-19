@@ -35,7 +35,7 @@ import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
 import { LEGAL_LINKS } from '../site/legalLinks';
 import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
-import { detectLang, persistLang } from '../lib/lang';
+import { detectLang, initialLang, persistLang } from '../lib/lang';
 import AutomationExplorer from './AutomationExplorer';
 import { aiCopy } from './copy';
 import AiConveyor from './AiConveyor';
@@ -55,12 +55,18 @@ const WHY_ICONS = [Lock, Blocks, KeyRound, Award];
 
 const AiPage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [lang, setLang] = useState<Lang>(detectLang);
+  const [lang, setLang] = useState<Lang>(initialLang);
   const [scrolled, setScrolled] = useState(false);
 
   const t = aiCopy[lang];
   const legal = translations[lang].legal;
   const fr = lang === 'fr';
+
+  // Once the French prerendered HTML is hydrated, switch to the visitor's language (no-op otherwise).
+  useEffect(() => {
+    const detected = detectLang();
+    setLang((current) => (current === detected ? current : detected));
+  }, []);
 
   useEffect(() => {
     persistLang(lang);

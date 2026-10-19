@@ -98,7 +98,7 @@ const legalPage = (page: 'legalNotice' | 'privacy' | 'terms'): React.FC => () =>
   <SiteLayout page={page}>{(ctx) => <LegalContent {...ctx} page={page} />}</SiteLayout>
 );
 
-const PAGES: Record<PageId, React.FC> = {
+export const PAGES: Record<PageId, React.FC> = {
   home: HomePage,
   offers: OffersPage,
   work: WorkPage,
@@ -115,9 +115,13 @@ export function mount(page: PageId) {
   if (!root) throw new Error('Could not find root element to mount to');
   const Page = PAGES[page];
   demarrerMesure();   // (la mesure d'audience, anonyme et sans cookie : src/lib/mesure.ts)
-  ReactDOM.createRoot(root).render(
+  const app = (
     <React.StrictMode>
       <Page />
-    </React.StrictMode>,
+    </React.StrictMode>
   );
+  // The build prerenders each page (scripts/prerender.mjs): React then takes over that HTML
+  // instead of rebuilding it, so the text shows before the JavaScript has loaded.
+  if (root.dataset.prerendered) ReactDOM.hydrateRoot(root, app);
+  else ReactDOM.createRoot(root).render(app);
 }

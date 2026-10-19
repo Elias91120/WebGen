@@ -16,6 +16,15 @@ export function detectLang(): Lang {
   return 'fr';
 }
 
+/**
+ * Langue du tout premier rendu. Le HTML pré-rendu au build est en français : pendant l'hydratation,
+ * le premier rendu doit donc l'être aussi, puis la page passe à la langue du visiteur (useSyncedLang).
+ */
+export function initialLang(): Lang {
+  if (typeof document === 'undefined') return 'fr';
+  return document.getElementById('root')?.dataset.prerendered ? 'fr' : detectLang();
+}
+
 /** Applique la langue au document et la mémorise pour les autres pages du site. */
 export function persistLang(lang: Lang) {
   document.documentElement.lang = lang;

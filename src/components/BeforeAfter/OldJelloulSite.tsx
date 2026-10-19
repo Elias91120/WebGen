@@ -12,7 +12,7 @@ const VERDANA = 'Verdana, Geneva, Tahoma, sans-serif';
 const LINK = '#0000cc';
 
 const MenuLink: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <a style={{ color: LINK, textDecoration: 'underline', display: 'block', padding: '3px 0' }}>» {children}</a>
+  <span style={{ color: LINK, textDecoration: 'underline', display: 'block', padding: '3px 0' }}>» {children}</span>
 );
 
 const Box: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
@@ -178,10 +178,10 @@ const OldJelloulSite: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
                 </p>
                 <p style={{ margin: '0 0 10px' }}>
                   {fr ? 'Pour prendre rendez-vous, ' : 'To book an appointment, '}
-                  <a style={{ color: LINK, textDecoration: 'underline' }}>{fr ? 'cliquez ici' : 'click here'}</a>.
+                  <span style={{ color: LINK, textDecoration: 'underline' }}>{fr ? 'cliquez ici' : 'click here'}</span>.
                 </p>
                 <p style={{ margin: 0 }}>
-                  <a style={{ color: LINK, textDecoration: 'underline' }}>{fr ? '>> Voir le plan d’accès' : '>> See directions'}</a>
+                  <span style={{ color: LINK, textDecoration: 'underline' }}>{fr ? '>> Voir le plan d’accès' : '>> See directions'}</span>
                 </p>
               </div>
             </div>
@@ -207,7 +207,7 @@ const OldJelloulSite: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
             <div style={{ color: '#1d3f73', fontSize: 22, margin: '22px 0 8px', borderBottom: '1px dotted #1d3f73' }}>{fr ? 'Contact' : 'Contact'}</div>
             <p style={{ margin: 0 }}>
               {fr ? 'Pour nous contacter, merci de remplir le ' : 'To contact us, please fill in the '}
-              <a style={{ color: LINK, textDecoration: 'underline' }}>{fr ? 'formulaire de contact' : 'contact form'}</a>.
+              <span style={{ color: LINK, textDecoration: 'underline' }}>{fr ? 'formulaire de contact' : 'contact form'}</span>.
             </p>
           </div>
         </div>
