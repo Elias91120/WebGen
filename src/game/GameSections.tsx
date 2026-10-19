@@ -3,7 +3,7 @@
  * and the beta download (free since 14/10, served by the game's file server on the Mac Mini:
  * services/17-octobre, routed by Traefik on /17-octobre/fichiers).
  */
-import { ArrowRight, Dices, Download, Flag, Instagram, Moon, Play, Shield, Smile, Sparkles, Swords, X, Zap } from 'lucide-react';
+import { Apple, ArrowRight, Dices, Download, Flag, Instagram, Moon, Play, Shield, Smile, Sparkles, Swords, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
 import Reveal from '../components/Reveal';
@@ -37,6 +37,34 @@ interface VersionInfo {
   miroir?: string; // the backup's snapshot only: the zip's mirror, a release of this repo on GitHub
   telechargements?: number; // the backup's snapshot only: the server's count when the snapshot was taken
 }
+
+/** Les quatre carreaux de Windows, dessinés : une forme géométrique, pas un logo repris d'ailleurs. */
+const WindowsMark: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+    <path d="M3 5.6 10.4 4.5v7.2H3V5.6Zm0 12.8 7.4 1.1v-7.1H3v6Zm8.6-14 9.4-1.4v8.7h-9.4V4.4Zm9.4 9.3V22l-9.4-1.4v-6.9H21Z" />
+  </svg>
+);
+
+/**
+ * Une plateforme sur la page de téléchargement : sa marque, son nom, ce qu'il lui faut, son poids, son bouton, et
+ * ce qui se passe au premier lancement — la question que tout le monde se pose avant de cliquer.
+ */
+const PlatformCard: React.FC<{
+  mark: React.ReactNode; name: string; needs: string; size: number; href: string; cta: string; note: string; unit: string;
+}> = ({ mark, name, needs, size, href, cta, note, unit }) => (
+  <div className="flex flex-col rounded-xl border border-white/[0.09] bg-white/[0.02] p-5">
+    <div className="flex items-center gap-3">
+      <span className="text-white/90">{mark}</span>
+      <span className="font-display text-xl font-semibold text-white">{name}</span>
+    </div>
+    <p className="mt-2 text-xs leading-relaxed text-slate-400">{needs}</p>
+    <a href={href} className="btn btn-primary mt-4 w-full justify-center whitespace-normal text-center" download>
+      <Download className="h-4 w-4" /> {cta}
+      <span className="whitespace-nowrap opacity-70">· {Math.round(size / 1048576)} {unit}</span>
+    </a>
+    <p className="mt-3 text-xs leading-relaxed text-slate-500">{note}</p>
+  </div>
+);
 
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
@@ -610,27 +638,30 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-sm text-slate-500">
-                {c.system}
-                {mac ? ` · ${c.systemMac}` : info?.size ? ` · ${Math.round(info.size / 1048576)} ${c.size}` : ''}
-              </p>
               {info ? (
-                <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-                  <a href={info.miroir ?? `${FILES}/telecharger`} className="btn btn-primary justify-center whitespace-normal text-center" download>
-                    <Download className="h-4 w-4" /> {c.download}
-                    {/* the size is also on the line above: dropped on phones, where it pushed the button past the card */}
-                    {info.size ? <span className="hidden opacity-70 sm:inline">· {Math.round(info.size / 1048576)} {c.size}</span> : null}
-                  </a>
-                  {/* The Mac package, when the version has one. The backup site has no mirror of it: there, the
-                      button only shows if the file server answered, which is also the only place it can be had. */}
-                  {mac && (
-                    <a href={`${FILES}/telecharger?os=macos`} className="btn btn-ghost justify-center whitespace-normal text-center" download>
-                      <Download className="h-4 w-4" /> {c.downloadMac}
-                      <span className="hidden opacity-70 sm:inline">· {Math.round(mac.size / 1048576)} {c.size}</span>
-                    </a>
-                  )}
-                  {count}
-                </div>
+                <>
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">{c.pick}</p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <PlatformCard
+                      mark={<WindowsMark className="h-6 w-6" />}
+                      name={c.platWindows} needs={c.system} unit={c.size}
+                      size={info.fichiers?.windows?.size ?? info.size ?? 0}
+                      href={info.miroir ?? `${FILES}/telecharger`}
+                      cta={c.download} note={c.openWindows}
+                    />
+                    {/* The Mac package, when the version has one. The backup site has no mirror of it: there, the
+                        card only shows if the file server answered, which is also the only place it can be had. */}
+                    {mac && (
+                      <PlatformCard
+                        mark={<Apple className="h-6 w-6" />}
+                        name={c.platMac} needs={c.systemMac} unit={c.size} size={mac.size}
+                        href={`${FILES}/telecharger?os=macos`}
+                        cta={c.download} note={c.openMac}
+                      />
+                    )}
+                  </div>
+                  <div className="mt-5">{count}</div>
+                </>
               ) : (
                 <p className="mt-6 text-sm text-slate-400">{c.notYet}</p>
               )}
