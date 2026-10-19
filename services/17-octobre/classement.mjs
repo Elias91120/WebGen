@@ -9,6 +9,15 @@
 //                                      or {"ok":false,"msg":"..."} (name taken, refused, too many tries...)
 //   DELETE /classement?nom=X[&mode=campagne]   Authorization: Bearer <UPLOAD_TOKEN> — removes a name (moderation)
 //
+// Les Actes (20/10, Elias: « un scoreboard comme sur Megabonk : les meilleurs en CRS, en manifestant, les plus actifs
+// récemment, les duels en ligne ») keep no best run: each finished match counts.
+//   GET  /classement?mode=actes   {"mode":"actes","crs":[{rang,nom,victoires,parties}],"manifestants":[...],
+//                                  "actifs":[{rang,nom,parties,derniere}],"duels":[{nom,cote,victoire,duree,date}],
+//                                  "semaine":{"parties":N,"joueurs":M},"joueurs":N}
+//   POST /classement              {"mode":"actes","nom","jeton","cote":"crs"|"manifestants",
+//                                  "jeu":"escarmouche"|"acte"|"note"|"defi"|"duel"|"formation","victoire":bool,"duree":s,"version"}
+//                                  → {"ok":true,"mode":"actes","victoires":V,"parties":P,"rang":R (in its side's ranking)}
+//
 // A player is a secret token kept by the game (no account, no password, no e-mail); the first token to use a name owns
 // it on that board (case and accents ignored). Only each player's best run is kept. The Manif score is computed here
 // from the facts, never taken from the game:
@@ -33,25 +42,30 @@ import { fileURLToPath } from 'node:url';
 import { cleanName } from './noms.mjs';
 
 const TOKEN_RE = /^[0-9a-f]{32}$/;
-const MODES = { manif: 'classement.json', campagne: 'casseurs.json' };
+const MODES = { manif: 'classement.json', campagne: 'casseurs.json', actes: 'actes.json' };
 const AJOUTS = process.env.AJOUTS_FILE || join(dirname(fileURLToPath(import.meta.url)), 'ajouts.json');
 const PERSOS = {
   manif: new Set(['jojo', 'gege', 'mimi', 'karim', 'nadia']),
   campagne: new Set(['elias', 'noam', 'eden']),
+  actes: new Set([]),
 };
-const DEFAULT_PERSO = { manif: 'jojo', campagne: 'elias' };
+const DEFAULT_PERSO = { manif: 'jojo', campagne: 'elias', actes: '' };
+const COTES = new Set(['crs', 'manifestants']);
+const JEUX_ACTES = new Set(['escarmouche', 'acte', 'note', 'defi', 'duel', 'formation']);
+const SEMAINE_MS = 7 * 24 * 3600 * 1000;
+const TOP_ACTES = 10;
 const FINS = new Set(['interpellé', 'aube', 'quitté']);
 const TOP = 50;
 const POSTS = 20; // per visitor per window
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_BODY = 2048;
 
-const boards = { manif: { joueurs: {} }, campagne: { joueurs: {} } }; // mode -> {joueurs: hash(token) -> player}
+const boards = { manif: { joueurs: {} }, campagne: { joueurs: {} }, actes: { joueurs: {}, duels: [] } }; // mode -> {joueurs: hash(token) -> player}
 const paths = {};
 let saving = Promise.resolve();
 const posts = new Map(); // visitor -> {n, until}
 
-const modeOf = (v) => (v === 'campagne' ? 'campagne' : 'manif');
+const modeOf = (v) => (v === 'campagne' || v === 'actes' ? v : 'manif');
 
 // (0.9.0: the run goes on after the Prefect — RER to the next world — so each extra world reached is worth 3000;
 // jalon 44: the 5th world, the Élysée castle, is terminal — taking it, the real end of the game, is worth 20 000 more)
@@ -72,6 +86,7 @@ export async function loadBoard(dir) {
     } catch {
       boards[mode] = { joueurs: {} };
     }
+    if (mode === 'actes' && !Array.isArray(boards.actes.duels)) boards.actes.duels = [];
   }
   await loadAjouts();
 }
@@ -84,7 +99,7 @@ async function loadAjouts() {
   } catch {
     return;
   }
-  for (const mode of Object.keys(MODES)) {
+  for (const mode of ['manif', 'campagne']) {
     const board = boards[mode];
     for (const r of Array.isArray(a && a[mode]) ? a[mode] : []) {
       const nom = cleanName(r && r.nom);
@@ -109,6 +124,7 @@ async function loadAjouts() {
 export const boardStats = () => ({
   joueurs: Object.keys(boards.manif.joueurs).length,
   casseurs: Object.keys(boards.campagne.joueurs).length,
+  actes: Object.keys(boards.actes.joueurs).length,
 });
 
 function save(mode) {
@@ -128,6 +144,7 @@ function ranked(mode) {
 }
 
 function top(mode) {
+  if (mode === 'actes') return topActes();
   const list = ranked(mode).slice(0, TOP);
   const joueurs = Object.keys(boards[mode].joueurs).length;
   if (mode === 'campagne') {
@@ -186,6 +203,65 @@ function factsCampagne(m) {
   return { ...f, score: f.bordel };
 }
 
+/** Les Actes : les meilleurs de chaque camp (aux victoires), les plus actifs de la semaine, les derniers duels. */
+function topActes() {
+  const b = boards.actes;
+  const all = Object.values(b.joueurs);
+  const depuis = Date.now() - SEMAINE_MS;
+  const camp = (cote) => all.filter((p) => p[cote] && p[cote].v > 0)
+    .sort((x, y) => y[cote].v - x[cote].v || x[cote].p - y[cote].p || x.date.localeCompare(y.date))
+    .slice(0, TOP_ACTES)
+    .map((p, k) => ({ rang: k + 1, nom: p.nom, victoires: p[cote].v, parties: p[cote].p }));
+  const semaine = all.map((p) => ({ p, n: (p.recentes || []).filter((d) => Date.parse(d) >= depuis).length }))
+    .filter((x) => x.n > 0);
+  return {
+    mode: 'actes',
+    crs: camp('crs'),
+    manifestants: camp('manifestants'),
+    actifs: semaine.sort((x, y) => y.n - x.n || y.p.derniere.localeCompare(x.p.derniere)).slice(0, TOP_ACTES)
+      .map((x, k) => ({ rang: k + 1, nom: x.p.nom, parties: x.n, derniere: x.p.derniere.slice(0, 10) })),
+    duels: (b.duels || []).slice(0, TOP_ACTES),
+    semaine: { parties: semaine.reduce((s, x) => s + x.n, 0), joueurs: semaine.length },
+    joueurs: all.length,
+  };
+}
+
+/** The facts of a match of Les Actes, checked; null if they can't be. */
+function factsActes(m) {
+  const f = { cote: String(m.cote || ''), jeu: String(m.jeu || ''), victoire: m.victoire === true, duree: int(m.duree) };
+  if (!COTES.has(f.cote) || !JEUX_ACTES.has(f.jeu)) return null;
+  if (!(f.duree >= 20 && f.duree <= 4 * 3600)) return null; // (moins de 20 s : pas une partie)
+  return f;
+}
+
+async function postActes(m, nom, res, ctx) {
+  const f = factsActes(m);
+  if (!f) return ctx.send(res, 400, { ok: false, msg: 'Cette partie ne tient pas debout : refusée.' });
+  const b = boards.actes;
+  const id = hash(m.jeton);
+  const cle = keyOf(nom);
+  const owner = Object.entries(b.joueurs).find(([k, p]) => p.cle === cle && k !== id);
+  if (owner) return ctx.send(res, 409, { ok: false, msg: `Le pseudo « ${nom} » est déjà pris : choisis-en un autre.` });
+  const now = new Date().toISOString();
+  const p = b.joueurs[id] || { crs: { p: 0, v: 0 }, manifestants: { p: 0, v: 0 }, duel: { p: 0, v: 0 }, recentes: [], parties: 0, date: now };
+  p.nom = nom;
+  p.cle = cle;
+  p[f.cote].p += 1;
+  if (f.victoire) p[f.cote].v += 1;
+  if (f.jeu === 'duel') {
+    p.duel.p += 1;
+    if (f.victoire) p.duel.v += 1;
+    b.duels = [{ nom, cote: f.cote, victoire: f.victoire, duree: f.duree, date: now.slice(0, 16).replace('T', ' ') }, ...(b.duels || [])].slice(0, 30);
+  }
+  p.parties += 1;
+  p.derniere = now;
+  p.recentes = [now, ...(p.recentes || [])].slice(0, 60);
+  b.joueurs[id] = p;
+  save('actes');
+  const rang = topActes()[f.cote].findIndex((x) => x.nom === nom) + 1;
+  ctx.send(res, 200, { ok: true, mode: 'actes', victoires: p[f.cote].v, parties: p[f.cote].p, rang });
+}
+
 function tooMany(visitor) {
   const now = Date.now();
   const a = posts.get(visitor);
@@ -212,6 +288,7 @@ async function post(req, res, ctx) {
   const nom = cleanName(m && m.nom);
   if (!nom) return ctx.send(res, 400, { ok: false, msg: 'Ce pseudo ne passe pas : 2 à 16 lettres ou chiffres, et rien d’insultant.' });
   if (!TOKEN_RE.test(String(m.jeton || ''))) return ctx.send(res, 400, { ok: false, msg: 'jeton invalide' });
+  if (mode === 'actes') return postActes(m, nom, res, ctx);
   const f = mode === 'campagne' ? factsCampagne(m) : factsManif(m);
   if (!f) {
     return ctx.send(res, 400, {

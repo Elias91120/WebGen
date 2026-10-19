@@ -55,6 +55,28 @@ try {
   r = await manif('Fauxroi', token(), { niveau: 60, temps: 1500, crs: 20000, victoire: true, mondes: 3, elysee: true });
   check(!r.ok && r.code === 400, "l'Élysée annoncé au monde 3 est refusé");
 
+  // Les Actes (20/10) : chaque partie compte ; les meilleurs de chaque camp, les plus actifs, les duels
+  const actes = (nom, jeton, f) => post({ mode: 'actes', nom, jeton, version: '0.14.2', ...f });
+  const ja = token();
+  r = await actes('Brigadier', ja, { cote: 'crs', jeu: 'escarmouche', victoire: true, duree: 600 });
+  check(r.ok && r.victoires === 1 && r.rang === 1, `les Actes : une victoire en CRS compte (${r.ok ? r.rang : r.msg})`);
+  await actes('Brigadier', ja, { cote: 'crs', jeu: 'acte', victoire: false, duree: 400 });
+  await actes('Brigadier', ja, { cote: 'manifestants', jeu: 'duel', victoire: true, duree: 700 });
+  await actes('Gilet', token(), { cote: 'manifestants', jeu: 'escarmouche', victoire: true, duree: 300 });
+  r = await actes('Brigadier', token(), { cote: 'crs', jeu: 'escarmouche', victoire: true, duree: 600 });
+  check(!r.ok && r.code === 409, 'les Actes : le pseudo appartient à son jeton');
+  r = await actes('Tricheur2', token(), { cote: 'crs', jeu: 'escarmouche', victoire: true, duree: 5 });
+  check(!r.ok && r.code === 400, 'les Actes : une partie de 5 s est refusée');
+  r = await actes('Tricheur3', token(), { cote: 'pompiers', jeu: 'escarmouche', victoire: true, duree: 300 });
+  check(!r.ok && r.code === 400, 'les Actes : un camp inconnu est refusé');
+  const ba = await (await fetch(base + '?mode=actes')).json();
+  check(ba.crs.length === 1 && ba.crs[0].nom === 'Brigadier' && ba.crs[0].victoires === 1 && ba.crs[0].parties === 2,
+    `les Actes : le classement CRS (${JSON.stringify(ba.crs)})`);
+  check(ba.manifestants.length === 2 && ba.actifs[0].nom === 'Brigadier' && ba.actifs[0].parties === 3,
+    `les Actes : les manifestants, les plus actifs (${JSON.stringify(ba.actifs)})`);
+  check(ba.duels.length === 1 && ba.duels[0].nom === 'Brigadier' && ba.duels[0].cote === 'manifestants' && ba.semaine.parties === 4,
+    `les Actes : le dernier duel, la semaine (${JSON.stringify(ba.semaine)})`);
+
   // what the game can't produce is refused
   r = await manif('Tricheur', token(), { niveau: 40, temps: 600, crs: 1000000, victoire: true });
   check(!r.ok && r.code === 400, 'un million de CRS en dix minutes est refusé');
