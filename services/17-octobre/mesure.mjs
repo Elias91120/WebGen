@@ -7,7 +7,8 @@
 //
 //   POST /evenement        a text/plain JSON body (a simple request: no CORS preflight), one event:
 //                          games: {t: "lancement"|"debut"|"fin"|"battement", j: "hub"|"actes"|"manif"|"campagne",
-//                                  v: version, id: a random install id, d: seconds, s: score, r: result, o: os}
+//                                  v: version, id: a random install id, d: seconds, s: score, r: result, o: os,
+//                                  c: (Les Actes, a match's end) the side played, "crs" | "manifestants"}
 //                          site:  {t: "page"|"quitte", p: path, vid: a random visit id, r: referrer host, d: seconds,
 //                                  sc: max scroll %, se: the section on screen when leaving, w: "mobile"|"bureau"}
 //   GET  /stats/tableau    Authorization: Bearer <UPLOAD_TOKEN> — the dashboard's numbers (now, the last 30 days)
@@ -80,6 +81,11 @@ export function compter(e, ms = Date.now()) {
         m.duree += nombre(e.d, 6 * 3600);
         m.meilleur = Math.max(m.meilleur, nombre(e.s, 1e9));
         if (texte(e.r, 16) === 'victoire') m.victoires += 1;
+        const c = texte(e.c, 16);   // (Les Actes, 20/10 : le camp joué, et ses victoires)
+        if (c === 'crs' || c === 'manifestants') {
+          ajoute(m, `${c}_parties`);
+          if (texte(e.r, 16) === 'victoire') ajoute(m, `${c}_victoires`);
+        }
       }
     }
     if (t === 'fin' || (t === 'lancement' && jeu === 'hub')) actifs.delete(id);
@@ -182,19 +188,64 @@ export function tableau(ms = Date.now()) {
   }
   const dates = [];
   for (let k = 29; k >= 0; k -= 1) dates.push(jourDe(ms - k * 86_400_000));
+  // (20/10 : les fidèles. Le premier jour où l'on a vu chaque joueur, sur les 60 jours gardés ; un nouveau, c'est un
+  // joueur vu ce jour-là pour la première fois)
+  const premier = new Map();
+  for (const date of Object.keys(jours).sort()) {
+    for (const id of jours[date].jeux.ids) if (!premier.has(id)) premier.set(id, date);
+  }
+  const nouveaux = (date) => {
+    const j = jours[date];
+    if (!j) return 0;
+    let n = 0;
+    for (const id of j.jeux.ids) if (premier.get(id) === date) n += 1;
+    return n;
+  };
+  // les jours où chaque joueur est venu (en tout, et par jeu), sur une liste de dates
+  const fideles = (liste) => {
+    const vus = new Map();
+    const parJeu = {};
+    for (const date of liste) {
+      const j = jours[date];
+      if (!j) continue;
+      for (const id of j.jeux.ids) vus.set(id, (vus.get(id) || 0) + 1);
+      for (const [n, m] of Object.entries(j.jeux.modes)) {
+        const v = (parJeu[n] ||= new Map());
+        for (const id of m.ids) v.set(id, (v.get(id) || 0) + 1);
+      }
+    }
+    const deux = (v) => [...v.values()].filter((k) => k >= 2).length;
+    const trois = (v) => [...v.values()].filter((k) => k >= 3).length;
+    return { fideles: deux(vus), tres_fideles: trois(vus),
+      fideles_par_jeu: Object.fromEntries(Object.entries(parJeu).map(([n, v]) => [n, { joueurs: v.size, fideles: deux(v) }])) };
+  };
+  // le retour : parmi les joueurs arrivés avant aujourd'hui (sur 30 jours), ceux qu'on a revus un autre jour
+  const retour = (() => {
+    const auj = dates[dates.length - 1];
+    let arrives = 0;
+    let revenus = 0;
+    for (const [id, d0] of premier) {
+      if (d0 >= auj || d0 < dates[0]) continue;
+      arrives += 1;
+      if (Object.keys(jours).some((d) => d > d0 && jours[d].jeux.ids.has(id))) revenus += 1;
+    }
+    return { arrives, revenus };
+  })();
   const parJour = dates.map((date) => {
     const j = jours[date] || jourVide();
     const modes = {};
     for (const [n, m] of Object.entries(j.jeux.modes)) {
       modes[n] = { parties: m.parties, fins: m.fins, joueurs: m.ids.size, duree_moyenne: m.fins ? Math.round(m.duree / m.fins) : 0,
-        meilleur: m.meilleur, victoires: m.victoires, battements: m.battements || 0 };
+        meilleur: m.meilleur, victoires: m.victoires, battements: m.battements || 0,
+        crs_parties: m.crs_parties || 0, crs_victoires: m.crs_victoires || 0,
+        manifestants_parties: m.manifestants_parties || 0, manifestants_victoires: m.manifestants_victoires || 0 };
     }
     const pages = {};
     for (const [p, pg] of Object.entries(j.site.pages)) {
       pages[p] = { vues: pg.vues, quittes: pg.quittes, duree_moyenne: pg.quittes ? Math.round(pg.duree / pg.quittes) : 0,
         scroll_moyen: pg.quittes ? Math.round(pg.scroll / pg.quittes) : 0 };
     }
-    return { date, lancements: j.jeux.lancements, joueurs: j.jeux.ids.size, modes,
+    return { date, lancements: j.jeux.lancements, joueurs: j.jeux.ids.size, nouveaux: nouveaux(date), modes,
       site: { vues: j.site.vues, visiteurs: j.site.visites.size, pages, sorties: j.site.sorties, referents: j.site.referents,
         appareils: j.site.appareils } };
   });
@@ -221,8 +272,9 @@ export function tableau(ms = Date.now()) {
   return {
     genere: new Date(ms).toISOString(),
     maintenant,
-    semaine: ensemble(dates.slice(-7)),
-    mois: ensemble(dates),
+    semaine: { ...ensemble(dates.slice(-7)), ...fideles(dates.slice(-7)), nouveaux: dates.slice(-7).reduce((s, d) => s + nouveaux(d), 0) },
+    mois: { ...ensemble(dates), ...fideles(dates), nouveaux: dates.reduce((s, d) => s + nouveaux(d), 0) },
+    retour,
     jours: parJour,
   };
 }

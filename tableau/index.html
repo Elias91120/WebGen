@@ -200,6 +200,12 @@ footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait)
     </section>
 
     <section>
+      <h2>Les joueurs fidèles <small id="fideles-periode"></small></h2>
+      <p class="sous">Ceux qui reviennent : un joueur fidèle a joué au moins deux jours différents. Le vrai signe qu'un jeu plaît.</p>
+      <div class="grille" id="fideles"></div>
+    </section>
+
+    <section>
       <h2>Les trois jeux <small id="jeux-periode"></small></h2>
       <p class="sous">Le temps de jeu compte aussi les parties jamais finies (≈ 5 min par signe) : c'est le meilleur juge de ce qui plaît.</p>
       <div class="carte defile" id="jeux"></div>
@@ -230,6 +236,10 @@ footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait)
       <div class="deux">
         <div class="carte defile" id="scores-manif"></div>
         <div class="carte defile" id="scores-campagne"></div>
+      </div>
+      <div class="deux" style="margin-top:12px">
+        <div class="carte defile" id="actes-camps"></div>
+        <div class="carte defile" id="scores-actes"></div>
       </div>
     </section>
 
@@ -414,11 +424,62 @@ footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait)
     dessinerVerdict(stats, mot);
     dessinerMaintenant();
     dessinerPeriode(liste);
+    dessinerFideles();
     dessinerJeux(stats);
     dessinerHisto();
     dessinerVersions();
     dessinerScores();
+    dessinerActes(liste);
     dessinerSite(liste);
+  }
+
+  // (20/10) les fidèles : ceux qui reviennent, les nouveaux, le retour
+  function dessinerFideles() {
+    const t = donnees.tableau || {};
+    const ens = periode === 7 ? (t.semaine || {}) : (t.mois || {});
+    $('fideles-periode').textContent = periode === 7 ? 'les 7 derniers jours' : 'les 30 derniers jours';
+    if (ens.fideles === undefined) {
+      $('fideles').innerHTML = '<div class="carte"><div class="vide">Le serveur du jeu n\'est pas encore à jour : les fidèles arrivent.</div></div>';
+      return;
+    }
+    const fpj = ens.fideles_par_jeu || {};
+    const parJeu = JEUX.map((j) => puce(j.couleur, `${esc(j.nom)} ${nb((fpj[j.cle] || {}).fideles || 0)} / ${nb((fpj[j.cle] || {}).joueurs || 0)}`)).join('');
+    const r = t.retour || { arrives: 0, revenus: 0 };
+    $('fideles').innerHTML = [
+      carte('Reviennent', nb(ens.fideles || 0), (ens.fideles || 0) > 1 ? 'joueurs' : 'joueur',
+        `sur ${nb(ens.joueurs || 0)} joueurs : ${pc(ens.fideles || 0, ens.joueurs || 0)} % jouent au moins deux jours`, parJeu),
+      carte('Très fidèles', nb(ens.tres_fideles || 0), '', 'au moins trois jours de jeu'),
+      carte('Nouveaux joueurs', nb(ens.nouveaux || 0), '', 'vus pour la première fois sur la période'),
+      carte('Taux de retour', r.arrives ? `${pc(r.revenus, r.arrives)} %` : '–', '',
+        r.arrives ? `${nb(r.revenus)} des ${nb(r.arrives)} joueurs arrivés ces 30 jours sont revenus un autre jour` : 'pas encore assez de jours mesurés'),
+    ].join('');
+  }
+
+  // (20/10) les Actes : le camp joué (et ses victoires), leur classement, les derniers duels en ligne
+  function dessinerActes(liste) {
+    const a = liste.map((j) => (j.modes && j.modes.actes) || {});
+    const cp = somme(a, (x) => x.crs_parties), cv = somme(a, (x) => x.crs_victoires);
+    const mp = somme(a, (x) => x.manifestants_parties), mv = somme(a, (x) => x.manifestants_victoires);
+    $('actes-camps').innerHTML = `<h3><span class="jeu"><i style="background:var(--actes)"></i>Les Actes</span> · le camp joué</h3>
+      ${cp + mp ? barres([
+        { lib: 'Manifestants', n: mp, val: `${nb(mp)} parties · ${pc(mv, mp)} % gagnées`, couleur: 'var(--or)' },
+        { lib: 'CRS', n: cp, val: `${nb(cp)} parties · ${pc(cv, cp)} % gagnées`, couleur: 'var(--campagne)' },
+      ], 'var(--or)', '') : '<div class="vide">Le camp joué se mesure à partir de la 0.14.2.</div>'}
+      <div class="detail">Le CRS a été rééquilibré dans la 0.14.2 (« en CRS on perd toujours ») : on suit ici s'il gagne enfin.</div>`;
+    const c = (donnees.classement || {}).actes;
+    if (!c || c.erreur || c.mode !== 'actes') {
+      $('scores-actes').innerHTML = '<h3>Le classement des Actes</h3><div class="vide">Le classement ne répond pas encore.</div>';
+      return;
+    }
+    const liste2 = (titre, l, f) => l && l.length ? `<h3 style="margin-top:10px">${titre}</h3><table><tbody>${l.map((e) =>
+      `<tr${e.rang === 1 ? ' class="tete"' : ''}><td>${e.rang}</td><td class="nom g">${esc(e.nom)}</td><td>${f(e)}</td></tr>`).join('')}</tbody></table>` : '';
+    const duels = c.duels && c.duels.length ? `<h3 style="margin-top:10px">Les derniers duels en ligne</h3><table><tbody>${c.duels.map((d) =>
+      `<tr><td class="nom g">${esc(d.nom)}</td><td>${d.cote === 'crs' ? 'CRS' : 'Gilets Jaunes'}</td><td>${d.victoire ? '<span class="ok">victoire</span>' : 'défaite'}</td><td>${esc(d.date)}</td></tr>`).join('')}</tbody></table>` : '';
+    const corps = liste2('Les meilleurs CRS', c.crs, (e) => `${nb(e.victoires)} / ${nb(e.parties)}`)
+      + liste2('Les meilleurs manifestants', c.manifestants, (e) => `${nb(e.victoires)} / ${nb(e.parties)}`)
+      + liste2('Les plus actifs (7 jours)', c.actifs, (e) => `${nb(e.parties)} parties`) + duels;
+    $('scores-actes').innerHTML = `<h3>Le classement des Actes${c.joueurs ? ` · ${nb(c.joueurs)} joueurs` : ''}</h3>
+      ${corps || '<div class="vide">Personne encore : le classement des Actes part avec la 0.14.2.</div>'}`;
   }
 
   function dessinerVerdict(stats, mot) {
@@ -536,7 +597,8 @@ footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait)
         const v = (x.modes && x.modes[j.cle] && x.modes[j.cle].joueurs) || 0;
         return html ? `${esc(j.nom)} <b>${v}</b>` : `${j.nom} ${v}`;
       }).join(' · ');
-      return html ? `<b>${jourCourt(x.date)}</b> : ${morceaux} · ${nb(x.lancements)} lancements` : `${jourCourt(x.date)} : ${morceaux}`;
+      const nv = x.nouveaux ? ` · <b>${nb(x.nouveaux)}</b> nouveau${x.nouveaux > 1 ? 'x' : ''}` : '';
+      return html ? `<b>${jourCourt(x.date)}</b> : ${morceaux} · ${nb(x.lancements)} lancements${nv}` : `${jourCourt(x.date)} : ${morceaux}`;
     });
     $('legende-jeux').innerHTML = JEUX.map((j) => `<span class="jeu"><i style="background:${j.couleur}"></i>${esc(j.nom)}</span>`).join('');
   }
@@ -581,7 +643,7 @@ footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait)
       ${camp.top.slice(0, 10).map((p) => `<tr${p.rang === 1 ? ' class="tete"' : ''}><td>${p.rang}</td><td class="nom g">${esc(p.nom)}</td><td>${nb(p.score)}</td>
         <td>${temps(p.duree)}</td><td>${esc(p.fin)}</td><td>${p.plus_gros ? `${esc(p.plus_gros.quoi)} (${nb(p.plus_gros.points)})` : '–'}</td></tr>`).join('')}</tbody></table>`
       : '<div class="vide">Le classement ne répond pas, ou personne encore.</div>'}
-      <div class="detail">Les Actes n'ont pas de classement : leurs parties comptent dans « Les trois jeux ».</div>`;
+      `;
   }
 
   function dessinerSite(liste) {

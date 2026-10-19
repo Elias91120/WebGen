@@ -34,17 +34,18 @@ export default async function handler(req, res) {
     return;
   }
   const lecture = { Authorization: `Bearer ${process.env.JETON || ''}` };
-  const [tableau, serveur, manif, campagne, version] = await Promise.all([
+  const [tableau, serveur, manif, campagne, actes, version] = await Promise.all([
     lire('/stats/tableau', lecture),
     lire('/stats', lecture),
     lire('/classement'),
     lire('/classement?mode=campagne'),
+    lire('/classement?mode=actes'),
     lire('/version.json'),
   ]);
   res.status(200).json({
     tableau,
     serveur,
-    classement: { manif, campagne },
+    classement: { manif, campagne, actes },
     version: version && version.version ? { version: version.version, date: version.date, titre: version.titre } : null,
     lu: new Date().toISOString(),
   });
