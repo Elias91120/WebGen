@@ -3,7 +3,7 @@
  * and the beta download (free since 14/10, served by the game's file server on the Mac Mini:
  * services/17-octobre, routed by Traefik on /17-octobre/fichiers).
  */
-import { Apple, ArrowRight, Dices, Download, Flag, Instagram, Moon, Play, Shield, Smile, Sparkles, Swords, X, Zap } from 'lucide-react';
+import { ArrowRight, Dices, Download, Flag, Instagram, Moon, Play, Shield, Smile, Sparkles, Swords, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
 import Reveal from '../components/Reveal';
@@ -38,6 +38,17 @@ interface VersionInfo {
   telechargements?: number; // the backup's snapshot only: the server's count when the snapshot was taken
 }
 
+/**
+ * La pomme d'Apple, pour dire sur quelle machine tourne le jeu. Le tracé vient du jeu Simple Icons (CC0) ; la
+ * marque, elle, reste celle d'Apple Inc. L'icône « pomme » générique essayée d'abord (une pomme de fruitier, sans
+ * la morsure) se lisait comme une erreur plutôt que comme un Mac.
+ */
+const AppleMark: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+    <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
+  </svg>
+);
+
 /** Les quatre carreaux de Windows, dessinés : une forme géométrique, pas un logo repris d'ailleurs. */
 const WindowsMark: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -57,10 +68,12 @@ const PlatformCard: React.FC<{
       <span className="text-white/90">{mark}</span>
       <span className="font-display text-xl font-semibold text-white">{name}</span>
     </div>
-    <p className="mt-2 text-xs leading-relaxed text-slate-400">{needs}</p>
-    <a href={href} className="btn btn-primary mt-4 w-full justify-center whitespace-normal text-center" download>
+    <p className="mt-2 text-xs leading-relaxed text-slate-400 sm:min-h-[3.2rem]">
+      {needs} · <span className="whitespace-nowrap text-slate-300">{Math.round(size / 1048576)} {unit}</span>
+    </p>
+    {/* le poids est sur la ligne au-dessus, pas dans le bouton : dans une colonne de cette largeur il en débordait */}
+    <a href={href} className="btn btn-primary mt-4 w-full justify-center text-center" download>
       <Download className="h-4 w-4" /> {cta}
-      <span className="whitespace-nowrap opacity-70">· {Math.round(size / 1048576)} {unit}</span>
     </a>
     <p className="mt-3 text-xs leading-relaxed text-slate-500">{note}</p>
   </div>
@@ -653,7 +666,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                         card only shows if the file server answered, which is also the only place it can be had. */}
                     {mac && (
                       <PlatformCard
-                        mark={<Apple className="h-6 w-6" />}
+                        mark={<AppleMark className="h-6 w-6" />}
                         name={c.platMac} needs={c.systemMac} unit={c.size} size={mac.size}
                         href={`${FILES}/telecharger?os=macos`}
                         cta={c.download} note={c.openMac}
