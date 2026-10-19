@@ -1,30 +1,23 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowRight, ArrowUpRight, Check, GraduationCap, Lock, Send, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, Gamepad2, GraduationCap, Lock, X } from 'lucide-react';
 import BeforeAfter from './BeforeAfter/BeforeAfter';
 import { Mark } from './Logo';
 import Reveal from './Reveal';
 
-// Our video game (featured lab card), from the /17-octobre page
-const GAME_COVER = '/images/17-octobre/nuit-640.webp';
-
 // Small logos (lab cards)
 import promptHubImg from '../assets/images/prompt-hub.png';
-import promptOptimImg from '../assets/images/prompt-optim.png';
 
 // Covers: above-the-fold captures of the live sites
 import jelloulCover from '../assets/images/projects/jellouli.jpg';
 import expressDivorceCover from '../assets/images/projects/express-divorce.jpg';
-import vipagenceCover from '../assets/images/projects/vipagence.jpg';
 import twoCover from '../assets/images/projects/two.jpg';
 import aurenzaCover from '../assets/images/projects/aurenza.jpg';
-import greenJardinCover from '../assets/images/projects/green-jardin.jpg';
 import callKitchenCover from '../assets/images/projects/callkitchen.jpg';
 
 // Phone captures for the case studies
 import jelloulMobile from '../assets/images/projects/jellouli-mobile.jpg';
 import expressDivorceMobile from '../assets/images/projects/express-divorce-mobile.jpg';
 import twoMobile from '../assets/images/projects/two-mobile.jpg';
-import greenJardinMobile from '../assets/images/projects/green-jardin-mobile.jpg';
 
 interface ProjectsShowcaseProps {
   lang: 'en' | 'fr';
@@ -47,7 +40,7 @@ export interface ProjectItem {
   /** Private projects have no link and never expose a URL or client name. */
   link?: string;
   cover?: string;
-  mockup?: 'esign' | 'telegram';
+  mockup?: 'esign';
   /** Lab cards: logo image, studio mark or icon. */
   image?: string;
   icon?: React.ElementType;
@@ -135,20 +128,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
     mockup: 'esign'
   },
   {
-    id: 'vipagence',
-    category: 'client',
-    title: { fr: 'Vipagence', en: 'Vipagence' },
-    subtitle: 'vipagence.net',
-    badge: { fr: 'Marketplace · Plateforme web', en: 'Marketplace · Web platform' },
-    description: {
-      fr: 'Site vitrine et parcours d’inscription pour une agence qui relie créateurs UGC, clippers et marques. Conçu et développé par 3geeks — le site, pas le casting.',
-      en: 'Marketing site and sign-up flows for an agency connecting UGC creators, clippers and brands. Designed and built by 3geeks — the website, not the roster.'
-    },
-    tags: { fr: ['React','Site produit','Marketplace'], en: ['React','Product site','Marketplace'] },
-    link: 'https://www.vipagence.net/',
-    cover: vipagenceCover
-  },
-  {
     id: 'two-app',
     category: 'client',
     title: { fr: 'Two', en: 'Two' },
@@ -192,48 +171,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
     cover: aurenzaCover
   },
   {
-    id: 'green-jardin',
-    category: 'client',
-    title: { fr: 'Green Jardin', en: 'Green Jardin' },
-    subtitle: 'green-jardin.fr',
-    badge: { fr: 'Retail omnicanal · Shopify', en: 'Omnichannel retail · Shopify' },
-    description: {
-      fr: 'Boutique CBD en ligne et en magasin (Palaiseau) : vitrine Shopify avec Ino Digital, menu TV dynamique en temps réel, caisse POS avec balance et fidélité 14 %.',
-      en: 'CBD shop online and in-store (Palaiseau): Shopify storefront with Ino Digital, real-time TV menu, gram-scale POS and loyalty sync.'
-    },
-    tags: { fr: ['Shopify','Caisse POS','Firebase'], en: ['Shopify','POS','Firebase'] },
-    link: 'https://green-jardin.fr',
-    cover: greenJardinCover,
-    caseStudy: {
-      mobile: greenJardinMobile,
-      context: {
-        fr: 'Green Jardin vend du CBD en boutique à Palaiseau et en ligne. Trois canaux à garder alignés : le site, la caisse du magasin et l’affichage en boutique.',
-        en: 'Green Jardin sells CBD in its Palaiseau shop and online. Three channels to keep aligned: the website, the in-store till and the in-store display.'
-      },
-      delivered: {
-        fr: ['Boutique Shopify, réalisée avec Ino Digital', 'Menu TV dynamique en magasin, mis à jour en temps réel', 'Caisse POS avec balance et programme de fidélité', 'Vérification d’âge et paiement sécurisé', 'Livraison offerte dès 50 € et expédition en 24/48 h'],
-        en: ['Shopify store, built with Ino Digital', 'Dynamic in-store TV menu, updated in real time', 'POS till with scale and loyalty programme', 'Age verification and secure checkout', 'Free shipping from €50, dispatched in 24/48h']
-      },
-      result: {
-        fr: 'Le site, la caisse et l’écran du magasin partagent les mêmes produits et les mêmes prix : une seule source à tenir à jour.',
-        en: 'The website, the till and the in-store screen share the same products and prices: a single source to keep up to date.'
-      }
-    }
-  },
-  {
-    id: 'telegram',
-    category: 'client',
-    title: { fr: 'Boutique privée sur Telegram', en: 'Private shop on Telegram' },
-    subtitle: '',
-    badge: { fr: 'Commerce · Mini-app Telegram', en: 'Commerce · Telegram mini-app' },
-    description: {
-      fr: 'Une mini-app de commande intégrée à Telegram, avec accès vérifié côté serveur, et un espace gérant installable sur iPhone pour suivre les commandes et modérer les membres en temps réel.',
-      en: 'An ordering mini-app built into Telegram with server-side verified access, plus a manager space installable on iPhone to follow orders and moderate members in real time.'
-    },
-    tags: { fr: ['Mini-app Telegram','PWA','Docker'], en: ['Telegram Mini App','PWA','Docker'] },
-    mockup: 'telegram'
-  },
-  {
     id: 'callkitchen',
     category: 'client',
     title: { fr: 'CallKitchen', en: 'CallKitchen' },
@@ -275,20 +212,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
     image: promptHubImg
   },
   {
-    id: 'prompt-optim',
-    category: 'studio',
-    title: { fr: 'PromptOptim', en: 'PromptOptim' },
-    subtitle: 'prompt-optim.3geeks.fr',
-    badge: { fr: 'Green IT & sobriété numérique', en: 'Green IT & low-impact computing' },
-    description: {
-      fr: 'Optimiseur de prompts IA qui réduit la consommation de tokens, estime l’impact CO2 par requête et encourage une utilisation sobre et souveraine de l’IA.',
-      en: 'AI prompt optimization tool designed to reduce token usage, estimate the CO2 impact of each request and encourage frugal AI use.'
-    },
-    tags: { fr: ['Green IT','Sobriété IA','Outil ouvert'], en: ['Green IT','Frugal AI','Open tool'] },
-    link: 'https://prompt-optim.3geeks.fr/',
-    image: promptOptimImg
-  },
-  {
     id: 'efrei-skill-hub',
     category: 'studio',
     title: { fr: 'EFREI Skill Hub', en: 'EFREI Skill Hub' },
@@ -301,6 +224,21 @@ export const PROJECTS_DATA: ProjectItem[] = [
     tags: { fr: ['IA générative','WebAssembly','Open source'], en: ['Generative AI','WebAssembly','Open source'] },
     link: 'https://efrei-skill-hub.vercel.app/',
     icon: GraduationCap
+  },
+  {
+    // Our video game lab: one discreet card here, the game itself lives on its own page.
+    id: '3geeks-studio',
+    category: 'studio',
+    title: { fr: '3geeks Studio', en: '3geeks Studio' },
+    subtitle: '/17-octobre',
+    badge: { fr: 'Notre lab de jeux vidéo', en: 'Our video game lab' },
+    description: {
+      fr: 'Le lab où l’on fabrique nos jeux vidéo. Premier titre : 17 OCTOBRE, un jeu de stratégie satirique en bêta, bientôt sur Steam.',
+      en: 'The lab where we make our video games. First title: 17 OCTOBRE, a satirical strategy game in beta, coming to Steam.'
+    },
+    tags: { fr: ['Godot 4','Jeu vidéo','Bêta'], en: ['Godot 4','Video game','Beta'] },
+    link: '/17-octobre',
+    icon: Gamepad2
   }
 ];
 
@@ -351,52 +289,6 @@ const EsignMockup: React.FC = () => (
   </div>
 );
 
-const TelegramMockup: React.FC = () => (
-  <div className="absolute inset-0 flex items-center justify-center gap-[5%] bg-ink bg-[radial-gradient(circle_at_25%_20%,rgba(56,189,248,0.22),transparent_55%),radial-gradient(circle_at_90%_85%,rgba(195,251,5,0.12),transparent_50%)] px-[6%]" aria-hidden="true">
-    <div className="flex aspect-[9/19] h-[86%] flex-col gap-[4%] rounded-[1.2rem] border-[3px] border-white/15 bg-surface-2 p-[5%] shadow-[0_25px_60px_-20px_rgba(0,0,0,0.9)]">
-      <div className="mx-auto h-1 w-1/3 rounded-full bg-white/20" />
-      <div className="flex items-center gap-1.5">
-        <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-sky-500">
-          <Send className="h-2 w-2 text-white" />
-        </span>
-        <div className="h-1 w-1/2 rounded-full bg-white/40" />
-      </div>
-      <div className="grid flex-1 grid-cols-2 gap-[6%]">
-        {['from-brand-mint/50', 'from-brand-lime/45', 'from-sky-400/45', 'from-brand-mint/30'].map((tint) => (
-          <div key={tint} className="flex flex-col gap-1">
-            <div className={`flex-1 rounded-md bg-gradient-to-br ${tint} to-white/5`} />
-            <div className="h-1 w-4/5 rounded-full bg-white/25" />
-          </div>
-        ))}
-      </div>
-      <div className="flex h-[8%] items-center justify-center rounded-md bg-sky-500">
-        <div className="h-1 w-1/3 rounded-full bg-white/80" />
-      </div>
-    </div>
-    <div className="flex h-[70%] w-[48%] flex-col gap-[7%] rounded-lg border border-white/10 bg-white/[0.04] p-[4%]">
-      <div className="flex items-center justify-between">
-        <div className="h-1.5 w-1/3 rounded-full bg-white/40" />
-        <span className="h-2 w-2 rounded-full bg-brand-lime shadow-[0_0_8px_rgba(195,251,5,0.8)]" />
-      </div>
-      <div className="grid grid-cols-3 gap-[5%]">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="rounded-md border border-white/10 bg-white/[0.04] p-[12%]">
-            <div className="h-2.5 w-2/3 rounded-sm bg-white/50" />
-            <div className="mt-1 h-1 w-full rounded-full bg-white/15" />
-          </div>
-        ))}
-      </div>
-      {['bg-brand-mint', 'bg-brand-lime', 'bg-sky-400', 'bg-brand-mint'].map((dot, i) => (
-        <div key={i} className="flex items-center gap-2">
-          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} />
-          <div className="h-1 flex-1 rounded-full bg-white/20" />
-          <div className="h-1 w-1/5 rounded-full bg-white/30" />
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
 const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase: (project: ProjectItem) => void }> = ({
   project,
   lang,
@@ -410,10 +302,8 @@ const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase
       loading="lazy"
       className="absolute inset-0 h-full w-full object-cover object-left-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
     />
-  ) : project.mockup === 'esign' ? (
-    <EsignMockup />
   ) : (
-    <TelegramMockup />
+    <EsignMockup />
   );
   const coverClass = 'relative block aspect-[16/10] w-full overflow-hidden border-b border-white/[0.07] bg-ink text-left';
 
@@ -600,14 +490,19 @@ const LabLogo: React.FC<{ project: ProjectItem }> = ({ project }) => {
 
 const LabCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ project, lang }) => {
   const Wrapper: React.ElementType = project.link ? 'a' : 'div';
+  // Our own pages open in place; outside sites open in a new tab.
+  const internal = project.link?.startsWith('/');
   const wrapperProps = project.link
-    ? { href: project.link, target: '_blank', rel: 'noopener noreferrer' }
+    ? internal
+      ? { href: project.link }
+      : { href: project.link, target: '_blank', rel: 'noopener noreferrer' }
     : {};
 
   return (
     <Wrapper
       {...wrapperProps}
-      className="card group flex h-full flex-col p-6 hover:-translate-y-1 hover:bg-surface-2"
+      id={project.id}
+      className="card group flex h-full scroll-mt-24 flex-col p-6 hover:-translate-y-1 hover:bg-surface-2"
     >
       <div className="flex items-start justify-between gap-4">
         <LabLogo project={project} />
@@ -645,6 +540,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
     (a, b) => Number(a.id === BEFORE_AFTER_ID) - Number(b.id === BEFORE_AFTER_ID),
   );
   const labProjects = PROJECTS_DATA.filter((p) => p.category === 'studio');
+  const productCount = labProjects.filter((p) => p.id !== '3geeks-studio').length;
 
   return (
     <section id="projets" className={`relative border-t border-white/5 bg-surface/60 ${showIntro ? 'py-20 md:py-28' : 'pb-20 pt-12 md:pb-28 md:pt-16'}`}>
@@ -657,8 +553,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
           </h2>
           <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">
             {fr
-              ? 'Santé, juridique, finance, e-commerce, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.'
-              : 'Healthcare, legal, finance, e-commerce, mobile apps and private platforms: projects designed, built and launched by 3geeks.'}
+              ? 'Santé, juridique, finance, restauration, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.'
+              : 'Healthcare, legal, finance, restaurants, mobile apps and private platforms: projects designed, built and launched by 3geeks.'}
           </p>
         </Reveal>
         )}
@@ -686,8 +582,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-400 md:text-base">
                   {fr
-                    ? `${clientProjects.length} réalisations clients, ${labProjects.length} produits maison et un jeu vidéo : chaque projet élargit ce qu’on sait construire. Le prochain peut être le vôtre.`
-                    : `${clientProjects.length} client projects, ${labProjects.length} in-house products and a video game: every project widens what we can build. The next one could be yours.`}
+                    ? `${clientProjects.length} réalisations clients et ${productCount} produits maison : chaque projet élargit ce qu’on sait construire. Le prochain peut être le vôtre.`
+                    : `${clientProjects.length} client projects and ${productCount} in-house products: every project widens what we can build. The next one could be yours.`}
                 </p>
               </div>
               <button type="button" data-booking="projects" onClick={onContact} className="btn btn-primary shrink-0">
@@ -699,52 +595,12 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
 
         <Reveal className="mb-6 mt-16 flex items-center gap-4">
           <h3 className="font-display text-lg font-semibold text-white md:text-xl">
-            {fr ? 'Le lab 3geeks' : 'The 3geeks lab'}
+            {fr ? 'Nos produits maison' : 'Our in-house products'}
           </h3>
           <span className="h-px flex-1 bg-white/10" />
           <span className="hidden text-sm text-slate-500 sm:block">
             {fr ? 'Nos propres produits et outils' : 'Our own products and tools'}
           </span>
-        </Reveal>
-
-        <Reveal className="mb-5">
-          <a
-            id="17-octobre"
-            href="/17-octobre"
-            className="card group grid scroll-mt-24 overflow-hidden hover:-translate-y-1 hover:bg-surface-2 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
-          >
-            <div className="relative aspect-[16/9] overflow-hidden border-b border-white/[0.07] bg-ink md:aspect-auto md:border-b-0 md:border-r">
-              <img
-                src={GAME_COVER}
-                alt={fr ? '17 OCTOBRE : une manif vue d’en haut, la nuit' : '17 OCTOBRE: a street protest seen from above, at night'}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                style={{ imageRendering: 'pixelated' }}
-              />
-              <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-ink/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 backdrop-blur">
-                {fr ? 'Jeu vidéo · bêta' : 'Video game · beta'}
-              </span>
-            </div>
-            <div className="flex flex-col p-6 md:p-8">
-              <p className="text-xs font-medium text-brand-mint/90">{fr ? 'Jeu vidéo · stratégie en temps réel' : 'Video game · real-time strategy'}</p>
-              <h3 className="mt-1.5 font-display text-2xl font-bold tracking-tight text-[#FCC200]">17 OCTOBRE</h3>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">
-                {fr
-                  ? 'Notre jeu : une manif vue d’en haut, satirique et cartoon. Des centaines de personnages simulés, une ville de Paris entièrement dessinée par le code, une campagne de huit Actes, le camp CRS, et bientôt le duel en ligne. Bientôt sur Steam.'
-                  : 'Our game: a street protest seen from above, satirical and cartoonish. Hundreds of simulated characters, a Paris drawn entirely by code, an eight-Act campaign, the riot police side, and an online duel on the way. Coming to Steam.'}
-              </p>
-              <div className="mt-5 flex flex-wrap gap-1.5">
-                {(fr ? ['Godot 4', 'Simulation de foule', 'Pixel art généré', 'Steam'] : ['Godot 4', 'Crowd simulation', 'Generated pixel art', 'Steam']).map((tag) => (
-                  <span key={tag} className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors group-hover:text-white">
-                {fr ? 'Bande-annonce et bêta' : 'Trailer and beta'} <ArrowRight className="h-4 w-4" />
-              </span>
-            </div>
-          </a>
         </Reveal>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">

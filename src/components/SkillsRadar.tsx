@@ -62,12 +62,12 @@ export const SkillsRadar: React.FC<SkillsRadarProps> = ({ lang }) => {
         <Reveal className="mb-12 max-w-2xl md:mb-16">
           <span className="eyebrow">{fr ? 'Expertise' : 'Expertise'}</span>
           <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">
-            {fr ? 'Trois pôles d’expertise, une exécution sans faille.' : 'Three areas of expertise, flawless execution.'}
+            {fr ? 'Trois pôles d’expertise, une exécution soignée.' : 'Three areas of expertise, careful execution.'}
           </h2>
           <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">
             {fr
-              ? 'Design produit, ingénierie cloud & IA certifiée AWS, et pilotage business : tout ce qu’il faut pour livrer un produit qui tient ses promesses.'
-              : 'Product design, AWS-certified cloud & AI engineering, and business management: everything needed to ship a product that keeps its promises.'}
+              ? 'Design produit, ingénierie cloud et IA (équipe formée et certifiée AWS, Cloud Practitioner), et pilotage business : tout ce qu’il faut pour livrer un produit qui tient ses promesses.'
+              : 'Product design, cloud and AI engineering (team trained and certified by AWS, Cloud Practitioner), and business management: everything needed to ship a product that keeps its promises.'}
           </p>
         </Reveal>
 

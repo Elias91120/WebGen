@@ -31,6 +31,9 @@ import type { PageContext } from './SiteLayout';
 
 type Props = PageContext;
 
+/** Delivered client projects only: our own products and the game lab are not counted. */
+const CLIENT_PROJECT_COUNT = PROJECTS_DATA.filter((p) => p.category === 'client').length;
+
 /* ------------------------------------------------------------------ */
 /* Shared                                                              */
 /* ------------------------------------------------------------------ */
@@ -123,7 +126,7 @@ export const Hero: React.FC<Props> = ({ lang, t, book }) => (
         {t.hero.trust.map((item) => (
           <div key={item.v} className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-3">
             <span className="shrink-0 whitespace-nowrap font-display text-2xl font-semibold text-white md:text-3xl">
-              {item.k.replace('{projects}', String(PROJECTS_DATA.length))}
+              {item.k.replace('{projects}', String(CLIENT_PROJECT_COUNT))}
             </span>
             <span className="text-xs leading-snug text-slate-400 md:text-sm">{item.v}</span>
           </div>
@@ -422,9 +425,9 @@ export const MethodSection: React.FC<Props> = ({ t }) => (
 
 export const Reviews: React.FC<Props> = ({ t }) => {
   const reviews = [
-    { text: t.reviews.r1, name: 'Adrien', meta: 'CallKitchen · Express Divorce USA', initial: 'A' },
-    { text: t.reviews.r2, name: 'Henry F.', meta: 'Two App', initial: 'H' },
-    { text: t.reviews.r3, name: 'Pierre V.', meta: 'Concept Store', initial: 'P' },
+    { text: t.reviews.r1, name: 'Adrien', meta: t.reviews.meta.r1, initial: 'A' },
+    { text: t.reviews.r2, name: 'Henry F.', meta: t.reviews.meta.r2, initial: 'H' },
+    { text: t.reviews.r3, name: 'Pierre V.', meta: t.reviews.meta.r3, initial: 'P' },
   ];
   return (
     <section id="avis" className="relative border-t border-white/5 bg-surface/60 py-20 md:py-28">

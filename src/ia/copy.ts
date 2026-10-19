@@ -105,7 +105,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         { k: '30 min', v: 'd’audit gratuit pour repérer vos gains rapides' },
         { k: '0 €', v: 'd’avance : vous payez une fois satisfait' },
         { k: 'FR', v: 'modèles hébergés en France ou sur vos serveurs' },
-        { k: 'AWS', v: 'équipe certifiée cloud & machine learning' },
+        { k: 'AWS', v: 'équipe formée et certifiée (Cloud Practitioner)' },
       ],
       diagram: {
         inLabel: 'Ce qui arrive',
@@ -297,7 +297,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         },
         {
           title: 'Applications associées',
-          desc: 'Une app web, mobile ou Telegram reliée à votre système : espace client, outil terrain pour vos équipes, portail fournisseurs ou partenaires.',
+          desc: 'Une app web ou mobile reliée à votre système : espace client, outil terrain pour vos équipes, portail fournisseurs ou partenaires.',
           bullets: ['App web ou iOS reliée à vos données', 'Espace client ou portail partenaires', 'Outil terrain pour les équipes'],
         },
         {
@@ -328,13 +328,6 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           tags: ['Mistral AI', 'RAG', 'Relais sur nos serveurs'],
         },
         {
-          name: 'Green Jardin',
-          title: 'Site, caisse et écran synchronisés',
-          desc: 'La boutique en ligne, la caisse avec balance et le menu TV du magasin partagent les mêmes produits et les mêmes prix : une seule source à tenir à jour.',
-          tags: ['Automatisation', 'POS', 'Temps réel'],
-          link: 'https://green-jardin.fr',
-        },
-        {
           name: 'Signature de contrats',
           title: 'Documents générés et signés automatiquement',
           desc: 'Liens de signature par rôle, suivi des statuts et PDF consolidé mis à jour à chaque signature, avec un tableau de bord d’administration.',
@@ -342,17 +335,10 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           isPrivate: true,
         },
         {
-          name: 'Boutique sur Telegram',
-          title: 'Commandes et gestion en temps réel',
-          desc: 'Mini-app de commande intégrée à Telegram, accès vérifié côté serveur et espace gérant installable sur iPhone pour suivre les commandes.',
-          tags: ['Mini-app', 'PWA', 'Temps réel'],
-          isPrivate: true,
-        },
-        {
-          name: 'Prompt Hub & PromptOptim',
-          title: 'Nos outils IA maison',
-          desc: 'Prompt Hub transforme une idée en plan d’exécution orchestré par des agents IA. PromptOptim réduit la consommation de tokens et estime l’impact CO2 de chaque requête.',
-          tags: ['Multi-agent', 'Green IT'],
+          name: 'Prompt Hub',
+          title: 'Notre outil IA maison',
+          desc: 'Prompt Hub transforme une idée en plan d’exécution par étapes, orchestré par des agents IA, avec des prompts prêts à l’emploi.',
+          tags: ['Multi-agent', 'Planification IA'],
           link: 'https://prompt-hub.3geeks.fr/',
         },
       ],
@@ -376,7 +362,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         { title: 'Vos données restent sous contrôle', desc: 'Modèles hébergés en France, sur nos serveurs ou les vôtres. Rien n’est envoyé à un service tiers sans votre accord.' },
         { title: 'Compatible avec l’existant', desc: 'On s’appuie sur vos API, exports et bases de données. Votre ERP, votre CRM et votre site restent en place.' },
         { title: 'Du code qui vous appartient', desc: 'Tout ce qu’on développe est à votre nom : code source, prompts, intégrations. Aucune dépendance à 3geeks.' },
-        { title: 'Certifiés cloud & IA', desc: 'Équipe certifiée AWS (Cloud Practitioner, Machine Learning, Cloud Architecting) et formée au prompt engineering.' },
+        { title: 'Formés au cloud et à l’IA', desc: 'Équipe formée et certifiée AWS (Cloud Practitioner), formée aux parcours AWS Academy Machine Learning et Cloud Architecting, et au prompt engineering.' },
       ],
     },
     contact: {
@@ -426,7 +412,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         { k: '30 min', v: 'free audit to spot your quick wins' },
         { k: '€0', v: 'upfront: you pay once you are happy' },
         { k: 'FR', v: 'models hosted in France or on your servers' },
-        { k: 'AWS', v: 'cloud & machine learning certified team' },
+        { k: 'AWS', v: 'trained and certified team (Cloud Practitioner)' },
       ],
       diagram: {
         inLabel: 'Comes in',
@@ -618,7 +604,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         },
         {
           title: 'Companion apps',
-          desc: 'A web, mobile or Telegram app connected to your system: customer area, field tool for your teams, supplier or partner portal.',
+          desc: 'A web or mobile app connected to your system: customer area, field tool for your teams, supplier or partner portal.',
           bullets: ['Web or iOS app connected to your data', 'Customer area or partner portal', 'Field tool for teams'],
         },
         {
@@ -649,13 +635,6 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           tags: ['Mistral AI', 'RAG', 'Fallback on our servers'],
         },
         {
-          name: 'Green Jardin',
-          title: 'Website, till and screen in sync',
-          desc: 'The online store, the till with its scale and the in-store TV menu share the same products and prices: a single source to keep up to date.',
-          tags: ['Automation', 'POS', 'Real time'],
-          link: 'https://green-jardin.fr',
-        },
-        {
           name: 'Contract signing',
           title: 'Documents generated and signed automatically',
           desc: 'Per-role signing links, status tracking and a consolidated PDF updated with every signature, with an admin dashboard.',
@@ -663,17 +642,10 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           isPrivate: true,
         },
         {
-          name: 'Telegram shop',
-          title: 'Orders and management in real time',
-          desc: 'Ordering mini-app built into Telegram, server-side verified access and a manager space installable on iPhone to follow orders.',
-          tags: ['Mini-app', 'PWA', 'Real time'],
-          isPrivate: true,
-        },
-        {
-          name: 'Prompt Hub & PromptOptim',
-          title: 'Our in-house AI tools',
-          desc: 'Prompt Hub turns an idea into an execution plan orchestrated by AI agents. PromptOptim cuts token usage and estimates the CO2 impact of each request.',
-          tags: ['Multi-agent', 'Green IT'],
+          name: 'Prompt Hub',
+          title: 'Our in-house AI tool',
+          desc: 'Prompt Hub turns an idea into a step-by-step execution plan orchestrated by AI agents, with ready-to-use prompts.',
+          tags: ['Multi-agent', 'AI planning'],
           link: 'https://prompt-hub.3geeks.fr/',
         },
       ],
@@ -697,7 +669,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
         { title: 'Your data stays under control', desc: 'Models hosted in France, on our servers or yours. Nothing is sent to a third-party service without your agreement.' },
         { title: 'Works with what you have', desc: 'We build on your APIs, exports and databases. Your ERP, CRM and website stay in place.' },
         { title: 'Code that belongs to you', desc: 'Everything we build is in your name: source code, prompts, integrations. No dependency on 3geeks.' },
-        { title: 'Cloud & AI certified', desc: 'AWS-certified team (Cloud Practitioner, Machine Learning, Cloud Architecting), trained in prompt engineering.' },
+        { title: 'Trained in cloud and AI', desc: 'Team trained and certified by AWS (Cloud Practitioner), trained through the AWS Academy Machine Learning and Cloud Architecting courses, and in prompt engineering.' },
       ],
     },
     contact: {

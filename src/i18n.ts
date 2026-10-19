@@ -27,8 +27,8 @@ export const translations = {
       trust: [
         { k: "24–48 h", v: "to deliver a small request" },
         { k: "€300", v: "Starter website, one-off" },
-        { k: "AWS", v: "certified cloud expertise" },
-        { k: "{projects}", v: "projects delivered" },
+        { k: "AWS", v: "trained and certified team (Cloud Practitioner)" },
+        { k: "{projects}", v: "client projects delivered" },
       ],
     },
     commitments: {
@@ -144,10 +144,10 @@ export const translations = {
         },
         work: {
           title: "Our work — 3geeks",
-          description: "Websites, SaaS platforms, iOS apps, e-commerce and AI: projects designed, built and launched by 3geeks, with a before/after and client reviews.",
+          description: "Websites, SaaS platforms, iOS apps and AI: projects designed, built and launched by 3geeks, with a before/after and feedback from clients and users.",
           path: "Work",
           h1: "What we've already built.",
-          sub: "Healthcare, legal, finance, e-commerce, mobile apps and private platforms: projects designed, built and launched by 3geeks.",
+          sub: "Healthcare, legal, finance, restaurants, mobile apps and private platforms: projects designed, built and launched by 3geeks.",
         },
         game: {
           title: "17 OCTOBRE — the 3geeks lab video game",
@@ -256,11 +256,12 @@ export const translations = {
       }
     },
     reviews: {
-      path: "Client feedback",
-      title: "What clients say after delivery.",
+      path: "Feedback",
+      title: "What our clients and users say.",
       r1: "A responsive team, a very clear process and clean execution. The new website made our customer acquisition much smoother.",
       r2: "They understood our business quickly and suggested useful choices. We saw real progress.",
-      r3: "The system they set up is robust and simple to run. Our day-to-day is much calmer."
+      r3: "The system they set up is robust and simple to run. Our day-to-day is much calmer.",
+      meta: { r1: "Client · Express Divorce USA", r2: "Two app user", r3: "Client · CallKitchen" }
     },
     team: {
       path: "Founding team",
@@ -269,7 +270,7 @@ export const translations = {
       labels: {
         expertise: "3geeks expertise",
         background: "Background",
-        certifications: "Licenses & certifications",
+        certifications: "Certifications & training",
         issued: "Issued",
         expires: "Expires",
         expired: "Expired",
@@ -319,11 +320,16 @@ export const translations = {
         },
       },
       introducersTitle: "Business introducers",
-      introducersSubtitle: "Charles and Niels are part of our growing introducer network. We aim to welcome more partners over time.",
+      introducersSubtitle: "Niels is part of our business introducer network, which is open to new members.",
       introducerRole: "Business introducer",
       introducers: {
-        charles: "Charles spots companies and project owners who need a website or digital tool, and introduces them to 3geeks.",
         niels: "Niels finds new opportunities among businesses looking for a digital project, and points them towards 3geeks.",
+      },
+      introducerJoin: {
+        title: "Join the network",
+        desc: "You know companies or organisations that need a website or a digital tool? Become a 3geeks business introducer.",
+        cta: "Write to us",
+        subject: "Becoming a 3geeks business introducer",
       },
     },
     contact: {
@@ -442,8 +448,8 @@ export const translations = {
       trust: [
         { k: "24–48 h", v: "pour livrer une petite demande" },
         { k: "300 €", v: "site Starter, paiement unique" },
-        { k: "AWS", v: "expertise cloud certifiée" },
-        { k: "{projects}", v: "projets livrés" },
+        { k: "AWS", v: "équipe formée et certifiée (Cloud Practitioner)" },
+        { k: "{projects}", v: "projets clients livrés" },
       ],
     },
     commitments: {
@@ -559,10 +565,10 @@ export const translations = {
         },
         work: {
           title: "Réalisations — 3geeks",
-          description: "Sites, plateformes SaaS, apps iOS, e-commerce et IA : des projets conçus, développés et lancés par 3geeks, avec un avant/après et les avis clients.",
+          description: "Sites, plateformes SaaS, apps iOS et IA : des projets conçus, développés et lancés par 3geeks, avec un avant/après et les retours de clients et d’utilisateurs.",
           path: "Réalisations",
           h1: "Ce qu’on a déjà construit.",
-          sub: "Santé, juridique, finance, e-commerce, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.",
+          sub: "Santé, juridique, finance, restauration, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.",
         },
         game: {
           title: "17 OCTOBRE — le jeu vidéo du lab 3geeks",
@@ -671,11 +677,12 @@ export const translations = {
       },
     },
     reviews: {
-      path: "Retours clients",
-      title: "Ce que nos clients disent après livraison.",
+      path: "Retours",
+      title: "Ce qu’en disent nos clients et utilisateurs.",
       r1: "Équipe réactive, process très clair et exécution propre. Le nouveau site a fluidifié notre acquisition.",
       r2: "Ils ont compris notre métier rapidement et proposé des choix utiles. On a vu une vraie progression.",
-      r3: "Le système mis en place est robuste et simple à opérer. Notre quotidien est plus serein."
+      r3: "Le système mis en place est robuste et simple à opérer. Notre quotidien est plus serein.",
+      meta: { r1: "Client · Express Divorce USA", r2: "Utilisateur de l’app Two", r3: "Client · CallKitchen" }
     },
     team: {
       path: "Équipe fondatrice",
@@ -684,7 +691,7 @@ export const translations = {
       labels: {
         expertise: "Expertise 3geeks",
         background: "Parcours",
-        certifications: "Licences et certifications",
+        certifications: "Certifications et formations",
         issued: "Émise le",
         expires: "Expire le",
         expired: "Expirée le",
@@ -734,11 +741,16 @@ export const translations = {
         },
       },
       introducersTitle: "Apporteurs d’affaires",
-      introducersSubtitle: "Charles et Niels font partie de notre réseau, que nous souhaitons développer avec de nouveaux apporteurs d’affaires.",
+      introducersSubtitle: "Niels fait partie de notre réseau d’apporteurs d’affaires, ouvert à de nouveaux membres.",
       introducerRole: "Apporteur d’affaires",
       introducers: {
-        charles: "Charles repère des entreprises et porteurs de projet qui ont besoin d’un site ou d’un outil digital, et les met en relation avec 3geeks.",
         niels: "Niels identifie de nouvelles opportunités auprès d’entreprises en quête d’un projet digital, et les oriente vers 3geeks.",
+      },
+      introducerJoin: {
+        title: "Rejoindre le réseau",
+        desc: "Vous connaissez des entreprises ou des organisations qui ont besoin d’un site ou d’un outil numérique ? Devenez apporteur d’affaires pour 3geeks.",
+        cta: "Nous écrire",
+        subject: "Devenir apporteur d’affaires 3geeks",
       },
     },
     contact: {

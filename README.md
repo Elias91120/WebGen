@@ -35,7 +35,7 @@ Page à envoyer aux entreprises qui ont déjà un site : [www.3geeks.fr/ia](http
 
 ## Le jeu vidéo : 17 OCTOBRE (`/17-octobre`)
 
-Page du jeu du lab (code du jeu : dépôt séparé, `Desktop/Manif`). Elle est aussi en vedette dans « Le lab 3geeks » des Réalisations.
+Page du jeu de 3geeks Studio, notre lab de jeux vidéo (code du jeu : dépôt séparé, `Desktop/Manif`). Dans les Réalisations, il n’apparaît que sous la forme d’une carte discrète « 3geeks Studio » parmi les produits maison, hors du parcours pro.
 
 - Page : `src/game/GameSections.tsx`, textes FR/EN `src/game/copy.ts`, dans le cadre commun (`SiteLayout`, page `game`).
 - Médias : bande-annonce `public/videos/17-octobre-trailer.mp4` (31 s, 1080p, ~10 Mo), captures et affiche dans
@@ -70,9 +70,11 @@ Animations CSS ou `motion/react`, en pause hors écran et figées avec « rédui
 
 Source unique : `src/components/ProjectsShowcase.tsx` (vignettes dans `src/assets/images/projects/`, logos du bandeau « Déjà en ligne » dans `src/assets/images/logos/`).
 
-**Clients** — Cabinet Dr Amel Elloumi Jellouli, Express Divorce USA, Vipagence ([vipagence.net](https://www.vipagence.net/) : le site seulement), Two, Aurenza Capital, Green Jardin, CallKitchen, et deux plateformes privées (signature de contrats, mini-app Telegram) montrées en maquette, sans lien ni nom de client.
+**Clients** (6, le chiffre « projets clients livrés » du bandeau de l’accueil) — Cabinet Dr Amel Elloumi Jellouli, Express Divorce USA, Two, Aurenza Capital, CallKitchen, et une plateforme privée de signature de contrats montrée en maquette, sans lien ni nom de client.
 
-**Lab** — 3geeks Infra (volontairement floue), Prompt Hub, PromptOptim, EFREI Skill Hub.
+**Produits maison** — 3geeks Infra (volontairement floue), Prompt Hub, EFREI Skill Hub, et la carte discrète « 3geeks Studio », notre lab de jeux vidéo, qui mène à `/17-octobre`.
+
+Retirés du site public le 19/10/2026 (décision d’Elias et Noam), partout, assistant compris : la boutique privée Telegram, Green Jardin, Vipagence et PromptOptim. Leurs images restent dans `src/assets/` mais ne sont plus importées.
 
 ## Prise de contact
 

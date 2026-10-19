@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, Briefcase, ChevronDown, ShieldCheck, Users, Zap } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Briefcase, ChevronDown, ShieldCheck, UserPlus, Users, Zap } from 'lucide-react';
 import Reveal from './Reveal';
 import { translations } from '../i18n';
 
 import eliasImg from '../assets/images/Elias.jpeg';
 import noamImg from '../assets/images/Noam.jpeg';
-import charlesImg from '../assets/images/Charles.jpeg';
 import nielsImg from '../assets/images/Niels.png';
 
 type TeamCopy = (typeof translations)['en']['team'] | (typeof translations)['fr']['team'];
@@ -17,9 +16,8 @@ export const FOUNDERS: Record<FounderKey, { name: string; image: string; linkedi
   noam: { name: 'Noam Leclapart-Jublot', image: noamImg, linkedin: 'https://www.linkedin.com/in/noam-leclapart-jublot/' },
 };
 
-// Add new business introducers here; each one gets an identical card.
+// Add new business introducers here; each one gets an identical card. The last card invites new ones.
 const INTRODUCERS = [
-  { key: 'charles', name: 'Charles Garbus', image: charlesImg },
   { key: 'niels', name: 'Niels Wiriath', image: nielsImg },
 ] as const;
 
@@ -186,6 +184,23 @@ export const TeamSection: React.FC<{ team: TeamCopy; showIntro?: boolean }> = ({
             </article>
           </Reveal>
         ))}
+        <Reveal delay={INTRODUCERS.length * 90}>
+          <article className="card flex h-full items-start gap-4 border-dashed p-6">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
+              <UserPlus className="h-6 w-6" />
+            </span>
+            <div className="min-w-0">
+              <h4 className="font-display text-lg font-semibold text-white">{team.introducerJoin.title}</h4>
+              <p className="mt-3 text-sm leading-relaxed text-slate-400">{team.introducerJoin.desc}</p>
+              <a
+                href={`mailto:contact@3geeks.fr?subject=${encodeURIComponent(team.introducerJoin.subject)}`}
+                className="mt-4 inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors hover:text-white"
+              >
+                {team.introducerJoin.cta} <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </article>
+        </Reveal>
       </div>
     </div>
   </section>
