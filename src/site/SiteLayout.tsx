@@ -10,6 +10,7 @@ import AiAgentWidget from '../components/AiAgentWidget';
 import BookingModal from '../components/BookingModal';
 import LegalModals from '../components/LegalModals';
 import Logo from '../components/Logo';
+import SpaceSwitch from '../components/SpaceSwitch';
 import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
 import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
@@ -25,11 +26,11 @@ export interface PageContext {
   book: (source: string) => void;
 }
 
-type NavKey = 'offers' | 'work' | 'ai' | 'team';
-const NAV: Array<{ key: NavKey; href: string; page?: PageId }> = [
+// The /ia side is reached through the SpaceSwitch next to the logo, not a page link.
+type NavKey = 'offers' | 'work' | 'team';
+const NAV: Array<{ key: NavKey; href: string; page: PageId }> = [
   { key: 'offers', href: '/offres', page: 'offers' },
   { key: 'work', href: '/realisations', page: 'work' },
-  { key: 'ai', href: '/ia' },
   { key: 'team', href: '/equipe', page: 'team' },
 ];
 
@@ -99,22 +100,17 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
         }`}
       >
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8 md:h-20">
-          <a href="/" className="flex min-w-0 shrink-0 items-center" aria-label={`3geeks · ${nav.home}`}>
-            <Logo variant="wordmark" compact glow={false} />
-          </a>
+          <div className="flex min-w-0 items-center gap-3 xl:gap-5">
+            <a href="/" className="flex min-w-0 shrink-0 items-center" aria-label={`3geeks · ${nav.home}`}>
+              <Logo variant="wordmark" compact glow={false} />
+            </a>
+            <SpaceSwitch active="web" lang={lang} className="hidden min-[360px]:inline-flex" />
+          </div>
 
           <div className="hidden items-center gap-7 lg:flex">
             {NAV.map((link) => {
               const active = link.page === page || (page === 'game' && link.page === 'work'); // (the game lives in the work)
-              return link.key === 'ai' ? (
-                <a
-                  key={link.key}
-                  href={link.href}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-mint/30 bg-brand-mint/10 px-3 py-1 text-xs font-semibold text-brand-mint transition hover:border-brand-mint/60 hover:bg-brand-mint/15"
-                >
-                  <Sparkles className="h-3.5 w-3.5" /> {nav.ai}
-                </a>
-              ) : (
+              return (
                 <a
                   key={link.key}
                   href={link.href}
@@ -146,7 +142,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
             <button
               type="button"
               onClick={toggleLang}
-              className="flex h-10 items-center rounded-full border border-white/10 px-3.5 text-xs font-semibold text-slate-300"
+              className="hidden h-10 items-center rounded-full border border-white/10 px-3.5 text-xs font-semibold text-slate-300 sm:flex"
               aria-label={fr ? 'Switch to English' : 'Passer en français'}
             >
               {lang.toUpperCase()}
@@ -165,6 +161,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
 
         {isMenuOpen && (
           <div className="h-[calc(100svh-4rem)] overflow-y-auto border-t border-white/[0.07] bg-ink px-5 pb-6 pt-4 md:h-[calc(100svh-5rem)] lg:hidden">
+            <SpaceSwitch active="web" lang={lang} variant="menu" className="mb-3" />
             <div className="flex flex-col">
               {[{ key: 'home' as const, href: '/', page: 'home' as PageId }, ...NAV].map((link) => (
                 <a
@@ -172,11 +169,10 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
                   href={link.href}
                   aria-current={link.page === page ? 'page' : undefined}
                   className={`flex items-center justify-between border-b border-white/5 py-4 text-left text-base font-medium ${
-                    link.key === 'ai' ? 'text-brand-mint' : link.page === page ? 'text-white' : 'text-slate-300'
+                    link.page === page ? 'text-white' : 'text-slate-300'
                   }`}
                 >
                   <span className="inline-flex items-center gap-2">
-                    {link.key === 'ai' && <Sparkles className="h-4 w-4" />}
                     {nav[link.key]}
                     {link.page === page && <span className="h-1.5 w-1.5 rounded-full bg-brand-mint" aria-hidden="true" />}
                   </span>
@@ -184,6 +180,13 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
                 </a>
               ))}
             </div>
+            <button
+              type="button"
+              onClick={toggleLang}
+              className="mt-4 flex items-center gap-2 text-sm font-medium text-slate-300 sm:hidden"
+            >
+              <Globe className="h-4 w-4 text-brand-mint" /> {fr ? 'English version' : 'Version française'}
+            </button>
             <button type="button" data-booking="menu" onClick={() => book('menu')} className="btn btn-primary mt-6 w-full">
               {nav.cta}
             </button>

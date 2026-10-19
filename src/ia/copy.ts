@@ -16,7 +16,7 @@ export interface DemoScenario {
 
 export interface AiCopy {
   meta: { title: string; description: string };
-  nav: { demo: string; explorer: string; services: string; proof: string; method: string; cta: string; mainSite: string };
+  nav: { demo: string; explorer: string; services: string; proof: string; method: string; cta: string };
   hero: {
     badge: string;
     titleStart: string;
@@ -92,7 +92,6 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
       proof: 'Réalisations',
       method: 'Méthode',
       cta: 'Réserver un audit gratuit',
-      mainSite: 'Sites & applications',
     },
     hero: {
       badge: 'IA & automatisation pour entreprises · Made in France',
@@ -414,7 +413,6 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
       proof: 'Work',
       method: 'Process',
       cta: 'Book a free audit',
-      mainSite: 'Websites & apps',
     },
     hero: {
       badge: 'AI & automation for businesses · Made in France',

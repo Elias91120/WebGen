@@ -29,7 +29,7 @@ Page à envoyer aux entreprises qui ont déjà un site : [www.3geeks.fr/ia](http
 
 - Entrée Vite séparée (`ia/index.html` → `src/ia/main.tsx` → `src/ia/AiPage.tsx`), avec ses propres balises title/OG pour l’aperçu du lien partagé. Textes FR/EN dans `src/ia/copy.ts`.
 - Servie par nginx sur `/ia` et `/ia/` depuis `dist/ia/index.html` (location dédiée dans `nginx.conf`).
-- Réutilise le design, la réservation Calendly (sources `ia-*`), l’assistant (accueil et suggestions IA) et les mentions légales du site principal. Le site principal y renvoie depuis la navigation (« IA pour entreprises »).
+- Réutilise le design, la réservation Calendly (sources `ia-*`), l’assistant (accueil et suggestions IA) et les mentions légales du site principal. Les deux en-têtes portent le même sélecteur à deux segments « Sites & applications | IA pour entreprises » à côté du logo (`src/components/SpaceSwitch.tsx`) : on voit de quel côté on est et on rebascule en un clic ; sur mobile, il est aussi en tête du menu, en deux grandes cartes.
 - Pas de prix affiché : services sur devis après l’audit gratuit de 30 min.
 - Le site principal y mène depuis la section « IA & automatisation » (`src/components/AiTeaser.tsx`, même convoyeur animé). Chaque domaine ouvre `/ia?service=<n>#vos-process` sur le bon service (ordre des `departments` dans `src/ia/copy.ts`).
 

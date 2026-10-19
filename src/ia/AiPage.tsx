@@ -31,6 +31,7 @@ import LegalModals from '../components/LegalModals';
 import Logo from '../components/Logo';
 import Reveal from '../components/Reveal';
 import SectionLines from '../components/SectionLines';
+import SpaceSwitch from '../components/SpaceSwitch';
 import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
 import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
@@ -40,12 +41,13 @@ import { aiCopy } from './copy';
 import AiConveyor from './AiConveyor';
 import ProcessDemo from './ProcessDemo';
 
-const NAV_LINKS: Array<{ id: string; key: 'demo' | 'explorer' | 'services' | 'proof' | 'method' }> = [
+// `wide`: only shown in the desktop bar from 2xl up (the SpaceSwitch takes their room on smaller screens).
+const NAV_LINKS: Array<{ id: string; key: 'demo' | 'explorer' | 'services' | 'proof' | 'method'; wide?: boolean }> = [
   { id: 'demo', key: 'demo' },
-  { id: 'vos-process', key: 'explorer' },
+  { id: 'vos-process', key: 'explorer', wide: true },
   { id: 'services', key: 'services' },
   { id: 'realisations', key: 'proof' },
-  { id: 'methode', key: 'method' },
+  { id: 'methode', key: 'method', wide: true },
 ];
 
 const SERVICE_ICONS = [Plug, Truck, Headset, FileText, Smartphone, GraduationCap];
@@ -119,27 +121,24 @@ const AiPage: React.FC = () => {
         }`}
       >
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8 md:h-20">
-          <a href="/ia" className="flex min-w-0 shrink-0 items-center gap-3" aria-label="3geeks">
-            <Logo variant="wordmark" compact glow={false} />
-            <span className="hidden rounded-full border border-brand-mint/30 bg-brand-mint/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-brand-mint sm:inline-flex">
-              {fr ? 'IA' : 'AI'}
-            </span>
-          </a>
+          <div className="flex min-w-0 items-center gap-3 xl:gap-5">
+            <a href="/ia" className="flex min-w-0 shrink-0 items-center" aria-label="3geeks">
+              <Logo variant="wordmark" compact glow={false} />
+            </a>
+            <SpaceSwitch active="ai" lang={lang} className="hidden min-[360px]:inline-flex" />
+          </div>
 
-          <div className="hidden items-center gap-6 lg:flex xl:gap-8">
+          <div className="hidden items-center gap-6 lg:flex">
             {NAV_LINKS.map((link) => (
               <button
                 key={link.id}
                 type="button"
                 onClick={() => scrollToSection(link.id)}
-                className="text-sm font-medium text-slate-300 transition-colors hover:text-white"
+                className={`text-sm font-medium text-slate-300 transition-colors hover:text-white ${link.wide ? 'hidden 2xl:inline' : ''}`}
               >
                 {t.nav[link.key]}
               </button>
             ))}
-            <a href="/" className="inline-flex items-center gap-1 text-sm font-medium text-slate-400 transition-colors hover:text-white">
-              {t.nav.mainSite} <ArrowUpRight className="h-3.5 w-3.5" />
-            </a>
           </div>
 
           <div className="hidden items-center gap-3 lg:flex">
@@ -160,7 +159,7 @@ const AiPage: React.FC = () => {
             <button
               type="button"
               onClick={toggleLang}
-              className="flex h-10 items-center rounded-full border border-white/10 px-3.5 text-xs font-semibold text-slate-300"
+              className="hidden h-10 items-center rounded-full border border-white/10 px-3.5 text-xs font-semibold text-slate-300 sm:flex"
               aria-label={fr ? 'Switch to English' : 'Passer en français'}
             >
               {lang.toUpperCase()}
@@ -179,6 +178,7 @@ const AiPage: React.FC = () => {
 
         {isMenuOpen && (
           <div className="h-[calc(100svh-4rem)] overflow-y-auto border-t border-white/[0.07] bg-ink px-5 pb-6 pt-4 md:h-[calc(100svh-5rem)] lg:hidden">
+            <SpaceSwitch active="ai" lang={lang} variant="menu" className="mb-3" />
             <div className="flex flex-col">
               {NAV_LINKS.map((link) => (
                 <button
@@ -191,11 +191,14 @@ const AiPage: React.FC = () => {
                   <ArrowRight className="h-4 w-4 text-slate-500" />
                 </button>
               ))}
-              <a href="/" className="flex items-center justify-between border-b border-white/5 py-4 text-left text-base font-medium text-slate-400">
-                {t.nav.mainSite}
-                <ArrowUpRight className="h-4 w-4 text-slate-500" />
-              </a>
             </div>
+            <button
+              type="button"
+              onClick={toggleLang}
+              className="mt-4 flex items-center gap-2 text-sm font-medium text-slate-300 sm:hidden"
+            >
+              <Globe className="h-4 w-4 text-brand-mint" /> {fr ? 'English version' : 'Version française'}
+            </button>
             <button type="button" data-booking="ia-menu" onClick={() => book('menu')} className="btn btn-primary mt-6 w-full">
               {t.nav.cta}
             </button>
