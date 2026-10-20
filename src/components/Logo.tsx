@@ -63,7 +63,7 @@ const Logo = memo(function Logo({
   withTagline: _withTagline = false,
   compact = false,
   large = false,
-  glow = true,
+  glow = false,
   className = '',
 }: LogoProps) {
   if (variant === 'mark') {

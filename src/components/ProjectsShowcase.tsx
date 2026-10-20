@@ -376,7 +376,7 @@ const TelegramMockup: React.FC = () => (
     <div className="flex h-[70%] w-[48%] flex-col gap-[7%] rounded-lg border border-white/10 bg-white/[0.04] p-[4%]">
       <div className="flex items-center justify-between">
         <div className="h-1.5 w-1/3 rounded-full bg-white/40" />
-        <span className="h-2 w-2 rounded-full bg-brand-lime shadow-[0_0_8px_rgba(195,251,5,0.8)]" />
+        <span className="h-2 w-2 rounded-full bg-brand-lime" />
       </div>
       <div className="grid grid-cols-3 gap-[5%]">
         {[0, 1, 2].map((i) => (

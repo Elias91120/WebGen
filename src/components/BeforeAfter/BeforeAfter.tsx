@@ -166,7 +166,7 @@ const Slider: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
         onPointerMove={onPointerMove}
         onPointerUp={stopDrag}
         onPointerCancel={stopDrag}
-        className="relative mx-auto aspect-[468/797] w-full max-w-[22rem] cursor-ew-resize select-none overflow-hidden rounded-[1.75rem] border border-white/10 bg-ink shadow-[0_40px_100px_-40px_rgba(10,239,187,0.45)] [touch-action:pan-y] sm:aspect-[1200/750] sm:max-w-none sm:rounded-b-2xl sm:rounded-t-none"
+        className="relative mx-auto aspect-[468/797] w-full max-w-[22rem] cursor-ew-resize select-none overflow-hidden rounded-[1.75rem] border border-white/10 bg-ink shadow-[0_40px_100px_-40px_rgba(0,0,0,0.6)] [touch-action:pan-y] sm:aspect-[1200/750] sm:max-w-none sm:rounded-b-2xl sm:rounded-t-none"
       >
         {/* After: the real site */}
         <picture>
@@ -190,7 +190,7 @@ const Slider: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
         {/* Handle */}
         <motion.div style={{ left }} className="absolute inset-y-0 w-0">
           <span className="pointer-events-none absolute inset-y-0 -left-4 w-8 bg-brand-mint/20 blur-md" aria-hidden="true" />
-          <span className="pointer-events-none absolute inset-y-0 -left-px w-[2px] bg-gradient-to-b from-brand-lime via-brand-mint to-brand-lime shadow-[0_0_14px_2px_rgba(10,239,187,0.75)]" aria-hidden="true" />
+          <span className="pointer-events-none absolute inset-y-0 -left-px w-[2px] bg-gradient-to-b from-brand-lime via-brand-mint to-brand-lime" aria-hidden="true" />
           <button
             type="button"
             role="slider"
@@ -199,7 +199,7 @@ const Slider: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
             aria-valuemax={100}
             aria-valuenow={value}
             onKeyDown={onKeyDown}
-            className="absolute left-0 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-brand-gradient text-ink shadow-[0_0_30px_-4px_rgba(10,239,187,0.9)] outline-none ring-4 ring-ink/40 focus-visible:ring-white"
+            className="absolute left-0 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-brand-gradient text-ink outline-none ring-4 ring-ink/40 focus-visible:ring-white"
           >
             <ChevronsLeftRight className="h-5 w-5" />
           </button>

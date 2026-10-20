@@ -315,7 +315,7 @@ const AiPage: React.FC = () => {
                 const featured = i < 2;
                 return (
                   <Reveal key={item.title} delay={i * 80}>
-                    <article className={`${featured ? 'card-featured shadow-[0_30px_80px_-35px_rgba(10,239,187,0.4)]' : 'card'} flex h-full flex-col p-7`}>
+                    <article className={`${featured ? 'card-featured shadow-[0_30px_80px_-35px_rgba(0,0,0,0.6)]' : 'card'} flex h-full flex-col p-7`}>
                       <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
                         <Icon className="h-5 w-5" />
                       </div>
@@ -413,7 +413,7 @@ const AiPage: React.FC = () => {
               <div className="absolute left-0 right-0 top-[1.35rem] hidden h-px bg-gradient-to-r from-brand-lime/60 via-brand-mint/40 to-transparent md:block" aria-hidden="true" />
               {t.method.steps.map((step, i) => (
                 <Reveal as="li" key={step.t} delay={i * 90} className="relative pl-16 md:pl-0">
-                  <span className="absolute left-0 top-0 flex h-11 w-11 items-center justify-center rounded-full border border-brand-mint/40 bg-ink font-display text-sm font-semibold text-brand-mint shadow-[0_0_24px_-4px_rgba(10,239,187,0.5)] md:relative">
+                  <span className="absolute left-0 top-0 flex h-11 w-11 items-center justify-center rounded-full border border-brand-mint/40 bg-ink font-display text-sm font-semibold text-brand-mint md:relative">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <h3 className="font-display text-lg font-semibold text-white md:mt-6">{step.t}</h3>
@@ -490,7 +490,7 @@ const AiPage: React.FC = () => {
                   type="button"
                   data-booking="ia-contact"
                   onClick={() => book('contact')}
-                  className="group flex w-full items-center gap-4 rounded-[1.25rem] bg-brand-gradient p-5 text-left text-ink shadow-[0_20px_50px_-20px_rgba(10,239,187,0.7)] transition-transform hover:-translate-y-0.5"
+                  className="group flex w-full items-center gap-4 rounded-[1.25rem] bg-brand-gradient p-5 text-left text-ink shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)] transition-transform hover:-translate-y-0.5"
                 >
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ink/10 ring-1 ring-ink/15">
                     <CalendarCheck className="h-5 w-5" />

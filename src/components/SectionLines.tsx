@@ -22,6 +22,10 @@ const DISTANCE_DESKTOP = [4, 5, 4];
 const LINES_COMPACT = [3, 4, 3];
 const DISTANCE_COMPACT = [4, 5, 4];
 
+// Charte A (20/10/2026) : plus de lignes lumineuses animées (« l'effet néon ») sur le site.
+// Le composant reste en place : repasser à true pour les retrouver. Éteint, three.js n'est plus téléchargé.
+const SHOW_LINES = false;
+
 /**
  * Fond de lignes animées, aux couleurs de la marque, pour habiller une section.
  * - Grand écran : couvre toute la section, réagit à la souris.
@@ -38,7 +42,7 @@ const SectionLines: React.FC<SectionLinesProps> = ({ variant = 'a', className = 
     const wide = window.matchMedia('(min-width: 1024px)');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sync = () => {
-      setEnabled(!reduce.matches);
+      setEnabled(SHOW_LINES && !reduce.matches);
       setCompact(!wide.matches);
     };
     sync();

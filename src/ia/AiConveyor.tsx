@@ -50,7 +50,7 @@ const DoneFace: React.FC<{ item: Diagram['items'][number] }> = ({ item }) => {
     <div
       className={`flex h-full items-center gap-2 rounded-xl border px-3 ${
         warn ? 'border-amber-300/40 bg-[#1b1708]' : 'border-brand-mint/40 bg-[#0b1a16]'
-      } shadow-[0_10px_34px_-16px_rgba(10,239,187,0.55)]`}
+      } shadow-[0_10px_34px_-16px_rgba(0,0,0,0.6)]`}
     >
       <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg sm:h-8 sm:w-8 ${warn ? 'bg-amber-300/15 text-amber-300' : 'bg-brand-mint/15 text-brand-mint'}`}>
         <Icon className="h-4 w-4" />
@@ -108,12 +108,12 @@ const AiConveyor: React.FC<{ diagram: Diagram }> = ({ diagram }) => {
   return (
     <div
       ref={ref}
-      className={`card-featured overflow-hidden px-3 pb-4 pt-4 shadow-[0_40px_100px_-40px_rgba(10,239,187,0.45)] sm:px-5 sm:pb-5 ${inView ? '' : 'ia-paused'}`}
+      className={`card-featured overflow-hidden px-3 pb-4 pt-4 shadow-[0_40px_100px_-40px_rgba(0,0,0,0.6)] sm:px-5 sm:pb-5 ${inView ? '' : 'ia-paused'}`}
     >
       {/* Header: what comes in · the AI · what gets done (labels move under the conveyor on phones) */}
       <div className="flex items-center justify-center gap-2 sm:grid sm:grid-cols-[1fr_auto_1fr]">
         <span className="hidden font-mono text-[11px] uppercase tracking-[0.16em] text-slate-500 sm:block">{diagram.inLabel}</span>
-        <div className="relative flex items-center gap-2 justify-self-center rounded-full bg-brand-gradient py-1.5 pl-2.5 pr-3 text-ink shadow-[0_0_30px_-4px_rgba(10,239,187,0.8)]">
+        <div className="relative flex items-center gap-2 justify-self-center rounded-full bg-brand-gradient py-1.5 pl-2.5 pr-3 text-ink">
           <Sparkles className={`h-4 w-4 ${animate ? 'ia-spin-slow' : ''}`} />
           <span className="font-display text-xs font-semibold sm:text-sm">{diagram.core}</span>
           <span className="h-3.5 w-px bg-ink/25" aria-hidden="true" />
@@ -156,8 +156,8 @@ const AiConveyor: React.FC<{ diagram: Diagram }> = ({ diagram }) => {
         {/* The AI scan line */}
         <div className="pointer-events-none absolute -inset-y-2 left-1/2 w-10 -translate-x-1/2" aria-hidden="true">
           <span className="absolute inset-y-0 left-1/2 w-8 -translate-x-1/2 bg-brand-mint/15 blur-md" />
-          <span className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 bg-gradient-to-b from-brand-lime via-brand-mint to-brand-lime shadow-[0_0_16px_2px_rgba(10,239,187,0.7)]" />
-          {animate && <span className="ia-beam-spark absolute left-1/2 h-10 w-[3px] -translate-x-1/2 rounded-full bg-white shadow-[0_0_14px_4px_rgba(195,251,5,0.8)]" />}
+          <span className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 bg-gradient-to-b from-brand-lime via-brand-mint to-brand-lime" />
+          {animate && <span className="ia-beam-spark absolute left-1/2 h-10 w-[3px] -translate-x-1/2 rounded-full bg-white" />}
         </div>
       </div>
 

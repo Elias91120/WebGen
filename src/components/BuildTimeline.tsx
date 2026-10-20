@@ -45,7 +45,7 @@ const BrowserMock: React.FC<{ stage: number; mock: Mock }> = ({ stage, mock }) =
   const showPage = stage >= 1;
 
   return (
-    <div className="card-featured overflow-hidden shadow-[0_40px_100px_-40px_rgba(10,239,187,0.45)]">
+    <div className="card-featured overflow-hidden shadow-[0_40px_100px_-40px_rgba(0,0,0,0.6)]">
       {/* Browser chrome */}
       <div className="flex items-center gap-3 border-b border-white/[0.07] bg-ink/60 px-3 py-2.5 sm:px-4">
         <span className="flex gap-1.5" aria-hidden="true">
@@ -90,7 +90,7 @@ const BrowserMock: React.FC<{ stage: number; mock: Mock }> = ({ stage, mock }) =
             <Block built={built} fill="bg-white/25" className="h-2 w-1/2" />
           </div>
           <div className="relative mt-4 inline-block">
-            <Block built={built} fill="bg-brand-gradient shadow-[0_8px_24px_-8px_rgba(10,239,187,0.7)]" className="h-7 w-24 sm:w-28" />
+            <Block built={built} fill="bg-brand-gradient shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6)]" className="h-7 w-24 sm:w-28" />
             <AnimatePresence>
               {stage === 2 && (
                 <motion.span
@@ -258,7 +258,7 @@ const BuildTimeline: React.FC<BuildTimelineProps> = ({ steps, mock }) => {
                   <span
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border font-display text-xs font-semibold transition-all duration-500 ${
                       active
-                        ? 'border-brand-mint bg-brand-mint/15 text-brand-mint shadow-[0_0_24px_-4px_rgba(10,239,187,0.7)]'
+                        ? 'border-brand-mint bg-brand-mint/15 text-brand-mint'
                         : done
                           ? 'border-transparent bg-brand-gradient text-ink'
                           : 'border-white/15 text-slate-500'
@@ -310,7 +310,7 @@ const BuildTimeline: React.FC<BuildTimelineProps> = ({ steps, mock }) => {
                     aria-current={active ? 'step' : undefined}
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-xs font-semibold transition-all duration-500 ${
                       active
-                        ? 'border-brand-mint bg-brand-mint/15 text-brand-mint shadow-[0_0_20px_-4px_rgba(10,239,187,0.8)]'
+                        ? 'border-brand-mint bg-brand-mint/15 text-brand-mint'
                         : done
                           ? 'border-transparent bg-brand-gradient text-ink'
                           : 'border-white/15 text-slate-500'

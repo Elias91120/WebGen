@@ -73,7 +73,7 @@ export const HeroVideoCard: React.FC<HeroVideoProps> = ({ lang, className = '' }
   return (
     <div
       ref={wrapRef}
-      className={`relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-ink shadow-[0_30px_80px_-30px_rgba(10,239,187,0.45)] lg:rounded-3xl lg:shadow-[0_40px_120px_-40px_rgba(10,239,187,0.55)] ${className}`}
+      className={`relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-ink shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)] lg:rounded-3xl lg:shadow-[0_40px_120px_-40px_rgba(0,0,0,0.6)] ${className}`}
       aria-hidden="true"
     >
       <img src={POSTER} alt="" width={1280} height={720} decoding="async" className="absolute inset-0 h-full w-full object-cover" />

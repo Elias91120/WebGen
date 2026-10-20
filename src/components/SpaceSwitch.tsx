@@ -85,7 +85,7 @@ const SpaceSwitch: React.FC<SpaceSwitchProps> = ({ active, lang, variant = 'pill
             className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-semibold transition sm:px-3 ${
               on
                 ? id === 'ai'
-                  ? 'bg-brand-mint text-ink shadow-[0_0_18px_rgba(10,239,187,0.35)]'
+                  ? 'bg-brand-mint text-ink'
                   : 'bg-white text-ink'
                 : id === 'ai'
                   ? 'text-brand-mint hover:bg-brand-mint/10'

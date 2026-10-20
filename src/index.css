@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
-/* Design tokens — palette issue du logo 3geeks (lime → menthe)        */
+/* Design tokens — charte 3geeks, direction A (octobre 2026)           */
 /* ------------------------------------------------------------------ */
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -10,10 +10,15 @@
   --color-ink: #08090d;
   --color-surface: #0d1015;
   --color-surface-2: #12161c;
+  --color-surface-3: #1a1f27;
   --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.14);
 
   --color-brand-lime: #c3fb05;
   --color-brand-mint: #0aefbb;
+  --color-text: #f2f4f7;
+  --color-text-muted: #a3acb9;
+  --color-on-brand: #06130f;
 
   /* Anciennes classes « cyan-* » → menthe de la marque.
      Les composants secondaires (chatbot, réservation, admin…) suivent sans être réécrits. */
@@ -24,7 +29,7 @@
   --color-cyan-400: #0aefbb;
   --color-cyan-500: #08c99d;
   --color-cyan-600: #06a07e;
-  --color-cyan-700: #078065;
+  --color-cyan-700: #007a5e;
   --color-cyan-800: #0a6551;
   --color-cyan-900: #0a5343;
   --color-cyan-950: #032e26;
@@ -129,7 +134,7 @@ body {
     font-weight: 600;
     line-height: 1;
     white-space: nowrap;
-    transition: transform 0.2s ease, box-shadow 0.25s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.25s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, filter 0.2s ease;
   }
   .btn:focus-visible {
     outline: 2px solid var(--brand-mint);
@@ -138,11 +143,10 @@ body {
   .btn-primary {
     color: #06130f;
     background-image: var(--brand-gradient);
-    box-shadow: 0 8px 30px -8px rgba(10, 239, 187, 0.55);
   }
   .btn-primary:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 38px -8px rgba(195, 251, 5, 0.6);
+    filter: brightness(1.05);
   }
   .btn-ghost {
     color: #e2e8f0;
@@ -211,10 +215,6 @@ body {
       linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
     background-size: 56px 56px;
   }
-  .glow-lime { box-shadow: 0 0 24px rgba(195, 251, 5, 0.35); }
-  .glow-cyan { box-shadow: 0 0 24px rgba(10, 239, 187, 0.4); }
-  .text-glow-cyan { text-shadow: 0 0 12px rgba(10, 239, 187, 0.5); }
-  .text-glow-lime { text-shadow: 0 0 12px rgba(195, 251, 5, 0.5); }
 }
 
 /* Bouton WhatsApp (formulaire de contact) */

@@ -131,7 +131,7 @@ const MobileStepper: React.FC<{ steps: string[]; active: number; finished: boole
                   done
                     ? 'border-transparent bg-brand-gradient text-ink'
                     : running
-                      ? 'border-brand-mint bg-brand-mint/15 text-brand-mint shadow-[0_0_18px_-2px_rgba(10,239,187,0.8)]'
+                      ? 'border-brand-mint bg-brand-mint/15 text-brand-mint'
                       : 'border-white/15 text-slate-500'
                 }`}
               >
@@ -332,7 +332,7 @@ const ProcessDemo: React.FC<{ copy: AiCopy['demo'] }> = ({ copy }) => {
                           done
                             ? 'border-transparent bg-brand-gradient text-ink'
                             : running
-                              ? 'border-brand-mint bg-brand-mint/15 text-brand-mint shadow-[0_0_24px_-2px_rgba(10,239,187,0.7)]'
+                              ? 'border-brand-mint bg-brand-mint/15 text-brand-mint'
                               : 'border-white/15 bg-ink text-slate-500'
                         }`}
                       >

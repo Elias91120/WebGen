@@ -150,7 +150,7 @@ export const WhatWeDo: React.FC<Props> = ({ t }) => {
               <Reveal key={item.title} delay={i * 90}>
                 <a
                   href={WHAT_LINKS[i]}
-                  className={`${ai ? 'card-featured shadow-[0_30px_80px_-35px_rgba(10,239,187,0.45)]' : 'card hover:bg-surface-2'} group flex h-full flex-col p-5 transition-transform duration-300 hover:-translate-y-1 md:p-7`}
+                  className={`${ai ? 'card-featured shadow-[0_30px_80px_-35px_rgba(0,0,0,0.6)]' : 'card hover:bg-surface-2'} group flex h-full flex-col p-5 transition-transform duration-300 hover:-translate-y-1 md:p-7`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
@@ -198,7 +198,7 @@ export const HowItWorks: React.FC<Props> = ({ t, book }) => {
               <Reveal as="li" key={step.t} delay={i * 110} className="relative">
                 <div className="flex h-full gap-4 md:block md:rounded-[1.25rem] md:border md:border-white/[0.08] md:bg-surface md:p-7">
                   <div className="flex shrink-0 items-center gap-3">
-                    <span className="relative flex h-11 w-11 items-center justify-center rounded-full border border-brand-mint/40 bg-ink font-display text-sm font-semibold text-brand-mint shadow-[0_0_24px_-4px_rgba(10,239,187,0.5)]">
+                    <span className="relative flex h-11 w-11 items-center justify-center rounded-full border border-brand-mint/40 bg-ink font-display text-sm font-semibold text-brand-mint">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <Icon className="hidden h-5 w-5 text-slate-500 md:block" />
@@ -292,7 +292,7 @@ export const Commitments: React.FC<Props> = ({ t }) => (
           const Icon = COMMITMENT_ICONS[i];
           return (
             <Reveal key={item.title} delay={i * 80}>
-              <div className={`${i === 0 ? 'card-featured shadow-[0_30px_80px_-35px_rgba(10,239,187,0.45)]' : 'card'} flex h-full flex-col p-6 md:p-7`}>
+              <div className={`${i === 0 ? 'card-featured shadow-[0_30px_80px_-35px_rgba(0,0,0,0.6)]' : 'card'} flex h-full flex-col p-6 md:p-7`}>
                 <div className="flex items-center justify-between">
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-mint/10 text-brand-mint ring-1 ring-brand-mint/25">
                     <Icon className="h-5 w-5" />
@@ -323,7 +323,7 @@ export const OffersSection: React.FC<Props> = ({ t, lang, book }) => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:items-stretch">
           {plans.map((plan, i) => (
             <Reveal key={plan.id} delay={i * 100} className={plan.featured ? 'md:-my-4' : ''}>
-              <div className={`${plan.featured ? 'card-featured shadow-[0_30px_80px_-30px_rgba(10,239,187,0.35)]' : 'card'} flex h-full flex-col p-7 md:p-8`}>
+              <div className={`${plan.featured ? 'card-featured shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]' : 'card'} flex h-full flex-col p-7 md:p-8`}>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-slate-300">{plan.tag}</span>
                   <span
@@ -518,7 +518,7 @@ export const ContactSection: React.FC<Props> = ({ t, book }) => (
             type="button"
             data-booking="contact"
             onClick={() => book('contact')}
-            className="group flex w-full items-center gap-4 rounded-[1.25rem] bg-brand-gradient p-5 text-left text-ink shadow-[0_20px_50px_-20px_rgba(10,239,187,0.7)] transition-transform hover:-translate-y-0.5"
+            className="group flex w-full items-center gap-4 rounded-[1.25rem] bg-brand-gradient p-5 text-left text-ink shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)] transition-transform hover:-translate-y-0.5"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ink/10 ring-1 ring-ink/15">
               <CalendarCheck className="h-5 w-5" />
