@@ -411,6 +411,52 @@ body {
   box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.9), inset 0 0 0 2px rgba(0, 0, 0, 0.6);
 }
 
+/* Haut de page « typo pure » (21/10/2026) : le titre monte mot par mot, une seule fois. */
+.word-rise {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+  animation: word-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(120ms + var(--w, 0) * 80ms);
+}
+@keyframes word-rise {
+  to { opacity: 1; transform: none; }
+}
+/* La partie en couleur glisse doucement du lime à la menthe, sans lueur. */
+.gradient-drift {
+  background-image: linear-gradient(90deg, #c3fb05 0%, #0aefbb 50%, #c3fb05 100%);
+  background-size: 200% 100%;
+  animation:
+    word-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    gradient-drift 9s ease-in-out infinite alternate;
+  animation-delay: calc(120ms + var(--w, 0) * 80ms), 1.6s;
+}
+@keyframes gradient-drift {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+/* Banderole des projets en ligne : défile en boucle, s'arrête au survol. */
+.logo-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.logo-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 45s linear infinite;
+}
+.logo-marquee:hover .logo-marquee-track { animation-play-state: paused; }
+.logo-marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 2.75rem;
+  margin: 0;
+  padding: 0 2.75rem 0 0;
+  list-style: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
@@ -419,6 +465,11 @@ body {
   .ia-ring, .ia-spin-slow, .ia-travel, .ia-beam-spark { animation: none; }
   .live-ring, .count-bump { animation: none; }
   .title-shine, .stamp-2026, .marquee-track { animation: none; }
+  .word-rise, .gradient-drift { opacity: 1; transform: none; animation: none; }
+  .logo-marquee { -webkit-mask-image: none; mask-image: none; }
+  .logo-marquee-track { width: auto; animation: none; justify-content: center; }
+  .logo-marquee-group { flex-wrap: wrap; justify-content: center; gap: 1rem 1.75rem; padding: 0; }
+  .logo-marquee-dup { display: none; }
 }
 
 /* Horizontal rows that scroll by swipe, without a visible scrollbar */

@@ -22,8 +22,8 @@ import {
 import React from 'react';
 
 import BuildTimeline from '../components/BuildTimeline';
-import { HeroVideoCard } from '../components/HeroVideo';
 import { PROJECTS_DATA } from '../components/ProjectsShowcase';
+import ProjectsMarquee from '../components/ProjectsMarquee';
 import Reveal from '../components/Reveal';
 import SectionLines from '../components/SectionLines';
 import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
@@ -70,6 +70,21 @@ const Heading: React.FC<{ path: string; title: string; sub?: string; center?: bo
 /* Home                                                                */
 /* ------------------------------------------------------------------ */
 
+/** Le grand titre, mot par mot : chaque mot monte à son tour (coupé avec « réduire les animations »). */
+const RisingWords: React.FC<{ text: string; from: number }> = ({ text, from }) => (
+  <>
+    {text.split(' ').map((word, i) => (
+      <React.Fragment key={`${word}-${i}`}>
+        <span className="word-rise" style={{ ['--w' as string]: from + i }}>
+          {word}
+        </span>{' '}
+      </React.Fragment>
+    ))}
+  </>
+);
+
+// Haut de page « typo pure » (piste A choisie par Noam le 21/10/2026) : tout centré, sans vidéo,
+// le titre légèrement animé, puis la banderole des projets en ligne.
 export const Hero: React.FC<Props> = ({ lang, t, book }) => (
   <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden">
     <div
@@ -79,42 +94,37 @@ export const Hero: React.FC<Props> = ({ lang, t, book }) => (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-ink to-transparent" aria-hidden="true" />
     <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/80 to-transparent" aria-hidden="true" />
 
-    <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 content-center items-center gap-10 px-5 pb-10 pt-24 sm:px-8 sm:pt-32 md:pt-36 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
-      <div className="max-w-2xl">
-        <div
-          className="hero-rise inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] py-1.5 pl-3 pr-4 text-xs font-medium text-slate-200 backdrop-blur"
-          style={{ ['--rise-delay' as string]: '100ms' }}
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-mint opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-mint" />
-          </span>
-          {t.hero.badge}
-        </div>
-
-        <h1
-          className="hero-rise mt-6 font-display text-[2.15rem] font-semibold leading-[1.06] tracking-tight text-white drop-shadow-[0_2px_24px_rgba(8,9,13,0.8)] sm:text-6xl lg:text-[2.9rem] xl:text-[3.25rem]"
-          style={{ ['--rise-delay' as string]: '220ms' }}
-        >
-          {t.hero.titleStart} <span className="text-gradient">{t.hero.titleEnd}</span>
-        </h1>
-
-        <p className="hero-rise mt-7 max-w-xl text-base leading-relaxed text-slate-200 md:text-lg lg:text-slate-300" style={{ ['--rise-delay' as string]: '360ms' }}>
-          {t.hero.comment}
-        </p>
-
-        <div className="hero-rise mt-9 flex flex-col gap-3 sm:flex-row" style={{ ['--rise-delay' as string]: '480ms' }}>
-          <button type="button" data-booking="hero" onClick={() => book('hero')} className="btn btn-primary">
-            {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
-          </button>
-          <a href="#ce-quon-fait" className="btn btn-ghost">
-            {t.hero.ctaSecondary}
-          </a>
-        </div>
+    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center px-5 pb-10 pt-28 text-center sm:px-8 sm:pt-36">
+      <div
+        className="hero-rise inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] py-1.5 pl-3 pr-4 text-xs font-medium text-slate-200 backdrop-blur"
+        style={{ ['--rise-delay' as string]: '60ms' }}
+      >
+        <span className="inline-flex h-2 w-2 rounded-full bg-brand-mint" aria-hidden="true" />
+        {t.hero.badge}
       </div>
 
-      <div className="hero-rise" style={{ ['--rise-delay' as string]: '600ms' }}>
-        <HeroVideoCard lang={lang} />
+      <h1 className="mt-6 max-w-5xl font-display text-[2.5rem] font-semibold leading-[1.04] tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-[5.25rem]">
+        <RisingWords text={t.hero.titleStart} from={0} />
+        <span className="word-rise text-gradient gradient-drift" style={{ ['--w' as string]: t.hero.titleStart.split(' ').length }}>
+          {t.hero.titleEnd}
+        </span>
+      </h1>
+
+      <p className="hero-rise mx-auto mt-7 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg" style={{ ['--rise-delay' as string]: '700ms' }}>
+        {t.hero.comment}
+      </p>
+
+      <div className="hero-rise mt-9 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row" style={{ ['--rise-delay' as string]: '820ms' }}>
+        <button type="button" data-booking="hero" onClick={() => book('hero')} className="btn btn-primary">
+          {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
+        </button>
+        <a href="#ce-quon-fait" className="btn btn-ghost">
+          {t.hero.ctaSecondary}
+        </a>
+      </div>
+
+      <div className="hero-rise mt-14 w-full md:mt-16" style={{ ['--rise-delay' as string]: '960ms' }}>
+        <ProjectsMarquee lang={lang} />
       </div>
     </div>
 

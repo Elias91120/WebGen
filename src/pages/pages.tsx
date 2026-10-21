@@ -6,7 +6,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import AiTeaser from '../components/AiTeaser';
-import ClientLogos from '../components/ClientLogos';
 import ProjectsShowcase from '../components/ProjectsShowcase';
 import SkillsRadar from '../components/SkillsRadar';
 import TeamSection from '../components/TeamSection';
@@ -33,7 +32,6 @@ export const HomePage: React.FC = () => (
     {(ctx) => (
       <>
         <Hero {...ctx} />
-        <ClientLogos lang={ctx.lang} />
         <WhatWeDo {...ctx} />
         <HowItWorks {...ctx} />
         <FeaturedWork {...ctx} />
