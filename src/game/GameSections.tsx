@@ -21,6 +21,8 @@ const SNAPSHOT = '/secours/17-octobre.json';
 const MIRROR_RELEASES = 'https://api.github.com/repos/Elias91120/WebGen/releases?per_page=30';
 const IMG = '/images/17-octobre';
 const GAME_YELLOW = '#FCC200'; // the game's title colour (its own art direction)
+// The 3Geeks Studio logo (3geeks' own logo from the brand kit, and STUDIO in pixels): drawn by Manif 2/tools/actus/studio.py
+const STUDIO_LOGO = '/images/3geeks-studio.svg';
 
 const ICONS: Record<string, React.ElementType> = { flag: Flag, shield: Shield, dice: Dices, swords: Swords, moon: Moon, smile: Smile, zap: Zap };
 
@@ -319,7 +321,17 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
         />
         <div className="relative mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-14">
           <div>
-            <span className="eyebrow hero-rise" style={{ ['--rise-delay' as string]: '60ms' }}>{c.eyebrow}</span>
+            {/* le logo 3Geeks Studio (la charte 3geeks et STUDIO en pixels) : partout où l'on parle des jeux de 3geeks (Elias,
+                21/10 : « je veux voir ce logo ») */}
+            <img
+              src={STUDIO_LOGO}
+              alt={c.eyebrow}
+              width={970}
+              height={372}
+              className="hero-rise block h-14 w-auto select-none sm:h-16 lg:h-20"
+              style={{ ['--rise-delay' as string]: '60ms' }}
+              draggable={false}
+            />
             <h1
               className="hero-rise relative mt-4 inline-block font-display text-6xl font-bold tracking-tight sm:text-7xl md:text-8xl"
               style={{ ['--rise-delay' as string]: '140ms' }}
@@ -663,9 +675,14 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
         </div>
       )}
 
-      {/* How it was made */}
+      {/* How it was made: the studio's signature first, as at the end of every video, then the lab */}
       <section className="relative border-b border-white/5 py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <Reveal className="mb-16 flex flex-col items-center text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">{c.studioBy}</span>
+            <img src={STUDIO_LOGO} alt="3Geeks Studio" width={970} height={372} loading="lazy" className="mt-6 block h-28 w-auto select-none md:h-40" draggable={false} />
+            <p className="mt-6 max-w-xl text-sm leading-relaxed text-slate-400 md:text-base">{c.studioLine}</p>
+          </Reveal>
           <Heading path={c.labPath} title={c.labTitle} sub={c.labSub} />
           <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
             {c.lab.map((l, i) => (

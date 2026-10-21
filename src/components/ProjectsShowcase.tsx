@@ -5,7 +5,9 @@ import { Mark } from './Logo';
 import Reveal from './Reveal';
 
 // Our video game (featured lab card), from the /17-octobre page
-const GAME_COVER = '/images/17-octobre/nuit-640.webp';
+const GAME_COVER = '/images/17-octobre/manif-angers-640.webp';
+// The 3Geeks Studio logo: shown wherever 3geeks' games are (Elias, 21/10/2026)
+const STUDIO_LOGO = '/images/3geeks-studio.svg';
 
 // Small logos (lab cards)
 import promptHubImg from '../assets/images/prompt-hub.png';
@@ -719,29 +721,28 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
                 alt={fr ? '17 OCTOBRE : une manif vue d’en haut, la nuit' : '17 OCTOBRE: a street protest seen from above, at night'}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                style={{ imageRendering: 'pixelated' }}
               />
               <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-ink/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 backdrop-blur">
-                {fr ? 'Jeu vidéo · bêta' : 'Video game · beta'}
+                {fr ? 'Jeu vidéo · gratuit' : 'Video game · free'}
               </span>
             </div>
             <div className="flex flex-col p-6 md:p-8">
-              <p className="text-xs font-medium text-brand-mint/90">{fr ? 'Jeu vidéo · stratégie en temps réel' : 'Video game · real-time strategy'}</p>
-              <h3 className="mt-1.5 font-display text-2xl font-bold tracking-tight text-[#FCC200]">17 OCTOBRE</h3>
+              <img src={STUDIO_LOGO} alt="3Geeks Studio" width={970} height={372} loading="lazy" className="block h-10 w-auto self-start select-none" draggable={false} />
+              <h3 className="mt-4 font-display text-2xl font-bold tracking-tight text-[#FCC200]">17 OCTOBRE</h3>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">
                 {fr
-                  ? 'Notre jeu : une manif vue d’en haut, satirique et cartoon. Des centaines de personnages simulés, une ville de Paris entièrement dessinée par le code, une campagne de huit Actes, le camp CRS, et bientôt le duel en ligne. Bientôt sur Steam.'
-                  : 'Our game: a street protest seen from above, satirical and cartoonish. Hundreds of simulated characters, a Paris drawn entirely by code, an eight-Act campaign, the riot police side, and an online duel on the way. Coming to Steam.'}
+                  ? 'Notre jeu, trois jeux en un, gratuits sur Windows et Mac : les Actes, la stratégie en temps réel ; la Manif, un roguelite en 3D de Paris à Lyon, Clermont-Ferrand et Angers ; la Campagne, Paris en monde ouvert. Des centaines de personnages simulés, des villes entièrement dessinées par le code. Bientôt sur Steam.'
+                  : 'Our game, three games in one, free on Windows and Mac: Les Actes, real-time strategy; the Manif, a 3D roguelite from Paris to Lyon, Clermont-Ferrand and Angers; the Campagne, an open-world Paris. Hundreds of simulated characters, cities drawn entirely by code. Coming to Steam.'}
               </p>
               <div className="mt-5 flex flex-wrap gap-1.5">
-                {(fr ? ['Godot 4', 'Simulation de foule', 'Pixel art généré', 'Steam'] : ['Godot 4', 'Crowd simulation', 'Generated pixel art', 'Steam']).map((tag) => (
+                {(fr ? ['Godot 4', '3 jeux en 1', 'Windows et Mac', 'Steam'] : ['Godot 4', '3 games in 1', 'Windows and Mac', 'Steam']).map((tag) => (
                   <span key={tag} className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
                     {tag}
                   </span>
                 ))}
               </div>
               <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors group-hover:text-white">
-                {fr ? 'Bande-annonce et bêta' : 'Trailer and beta'} <ArrowRight className="h-4 w-4" />
+                {fr ? 'Bande-annonce et téléchargement' : 'Trailer and download'} <ArrowRight className="h-4 w-4" />
               </span>
             </div>
           </a>

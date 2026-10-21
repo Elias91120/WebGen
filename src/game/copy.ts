@@ -7,7 +7,9 @@
  */
 export const GAME_COPY = {
   fr: {
-    eyebrow: 'Un jeu 3Geeks Studio · le lab jeu vidéo de 3geeks',
+    eyebrow: '3Geeks Studio',
+    studioBy: 'Un jeu développé par',
+    studioLine: 'Le studio de jeux vidéo de 3geeks : le lab où l’on fait nos jeux, de la première ligne de code à la dernière vidéo.',
     title: '17 OCTOBRE',
     tagline: 'Un jeu, trois façons de descendre dans la rue.',
     lead: 'Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République jusqu’à Lyon, Clermont-Ferrand et Angers. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.',
@@ -178,7 +180,9 @@ export const GAME_COPY = {
     studioCta: 'Parler de mon projet',
   },
   en: {
-    eyebrow: 'A 3Geeks Studio game · the 3geeks video-game lab',
+    eyebrow: '3Geeks Studio',
+    studioBy: 'A game developed by',
+    studioLine: 'The video-game studio of 3geeks: the lab where we make our games, from the first line of code to the last video.',
     title: '17 OCTOBRE',
     tagline: 'One game, three ways to take to the streets.',
     lead: 'Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République all the way to Lyon, Clermont-Ferrand and Angers. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.',
