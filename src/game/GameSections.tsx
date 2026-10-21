@@ -30,6 +30,7 @@ interface VersionInfo {
   size?: number;
   notes?: string[];
   titre?: string;
+  mode?: 'actes' | 'manif' | 'campagne'; // the game the version is about (actus.json), shown on the news block
   video_mp4?: string; // the version's video on the file server ("actus/actus_0.12.0.mp4"), since 0.12.0
   // Both platforms, since the Mac release. "file" and "size" above stay the Windows zip, so a client from before
   // it (the 0.13.0 game's update notice, an old cached page) keeps working untouched.
@@ -155,6 +156,28 @@ function formatDate(iso: string | undefined, lang: Lang): string {
   return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+/** The notes' prefixes ("LA MANIF : …", as in tools/release/notes.json) and the game each one names. */
+const NOTE_MODES: [RegExp, 'actes' | 'manif' | 'campagne'][] = [
+  [/^les actes\s*:\s*/i, 'actes'],
+  [/^la manif\s*:\s*/i, 'manif'],
+  [/^la campagne\s*:\s*/i, 'campagne'],
+];
+
+/**
+ * The news block's game and lines: version.json's "mode" when it has one; otherwise the game every note names, its
+ * prefix then dropped from each line (the chip says it once). Notes about several games keep their prefixes.
+ */
+function newsOf(info: VersionInfo | null): { mode: 'actes' | 'manif' | 'campagne' | null; notes: string[] } {
+  const notes = info?.notes ?? [];
+  const prefixOf = (n: string) => NOTE_MODES.find(([re]) => re.test(n)) ?? null;
+  const first = notes.length > 0 ? prefixOf(notes[0]) : null;
+  const same = first !== null && notes.every((n) => prefixOf(n)?.[1] === first[1]);
+  const mode = info?.mode ?? (same ? first[1] : null);
+  if (!same) return { mode, notes };
+  const bare = notes.map((n) => n.replace(first[0], ''));
+  return { mode, notes: bare.map((n) => n.charAt(0).toUpperCase() + n.slice(1)) };
+}
+
 /**
  * The beta's download count, live: the file server pushes the total on connect and after each download
  * (Server-Sent Events). Closed while the tab is hidden, reopened when it comes back. Null until known.
@@ -258,6 +281,9 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
   const count = downloads !== null && <DownloadCount n={downloads} lang={lang} words={c.downloads} title={c.downloadsLive} />;
   // the Mac package of this version, when there is one (versions up to 0.13.0 came out for Windows only)
   const mac = info?.fichiers?.macos ?? null;
+  // the game the latest version is about: from version.json, or else from its notes when they all name the same game
+  // (« LA MANIF : … »); its name then shows once, on the block, instead of at the head of every line
+  const news = newsOf(info);
 
   useEffect(() => {
     // the file server's version.json; if the Mac Mini does not answer, the backup's snapshot (absent from the main site)
@@ -369,10 +395,13 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
         <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-14">
           <Reveal>
             <div className="card overflow-hidden p-0 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
+              {/* la vidéo de la version, en 16:9, et son affiche : refaites à chaque sortie, avec tout le front (Elias,
+                  21/10 : la 0.16.0 de la Manif s'affichait à côté d'une vidéo de la Campagne) */}
               <video
+                key={info?.version ?? 'nouveautes'}
                 className="block aspect-video w-full bg-black"
-                src={`/videos/17-octobre-nouveautes.mp4?v=${info?.version ?? '0.13.0'}c`}
-                poster={`${IMG}/nouveautes-0130.jpg`}
+                src={`/videos/17-octobre-nouveautes.mp4?v=${info?.version ?? '0.16.0'}`}
+                poster={`${IMG}/nouveautes.jpg?v=${info?.version ?? '0.16.0'}`}
                 controls
                 playsInline
                 preload="metadata"
@@ -386,14 +415,22 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                 <Sparkles className="mr-1 inline h-3.5 w-3.5" /> {c.newsPath}
                 {info ? ` · ${c.version} ${info.version}` : ''}
               </span>
+              {news.mode && (
+                <span
+                  className="mt-4 block w-fit rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider"
+                  style={{ background: GAME_YELLOW, color: '#1a1200' }}
+                >
+                  {c.newsModes[news.mode]}
+                </span>
+              )}
               <h2 className="section-title mt-4 text-3xl sm:text-4xl md:text-5xl">{info?.titre ?? c.newsTitle}</h2>
               {info?.date && <p className="mt-3 text-sm text-slate-400">{c.published} {formatDate(info.date, lang)}</p>}
               <p className="mt-4 text-base leading-relaxed text-slate-400">{c.newsSub}</p>
             </Reveal>
-            {info?.notes && info.notes.length > 0 && (
+            {news.notes.length > 0 && (
               <Reveal className="mt-6" delay={80}>
                 <ul className="space-y-2.5 text-sm leading-relaxed text-slate-300 md:text-base">
-                  {info.notes.slice(0, 6).map((n) => (
+                  {news.notes.slice(0, 6).map((n) => (
                     <li key={n} className="flex gap-2.5">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rotate-45" style={{ background: GAME_YELLOW }} />
                       {n}
@@ -422,8 +459,8 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                         Manif : des parties d'Elias ; la Campagne : son ouverture) */}
                     <video
                       className="block aspect-video w-full bg-black object-cover"
-                      src={`/videos/17-octobre-mode-${m.id}.mp4?v=0120b`}
-                      poster={m.id === 'actes' ? `${IMG}/melee-640.webp` : m.id === 'manif' ? `${IMG}/manif-horde-640.webp` : `${IMG}/campagne-mumie-640.webp`}
+                      src={`/videos/17-octobre-mode-${m.id}.mp4?v=${m.id === 'manif' ? '0160' : '0120b'}`}
+                      poster={m.id === 'actes' ? `${IMG}/melee-640.webp` : m.id === 'manif' ? `${IMG}/manif-angers-640.webp` : `${IMG}/campagne-mumie-640.webp`}
                       autoPlay
                       muted
                       loop
@@ -512,11 +549,23 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
         </div>
       </section>
 
-      {/* Les vidéos, en vertical, comme sur un téléphone */}
+      {/* Nos dernières vidéos : celles des mises à jour en 16:9, puis nos vidéos en vertical, comme sur un téléphone
+          (Elias, 21/10 : « exploiter nos vidéos », les plus récentes d'abord) */}
       <section id="videos" className="relative scroll-mt-20 border-b border-white/5 py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <Heading path={c.videosPath} title={c.videosTitle} sub={c.videosSub} />
-          <div className="mt-12 grid grid-cols-1 justify-items-center gap-8 sm:grid-cols-3">
+          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {c.largeVideos.map((v, i) => (
+              <Reveal key={v.src} delay={i * 90}>
+                <figure className="card overflow-hidden p-0">
+                  <video className="block aspect-video w-full bg-black" src={v.src} poster={v.poster} controls playsInline preload="metadata" aria-label={v.label} />
+                </figure>
+                <figcaption className="mt-3 text-sm text-slate-300">{v.label}</figcaption>
+              </Reveal>
+            ))}
+          </div>
+          <h3 className="mt-16 text-center font-display text-2xl font-semibold text-white">{c.phoneTitle}</h3>
+          <div className="mt-8 grid grid-cols-1 justify-items-center gap-8 sm:grid-cols-3">
             {c.videos.map((v, i) => (
               <Reveal key={v.src} delay={i * 90} className="w-full max-w-[300px]">
                 <figure className="phone-frame">

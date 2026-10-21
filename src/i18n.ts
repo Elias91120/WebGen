@@ -150,8 +150,8 @@ export const translations = {
           sub: "Healthcare, legal, finance, e-commerce, mobile apps and private platforms: projects designed, built and launched by 3geeks.",
         },
         game: {
-          title: "17 OCTOBRE — the 3geeks lab video game",
-          description: "17 OCTOBRE, the 3geeks lab video game: a satirical, cartoon real-time strategy game. Lead the Yellow Vest marches through Paris, or switch to the riot police. Trailer, screenshots, and the free beta for Windows.",
+          title: "17 OCTOBRE — the video game by 3Geeks Studio",
+          description: "17 OCTOBRE, a 3Geeks Studio game: three games in one, free on Windows and Mac. Les Actes, the Manif (from Paris to Lyon, Clermont-Ferrand and Angers) and the Campagne.",
           path: "Video game",
           h1: "17 OCTOBRE",
           sub: "A satirical, cartoon real-time strategy game.",
@@ -565,8 +565,8 @@ export const translations = {
           sub: "Santé, juridique, finance, e-commerce, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.",
         },
         game: {
-          title: "17 OCTOBRE — le jeu vidéo du lab 3geeks",
-          description: "17 OCTOBRE, le jeu vidéo du lab 3geeks : stratégie en temps réel satirique et cartoon. Mène les cortèges de Gilets Jaunes dans Paris, ou passe côté CRS. Bande-annonce, captures, et la bêta à télécharger gratuitement pour Windows.",
+          title: "17 OCTOBRE — le jeu vidéo de 3Geeks Studio",
+          description: "17 OCTOBRE, un jeu 3Geeks Studio : trois jeux en un, gratuits sur Windows et Mac. Les Actes, la Manif (de Paris à Lyon, Clermont-Ferrand et Angers) et la Campagne.",
           path: "Jeu vidéo",
           h1: "17 OCTOBRE",
           sub: "Un jeu de stratégie en temps réel, satirique et cartoon.",
