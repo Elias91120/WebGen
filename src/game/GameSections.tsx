@@ -365,7 +365,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
               ))}
             </ul>
           </div>
-          <div id="bande-annonce" className="hero-rise scroll-mt-24" style={{ ['--rise-delay' as string]: '220ms' }}>
+          <div id="bande-annonce" className="hero-rise" style={{ ['--rise-delay' as string]: '220ms' }}>
             <div className="card overflow-hidden p-0 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
               <video
                 className="block aspect-video w-full bg-black"
@@ -403,7 +403,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
       </div>
 
       {/* Quoi de neuf : la dernière version, sa vidéo (la même que dans le menu du jeu), ce qu'elle change */}
-      <section id="nouveautes" className="relative scroll-mt-20 border-b border-white/5 py-16 md:py-24">
+      <section id="nouveautes" className="relative border-b border-white/5 py-16 md:py-24">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-14">
           <Reveal>
             <div className="card overflow-hidden p-0 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
@@ -459,7 +459,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
       </section>
 
       {/* Two games in one: Les Actes (the original) and the Manif (3D, online) */}
-      <section id="deux-jeux" className="relative scroll-mt-20 border-b border-white/5 py-16 md:py-24">
+      <section id="deux-jeux" className="relative border-b border-white/5 py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <Heading path={c.modesPath} title={c.modesTitle} sub={c.modesSub} />
           <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -517,7 +517,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
 
       {/* L'équipe : Elias et Noam font le jeu, Eden le teste ; tous les trois sont dans la Campagne (leurs têtes modelées,
           rendues en jeu : jamais leurs photos), et le concours pour y entrer */}
-      <section id="equipe" className="relative scroll-mt-20 overflow-hidden border-b border-white/5 py-16 md:py-24">
+      <section id="equipe" className="relative overflow-hidden border-b border-white/5 py-16 md:py-24">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_15%_20%,rgba(252,194,0,0.10),transparent_70%),radial-gradient(ellipse_50%_60%_at_100%_100%,rgba(255,140,38,0.08),transparent_70%)]"
           aria-hidden="true"
@@ -563,7 +563,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
 
       {/* Nos dernières vidéos : celles des mises à jour en 16:9, puis nos vidéos en vertical, comme sur un téléphone
           (Elias, 21/10 : « exploiter nos vidéos », les plus récentes d'abord) */}
-      <section id="videos" className="relative scroll-mt-20 border-b border-white/5 py-16 md:py-24">
+      <section id="videos" className="relative border-b border-white/5 py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <Heading path={c.videosPath} title={c.videosTitle} sub={c.videosSub} />
           <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -702,10 +702,13 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
       </section>
 
       {/* Download */}
-      <section id="telecharger" className="relative scroll-mt-20 border-b border-white/5 py-16 md:py-24">
+      <section data-section="telecharger" className="relative border-b border-white/5 py-16 md:py-24">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-2 lg:gap-14">
           <div>
             <Heading path={c.dlPath} title={c.dlTitle} sub={c.dlSub} />
+            {/* #telecharger lands on the download buttons, not on the section's title (Elias and Noam, 21/10: after
+                the jump, the buttons were still below the fold). The section keeps the name for the visit stats. */}
+            <div id="telecharger" aria-hidden="true" />
             <Reveal className="card mt-8 p-6">
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span className="font-display text-2xl font-semibold text-white">
