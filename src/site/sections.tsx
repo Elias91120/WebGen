@@ -22,6 +22,7 @@ import {
 import React from 'react';
 
 import BuildTimeline from '../components/BuildTimeline';
+import { HeroShowcase, readHeroPreview } from '../components/HeroShowcase';
 import { HeroVideoCard } from '../components/HeroVideo';
 import { PROJECTS_DATA } from '../components/ProjectsShowcase';
 import Reveal from '../components/Reveal';
@@ -114,7 +115,10 @@ export const Hero: React.FC<Props> = ({ lang, t, book }) => (
       </div>
 
       <div className="hero-rise" style={{ ['--rise-delay' as string]: '600ms' }}>
-        <HeroVideoCard lang={lang} />
+        {(() => {
+          const preview = readHeroPreview();
+          return preview ? <HeroShowcase lang={lang} variant={preview} /> : <HeroVideoCard lang={lang} />;
+        })()}
       </div>
     </div>
 
