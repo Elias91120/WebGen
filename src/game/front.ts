@@ -44,14 +44,14 @@ export const FRONT = {
     },
     "largeVideos": [
       {
+        "src": "/videos/17-octobre-tour.mp4",
+        "poster": "/images/17-octobre/video-tour.jpg",
+        "label": "La Manif : le tour de France, Caen et Brest (la 0.17)"
+      },
+      {
         "src": "/videos/17-octobre-lyon.mp4",
         "poster": "/images/17-octobre/video-lyon.jpg",
         "label": "La Manif : Lyon, place Bellecour (la 0.15)"
-      },
-      {
-        "src": "/videos/17-octobre-monde5.mp4",
-        "poster": "/images/17-octobre/video-monde5.jpg",
-        "label": "La Manif : le monde 5, un château de lave et d’os (la 0.14)"
       },
       {
         "src": "/videos/17-octobre-mac.mp4",
@@ -79,11 +79,11 @@ export const FRONT = {
     "gallery": [
       {
         "src": "manif-caen",
-        "alt": "La Manif : Caen, le château et la place Saint-Pierre, vus du ciel"
+        "alt": "La Manif : Caen, la place Saint-Pierre et son église, la horde vue du drone"
       },
       {
         "src": "manif-brest",
-        "alt": "La Manif : Brest, le château, le pont de Recouvrance et la rade"
+        "alt": "La Manif : Brest, la place de la Liberté et l'hôtel de ville, la horde vue du drone"
       },
       {
         "src": "manif-angers",
@@ -166,14 +166,14 @@ export const FRONT = {
     },
     "largeVideos": [
       {
+        "src": "/videos/17-octobre-tour.mp4",
+        "poster": "/images/17-octobre/video-tour.jpg",
+        "label": "The Manif: the tour of France, Caen and Brest (0.17)"
+      },
+      {
         "src": "/videos/17-octobre-lyon.mp4",
         "poster": "/images/17-octobre/video-lyon.jpg",
         "label": "The Manif: Lyon, Place Bellecour (0.15)"
-      },
-      {
-        "src": "/videos/17-octobre-monde5.mp4",
-        "poster": "/images/17-octobre/video-monde5.jpg",
-        "label": "The Manif: world 5, a castle of lava and bones (0.14)"
       },
       {
         "src": "/videos/17-octobre-mac.mp4",
@@ -201,11 +201,11 @@ export const FRONT = {
     "gallery": [
       {
         "src": "manif-caen",
-        "alt": "The Manif: Caen, the castle and Place Saint-Pierre, from the sky"
+        "alt": "The Manif: Caen, Place Saint-Pierre and its church, the horde from a drone"
       },
       {
         "src": "manif-brest",
-        "alt": "The Manif: Brest, the castle, the Recouvrance bridge and the harbour"
+        "alt": "The Manif: Brest, Place de la Liberté and the town hall, the horde from a drone"
       },
       {
         "src": "manif-angers",
