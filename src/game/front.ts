@@ -4,25 +4,27 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.16.0",
+  "version": "0.17.0",
   "fr": {
-    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République jusqu’à Lyon, Clermont-Ferrand et Angers. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
+    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lyon, Clermont-Ferrand. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
       "actes": {
         "tag": "Le jeu d’origine",
         "d": "Tu commandes des groupes, jamais des individus : des centaines de personnages, chacun avec son moral, qui avancent, hésitent, chantent ou détalent.",
         "points": [
           "La campagne des huit Actes, de « Paris, 14 h » à la Bastille",
+          "Plus durs et plus chaotiques depuis la 0.17 : des imprévus, et une carte par cortège en bas de l’écran",
           "Toutes les polices : la Mumie, la Nationale, les CRS, la BAQ en civil, la Brigade Mobylette, les drones",
           "Le camp CRS : six notes de service du Préfet et un budget absurde",
           "Escarmouche, défi du jour, le duel en ligne et son classement ; tout se joue aussi à la manette"
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.16",
-        "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis en RER jusqu’aux cités, et en train jusqu’à Lyon, Clermont-Ferrand et Angers. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
+        "tag": "Nouveau : la 0.17",
+        "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Clermont-Ferrand, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
-          "Les villes que vous avez demandées : Lyon place Bellecour, Clermont-Ferrand place de Jaude et sa Passerelle, Angers et son château",
+          "Le tour de France par les vrais trains : Caen, Brest et Angers, ou Lyon et Clermont-Ferrand, puis l’Élysée et la banlieue en bonus",
+          "Les villes que vous avez demandées : Caen place Saint-Pierre, Brest place de la Liberté et son pont de Recouvrance, Angers, Clermont-Ferrand, Lyon",
           "Le mode DIFFICILE, des missions toutes les deux minutes, et les CRS d’élite au casque d’or",
           "Le Préfet, le château de lave de Sa Majesté des Os, la BAC en T-Max ; la bande à six, avec Droven et ses pancartes",
           "Le classement mondial, la manette, et une horde qui s’adapte à ton PC"
@@ -76,16 +78,20 @@ export const FRONT = {
     ],
     "gallery": [
       {
+        "src": "manif-caen",
+        "alt": "La Manif : Caen, le château et la place Saint-Pierre, vus du ciel"
+      },
+      {
+        "src": "manif-brest",
+        "alt": "La Manif : Brest, le château, le pont de Recouvrance et la rade"
+      },
+      {
         "src": "manif-angers",
         "alt": "La Manif : Angers, le château et ses dix-sept tours, vu du ciel"
       },
       {
         "src": "manif-clermont",
         "alt": "La Manif : Clermont-Ferrand, la place de Jaude"
-      },
-      {
-        "src": "manif-passerelle",
-        "alt": "La Manif : la cité de la Passerelle, à Clermont-Ferrand"
       },
       {
         "src": "manif-lyon",
@@ -116,33 +122,31 @@ export const FRONT = {
         "alt": "Les Actes : la place de la Bastille et sa colonne, le dernier samedi"
       },
       {
-        "src": "nuit",
-        "alt": "Les Actes : la nuit des affiches, un drone éclaire la place des Fêtes"
-      },
-      {
         "src": "bd",
         "alt": "L’histoire en BD : Jojo, Mimi et Gégé avant la Bastille"
       }
     ]
   },
   "en": {
-    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République all the way to Lyon, Clermont-Ferrand and Angers. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
+    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République to a whole tour of France by real trains: Caen, Brest, Angers, Lyon, Clermont-Ferrand. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
     "modes": {
       "actes": {
         "tag": "The original",
         "d": "You command groups, never individuals: hundreds of characters, each with their own morale, who march, hesitate, sing or run away.",
         "points": [
           "The eight-Act campaign, from \"Paris, 2 pm\" to the Bastille",
+          "Harder and more chaotic since 0.17: surprises, and one card per march at the bottom of the screen",
           "Every kind of police: the municipal cops, the Nationale, the riot police, the plain-clothes BAQ, the Moped Brigade, the drones",
           "The riot police side: six memos from the Prefect and an absurd budget",
           "Skirmish, daily challenge, the online duel and its leaderboard; all playable with a gamepad"
         ]
       },
       "manif": {
-        "tag": "New: 0.16",
-        "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then by RER out to the housing estates, and by train all the way to Lyon, Clermont-Ferrand and Angers. Your weapons fire on their own; you jump, slide and power up.",
+        "tag": "New: 0.17",
+        "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France by real trains, from Caen to Clermont-Ferrand, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
-          "The cities you asked for: Lyon’s Place Bellecour, Clermont-Ferrand’s Place de Jaude and its Passerelle estate, Angers and its castle",
+          "A tour of France by real trains: Caen, Brest and Angers, or Lyon and Clermont-Ferrand, then the Élysée and the suburbs as a bonus",
+          "The cities you asked for: Caen’s Place Saint-Pierre, Brest’s Place de la Liberté and its Recouvrance bridge, Angers, Clermont-Ferrand, Lyon",
           "HARD mode, missions every two minutes, and elite riot police in golden helmets",
           "The Prefect, the lava castle of His Majesty of Bones, the BAC on scooters; a crew of six, with Droven and his placards",
           "A world leaderboard, gamepad support, and a horde that adapts to your PC"
@@ -196,16 +200,20 @@ export const FRONT = {
     ],
     "gallery": [
       {
+        "src": "manif-caen",
+        "alt": "The Manif: Caen, the castle and Place Saint-Pierre, from the sky"
+      },
+      {
+        "src": "manif-brest",
+        "alt": "The Manif: Brest, the castle, the Recouvrance bridge and the harbour"
+      },
+      {
         "src": "manif-angers",
         "alt": "The Manif: Angers, the castle and its seventeen towers, from the sky"
       },
       {
         "src": "manif-clermont",
         "alt": "The Manif: Clermont-Ferrand, Place de Jaude"
-      },
-      {
-        "src": "manif-passerelle",
-        "alt": "The Manif: the Passerelle housing estate, in Clermont-Ferrand"
       },
       {
         "src": "manif-lyon",
@@ -234,10 +242,6 @@ export const FRONT = {
       {
         "src": "bastille",
         "alt": "Les Actes: Place de la Bastille and its column, on the last Saturday"
-      },
-      {
-        "src": "nuit",
-        "alt": "Les Actes: poster night, a drone lights up the square"
       },
       {
         "src": "bd",
