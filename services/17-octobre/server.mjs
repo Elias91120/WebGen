@@ -15,6 +15,8 @@
 //   GET  /telechargements               {"total": N} downloads so far, every version (public)
 //   GET  /telechargements/direct        the same total, live (Server-Sent Events: on connect, then on each download)
 //   GET  /actus/actus_<version>.<ext>   a version's video, its "what's new" (mp4 for the page, ogv for the game ; byte ranges)
+//   GET  /paquets/paquet_<version>_<jeu>.pck  a version's game package, for the in-game update (jalon 140 ; byte ranges, so a
+//                                       cut download resumes where it stopped)
 //   PUT  /upload/<name>                 Authorization: Bearer <UPLOAD_TOKEN> — stores a file in DATA_DIR
 //   PUT  /upload/<name>?offset=X&total=T  the same, in pieces under Cloudflare's 100 MB body limit (the zip since 0.11.0)
 //   GET  /stats                         Authorization: Bearer <UPLOAD_TOKEN or STATS_TOKEN> — download counts, relay rooms,
@@ -182,6 +184,9 @@ async function download(req, res, url) {
 
 const ACTUS_RE = /^actus_[A-Za-z0-9._-]{1,80}\.(mp4|ogv|webm|jpg|png)$/;
 const ACTUS_TYPES = { mp4: 'video/mp4', ogv: 'video/ogg', webm: 'video/webm', jpg: 'image/jpeg', png: 'image/png' };
+// (jalon 140) the game packages of a version, uploaded by tools/publish.ps1 and named in version.json (paquets): the game
+// downloads the ones it lacks and restarts on them, without the zip
+const PAQUET_RE = /^paquet_[A-Za-z0-9._-]{1,80}\.pck$/;
 
 /**
  * A version's video (its "what's new"), uploaded with the build by tools/publish.ps1 as actus_<version>.<ext>: the
@@ -190,6 +195,17 @@ const ACTUS_TYPES = { mp4: 'video/mp4', ogv: 'video/ogg', webm: 'video/webm', jp
  */
 async function actus(req, res, name) {
   if (!ACTUS_RE.test(name)) return send(res, 404, { error: 'not found' });
+  return serveFile(req, res, name, ACTUS_TYPES[name.split('.').pop()]);
+}
+
+/** (jalon 140) A game package (see PAQUET_RE): the same byte ranges, so the game resumes a cut download. */
+async function paquet(req, res, name) {
+  if (!PAQUET_RE.test(name)) return send(res, 404, { error: 'not found' });
+  return serveFile(req, res, name, 'application/octet-stream');
+}
+
+/** A file of DATA_DIR, whole or by byte range, cached a day (its name changes with each version). */
+async function serveFile(req, res, name, type) {
   const path = join(DATA, name);
   let st;
   try {
@@ -198,7 +214,7 @@ async function actus(req, res, name) {
     return send(res, 404, { error: 'not found' });
   }
   const headers = {
-    'Content-Type': ACTUS_TYPES[name.split('.').pop()],
+    'Content-Type': type,
     'Accept-Ranges': 'bytes',
     'Cache-Control': 'public, max-age=86400',
     'Access-Control-Allow-Origin': '*',
@@ -304,6 +320,7 @@ const server = createServer(async (req, res) => {
     }
     if (req.method === 'GET' && path === '/telechargements/direct') return watch(req, res);
     if ((req.method === 'GET' || req.method === 'HEAD') && path.startsWith('/actus/')) return await actus(req, res, decodeURIComponent(path.slice(7)));
+    if ((req.method === 'GET' || req.method === 'HEAD') && path.startsWith('/paquets/')) return await paquet(req, res, decodeURIComponent(path.slice(9)));
     if (req.method === 'PUT' && path.startsWith('/upload/')) return await upload(req, res, decodeURIComponent(path.slice(8)), url);
     if (req.method === 'GET' && path === '/stats') {
       if (!reader(req)) return send(res, 401, { error: 'unauthorized' });
