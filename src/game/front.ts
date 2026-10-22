@@ -4,7 +4,7 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.18.1",
+  "version": "0.18.2",
   "fr": {
     "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand, Rennes, Nantes, Tours. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
@@ -20,13 +20,13 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.18.1",
+        "tag": "Nouveau : la 0.18.2",
         "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille, Clermont-Ferrand et Tours, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
-          "Nouveau : Rennes, Nantes et Tours, que vous avez demandées : la place de la Mairie, la place Royale et le château des ducs, la place Plumereau",
-          "De vraies gares : à Paris, chaque train part de la sienne ; dans chaque ville, on entre dans la gare, le train attend à quai",
+          "Nouveau : le téléphérique de Brest comme le vrai, son pylône au-dessus de la Penfeld, ses deux cabines qui se croisent ; et l'eau de retour dans les villes",
+          "Rennes, Nantes et Tours, que vous avez demandées : la place de la Mairie, la place Royale et le château des ducs, la place Plumereau",
           "Ça démarre tout de suite, 5 minutes par monde, un NORMAL qui fait galérer ; un curseur sous le chrono montre où aller",
-          "Le tour de France par les vrais trains : Caen, Brest, Angers ; Lille, Lyon, Clermont-Ferrand ; Rennes, Nantes, Tours ; l’Élysée, et la banlieue en bonus",
+          "Le tour de France par les vrais trains, de vraies gares où l'on entre : Caen, Brest, Angers ; Lille, Lyon, Clermont-Ferrand ; Rennes, Nantes, Tours ; l’Élysée, et la banlieue en bonus",
           "La bande à six, avec Droven et ses pancartes ; des missions dans chaque monde, le mode DIFFICILE, le classement mondial"
         ]
       },
@@ -77,6 +77,10 @@ export const FRONT = {
       }
     ],
     "gallery": [
+      {
+        "src": "manif-brest-telepherique",
+        "alt": "La Manif : Brest, la Penfeld et son téléphérique, depuis le pont de Recouvrance"
+      },
       {
         "src": "manif-tours",
         "alt": "La Manif : Tours, la place Plumereau et ses maisons à pans de bois"
@@ -154,13 +158,13 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "New: 0.18.1",
+        "tag": "New: 0.18.2",
         "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France by real trains, from Caen to Lille, Clermont-Ferrand and Tours, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
-          "New: Rennes, Nantes and Tours, which you asked for: Place de la Mairie, Place Royale and the castle of the Dukes, Place Plumereau",
-          "Real stations: in Paris, every train leaves from its own; in every city, you walk into the station and the train waits at the platform",
+          "New: the Brest cable car like the real one, its pylon over the Penfeld, its two cabins crossing; and the water is back in the cities",
+          "Rennes, Nantes and Tours, which you asked for: Place de la Mairie, Place Royale and the castle of the Dukes, Place Plumereau",
           "Action from the first minute, 5 minutes per world, a NORMAL mode that makes you sweat; a cursor under the timer shows the way",
-          "A tour of France by real trains: Caen, Brest, Angers; Lille, Lyon, Clermont-Ferrand; Rennes, Nantes, Tours; the Élysée, and the suburbs as a bonus",
+          "A tour of France by real trains, real stations you walk into: Caen, Brest, Angers; Lille, Lyon, Clermont-Ferrand; Rennes, Nantes, Tours; the Élysée, and the suburbs as a bonus",
           "A crew of six, with Droven and his placards; missions in every world, HARD mode, the world leaderboard"
         ]
       },
@@ -211,6 +215,10 @@ export const FRONT = {
       }
     ],
     "gallery": [
+      {
+        "src": "manif-brest-telepherique",
+        "alt": "The Manif: Brest, the Penfeld and its cable car, from the Recouvrance bridge"
+      },
       {
         "src": "manif-tours",
         "alt": "The Manif: Tours, Place Plumereau and its half-timbered houses"
