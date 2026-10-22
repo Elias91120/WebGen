@@ -4,7 +4,7 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.18.2",
+  "version": "0.18.3",
   "fr": {
     "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand, Rennes, Nantes, Tours. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
@@ -20,10 +20,10 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.18.2",
+        "tag": "Nouveau : la 0.18.3",
         "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille, Clermont-Ferrand et Tours, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
-          "Nouveau : le téléphérique de Brest comme le vrai, son pylône au-dessus de la Penfeld, ses deux cabines qui se croisent ; et l'eau de retour dans les villes",
+          "Nouveau : choisis ta région dès Paris (Saint-Lazare, la gare du Nord ou Montparnasse), et un NORMAL qui fait vraiment galérer : plus ton build monte, plus les CRS encaissent",
           "Rennes, Nantes et Tours, que vous avez demandées : la place de la Mairie, la place Royale et le château des ducs, la place Plumereau",
           "Ça démarre tout de suite, 5 minutes par monde, un NORMAL qui fait galérer ; un curseur sous le chrono montre où aller",
           "Le tour de France par les vrais trains, de vraies gares où l'on entre : Caen, Brest, Angers ; Lille, Lyon, Clermont-Ferrand ; Rennes, Nantes, Tours ; l’Élysée, et la banlieue en bonus",
@@ -158,10 +158,10 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "New: 0.18.2",
+        "tag": "New: 0.18.3",
         "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France by real trains, from Caen to Lille, Clermont-Ferrand and Tours, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
-          "New: the Brest cable car like the real one, its pylon over the Penfeld, its two cabins crossing; and the water is back in the cities",
+          "New: pick your region from Paris (Saint-Lazare, Gare du Nord or Montparnasse), and a NORMAL mode that really makes you sweat: the stronger your build, the tougher the riot police",
           "Rennes, Nantes and Tours, which you asked for: Place de la Mairie, Place Royale and the castle of the Dukes, Place Plumereau",
           "Action from the first minute, 5 minutes per world, a NORMAL mode that makes you sweat; a cursor under the timer shows the way",
           "A tour of France by real trains, real stations you walk into: Caen, Brest, Angers; Lille, Lyon, Clermont-Ferrand; Rennes, Nantes, Tours; the Élysée, and the suburbs as a bonus",
