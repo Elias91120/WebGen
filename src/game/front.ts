@@ -4,9 +4,9 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.17.0",
+  "version": "0.18.0",
   "fr": {
-    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lyon, Clermont-Ferrand. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
+    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
       "actes": {
         "tag": "Le jeu d’origine",
@@ -20,14 +20,14 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.17",
-        "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Clermont-Ferrand, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
+        "tag": "Nouveau : la 0.18",
+        "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille et à Clermont-Ferrand, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
-          "Le tour de France par les vrais trains : Caen, Brest et Angers, ou Lyon et Clermont-Ferrand, puis l’Élysée et la banlieue en bonus",
-          "Les villes que vous avez demandées : Caen place Saint-Pierre, Brest place de la Liberté et son pont de Recouvrance, Angers, Clermont-Ferrand, Lyon",
-          "Le mode DIFFICILE, des missions toutes les deux minutes, et les CRS d’élite au casque d’or",
-          "Le Préfet, le château de lave de Sa Majesté des Os, la BAC en T-Max ; la bande à six, avec Droven et ses pancartes",
-          "Le classement mondial, la manette, et une horde qui s’adapte à ton PC"
+          "Nouveau : Lille, la Grand’Place, que vous avez demandée : la Déesse, la Vieille Bourse et sa cour, l’Opéra, le beffroi",
+          "Le tour de France par les vrais trains : Caen, Brest et Angers, puis Lille, Lyon et Clermont-Ferrand ; l’Élysée, et la banlieue en bonus",
+          "Des missions propres à chaque monde, le mode DIFFICILE, et les CRS d’élite au casque d’or",
+          "Lyon qui vit (la grande roue, les bateaux, les traboules), et des façades, des devantures et des arbres plus fins partout",
+          "La bande à six, avec Droven et ses pancartes ; le classement mondial, la manette qui vibre, une horde qui s’adapte à ton PC"
         ]
       },
       "campagne": {
@@ -37,8 +37,8 @@ export const FRONT = {
           "La soirée raconte, du premier pétard à l’Élysée : la bande t’écrit par SMS, la pluie et l’orage, le scooter, la BAC à semer",
           "On entre partout : les halls, les escaliers, les appartements, les caves, les toits de zinc, le métro",
           "Le commissariat et le déguisement : en CRS, glisse-toi dans leur ligne (« T’es de quelle compagnie ? » « La 17e ! »)",
-          "Le direct de 17 INFO piraté, le cortège et sa banderole, le feu d’artifice, et au bout, le coup d’État à l’Élysée",
-          "Le matin du 17, au menu : le quartier qui se réveille et le cortège qui se forme ; la soirée en drill, rap et trap"
+          "Le direct de 17 INFO piraté, le cortège et sa banderole, le feu d’artifice, et au bout, le coup d’État à l’Élysée, où les pavés et les pétards font reculer le barrage",
+          "Le matin du 17, au menu : les rideaux de fer qui se lèvent, les terrasses qu’on sort, la queue des boulangeries, le cortège qui se forme"
         ]
       }
     },
@@ -78,6 +78,10 @@ export const FRONT = {
     ],
     "gallery": [
       {
+        "src": "manif-lille",
+        "alt": "La Manif : Lille, la Grand'Place et la colonne de la Déesse"
+      },
+      {
         "src": "manif-caen",
         "alt": "La Manif : Caen, la place Saint-Pierre et son église, la horde vue du drone"
       },
@@ -88,10 +92,6 @@ export const FRONT = {
       {
         "src": "manif-angers",
         "alt": "La Manif : Angers, le château et ses dix-sept tours, vu du ciel"
-      },
-      {
-        "src": "manif-clermont",
-        "alt": "La Manif : Clermont-Ferrand, la place de Jaude"
       },
       {
         "src": "manif-lyon",
@@ -128,7 +128,7 @@ export const FRONT = {
     ]
   },
   "en": {
-    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République to a whole tour of France by real trains: Caen, Brest, Angers, Lyon, Clermont-Ferrand. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
+    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République to a whole tour of France by real trains: Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
     "modes": {
       "actes": {
         "tag": "The original",
@@ -142,14 +142,14 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "New: 0.17",
-        "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France by real trains, from Caen to Clermont-Ferrand, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
+        "tag": "New: 0.18",
+        "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France by real trains, from Caen to Lille and Clermont-Ferrand, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
-          "A tour of France by real trains: Caen, Brest and Angers, or Lyon and Clermont-Ferrand, then the Élysée and the suburbs as a bonus",
-          "The cities you asked for: Caen’s Place Saint-Pierre, Brest’s Place de la Liberté and its Recouvrance bridge, Angers, Clermont-Ferrand, Lyon",
-          "HARD mode, missions every two minutes, and elite riot police in golden helmets",
-          "The Prefect, the lava castle of His Majesty of Bones, the BAC on scooters; a crew of six, with Droven and his placards",
-          "A world leaderboard, gamepad support, and a horde that adapts to your PC"
+          "New: Lille’s Grand’Place, which you asked for: the Goddess column, the Vieille Bourse and its courtyard, the Opera, the belfry",
+          "A tour of France by real trains: Caen, Brest and Angers, then Lille, Lyon and Clermont-Ferrand; the Élysée, and the suburbs as a bonus",
+          "Missions of their own in every world, HARD mode, and elite riot police in golden helmets",
+          "Lyon comes alive (the big wheel, the boats, the traboules), and finer façades, shopfronts and trees everywhere",
+          "A crew of six, with Droven and his placards; a world leaderboard, gamepad rumble, and a horde that adapts to your PC"
         ]
       },
       "campagne": {
@@ -159,8 +159,8 @@ export const FRONT = {
           "The night tells a story, from the first banger to the Élysée: the crew texts you, rain and storms, the scooter, the BAC to shake off",
           "Go inside everywhere: halls, staircases, flats, cellars, the zinc rooftops, the metro",
           "The police station and the disguise: in riot gear, slip into their line (\"Which company are you?\" \"The 17th!\")",
-          "The hijacked 17 INFO broadcast, the march and its banner, the fireworks, and at the end, the coup at the Élysée",
-          "The morning of the 17th, from the menu: the neighbourhood waking up and the march forming; the night set to drill, rap and trap"
+          "The hijacked 17 INFO broadcast, the march and its banner, the fireworks, and at the end, the coup at the Élysée, where cobblestones and bangers push the police line back",
+          "The morning of the 17th, from the menu: shutters going up, café terraces coming out, queues at the bakeries, the march forming"
         ]
       }
     },
@@ -200,6 +200,10 @@ export const FRONT = {
     ],
     "gallery": [
       {
+        "src": "manif-lille",
+        "alt": "The Manif: Lille, the Grand'Place and the Goddess column"
+      },
+      {
         "src": "manif-caen",
         "alt": "The Manif: Caen, Place Saint-Pierre and its church, the horde from a drone"
       },
@@ -210,10 +214,6 @@ export const FRONT = {
       {
         "src": "manif-angers",
         "alt": "The Manif: Angers, the castle and its seventeen towers, from the sky"
-      },
-      {
-        "src": "manif-clermont",
-        "alt": "The Manif: Clermont-Ferrand, Place de Jaude"
       },
       {
         "src": "manif-lyon",
