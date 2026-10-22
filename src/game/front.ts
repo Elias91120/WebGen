@@ -4,9 +4,9 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.18.0",
+  "version": "0.18.1",
   "fr": {
-    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
+    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand, Rennes, Nantes, Tours. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
       "actes": {
         "tag": "Le jeu d’origine",
@@ -20,14 +20,14 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.18",
-        "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille et à Clermont-Ferrand, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
+        "tag": "Nouveau : la 0.18.1",
+        "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille, Clermont-Ferrand et Tours, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
-          "Nouveau : Lille, la Grand’Place, que vous avez demandée : la Déesse, la Vieille Bourse et sa cour, l’Opéra, le beffroi",
-          "Le tour de France par les vrais trains : Caen, Brest et Angers, puis Lille, Lyon et Clermont-Ferrand ; l’Élysée, et la banlieue en bonus",
-          "Des missions propres à chaque monde, le mode DIFFICILE, et les CRS d’élite au casque d’or",
-          "Lyon qui vit (la grande roue, les bateaux, les traboules), et des façades, des devantures et des arbres plus fins partout",
-          "La bande à six, avec Droven et ses pancartes ; le classement mondial, la manette qui vibre, une horde qui s’adapte à ton PC"
+          "Nouveau : Rennes, Nantes et Tours, que vous avez demandées : la place de la Mairie, la place Royale et le château des ducs, la place Plumereau",
+          "De vraies gares : à Paris, chaque train part de la sienne ; dans chaque ville, on entre dans la gare, le train attend à quai",
+          "Ça démarre tout de suite, 5 minutes par monde, un NORMAL qui fait galérer ; un curseur sous le chrono montre où aller",
+          "Le tour de France par les vrais trains : Caen, Brest, Angers ; Lille, Lyon, Clermont-Ferrand ; Rennes, Nantes, Tours ; l’Élysée, et la banlieue en bonus",
+          "La bande à six, avec Droven et ses pancartes ; des missions dans chaque monde, le mode DIFFICILE, le classement mondial"
         ]
       },
       "campagne": {
@@ -77,6 +77,18 @@ export const FRONT = {
       }
     ],
     "gallery": [
+      {
+        "src": "manif-tours",
+        "alt": "La Manif : Tours, la place Plumereau et ses maisons à pans de bois"
+      },
+      {
+        "src": "manif-rennes",
+        "alt": "La Manif : Rennes, la place de la Mairie et l'hôtel de ville"
+      },
+      {
+        "src": "manif-nantes",
+        "alt": "La Manif : Nantes, la place Royale, sa fontaine et Saint-Nicolas"
+      },
       {
         "src": "manif-lille",
         "alt": "La Manif : Lille, la Grand'Place et la colonne de la Déesse"
@@ -128,7 +140,7 @@ export const FRONT = {
     ]
   },
   "en": {
-    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République to a whole tour of France by real trains: Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
+    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République to a whole tour of France by real trains: Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand, Rennes, Nantes, Tours. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
     "modes": {
       "actes": {
         "tag": "The original",
@@ -142,14 +154,14 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "New: 0.18",
-        "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France by real trains, from Caen to Lille and Clermont-Ferrand, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
+        "tag": "New: 0.18.1",
+        "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France by real trains, from Caen to Lille, Clermont-Ferrand and Tours, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
-          "New: Lille’s Grand’Place, which you asked for: the Goddess column, the Vieille Bourse and its courtyard, the Opera, the belfry",
-          "A tour of France by real trains: Caen, Brest and Angers, then Lille, Lyon and Clermont-Ferrand; the Élysée, and the suburbs as a bonus",
-          "Missions of their own in every world, HARD mode, and elite riot police in golden helmets",
-          "Lyon comes alive (the big wheel, the boats, the traboules), and finer façades, shopfronts and trees everywhere",
-          "A crew of six, with Droven and his placards; a world leaderboard, gamepad rumble, and a horde that adapts to your PC"
+          "New: Rennes, Nantes and Tours, which you asked for: Place de la Mairie, Place Royale and the castle of the Dukes, Place Plumereau",
+          "Real stations: in Paris, every train leaves from its own; in every city, you walk into the station and the train waits at the platform",
+          "Action from the first minute, 5 minutes per world, a NORMAL mode that makes you sweat; a cursor under the timer shows the way",
+          "A tour of France by real trains: Caen, Brest, Angers; Lille, Lyon, Clermont-Ferrand; Rennes, Nantes, Tours; the Élysée, and the suburbs as a bonus",
+          "A crew of six, with Droven and his placards; missions in every world, HARD mode, the world leaderboard"
         ]
       },
       "campagne": {
@@ -199,6 +211,18 @@ export const FRONT = {
       }
     ],
     "gallery": [
+      {
+        "src": "manif-tours",
+        "alt": "The Manif: Tours, Place Plumereau and its half-timbered houses"
+      },
+      {
+        "src": "manif-rennes",
+        "alt": "The Manif: Rennes, Place de la Mairie and the town hall"
+      },
+      {
+        "src": "manif-nantes",
+        "alt": "The Manif: Nantes, Place Royale, its fountain and Saint-Nicolas"
+      },
       {
         "src": "manif-lille",
         "alt": "The Manif: Lille, the Grand'Place and the Goddess column"
