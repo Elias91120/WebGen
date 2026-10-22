@@ -181,8 +181,10 @@ function factsManif(m) {
   if (!(f.niveau >= 1 && f.niveau <= 999 && f.temps >= 0 && f.temps <= 21600 && f.crs >= 0)) return null;
   if (!(f.mondes >= 1 && f.mondes <= 12)) return null;
   if (f.crs > 100 * f.temps + 50 || f.niveau > 12 + f.temps / 6) return null; // (plus vite que le jeu ne le permet)
-  if (f.victoire && (f.temps < 600 || f.niveau < 10)) return null; // (le Préfet n'arrive qu'à 10 min)
-  if (f.mondes > 1 && (!f.victoire || f.temps < 600 + 130 * (f.mondes - 1))) return null; // (un monde de plus = un Préfet, puis 2 min de RER)
+  // (jalon 124 : des mondes de 5 minutes ; avant, Paris en durait 10) le Préfet n'arrive qu'à 5 min ; un monde de plus,
+  // c'est un Préfet vaincu puis le train (37 s), et Paris la nuit n'a que 90 s : 30 s par monde, au moins
+  if (f.victoire && (f.temps < 300 || f.niveau < 10)) return null;
+  if (f.mondes > 1 && (!f.victoire || f.temps < 300 + 30 * (f.mondes - 1))) return null;
   if (f.elysee && (f.mondes < 5 || !f.victoire)) return null; // (l'Élysée n'est que le 5e monde, après quatre Préfets)
   return { ...f, score: scoreOf(f) };
 }

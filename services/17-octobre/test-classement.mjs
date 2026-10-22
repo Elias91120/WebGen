@@ -93,6 +93,14 @@ try {
   check(!r.ok && r.code === 409, 'un autre joueur ne peut plus prendre ce nom');
   r = await manif('Testajout', marion, { niveau: 140, temps: 3600, crs: 120000, victoire: true, mondes: 5 });
   check(r.ok && r.record === true, 'sa partie suivante, meilleure, remplace le score ajouté');
+
+  // (jalon 124) des mondes de 5 minutes : le Préfet de Paris vaincu dès 5 min 30, le monde 2 atteint dès 5 min 45
+  r = await manif('Rapide', token(), { niveau: 30, temps: 330, crs: 3000, victoire: true });
+  check(r.ok, `une victoire à 5 min 30 est acceptée (${r.ok ? '' : r.msg})`);
+  r = await manif('Rapidedeux', token(), { niveau: 32, temps: 345, crs: 3200, victoire: true, mondes: 2 });
+  check(r.ok, `le monde 2 atteint à 5 min 45 est accepté (${r.ok ? '' : r.msg})`);
+  r = await manif('Tropvite', token(), { niveau: 30, temps: 250, crs: 2000, victoire: true });
+  check(!r.ok && r.code === 400, 'une victoire avant 5 min est refusée');
 } finally {
   srv.kill();
 }
