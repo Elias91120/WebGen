@@ -4,7 +4,7 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.20.0",
+  "version": "0.20.1",
   "fr": {
     "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Nice. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
@@ -20,7 +20,7 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.20.0",
+        "tag": "Nouveau : la 0.20.1",
         "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille, Marseille et Nice, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
           "Nouveau : Saint-Étienne, la place Jean-Jaurès et le stade Geoffroy-Guichard, où l'on entre jusque sur la pelouse",
@@ -174,7 +174,7 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "New: 0.20.0",
+        "tag": "New: 0.20.1",
         "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France on the real trains, from Caen to Lille, Marseille and Nice, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
           "New: Saint-Étienne, Place Jean-Jaurès and the Geoffroy-Guichard stadium, where you can walk right onto the pitch",
