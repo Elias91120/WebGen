@@ -4,7 +4,7 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.21.0",
+  "version": "0.21.1",
   "fr": {
     "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Toulon, Nice, Toulouse. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
@@ -20,7 +20,7 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.21.0",
+        "tag": "Nouveau : la 0.21.1",
         "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille, Marseille et Nice, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
           "Nouveau : Toulouse et sa place du Capitole, Toulon et son port, deux villes que vous avez demandées",
@@ -44,6 +44,11 @@ export const FRONT = {
     },
     "largeVideos": [
       {
+        "src": "/videos/17-octobre-trois-villes.mp4",
+        "poster": "/images/17-octobre/video-trois-villes.jpg",
+        "label": "La Manif : Sainté, Toulouse et Toulon (la 0.21)"
+      },
+      {
         "src": "/videos/17-octobre-tour.mp4",
         "poster": "/images/17-octobre/video-tour.jpg",
         "label": "La Manif : le tour de France, Caen et Brest (la 0.17)"
@@ -60,6 +65,11 @@ export const FRONT = {
       }
     ],
     "videos": [
+      {
+        "src": "/videos/17-octobre-trois-villes-vertical.mp4",
+        "poster": "/images/17-octobre/video-trois-villes-vertical.jpg",
+        "label": "Sainté, Toulouse, Toulon : 3 villes de plus (la 0.21)"
+      },
       {
         "src": "/videos/17-octobre-demande-vertical.mp4",
         "poster": "/images/17-octobre/video-demande-vertical.jpg",
@@ -182,7 +192,7 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "New: 0.21.0",
+        "tag": "New: 0.21.1",
         "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France on the real trains, from Caen to Lille, Marseille and Nice, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
           "New: Toulouse and its Place du Capitole, Toulon and its harbour, two cities you asked for",
@@ -206,6 +216,11 @@ export const FRONT = {
     },
     "largeVideos": [
       {
+        "src": "/videos/17-octobre-trois-villes.mp4",
+        "poster": "/images/17-octobre/video-trois-villes.jpg",
+        "label": "La Manif: Saint-Étienne, Toulouse and Toulon (0.21)"
+      },
+      {
         "src": "/videos/17-octobre-tour.mp4",
         "poster": "/images/17-octobre/video-tour.jpg",
         "label": "The Manif: the tour of France, Caen and Brest (0.17)"
@@ -222,6 +237,11 @@ export const FRONT = {
       }
     ],
     "videos": [
+      {
+        "src": "/videos/17-octobre-trois-villes-vertical.mp4",
+        "poster": "/images/17-octobre/video-trois-villes-vertical.jpg",
+        "label": "Saint-Étienne, Toulouse, Toulon: 3 more cities (0.21)"
+      },
       {
         "src": "/videos/17-octobre-demande-vertical.mp4",
         "poster": "/images/17-octobre/video-demande-vertical.jpg",
