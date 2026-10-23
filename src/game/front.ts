@@ -4,9 +4,9 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.19.3",
+  "version": "0.20.0",
   "fr": {
-    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Nice. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
+    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains : Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Nice. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
       "actes": {
         "tag": "Le jeu d’origine",
@@ -20,13 +20,13 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.19.3",
+        "tag": "Nouveau : la 0.20.0",
         "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille, Marseille et Nice, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
-          "Nouveau : Marseille (le Vieux-Port), Nice (la place Masséna) et Amiens (la cathédrale et Saint-Leu), et le jeu qui se met à jour tout seul",
+          "Nouveau : Saint-Étienne, la place Jean-Jaurès et le stade Geoffroy-Guichard, où l'on entre jusque sur la pelouse",
           "Choisis ta région dès Paris : cinq gares, cinq régions, trois villes au plus ; un NORMAL qui fait vraiment galérer",
           "Rennes, Nantes et Tours, que vous avez demandées : la place de la Mairie, la place Royale et le château des ducs, la place Plumereau",
-          "Le tour de France par les vrais trains, de vraies gares où l'on entre : Caen, Brest, Angers ; Amiens, Lille ; Lyon, Clermont-Ferrand ; Rennes, Nantes, Tours ; Marseille, Nice ; l’Élysée, et la banlieue en bonus",
+          "Le tour de France par les vrais trains, de vraies gares où l'on entre : Caen, Brest, Angers ; Amiens, Lille ; Lyon, Saint-Étienne, Clermont-Ferrand ; Rennes, Nantes, Tours ; Marseille, Nice ; l’Élysée, et la banlieue en bonus",
           "La bande à six, avec Droven et ses pancartes ; des missions dans chaque monde, le mode DIFFICILE, le classement mondial"
         ]
       },
@@ -77,6 +77,10 @@ export const FRONT = {
       }
     ],
     "gallery": [
+      {
+        "src": "manif-saint-etienne",
+        "alt": "La Manif : Saint-Étienne, le stade Geoffroy-Guichard au bout de la Grand'Rue"
+      },
       {
         "src": "manif-marseille",
         "alt": "La Manif : Marseille, le Vieux-Port, ses voiliers et la Canebière"
@@ -156,7 +160,7 @@ export const FRONT = {
     ]
   },
   "en": {
-    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République to a whole tour of France by real trains: Caen, Brest, Angers, Lille, Lyon, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Nice. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
+    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République to a whole tour of France by real trains: Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Nice. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
     "modes": {
       "actes": {
         "tag": "The original",
@@ -170,13 +174,13 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "New: 0.19.3",
+        "tag": "New: 0.20.0",
         "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France on the real trains, from Caen to Lille, Marseille and Nice, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
-          "New: Marseille (the Old Port), Nice (Place Masséna) and Amiens (the cathedral and Saint-Leu), and the game now updates itself",
+          "New: Saint-Étienne, Place Jean-Jaurès and the Geoffroy-Guichard stadium, where you can walk right onto the pitch",
           "Pick your region right from Paris: five stations, five regions, three cities at most; a NORMAL mode that really makes you sweat",
           "Rennes, Nantes and Tours, which you asked for: Place de la Mairie, Place Royale and the castle of the Dukes, Place Plumereau",
-          "The tour of France on the real trains, through real stations you walk into: Caen, Brest, Angers; Amiens, Lille; Lyon, Clermont-Ferrand; Rennes, Nantes, Tours; Marseille, Nice; the Élysée, and the suburbs as a bonus",
+          "The tour of France on the real trains, through real stations you walk into: Caen, Brest, Angers; Amiens, Lille; Lyon, Saint-Étienne, Clermont-Ferrand; Rennes, Nantes, Tours; Marseille, Nice; the Élysée, and the suburbs as a bonus",
           "The six-strong crew, with Droven and his placards; missions in every world, HARD mode, the world leaderboard"
         ]
       },
@@ -227,6 +231,10 @@ export const FRONT = {
       }
     ],
     "gallery": [
+      {
+        "src": "manif-saint-etienne",
+        "alt": "La Manif: Saint-Étienne, the Geoffroy-Guichard stadium at the end of the Grand'Rue"
+      },
       {
         "src": "manif-marseille",
         "alt": "La Manif: Marseille, the Old Port, its sailboats and the Canebière"
