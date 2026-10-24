@@ -54,6 +54,11 @@ export interface ProjectItem {
   image?: string;
   icon?: React.ElementType;
   useStudioMark?: boolean;
+  /** In-house product we sell to companies: shown wide, with figures measured on our own use. */
+  featured?: {
+    metrics: Localized<{ value: string; label: string }[]>;
+    points: Localized<string[]>;
+  };
   /** Flagship public projects get a short case study (context, what we shipped, result). */
   caseStudy?: {
     mobile: string;
@@ -72,10 +77,10 @@ export const PROJECTS_DATA: ProjectItem[] = [
     subtitle: 'amel-jellouli-elloumi.com',
     badge: { fr: 'Santé · Site médical premium', en: 'Healthcare · Premium medical website' },
     description: {
-      fr: 'Site d’un cabinet de dermatologie à Tunis : expertises détaillées, cas cliniques documentés, visite vidéo du plateau laser et prise de rendez-vous en un clic, en français et en arabe.',
-      en: 'Website for a dermatology practice in Tunis: detailed specialties, documented clinical cases, a video tour of the laser suite and one-click booking, in French and Arabic.'
+      fr: 'Site d’un cabinet de dermatologie à Tunis : soins détaillés, résultats cliniques repris automatiquement de la page Facebook du cabinet, avis Google et prise de rendez-vous en un clic, en français et en arabe.',
+      en: 'Website for a dermatology practice in Tunis: detailed treatments, clinical results pulled automatically from the practice’s Facebook page, Google reviews and one-click booking, in French and Arabic.'
     },
-    tags: { fr: ['Bilingue FR / AR','Cas cliniques','Prise de RDV'], en: ['Bilingual FR / AR','Clinical cases','Online booking'] },
+    tags: { fr: ['Bilingue FR / AR','Synchro Facebook','Prise de RDV'], en: ['Bilingual FR / AR','Facebook sync','Online booking'] },
     link: 'https://www.amel-jellouli-elloumi.com/',
     cover: jelloulCover,
     caseStudy: {
@@ -85,12 +90,12 @@ export const PROJECTS_DATA: ProjectItem[] = [
         en: 'Dr Amel Elloumi Jellouli, a former senior hospital physician, practises at Clinique Les Jasmins in Tunis. Her French- and Arabic-speaking patients want reassurance before booking: the site had to reflect her medical standards.'
       },
       delivered: {
-        fr: ['Site bilingue français / arabe', 'Pôles d’expertise détaillés : dermatologie, lasers, esthétique, chirurgie', '15 cas cliniques documentés, filtrables par spécialité', 'Visite vidéo du cabinet et du plateau laser', 'Rendez-vous en un clic : appel, WhatsApp, e-mail, itinéraire'],
-        en: ['Bilingual French / Arabic website', 'Detailed specialties: dermatology, lasers, aesthetics, surgery', '15 documented clinical cases, filterable by specialty', 'Video tour of the practice and the laser suite', 'One-tap booking: call, WhatsApp, email, directions']
+        fr: ['Site bilingue français / arabe', 'Pôles d’expertise détaillés : dermatologie, lasers, esthétique, chirurgie', 'Résultats cliniques repris de la page Facebook du cabinet toutes les 5 minutes, classés par thème', 'Avis Google, carte et bouton WhatsApp toujours à portée de main', 'Rendez-vous en un clic : appel, WhatsApp, e-mail, itinéraire'],
+        en: ['Bilingual French / Arabic website', 'Detailed specialties: dermatology, lasers, aesthetics, surgery', 'Clinical results pulled from the practice’s Facebook page every 5 minutes, sorted by theme', 'Google reviews, map and an always-visible WhatsApp button', 'One-tap booking: call, WhatsApp, email, directions']
       },
       result: {
-        fr: 'Un site à la hauteur du parcours du Dr Jellouli : crédible pour les patients, clair sur chaque soin, et pensé d’abord pour le mobile.',
-        en: "A site that matches Dr Jellouli's background: credible for patients, clear about every treatment, and designed mobile-first."
+        fr: 'Un site à la hauteur du parcours du Dr Jellouli, pensé d’abord pour le mobile, et qui se tient à jour tout seul : le cabinet publie sur Facebook comme d’habitude, le site suit.',
+        en: "A site that matches Dr Jellouli's background, designed mobile-first, and that keeps itself up to date: the practice posts on Facebook as usual, and the site follows."
       }
     }
   },
@@ -250,6 +255,29 @@ export const PROJECTS_DATA: ProjectItem[] = [
     cover: callKitchenCover
   },
   {
+    id: 'workspace',
+    category: 'studio',
+    title: { fr: 'Workspace', en: 'Workspace' },
+    subtitle: { fr: 'En production chez nous · démo sur demande', en: 'In production at 3geeks · demo on request' },
+    badge: { fr: 'Pilotage de projets + IA · déployable en entreprise', en: 'Project hub + AI · ready for companies' },
+    description: {
+      fr: 'Notre propre espace de travail : projets, tâches, documentation et décisions au même endroit. Son serveur MCP laisse l’IA tenir le tableau de bord à jour pendant qu’elle travaille : on voit où en est chaque projet sans rien saisir. On s’en sert tous les jours, et on peut l’installer dans votre entreprise, sur vos serveurs.',
+      en: 'Our own workspace: projects, tasks, documentation and decisions in one place. Its MCP server lets the AI keep the dashboard up to date while it works, so everyone sees where each project stands without typing anything. We use it every day, and we can install it in your company, on your servers.'
+    },
+    tags: { fr: ['Serveur MCP','IA sur nos serveurs','Angular · Next.js · Python'], en: ['MCP server','Self-hosted AI','Angular · Next.js · Python'] },
+    featured: {
+      // Counted in Workspace on 24/10/2026 (tasks of 17 OCTOBRE, 3Geeks Startup and Workspace alone; tests from its CI).
+      metrics: {
+        fr: [{ value: '9', label: 'projets suivis' }, { value: '100+', label: 'tâches depuis le 19/10' }, { value: '233', label: 'tests automatiques' }],
+        en: [{ value: '9', label: 'projects tracked' }, { value: '100+', label: 'tasks since 19 Oct' }, { value: '233', label: 'automated tests' }],
+      },
+      points: {
+        fr: ['L’IA crée les tâches, les fait avancer et tient le journal de chaque projet', 'Chaque dépôt de code est lu et résumé par une IA hébergée sur nos serveurs', 'Chaque action est tracée au nom de la personne, et les décisions attendent un humain'],
+        en: ['The AI creates tasks, moves them forward and keeps each project’s log', 'Every code repository is read and summarised by an AI hosted on our servers', 'Every action is logged in the person’s name, and decisions wait for a human'],
+      },
+    },
+  },
+  {
     id: '3geeks-infra',
     category: 'studio',
     title: { fr: '3geeks Infra', en: '3geeks Infra' },
@@ -269,10 +297,10 @@ export const PROJECTS_DATA: ProjectItem[] = [
     subtitle: 'prompt-hub.3geeks.fr',
     badge: { fr: 'Planification projet IA · beta', en: 'AI project planning · beta' },
     description: {
-      fr: 'Outil beta qui transforme une idée floue en un plan d’exécution structuré par étapes et prompts contextualisés à utiliser dans votre IDE.',
-      en: 'Beta tool that turns a short brief into phased steps and copy-paste prompts, orchestrated by specialized AI agents.'
+      fr: 'Outil bêta qui transforme une idée floue en plan d’exécution par étapes. Son serveur MCP branche ce plan dans votre IDE : l’IA récupère la prochaine étape, puis rend compte de ce qu’elle a livré.',
+      en: 'Beta tool that turns a rough idea into a step-by-step execution plan. Its MCP server plugs the plan into your IDE: the AI fetches the next step, then reports what it shipped.'
     },
-    tags: { fr: ['Multi-agent','Planification IA','Bêta'], en: ['Multi-agent','AI planning','Beta'] },
+    tags: { fr: ['Multi-agent','Serveur MCP','Bêta'], en: ['Multi-agent','MCP server','Beta'] },
     link: 'https://prompt-hub.3geeks.fr/',
     image: promptHubImg
   },
@@ -398,6 +426,89 @@ const TelegramMockup: React.FC = () => (
     </div>
   </div>
 );
+
+// Workspace is private: a sketch of its board (columns of tasks, and the AI's log on the side), never a real capture.
+const WorkspaceMockup: React.FC = () => (
+  <div className="absolute inset-0 flex items-center gap-[3%] bg-ink bg-[radial-gradient(circle_at_15%_20%,rgba(10,239,187,0.16),transparent_55%),radial-gradient(circle_at_90%_90%,rgba(195,251,5,0.12),transparent_50%)] p-[5%]" aria-hidden="true">
+    {[3, 2, 4].map((cards, col) => (
+      <div key={col} className="flex flex-1 flex-col gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-[3%]">
+        <div className="flex items-center gap-1.5">
+          <span className={`h-1.5 w-1.5 rounded-full ${['bg-slate-400', 'bg-brand-lime', 'bg-brand-mint'][col]}`} />
+          <div className="h-1 w-1/2 rounded-full bg-white/35" />
+        </div>
+        {Array.from({ length: cards }, (_, i) => (
+          <div key={i} className="rounded-md border border-white/10 bg-surface-2 p-[8%]">
+            <div className="h-1 w-4/5 rounded-full bg-white/45" />
+            <div className="mt-1.5 h-1 w-1/2 rounded-full bg-white/15" />
+          </div>
+        ))}
+      </div>
+    ))}
+    <div className="flex w-[30%] flex-col gap-2.5 rounded-lg border border-brand-mint/25 bg-brand-mint/[0.05] p-[3%]">
+      <div className="flex items-center gap-1.5">
+        <span className="rounded-sm bg-brand-mint px-1 text-[8px] font-bold leading-tight text-ink">MCP</span>
+        <div className="h-1 w-1/2 rounded-full bg-white/35" />
+      </div>
+      {[90, 70, 85, 60, 75, 80].map((w, i) => (
+        <div key={i} className="flex items-center gap-1.5">
+          <Check className="h-2.5 w-2.5 shrink-0 text-brand-mint" strokeWidth={3} />
+          <div className="h-1 rounded-full bg-white/20" style={{ width: `${w}%` }} />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+/** An in-house product we sell to companies: wide card, with what it does and the figures from our own use. */
+const FeaturedProductCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onContact?: () => void }> = ({ project, lang, onContact }) => {
+  const fr = lang === 'fr';
+  const featured = project.featured!;
+  return (
+    <article id={project.id} className="card grid scroll-mt-24 overflow-hidden lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)]">
+      <div className="relative aspect-[16/10] overflow-hidden border-b border-white/[0.07] bg-ink lg:aspect-auto lg:border-b-0 lg:border-r">
+        <WorkspaceMockup />
+        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-ink/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 backdrop-blur">
+          {fr ? 'Fait et utilisé chez nous' : 'Built and used in-house'}
+        </span>
+      </div>
+      <div className="flex flex-col p-6 md:p-8">
+        <p className="text-xs font-medium text-brand-mint/90">{project.badge[lang]}</p>
+        <h3 className="mt-1.5 font-display text-2xl font-semibold text-white md:text-3xl">{project.title[lang]}</h3>
+        <p className="mt-3 text-sm leading-relaxed text-slate-400 md:text-base">{project.description[lang]}</p>
+
+        <dl className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+          {featured.metrics[lang].map((m) => (
+            <div key={m.label} className="min-w-0 rounded-xl border border-white/10 bg-white/[0.03] p-2.5 sm:p-3">
+              <dt className="sr-only">{m.label}</dt>
+              <dd className="font-display text-2xl font-semibold text-white">{m.value}</dd>
+              <dd className="mt-1 break-words text-[10px] leading-snug text-slate-400 sm:text-[11px]">{m.label}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <ul className="mt-6 space-y-2.5">
+          {featured.points[lang].map((point) => (
+            <li key={point} className="flex items-start gap-3 text-sm text-slate-300">
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-mint/15 text-brand-mint">
+                <Check className="h-3 w-3" strokeWidth={3} />
+              </span>
+              {point}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-white/[0.07] pt-5">
+          {onContact && (
+            <button type="button" data-booking="workspace" onClick={onContact} className="btn btn-primary">
+              {fr ? 'Le voir en démo' : 'See a demo'} <ArrowRight className="h-4 w-4" />
+            </button>
+          )}
+          <span className="text-xs text-slate-500">{typeof project.subtitle === 'string' ? project.subtitle : project.subtitle[lang]}</span>
+        </div>
+      </div>
+    </article>
+  );
+};
 
 const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase: (project: ProjectItem) => void }> = ({
   project,
@@ -647,6 +758,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
     (a, b) => Number(a.id === BEFORE_AFTER_ID) - Number(b.id === BEFORE_AFTER_ID),
   );
   const labProjects = PROJECTS_DATA.filter((p) => p.category === 'studio');
+  const featuredProducts = labProjects.filter((p) => p.featured);
+  const otherProducts = labProjects.filter((p) => !p.featured);
 
   return (
     <section id="projets" className={`relative border-t border-white/5 bg-surface/60 ${showIntro ? 'py-20 md:py-28' : 'pb-20 pt-12 md:pb-28 md:pt-16'}`}>
@@ -701,15 +814,29 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
 
         <Reveal className="mb-6 mt-16 flex items-center gap-4">
           <h3 className="font-display text-lg font-semibold text-white md:text-xl">
-            {fr ? 'Le lab 3geeks' : 'The 3geeks lab'}
+            {fr ? 'Nos produits maison' : 'Our in-house products'}
           </h3>
           <span className="h-px flex-1 bg-white/10" />
           <span className="hidden text-sm text-slate-500 sm:block">
-            {fr ? 'Nos propres produits et outils' : 'Our own products and tools'}
+            {fr ? 'Utilisés chez nous, déployables chez vous' : 'Used in-house, ready for your company'}
           </span>
         </Reveal>
 
-        <Reveal className="mb-5">
+        {featuredProducts.map((project) => (
+          <Reveal key={project.id} className="mb-5">
+            <FeaturedProductCard project={project} lang={lang} onContact={onContact} />
+          </Reveal>
+        ))}
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {otherProducts.map((project, i) => (
+            <Reveal key={project.id} delay={(i % 4) * 80}>
+              <LabCard project={project} lang={lang} />
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal className="mt-5">
           <a
             id="17-octobre"
             href="/17-octobre"
@@ -747,14 +874,6 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
             </div>
           </a>
         </Reveal>
-
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {labProjects.map((project, i) => (
-            <Reveal key={project.id} delay={(i % 4) * 80}>
-              <LabCard project={project} lang={lang} />
-            </Reveal>
-          ))}
-        </div>
       </div>
 
       {openCase?.caseStudy && (
