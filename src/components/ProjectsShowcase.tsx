@@ -5,7 +5,8 @@ import { Mark } from './Logo';
 import Reveal from './Reveal';
 
 // Our video game (featured lab card), from the /17-octobre page
-const GAME_COVER = '/images/17-octobre/manif-angers-640.webp';
+const GAME_COVER = '/images/17-octobre/manif-lyon-640.webp';
+const GAME_COVER_LARGE = '/images/17-octobre/manif-lyon.webp';
 // The 3Geeks Studio logo: shown wherever 3geeks' games are (Elias, 21/10/2026)
 const STUDIO_LOGO = '/images/3geeks-studio.svg';
 
@@ -918,7 +919,9 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
             <div className="relative aspect-[16/9] overflow-hidden border-b border-white/[0.07] bg-ink md:aspect-auto md:border-b-0 md:border-r">
               <img
                 src={GAME_COVER}
-                alt={fr ? '17 OCTOBRE : une manif vue d’en haut, la nuit' : '17 OCTOBRE: a street protest seen from above, at night'}
+                srcSet={`${GAME_COVER} 640w, ${GAME_COVER_LARGE} 1600w`}
+                sizes="(min-width: 768px) 700px, 100vw"
+                alt={fr ? '17 OCTOBRE : la Manif à Lyon, la grande roue de la place Bellecour' : '17 OCTOBRE: the Manif in Lyon, by the Ferris wheel on Place Bellecour'}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
               />
