@@ -24,7 +24,9 @@ export type ContentSection =
       items: Array<{ name: string; title: Localized<string>; d: Localized<string>; link?: string }>;
     }
   /** Short list of limits or commitments, as plain checked lines. */
-  | { type: 'checks'; path: Localized<string>; title: Localized<string>; items: Localized<string[]> };
+  | { type: 'checks'; path: Localized<string>; title: Localized<string>; items: Localized<string[]> }
+  /** A few paragraphs (context, result of a case study). */
+  | { type: 'text'; path: Localized<string>; title: Localized<string>; paragraphs: Localized<string[]> };
 
 export interface ContentPage {
   /** Address without trailing slash, e.g. /ia/agents-ia. */
@@ -33,8 +35,12 @@ export interface ContentPage {
   space: 'web' | 'ai';
   /** The page one level up, for the breadcrumb. */
   parent: { href: string; label: Localized<string> };
-  /** schema.org type declared in the page head. */
-  schema: 'Service';
+  /** schema.org data declared in the page head: a service, or a case study (CreativeWork). */
+  schema: 'Service' | 'CaseStudy';
+  /** Screens shown under the intro (files in public/, so this file stays import-free). */
+  hero?: { desktop: string; mobile?: string; alt: Localized<string> };
+  /** Public address of the project itself, for a case study. */
+  live?: string;
   /** Search-result title (about 60 characters) and description (about 155). */
   meta: Localized<{ title: string; description: string }>;
   eyebrow: Localized<string>;
@@ -50,6 +56,7 @@ export interface ContentPage {
 }
 
 const AI_PARENT = { href: '/ia', label: { fr: 'IA pour entreprises', en: 'AI for business' } };
+const WORK_PARENT = { href: '/realisations', label: { fr: 'Réalisations', en: 'Our work' } };
 
 /** The four steps of every AI project (as on /ia), with the first two told for each service. */
 const aiMethod = (audit: Localized<string>, pilot: Localized<string>): ContentSection => ({
@@ -666,6 +673,407 @@ export const CONTENT_PAGES: ContentPage[] = [
     ],
     related: ['/ia/automatisation', '/ia/agents-ia', '/ia/assistant-interne'],
     bookingSource: 'seo-audit-formation',
+    updated: '2026-10-24',
+  },
+  {
+    path: '/realisations/cabinet-dermatologie-tunis',
+    space: 'web',
+    parent: WORK_PARENT,
+    schema: 'CaseStudy',
+    live: 'https://www.amel-jellouli-elloumi.com/',
+    hero: {
+      desktop: '/images/realisations/jellouli.jpg',
+      mobile: '/images/realisations/jellouli-mobile.jpg',
+      alt: { fr: 'Le site du cabinet du Dr Amel Elloumi Jellouli, sur ordinateur et sur mobile', en: 'Dr Amel Elloumi Jellouli’s practice website, on desktop and mobile' },
+    },
+    meta: {
+      fr: {
+        title: 'Étude de cas : site d’un cabinet de dermatologie à Tunis | 3geeks',
+        description: 'Le site bilingue français-arabe du cabinet du Dr Amel Elloumi Jellouli à Tunis : soins détaillés, résultats repris automatiquement de Facebook, rendez-vous en un clic.',
+      },
+      en: {
+        title: 'Case study: a dermatology practice website in Tunis | 3geeks',
+        description: 'The French-Arabic website of Dr Amel Elloumi Jellouli’s practice in Tunis: detailed treatments, results pulled automatically from Facebook, one-click booking.',
+      },
+    },
+    eyebrow: { fr: 'Étude de cas · Santé', en: 'Case study · Healthcare' },
+    h1: {
+      fr: 'Le site d’un cabinet de dermatologie, bilingue et à jour tout seul.',
+      en: 'A dermatology practice website, bilingual and always up to date.',
+    },
+    intro: {
+      fr: 'Le Dr Amel Elloumi Jellouli exerce à la Clinique Les Jasmins, à Tunis. On a refait son site en 24 heures, puis on l’a relié à la page Facebook du cabinet : chaque publication arrive sur le site, sans rien saisir deux fois.',
+      en: 'Dr Amel Elloumi Jellouli practises at Clinique Les Jasmins in Tunis. We rebuilt her website in 24 hours, then connected it to the practice’s Facebook page: every post lands on the site, with nothing typed twice.',
+    },
+    sections: [
+      {
+        type: 'text',
+        path: { fr: 'Le contexte', en: 'Context' },
+        title: { fr: 'Rassurer avant le rendez-vous.', en: 'Reassure before the appointment.' },
+        paragraphs: {
+          fr: [
+            'Ancienne médecin principale des hôpitaux, le Dr Jellouli reçoit des patients francophones comme arabophones. Avant de prendre rendez-vous, ils veulent comprendre les soins proposés et voir des résultats.',
+            'Le cabinet publie déjà régulièrement sur Facebook. Le site devait refléter son exigence médicale, sans demander à l’équipe de tenir deux supports à jour.',
+          ],
+          en: [
+            'A former senior hospital physician, Dr Jellouli sees both French- and Arabic-speaking patients. Before booking, they want to understand the treatments and see results.',
+            'The practice already posts regularly on Facebook. The website had to reflect its medical standards without asking the team to keep two channels up to date.',
+          ],
+        },
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Ce qu’on a livré', en: 'What we shipped' },
+        title: { fr: 'Un site pensé d’abord pour le mobile.', en: 'A website designed mobile-first.' },
+        items: {
+          fr: [
+            'Un site bilingue français et arabe.',
+            'Les pôles d’expertise détaillés : dermatologie, lasers, esthétique, chirurgie.',
+            'Les résultats cliniques repris de la page Facebook du cabinet toutes les 5 minutes, et classés par thème : peau, cheveux et ongles, laser, esthétique, dépistage.',
+            'Les avis Google, la carte et un bouton WhatsApp toujours à portée de main.',
+            'La prise de rendez-vous en un clic : appel, WhatsApp, e-mail, itinéraire.',
+          ],
+          en: [
+            'A bilingual French and Arabic website.',
+            'Detailed specialties: dermatology, lasers, aesthetics, surgery.',
+            'Clinical results pulled from the practice’s Facebook page every 5 minutes, sorted by theme: skin, hair and nails, laser, aesthetics, screening.',
+            'Google reviews, a map and an always-visible WhatsApp button.',
+            'One-tap booking: call, WhatsApp, email, directions.',
+          ],
+        },
+      },
+      {
+        type: 'text',
+        path: { fr: 'Le résultat', en: 'Result' },
+        title: { fr: 'Un site qui se tient à jour tout seul.', en: 'A website that keeps itself up to date.' },
+        paragraphs: {
+          fr: ['Le cabinet publie sur Facebook comme d’habitude, et le site suit. Les patients trouvent au même endroit les soins, les résultats, les avis et le moyen de prendre rendez-vous, en français comme en arabe.'],
+          en: ['The practice posts on Facebook as usual, and the website follows. Patients find the treatments, results, reviews and a way to book in one place, in French or in Arabic.'],
+        },
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Sous le capot', en: 'Under the hood' },
+        title: { fr: 'Comment c’est fait.', en: 'How it is built.' },
+        items: {
+          fr: ['Next.js, hébergé chez Vercel.', 'Les publications lues par l’API Graph de Facebook, puis rafraîchies côté serveur.', 'Un domaine propre au cabinet : amel-jellouli-elloumi.com.'],
+          en: ['Next.js, hosted on Vercel.', 'Posts read through Facebook’s Graph API, then refreshed server-side.', 'The practice’s own domain: amel-jellouli-elloumi.com.'],
+        },
+      },
+    ],
+    related: ['/realisations/express-divorce-usa', '/realisations/two-app-ios'],
+    bookingSource: 'seo-cas-jellouli',
+    updated: '2026-10-24',
+  },
+  {
+    path: '/realisations/express-divorce-usa',
+    space: 'web',
+    parent: WORK_PARENT,
+    schema: 'CaseStudy',
+    live: 'https://www.expressdivorceusa.co',
+    hero: {
+      desktop: '/images/realisations/express-divorce.jpg',
+      mobile: '/images/realisations/express-divorce-mobile.jpg',
+      alt: { fr: 'La plateforme Express Divorce USA, sur ordinateur et sur mobile', en: 'The Express Divorce USA platform, on desktop and mobile' },
+    },
+    meta: {
+      fr: {
+        title: 'Étude de cas : Express Divorce USA, une plateforme SaaS juridique | 3geeks',
+        description: 'Une plateforme SaaS en production aux États-Unis : un questionnaire guidé génère les formulaires de divorce propres à chacun des 50 États.',
+      },
+      en: {
+        title: 'Case study: Express Divorce USA, a legal SaaS platform | 3geeks',
+        description: 'A SaaS platform live in the United States: a guided questionnaire generates the divorce forms specific to each of the 50 states.',
+      },
+    },
+    eyebrow: { fr: 'Étude de cas · Juridique', en: 'Case study · Legal' },
+    h1: {
+      fr: 'Une plateforme juridique qui génère les bons formulaires, dans les 50 États.',
+      en: 'A legal platform that generates the right forms, in all 50 states.',
+    },
+    intro: {
+      fr: 'Express Divorce USA simplifie le divorce à l’amiable aux États-Unis. On a conçu et développé la plateforme : un parcours guidé, rassurant sur un sujet difficile, qui produit les formulaires propres à l’État de chaque utilisateur.',
+      en: 'Express Divorce USA makes uncontested divorce simpler in the United States. We designed and built the platform: a guided journey, reassuring on a difficult topic, that produces the forms specific to each user’s state.',
+    },
+    sections: [
+      {
+        type: 'text',
+        path: { fr: 'Le contexte', en: 'Context' },
+        title: { fr: 'Cinquante États, cinquante dossiers différents.', en: 'Fifty states, fifty different files.' },
+        paragraphs: {
+          fr: ['Chaque État américain a ses propres formulaires et ses propres règles. Et le sujet est sensible : les utilisateurs arrivent souvent inquiets, et doivent comprendre où ils en sont avant de payer.'],
+          en: ['Every US state has its own forms and rules. And the topic is sensitive: users often arrive worried, and need to understand where they stand before paying.'],
+        },
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Ce qu’on a livré', en: 'What we shipped' },
+        title: { fr: 'Du questionnaire au dossier complet.', en: 'From the questionnaire to the full file.' },
+        items: {
+          fr: [
+            'Un questionnaire guidé qui vérifie l’éligibilité.',
+            'La génération automatique des formulaires propres à chaque État.',
+            'Un parcours disponible dans les 50 États.',
+            'Le tarif affiché dès l’accueil, à partir de 299 $.',
+            'Un ton et un design rassurants, avec la sécurité des données au centre.',
+          ],
+          en: [
+            'A guided questionnaire that checks eligibility.',
+            'Automatic generation of each state’s forms.',
+            'A journey available in all 50 states.',
+            'The price shown upfront, starting at $299.',
+            'A reassuring tone and design, with data security at the core.',
+          ],
+        },
+      },
+      {
+        type: 'text',
+        path: { fr: 'Le résultat', en: 'Result' },
+        title: { fr: 'Une plateforme en production.', en: 'A platform in production.' },
+        paragraphs: {
+          fr: ['La plateforme est en ligne aux États-Unis. Selon les chiffres affichés par le client, plus de 500 familles ont été accompagnées.'],
+          en: ['The platform is live in the United States. According to the figures the client displays, more than 500 families have been helped.'],
+        },
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Sous le capot', en: 'Under the hood' },
+        title: { fr: 'Comment c’est fait.', en: 'How it is built.' },
+        items: {
+          fr: ['Next.js, pour un site rapide et bien référencé.', 'Des formulaires générés à partir des réponses du questionnaire.', 'Une conformité pensée État par État.'],
+          en: ['Next.js, for a fast, search-friendly website.', 'Forms generated from the questionnaire answers.', 'Compliance designed state by state.'],
+        },
+      },
+    ],
+    related: ['/ia/documents', '/realisations/cabinet-dermatologie-tunis'],
+    bookingSource: 'seo-cas-express-divorce',
+    updated: '2026-10-24',
+  },
+  {
+    path: '/realisations/two-app-ios',
+    space: 'web',
+    parent: WORK_PARENT,
+    schema: 'CaseStudy',
+    live: 'https://apps.apple.com/fr/app/two/id6758867716',
+    hero: {
+      desktop: '/images/realisations/two.jpg',
+      mobile: '/images/realisations/two-mobile.jpg',
+      alt: { fr: 'L’application iOS Two', en: 'The Two iOS app' },
+    },
+    meta: {
+      fr: {
+        title: 'Étude de cas : Two, une app iOS pour les couples notée 5,0 | 3geeks',
+        description: 'Two, l’app des couples publiée sur l’App Store et notée 5,0 : souvenirs sur une carte, humeur du jour, calendrier partagé et CinéMatch pour choisir un film à deux.',
+      },
+      en: {
+        title: 'Case study: Two, an iOS app for couples rated 5.0 | 3geeks',
+        description: 'Two, the app for couples live on the App Store and rated 5.0: memories on a map, daily mood, a shared calendar and CinéMatch to pick a movie together.',
+      },
+    },
+    eyebrow: { fr: 'Étude de cas · Application mobile', en: 'Case study · Mobile app' },
+    h1: {
+      fr: 'Two, une application iOS pour les couples, notée 5,0 sur l’App Store.',
+      en: 'Two, an iOS app for couples, rated 5.0 on the App Store.',
+    },
+    intro: {
+      fr: 'Two est un espace privé pour partager le quotidien, les souvenirs et les projets à deux. On l’a conçue et développée en natif pour l’iPhone, jusqu’à sa publication sur l’App Store.',
+      en: 'Two is a private space to share everyday life, memories and plans together. We designed and built it natively for iPhone, all the way to its App Store release.',
+    },
+    sections: [
+      {
+        type: 'checks',
+        path: { fr: 'Ce qu’on a livré', en: 'What we shipped' },
+        title: { fr: 'Une app native, publiée sur l’App Store.', en: 'A native app, live on the App Store.' },
+        items: {
+          fr: [
+            'Une app iOS native, publiée sur l’App Store.',
+            'Une carte des souvenirs partagés.',
+            'L’humeur du jour et le compteur de jours ensemble.',
+            'Un calendrier commun pour planifier.',
+            'CinéMatch : trouver un film qui plaît aux deux.',
+          ],
+          en: [
+            'A native iOS app, live on the App Store.',
+            'A shared memory map.',
+            'Daily mood and a days-together counter.',
+            'A shared calendar to plan ahead.',
+            'CinéMatch: find a movie you both like.',
+          ],
+        },
+      },
+      {
+        type: 'text',
+        path: { fr: 'Le résultat', en: 'Result' },
+        title: { fr: 'Notée 5,0 par ses utilisateurs.', en: 'Rated 5.0 by its users.' },
+        paragraphs: {
+          fr: ['L’application est publique sur l’App Store, et ses utilisateurs lui donnent la note de 5,0.'],
+          en: ['The app is public on the App Store, and its users rate it 5.0.'],
+        },
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Sous le capot', en: 'Under the hood' },
+        title: { fr: 'Comment c’est fait.', en: 'How it is built.' },
+        items: {
+          fr: ['Swift, en natif pour iOS.', 'Une publication sur l’App Store, avec sa fiche et sa revue par Apple.'],
+          en: ['Swift, native for iOS.', 'An App Store release, with its listing and Apple’s review.'],
+        },
+      },
+    ],
+    related: ['/realisations/cabinet-dermatologie-tunis', '/realisations/sonorstudio'],
+    bookingSource: 'seo-cas-two',
+    updated: '2026-10-24',
+  },
+  {
+    path: '/realisations/workspace',
+    space: 'web',
+    parent: WORK_PARENT,
+    schema: 'CaseStudy',
+    meta: {
+      fr: {
+        title: 'Étude de cas : Workspace, un pilotage de projets tenu à jour par l’IA | 3geeks',
+        description: 'Notre propre outil de pilotage : projets, tâches, docs et décisions, avec un serveur MCP qui laisse l’IA tenir le tableau de bord à jour. En production chez 3geeks, déployable en entreprise.',
+      },
+      en: {
+        title: 'Case study: Workspace, a project hub kept up to date by AI | 3geeks',
+        description: 'Our own project hub: projects, tasks, docs and decisions, with an MCP server that lets AI keep the dashboard up to date. In production at 3geeks, ready for companies.',
+      },
+    },
+    eyebrow: { fr: 'Étude de cas · Produit maison', en: 'Case study · In-house product' },
+    h1: {
+      fr: 'Workspace : un pilotage de projets que l’IA tient à jour.',
+      en: 'Workspace: a project hub that AI keeps up to date.',
+    },
+    intro: {
+      fr: 'Workspace est l’outil dans lequel 3geeks pilote tous ses projets. Sa particularité : l’IA s’y connecte pendant qu’elle travaille, et met elle-même à jour les tâches, le journal et la documentation. On voit où en est chaque projet sans rien saisir.',
+      en: 'Workspace is the tool where 3geeks runs all its projects. What sets it apart: AI connects to it while it works, and updates the tasks, log and documentation itself. You see where each project stands without typing anything.',
+    },
+    sections: [
+      {
+        type: 'text',
+        path: { fr: 'Le besoin', en: 'The need' },
+        title: { fr: 'Un tableau de bord qui ne prend plus de temps.', en: 'A dashboard that no longer takes time.' },
+        paragraphs: {
+          fr: ['Un tableau de bord n’est utile que s’il est à jour, et le tenir à jour prend du temps. Comme une grande partie de notre développement passe par l’IA, on lui a donné accès à l’outil : c’est elle qui rend compte de ce qu’elle fait.'],
+          en: ['A dashboard is only useful when it is up to date, and keeping it up to date takes time. Since much of our development goes through AI, we gave it access to the tool: it reports on what it does.'],
+        },
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Ce que fait Workspace', en: 'What Workspace does' },
+        title: { fr: 'Projets, tâches, docs et décisions au même endroit.', en: 'Projects, tasks, docs and decisions in one place.' },
+        items: {
+          fr: [
+            'L’IA crée les tâches, les fait avancer et tient le journal de chaque projet, par un serveur MCP.',
+            'Chaque dépôt de code est lu et résumé par une IA hébergée sur nos propres serveurs.',
+            'Chaque action est tracée au nom de la personne, et les décisions attendent la validation d’un humain.',
+            'La documentation, les décisions et les liens de chaque projet au même endroit.',
+          ],
+          en: [
+            'AI creates tasks, moves them forward and keeps each project’s log, through an MCP server.',
+            'Every code repository is read and summarised by an AI hosted on our own servers.',
+            'Every action is logged in the person’s name, and decisions wait for a human to approve them.',
+            'Each project’s documentation, decisions and links in one place.',
+          ],
+        },
+      },
+      {
+        type: 'text',
+        path: { fr: 'Les chiffres', en: 'The figures' },
+        title: { fr: 'En production chez nous.', en: 'In production at 3geeks.' },
+        paragraphs: {
+          fr: ['Comptés dans Workspace le 24 octobre 2026 : 9 projets suivis, plus de 100 tâches depuis sa mise en service le 19 octobre, et 233 tests automatiques (165 unitaires, 68 de bout en bout).', 'On peut l’installer dans votre entreprise, sur vos serveurs ou hébergé par nos soins, et vous le montrer en démo.'],
+          en: ['Counted in Workspace on 24 October 2026: 9 projects tracked, over 100 tasks since it went live on 19 October, and 233 automated tests (165 unit, 68 end-to-end).', 'We can install it in your company, on your servers or hosted by us, and show it to you in a demo.'],
+        },
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Sous le capot', en: 'Under the hood' },
+        title: { fr: 'Comment c’est fait.', en: 'How it is built.' },
+        items: {
+          fr: ['Trois services : un front Angular, Next.js et une API en Python.', 'Un serveur MCP complet, le standard qui relie les assistants IA aux outils.', 'Hébergé sur notre propre infrastructure.'],
+          en: ['Three services: an Angular front end, Next.js and a Python API.', 'A complete MCP server, the standard that connects AI assistants to tools.', 'Hosted on our own infrastructure.'],
+        },
+      },
+    ],
+    related: ['/ia/integration-logiciels', '/ia/automatisation', '/realisations/sonorstudio'],
+    bookingSource: 'seo-cas-workspace',
+    updated: '2026-10-24',
+  },
+  {
+    path: '/realisations/sonorstudio',
+    space: 'web',
+    parent: WORK_PARENT,
+    schema: 'CaseStudy',
+    live: 'https://sonorstudio.vercel.app/',
+    hero: {
+      desktop: '/images/realisations/sonorstudio.jpg',
+      alt: { fr: 'SonorStudio : le channel rack et la playlist dans le navigateur', en: 'SonorStudio: the channel rack and playlist in the browser' },
+    },
+    meta: {
+      fr: {
+        title: 'Étude de cas : SonorStudio, un studio de musique dans le navigateur | 3geeks',
+        description: 'SonorStudio, notre studio de production musicale gratuit dans le navigateur : channel rack, piano roll, playlist et mixer, import des projets .flp et de vos kits.',
+      },
+      en: {
+        title: 'Case study: SonorStudio, a music studio in the browser | 3geeks',
+        description: 'SonorStudio, our free music production studio in the browser: channel rack, piano roll, playlist and mixer, with .flp project and drum kit import.',
+      },
+    },
+    eyebrow: { fr: 'Étude de cas · Produit maison', en: 'Case study · In-house product' },
+    h1: {
+      fr: 'SonorStudio : faire des beats dans le navigateur, sans rien installer.',
+      en: 'SonorStudio: make beats in the browser, with nothing to install.',
+    },
+    intro: {
+      fr: 'Un studio de production musicale qui s’ouvre dans un onglet, avec les fenêtres et les raccourcis que les beatmakers connaissent déjà. On y dépose un projet .flp et son kit, et le beat rejoue tel quel. Gratuit, sans compte, et les sons restent sur votre ordinateur.',
+      en: 'A music production studio that opens in a browser tab, with the windows and shortcuts beatmakers already know. Drop in a .flp project and its kit, and the beat plays back as is. Free, no account, and your sounds stay on your computer.',
+    },
+    sections: [
+      {
+        type: 'checks',
+        path: { fr: 'Ce que fait SonorStudio', en: 'What SonorStudio does' },
+        title: { fr: 'Quatre fenêtres, et les raccourcis habituels.', en: 'Four windows, and the usual shortcuts.' },
+        items: {
+          fr: [
+            'Le channel rack (F6) : une ligne par son, des pas à peindre, et chaque piste envoyée au mixer.',
+            'Le piano roll (F7) : dessiner, déplacer et étirer les notes, avec les autres pistes en transparence.',
+            'La playlist (F5) : arranger les patterns en morceau sur 32 pistes.',
+            'Le mixer (F9) : 24 pistes avec égaliseur, filtre, saturation, compresseur, delay, réverbération et limiteur.',
+            'L’import d’un projet .flp (tempo, pistes, patterns, playlist, mixer) et d’un kit, en dossier ou en .zip.',
+            'L’export en WAV, ou en projet avec ses sons, pour l’ouvrir ailleurs.',
+          ],
+          en: [
+            'The channel rack (F6): one row per sound, steps to paint, and each channel sent to the mixer.',
+            'The piano roll (F7): draw, move and stretch notes, with the other channels as ghost notes.',
+            'The playlist (F5): arrange patterns into a song across 32 tracks.',
+            'The mixer (F9): 24 inserts with EQ, filter, drive, compressor, delay, reverb and limiter.',
+            'Import a .flp project (tempo, channels, patterns, playlist, mixer) and a kit, as a folder or a .zip.',
+            'Export as WAV, or as a project with its sounds, to open it anywhere.',
+          ],
+        },
+      },
+      {
+        type: 'text',
+        path: { fr: 'Le résultat', en: 'Result' },
+        title: { fr: 'En bêta ouverte, gratuite.', en: 'In open beta, for free.' },
+        paragraphs: {
+          fr: ['SonorStudio est en ligne en bêta ouverte : certaines choses manquent encore, rien n’est verrouillé. La démo rejoue un beat de UK drill à 148 BPM, ouvert depuis un vrai fichier de projet, avec le kit gratuit GASSED UK Drill de Producergrind.'],
+          en: ['SonorStudio is live in open beta: some things are still missing, nothing is locked. The demo plays a 148 BPM UK drill beat, opened from a real project file, with Producergrind’s free GASSED UK Drill kit.'],
+        },
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Sous le capot', en: 'Under the hood' },
+        title: { fr: 'Comment c’est fait.', en: 'How it is built.' },
+        items: {
+          fr: ['React 19 et TypeScript, avec Vite.', 'Le son produit par la Web Audio API du navigateur, sans serveur ni bibliothèque audio externe.', 'Un état global avec annuler et rétablir (Zustand et Immer).'],
+          en: ['React 19 and TypeScript, with Vite.', 'Sound produced by the browser’s Web Audio API, with no server and no external audio library.', 'A global state with undo and redo (Zustand and Immer).'],
+        },
+      },
+    ],
+    related: ['/realisations/workspace', '/realisations/two-app-ios'],
+    bookingSource: 'seo-cas-sonorstudio',
     updated: '2026-10-24',
   },
 ];

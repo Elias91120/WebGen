@@ -59,10 +59,12 @@ interface SiteLayoutProps {
   space?: 'web' | 'ai';
   /** Title and description of a content page, per language. */
   meta?: Record<Lang, { title: string; description: string }>;
+  /** Main page whose nav link stays lit (a case study lights « Réalisations »). */
+  current?: PageId;
   children: (ctx: PageContext) => React.ReactNode;
 }
 
-const SiteLayout: React.FC<SiteLayoutProps> = ({ page, space = 'web', meta: pageMeta, children }) => {
+const SiteLayout: React.FC<SiteLayoutProps> = ({ page, space = 'web', meta: pageMeta, current, children }) => {
   const [lang, setLang] = useState<Lang>(initialLang);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -127,7 +129,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, space = 'web', meta: page
         key: link.key,
         label: nav[link.key],
         href: link.href,
-        active: link.page === page || (page === 'game' && link.page === 'work'), // (the game lives in the work)
+        active: link.page === (current ?? page) || (page === 'game' && link.page === 'work'), // (the game lives in the work)
       }));
   const cta = isAi ? ai.nav.cta : nav.cta;
 

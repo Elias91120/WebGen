@@ -60,6 +60,8 @@ export interface ProjectItem {
     points: Localized<string[]>;
   };
   /** Flagship public projects get a short case study (context, what we shipped, result). */
+  /** Its full case-study page (src/content/pages.ts), when it has one. */
+  page?: string;
   caseStudy?: {
     mobile: string;
     context: Localized<string>;
@@ -72,6 +74,7 @@ export interface ProjectItem {
 export const PROJECTS_DATA: ProjectItem[] = [
   {
     id: 'jellouli',
+    page: '/realisations/cabinet-dermatologie-tunis',
     category: 'client',
     title: { fr: 'Cabinet Dr Amel Elloumi Jellouli', en: "Dr Amel Elloumi Jellouli's practice" },
     subtitle: 'amel-jellouli-elloumi.com',
@@ -101,6 +104,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
   },
   {
     id: 'express-divorce',
+    page: '/realisations/express-divorce-usa',
     category: 'client',
     title: { fr: 'Express Divorce USA', en: 'Express Divorce USA' },
     subtitle: 'expressdivorceusa.co',
@@ -143,6 +147,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
   },
   {
     id: 'two-app',
+    page: '/realisations/two-app-ios',
     category: 'client',
     title: { fr: 'Two', en: 'Two' },
     subtitle: { fr: 'App Store · 5,0 ★', en: 'App Store · 5.0 ★' },
@@ -200,6 +205,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
   },
   {
     id: 'workspace',
+    page: '/realisations/workspace',
     category: 'studio',
     title: { fr: 'Workspace', en: 'Workspace' },
     subtitle: { fr: 'En production chez nous · démo sur demande', en: 'In production at 3geeks · demo on request' },
@@ -223,6 +229,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
   },
   {
     id: 'sonorstudio',
+    page: '/realisations/sonorstudio',
     category: 'studio',
     title: { fr: 'SonorStudio', en: 'SonorStudio' },
     subtitle: 'sonorstudio.vercel.app',
@@ -360,14 +367,17 @@ const WorkspaceMockup: React.FC = () => (
 
 /** A public in-house product (SonorStudio): wide card with its cover, opening the live product. */
 const WideProductCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ project, lang }) => (
-  <a
+  <article
     id={project.id}
-    href={project.link}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="card group grid scroll-mt-24 overflow-hidden hover:-translate-y-1 hover:bg-surface-2 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
+    className="card group grid scroll-mt-24 overflow-hidden hover:bg-surface-2 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
   >
-    <div className="relative aspect-[16/10] overflow-hidden border-b border-white/[0.07] bg-ink md:aspect-auto md:border-b-0 md:border-r">
+    <a
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative block aspect-[16/10] overflow-hidden border-b border-white/[0.07] bg-ink md:aspect-auto md:border-b-0 md:border-r"
+      aria-label={project.title[lang]}
+    >
       <img
         src={project.cover}
         alt={project.title[lang]}
@@ -377,7 +387,7 @@ const WideProductCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = (
       <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-ink/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 backdrop-blur">
         {lang === 'fr' ? 'En ligne · gratuit' : 'Live · free'}
       </span>
-    </div>
+    </a>
     <div className="flex flex-col p-6 md:p-8">
       <p className="text-xs font-medium text-brand-mint/90">{project.badge[lang]}</p>
       <h3 className="mt-1.5 font-display text-2xl font-semibold text-white">{project.title[lang]}</h3>
@@ -389,11 +399,18 @@ const WideProductCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = (
           </span>
         ))}
       </div>
-      <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors group-hover:text-white">
-        {project.wide!.cta[lang]} <ArrowUpRight className="h-4 w-4" />
-      </span>
+      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+        <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors hover:text-white">
+          {project.wide!.cta[lang]} <ArrowUpRight className="h-4 w-4" />
+        </a>
+        {project.page && (
+          <a href={project.page} className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-slate-300 transition-colors hover:text-white">
+            {lang === 'fr' ? 'Étude de cas' : 'Case study'} <ArrowRight className="h-4 w-4" />
+          </a>
+        )}
+      </div>
     </div>
-  </a>
+  </article>
 );
 
 /** An in-house product we sell to companies: wide card, with what it does and the figures from our own use. */
@@ -440,7 +457,12 @@ const FeaturedProductCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; o
               {fr ? 'Le voir en démo' : 'See a demo'} <ArrowRight className="h-4 w-4" />
             </button>
           )}
-          <span className="text-xs text-slate-500">{typeof project.subtitle === 'string' ? project.subtitle : project.subtitle[lang]}</span>
+          {project.page && (
+            <a href={project.page} className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors hover:text-white">
+              {fr ? 'Étude de cas' : 'Case study'} <ArrowRight className="h-4 w-4" />
+            </a>
+          )}
+          <span className="text-xs text-slate-400">{typeof project.subtitle === 'string' ? project.subtitle : project.subtitle[lang]}</span>
         </div>
       </div>
     </article>
@@ -510,7 +532,11 @@ const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase
               <Lock className="h-3.5 w-3.5" /> {fr ? 'Projet privé · pas de lien public' : 'Private project · no public link'}
             </span>
           )}
-          {project.caseStudy && (
+          {project.page ? (
+            <a href={project.page} className="-my-2 inline-flex min-h-10 shrink-0 items-center gap-1 font-semibold text-brand-mint transition-colors hover:text-white">
+              {fr ? 'Étude de cas' : 'Case study'} <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          ) : project.caseStudy && (
             <button type="button" onClick={() => onOpenCase(project)} className="-my-2 inline-flex min-h-10 shrink-0 items-center gap-1 font-semibold text-brand-mint transition-colors hover:text-white">
               {fr ? 'Étude de cas' : 'Case study'} <ArrowRight className="h-3.5 w-3.5" />
             </button>
@@ -618,6 +644,11 @@ const CaseStudyModal: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onClos
                 {fr ? 'Un projet similaire ? Parlons-en' : 'A similar project? Let’s talk'} <ArrowRight className="h-4 w-4" />
               </button>
             )}
+            {project.page && (
+              <a href={project.page} className="btn btn-ghost">
+                {fr ? 'Lire l’étude de cas complète' : 'Read the full case study'} <ArrowRight className="h-4 w-4" />
+              </a>
+            )}
             {project.link && (
               <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
                 {fr ? 'Voir le projet en ligne' : 'See it live'} <ArrowUpRight className="h-4 w-4" />
@@ -715,9 +746,9 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
         )}
 
         <Reveal className="mb-6 flex items-center gap-4">
-          <h3 className="font-display text-lg font-semibold text-white md:text-xl">
+          <h2 className="font-display text-lg font-semibold text-white md:text-xl">
             {fr ? 'Projets clients' : 'Client projects'}
-          </h3>
+          </h2>
           <span className="h-px flex-1 bg-white/10" />
           <span className="hidden text-sm text-slate-500 sm:block">
             {fr ? 'Conçus et livrés pour nos clients' : 'Designed and delivered for our clients'}
@@ -759,9 +790,9 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
         )}
 
         <Reveal className="mb-6 mt-16 flex items-center gap-4">
-          <h3 className="font-display text-lg font-semibold text-white md:text-xl">
+          <h2 className="font-display text-lg font-semibold text-white md:text-xl">
             {fr ? 'Nos produits maison' : 'Our in-house products'}
-          </h3>
+          </h2>
           <span className="h-px flex-1 bg-white/10" />
           <span className="hidden text-sm text-slate-500 sm:block">
             {fr ? 'Sortis de chez nous : à essayer, ou à déployer chez vous' : 'Made at 3geeks: try them, or run them in your company'}

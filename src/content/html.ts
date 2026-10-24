@@ -13,23 +13,39 @@ const esc = (text: string) =>
 function jsonLd(page: ContentPage): string {
   const url = `${SITE}${page.path}`;
   const fr = page.meta.fr;
+  const organization = {
+    '@type': 'Organization',
+    name: '3geeks',
+    url: SITE,
+    logo: `${SITE}/favicon.png`,
+    contactPoint: { '@type': 'ContactPoint', email: 'contact@3geeks.fr', contactType: 'sales' },
+  };
+  const main =
+    page.schema === 'CaseStudy'
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'CreativeWork',
+          name: page.h1.fr,
+          headline: page.eyebrow.fr,
+          description: fr.description,
+          url,
+          inLanguage: 'fr',
+          creator: organization,
+          ...(page.hero ? { image: `${SITE}${page.hero.desktop}` } : {}),
+          ...(page.live ? { sameAs: page.live } : {}),
+        }
+      : {
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          name: page.h1.fr,
+          description: fr.description,
+          url,
+          areaServed: 'FR',
+          availableLanguage: ['French', 'English'],
+          provider: organization,
+        };
   const data = [
-    {
-      '@context': 'https://schema.org',
-      '@type': page.schema,
-      name: page.h1.fr,
-      description: fr.description,
-      url,
-      areaServed: 'FR',
-      availableLanguage: ['French', 'English'],
-      provider: {
-        '@type': 'Organization',
-        name: '3geeks',
-        url: SITE,
-        logo: `${SITE}/favicon.png`,
-        contactPoint: { '@type': 'ContactPoint', email: 'contact@3geeks.fr', contactType: 'sales' },
-      },
-    },
+    main,
     {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -47,6 +63,7 @@ function jsonLd(page: ContentPage): string {
 export function contentPageHtml(page: ContentPage): string {
   const url = `${SITE}${page.path}`;
   const { title, description } = page.meta.fr;
+  const image = page.hero ? `${SITE}${page.hero.desktop}` : `${SITE}/og-cover.png`;
   return `<!DOCTYPE html>
 <!-- Generated from src/content/pages.ts by vite.config.ts: edit the page there, not here. -->
 <html lang="fr">
@@ -68,14 +85,12 @@ export function contentPageHtml(page: ContentPage): string {
     <meta property="og:title" content="${esc(title)}" />
     <meta property="og:description" content="${esc(description)}" />
     <meta property="og:url" content="${url}" />
-    <meta property="og:image" content="${SITE}/og-cover.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image" content="${image}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${esc(title)}" />
     <meta name="twitter:description" content="${esc(description)}" />
-    <meta name="twitter:image" content="${SITE}/og-cover.png" />
+    <meta name="twitter:image" content="${image}" />
 
     <script type="application/ld+json">
 ${jsonLd(page)}

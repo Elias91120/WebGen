@@ -1,6 +1,7 @@
 /**
- * A content page (src/content/pages.ts) in the site's own design: breadcrumb, intro, sections, related
- * pages and the free-call block. Same cards, headings and booking as the rest of the site.
+ * A content page (src/content/pages.ts) in the site's own design: breadcrumb, intro, screens, sections,
+ * related pages and the free-call block. Same cards, headings and booking as the rest of the site.
+ * AI pages (space "ai") talk about an audit; case studies (space "web") about a similar project.
  */
 import { ArrowRight, ArrowUpRight, Check, ChevronRight, Mail } from 'lucide-react';
 import React from 'react';
@@ -14,24 +15,42 @@ const UI = {
   fr: {
     home: 'Accueil',
     breadcrumb: 'Fil d’Ariane',
-    book: 'Réserver un audit gratuit',
-    back: 'Voir tous nos services IA',
     open: 'Voir',
     related: 'À lire aussi',
-    contactTitle: 'Parlons de votre cas.',
-    contactSub: 'En 30 minutes, on regarde vos outils et vos demandes, et on vous dit ce qui est automatisable. Devis gratuit, rien à payer d’avance.',
+    live: 'Voir le projet en ligne',
     email: 'Ou écrivez-nous :',
+    ai: {
+      book: 'Réserver un audit gratuit',
+      back: 'Voir tous nos services IA',
+      contactTitle: 'Parlons de votre cas.',
+      contactSub: 'En 30 minutes, on regarde vos outils et vos demandes, et on vous dit ce qui est automatisable. Devis gratuit, rien à payer d’avance.',
+    },
+    web: {
+      book: 'Réserver un appel gratuit',
+      back: 'Voir toutes nos réalisations',
+      contactTitle: 'Un projet similaire ? Parlons-en.',
+      contactSub: 'En 30 minutes, on comprend votre besoin et on vous envoie un devis gratuit. Rien à payer d’avance : vous payez une fois satisfait.',
+    },
   },
   en: {
     home: 'Home',
     breadcrumb: 'Breadcrumb',
-    book: 'Book a free audit',
-    back: 'See all our AI services',
     open: 'See it',
     related: 'Read also',
-    contactTitle: 'Let’s talk about your case.',
-    contactSub: 'In 30 minutes, we look at your tools and requests, and tell you what can be automated. Free quote, nothing to pay upfront.',
+    live: 'See it live',
     email: 'Or write to us:',
+    ai: {
+      book: 'Book a free audit',
+      back: 'See all our AI services',
+      contactTitle: 'Let’s talk about your case.',
+      contactSub: 'In 30 minutes, we look at your tools and requests, and tell you what can be automated. Free quote, nothing to pay upfront.',
+    },
+    web: {
+      book: 'Book a free call',
+      back: 'See all our work',
+      contactTitle: 'A similar project? Let’s talk.',
+      contactSub: 'In 30 minutes, we understand your need and send you a free quote. Nothing to pay upfront: you pay once satisfied.',
+    },
   },
 } as const;
 
@@ -116,6 +135,14 @@ const Section: React.FC<{ section: ContentSection; lang: Lang; index: number }> 
           </div>
         )}
 
+        {section.type === 'text' && (
+          <Reveal className="mt-8 max-w-3xl space-y-5">
+            {section.paragraphs[lang].map((paragraph) => (
+              <p key={paragraph} className="text-base leading-relaxed text-slate-300 md:text-lg">{paragraph}</p>
+            ))}
+          </Reveal>
+        )}
+
         {section.type === 'checks' && (
           <Reveal className="mt-10 max-w-3xl">
             <ul className="space-y-4">
@@ -134,11 +161,12 @@ const Section: React.FC<{ section: ContentSection; lang: Lang; index: number }> 
 };
 
 const ContentPageView: React.FC<{ page: ContentPage }> = ({ page }) => (
-  <SiteLayout page="content" space={page.space} meta={page.meta}>
+  <SiteLayout page="content" space={page.space} meta={page.meta} current={page.parent.href === '/realisations' ? 'work' : undefined}>
     {({ lang, book }) => {
       const ui = UI[lang];
+      const side = UI[lang][page.space];
       const related = page.related.map((path) => CONTENT_PAGES.find((p) => p.path === path)).filter((p): p is ContentPage => Boolean(p));
-      const homeHref = page.space === 'ai' ? '/ia' : '/';
+      const homeHref = page.space === 'ai' ? '/ia' : page.parent.href;
       return (
         <>
           <section className="relative overflow-hidden border-b border-white/5 pb-14 pt-28 md:pb-20 md:pt-40">
@@ -171,12 +199,33 @@ const ContentPageView: React.FC<{ page: ContentPage }> = ({ page }) => (
               </p>
               <div className="hero-rise mt-9 flex flex-col gap-3 sm:flex-row" style={{ ['--rise-delay' as string]: '300ms' }}>
                 <button type="button" data-booking={page.bookingSource} onClick={() => book(page.bookingSource)} className="btn btn-primary">
-                  {ui.book} <ArrowRight className="h-4 w-4" />
+                  {side.book} <ArrowRight className="h-4 w-4" />
                 </button>
-                <a href={homeHref} className="btn btn-ghost">{ui.back}</a>
+                {page.live ? (
+                  <a href={page.live} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
+                    {ui.live} <ArrowUpRight className="h-4 w-4" />
+                  </a>
+                ) : (
+                  <a href={homeHref} className="btn btn-ghost">{side.back}</a>
+                )}
               </div>
             </div>
           </section>
+
+          {page.hero && (
+            <section className="relative border-b border-white/5 bg-ink">
+              <div className="mx-auto grid max-w-7xl items-end gap-6 px-5 py-10 sm:px-8 md:grid-cols-[minmax(0,1fr)_auto] md:py-14">
+                <div className="overflow-hidden rounded-2xl border border-white/10 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)]">
+                  <img src={page.hero.desktop} alt={page.hero.alt[lang]} width={1200} height={750} className="block aspect-[16/10] w-full object-cover object-left-top" />
+                </div>
+                {page.hero.mobile && (
+                  <div className="mx-auto w-44 overflow-hidden rounded-[1.6rem] border-4 border-white/10 shadow-xl md:w-52">
+                    <img src={page.hero.mobile} alt="" width={468} height={797} loading="lazy" className="block aspect-[468/797] w-full object-cover object-top" />
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
 
           {page.sections.map((section, i) => (
             <Section key={`${section.type}-${i}`} section={section} lang={lang} index={i} />
@@ -205,8 +254,8 @@ const ContentPageView: React.FC<{ page: ContentPage }> = ({ page }) => (
             <div className="mx-auto max-w-7xl px-5 sm:px-8">
               <Reveal className="card-featured relative flex flex-col gap-6 overflow-hidden p-7 md:flex-row md:items-center md:justify-between md:p-10">
                 <div className="max-w-2xl">
-                  <h2 className="font-display text-2xl font-semibold text-white md:text-4xl">{ui.contactTitle}</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-400 md:text-base">{ui.contactSub}</p>
+                  <h2 className="font-display text-2xl font-semibold text-white md:text-4xl">{side.contactTitle}</h2>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-400 md:text-base">{side.contactSub}</p>
                   {/* The address stays alone in its link: Cloudflare's e-mail obfuscation rewrites it in the HTML and
                       restores it with a script, which only gives back the same markup (no hydration error) that way. */}
                   <p className="mt-4 inline-flex min-h-10 items-center gap-2 text-sm text-slate-400">
@@ -216,7 +265,7 @@ const ContentPageView: React.FC<{ page: ContentPage }> = ({ page }) => (
                   </p>
                 </div>
                 <button type="button" data-booking={`${page.bookingSource}-bas`} onClick={() => book(`${page.bookingSource}-bas`)} className="btn btn-primary shrink-0">
-                  {ui.book} <ArrowRight className="h-4 w-4" />
+                  {side.book} <ArrowRight className="h-4 w-4" />
                 </button>
               </Reveal>
             </div>

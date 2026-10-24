@@ -236,7 +236,7 @@ export const HowItWorks: React.FC<Props> = ({ t, book }) => {
 };
 
 const FEATURED = ['jellouli', 'express-divorce', 'two-app'] as const;
-// The Jellouli card opens the before/after at the top of the work page.
+// Each card opens its case study page; without one, the project on the work page.
 const FEATURED_ANCHOR: Record<string, string> = { jellouli: 'avant-apres' };
 
 export const FeaturedWork: React.FC<Props> = ({ lang, t }) => {
@@ -256,7 +256,7 @@ export const FeaturedWork: React.FC<Props> = ({ lang, t }) => {
         <div className="no-scrollbar -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0">
           {projects.map((p, i) => (
             <Reveal key={p.id} delay={i * 90} className="w-[82%] shrink-0 snap-start md:w-auto">
-              <a href={`/realisations#${FEATURED_ANCHOR[p.id] ?? p.id}`} className="card group block h-full overflow-hidden hover:bg-surface-2">
+              <a href={p.page ?? `/realisations#${FEATURED_ANCHOR[p.id] ?? p.id}`} className="card group block h-full overflow-hidden hover:bg-surface-2">
                 <div className="relative aspect-[16/10] overflow-hidden border-b border-white/[0.07] bg-ink">
                   {p.cover && (
                     <img
@@ -444,7 +444,7 @@ export const Reviews: React.FC<Props> = ({ t }) => {
           {reviews.map((review, i) => (
             <Reveal key={review.name} delay={i * 90}>
               <figure className="card flex h-full flex-col p-7">
-                <div className="flex gap-1 text-brand-lime" aria-label="5/5">
+                <div className="flex gap-1 text-brand-lime" role="img" aria-label="5/5">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <Star key={n} className="h-4 w-4 fill-current" />
                   ))}
