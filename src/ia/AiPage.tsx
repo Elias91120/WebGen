@@ -36,6 +36,7 @@ import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
 import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
 import { detectLang, initialLang, persistLang } from '../lib/lang';
+import { CONTENT_PAGES } from '../content/pages';
 import AutomationExplorer from './AutomationExplorer';
 import { aiCopy } from './copy';
 import AiConveyor from './AiConveyor';
@@ -348,6 +349,15 @@ const AiPage: React.FC = () => {
                 );
               })}
             </div>
+
+            <Reveal className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-sm">
+              <span className="text-slate-400">{t.services.pages}</span>
+              {CONTENT_PAGES.filter((page) => page.space === 'ai').map((page) => (
+                <a key={page.path} href={page.path} className="inline-flex min-h-10 items-center font-medium text-brand-mint transition-colors hover:text-white">
+                  {page.eyebrow[lang]}
+                </a>
+              ))}
+            </Reveal>
           </div>
         </section>
 

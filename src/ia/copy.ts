@@ -64,6 +64,8 @@ export interface AiCopy {
     /** `href`: the service's own page (src/content/pages.ts), when it has one. */
     items: Array<{ title: string; desc: string; bullets: string[]; href?: string }>;
     more: string;
+    /** Row under the cards: every AI service page (src/content/pages.ts). */
+    pages: string;
   };
   proof: {
     path: string;
@@ -83,9 +85,9 @@ export interface AiCopy {
 export const aiCopy: Record<'fr' | 'en', AiCopy> = {
   fr: {
     meta: {
-      title: '3geeks — Intégration IA et automatisation pour entreprises',
+      title: 'Solution IA pour entreprise : intégration, agents et automatisation | 3geeks',
       description:
-        'Intégrez l’IA dans vos logiciels existants (ERP, CRM, site, logistique) : agents IA, automatisation des opérations, traitement de documents, applications associées. Audit gratuit de 30 min, rien à payer d’avance.',
+        'Intégrez l’IA dans vos logiciels existants : agents IA, automatisation des processus, lecture de documents, assistant interne. Modèles hébergés en France, audit gratuit de 30 min.',
     },
     nav: {
       demo: 'Démo',
@@ -277,16 +279,19 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
       title: 'Six façons concrètes d’utiliser l’IA dans votre entreprise.',
       subtitle: 'Chaque service part de vos outils et de vos données actuels. Pas de plateforme à remplacer, pas d’usine à gaz.',
       more: 'En savoir plus',
+      pages: 'Chaque besoin a sa page :',
       items: [
         {
           title: 'Intégration IA dans vos logiciels',
           desc: 'On branche l’IA dans votre ERP, CRM, back-office ou logiciel métier via leurs API : un assistant dans l’outil, des réponses tirées de vos documents, des champs remplis automatiquement.',
           bullets: ['Assistant interne qui répond à partir de vos documents', 'Connexion à l’existant : API, exports, bases de données', 'Rédaction et pré-remplissage automatiques'],
+          href: '/ia/integration-logiciels',
         },
         {
           title: 'Automatisation logistique & opérations',
           desc: 'Commandes, bons de livraison, factures, stocks, planning : on automatise les étapes qui prennent du temps à vos équipes chaque jour.',
           bullets: ['Lecture automatique des bons de livraison, factures et commandes', 'Alertes stock, retards et anomalies en temps réel', 'Planning et tournées assistés'],
+          href: '/ia/automatisation',
         },
         {
           title: 'Agents IA : chat, e-mail, téléphone',
@@ -298,6 +303,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           title: 'Documents & données',
           desc: 'Extraction d’informations dans vos contrats, factures et e-mails, classement automatique, tableaux de bord et prévisions à partir de vos données.',
           bullets: ['Extraction et classement automatiques', 'Tableaux de bord et reporting', 'Prévisions : ventes, stocks, charge'],
+          href: '/ia/documents',
         },
         {
           title: 'Applications associées',
@@ -308,6 +314,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           title: 'Cadrage & formation',
           desc: 'On identifie les cas d’usage rentables, on fixe les règles de confidentialité des données et on forme vos équipes à utiliser l’IA au quotidien.',
           bullets: ['Audit des cas d’usage et priorisation', 'Règles de confidentialité et droits d’accès', 'Formation des équipes : prompts, bons usages'],
+          href: '/ia/audit-formation',
         },
       ],
     },
@@ -400,9 +407,9 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
   },
   en: {
     meta: {
-      title: '3geeks — AI integration and automation for businesses',
+      title: 'AI solutions for business: integration, agents and automation | 3geeks',
       description:
-        'Bring AI into the software you already use (ERP, CRM, website, logistics): AI agents, operations automation, document processing, companion apps. Free 30-minute audit, nothing to pay upfront.',
+        'Put AI inside your existing software: AI agents, process automation, document reading, internal assistant. Models hosted in France, free 30-min audit.',
     },
     nav: {
       demo: 'Demo',
@@ -594,16 +601,19 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
       title: 'Six concrete ways to use AI in your business.',
       subtitle: 'Every service starts from your current tools and data. No platform to replace, no over-engineering.',
       more: 'Learn more',
+      pages: 'Each need has its own page:',
       items: [
         {
           title: 'AI integration into your software',
           desc: 'We plug AI into your ERP, CRM, back office or business software through their APIs: an assistant inside the tool, answers drawn from your documents, fields filled automatically.',
           bullets: ['Internal assistant answering from your documents', 'Connected to what exists: APIs, exports, databases', 'Automatic drafting and pre-filling'],
+          href: '/ia/integration-logiciels',
         },
         {
           title: 'Logistics & operations automation',
           desc: 'Orders, delivery notes, invoices, inventory, planning: we automate the steps that cost your teams time every day.',
           bullets: ['Automatic reading of delivery notes, invoices and orders', 'Real-time stock, delay and anomaly alerts', 'Assisted planning and routing'],
+          href: '/ia/automatisation',
         },
         {
           title: 'AI agents: chat, email, phone',
@@ -615,6 +625,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           title: 'Documents & data',
           desc: 'Information extraction from your contracts, invoices and emails, automatic filing, dashboards and forecasts built on your data.',
           bullets: ['Automatic extraction and filing', 'Dashboards and reporting', 'Forecasts: sales, stock, workload'],
+          href: '/ia/documents',
         },
         {
           title: 'Companion apps',
@@ -625,6 +636,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           title: 'Scoping & training',
           desc: 'We identify the profitable use cases, set the data privacy rules and train your teams to use AI every day.',
           bullets: ['Use-case audit and prioritization', 'Privacy rules and access rights', 'Team training: prompts, good practice'],
+          href: '/ia/audit-formation',
         },
       ],
     },
