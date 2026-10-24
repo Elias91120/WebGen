@@ -3,7 +3,16 @@ import { ArrowRight, ArrowUpRight, Check, GraduationCap, Lock, Send, X } from 'l
 import BeforeAfter from './BeforeAfter/BeforeAfter';
 import { Mark } from './Logo';
 import Reveal from './Reveal';
+import LoopVideo, { type LoopVideoSources } from './LoopVideo';
 import WorkspaceLoop from './WorkspaceLoop';
+
+// SonorStudio's demo from its landing page, muted and looped (public/videos/sonorstudio, from Stud.io/public/demo).
+// Bump the version when a file changes: the CDN keeps the old copy otherwise.
+const SONOR_VIDEO: LoopVideoSources = {
+  poster: '/videos/sonorstudio/poster.jpg?v=1',
+  wide: [{ src: '/videos/sonorstudio/demo.mp4?v=1', type: 'video/mp4' }],
+  narrow: '/videos/sonorstudio/demo-720.mp4?v=1',
+};
 
 // Our video game (featured lab card), from the /17-octobre page
 const GAME_COVER = '/images/17-octobre/manif-lyon-640.webp';
@@ -54,7 +63,7 @@ export interface ProjectItem {
   icon?: React.ElementType;
   useStudioMark?: boolean;
   /** Public in-house product with a cover and a link: shown wide, like the game. */
-  wide?: { cta: Localized<string> };
+  wide?: { cta: Localized<string>; video?: LoopVideoSources };
   /** In-house product we sell to companies: shown wide, with figures measured on our own use. */
   featured?: {
     metrics: Localized<{ value: string; label: string }[]>;
@@ -242,7 +251,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     tags: { fr: ['Web Audio','Import .flp','Gratuit'], en: ['Web Audio','.flp import','Free'] },
     link: 'https://sonorstudio.vercel.app/',
     cover: sonorStudioCover,
-    wide: { cta: { fr: 'Essayer la bêta', en: 'Try the beta' } },
+    wide: { cta: { fr: 'Essayer la bêta', en: 'Try the beta' }, video: SONOR_VIDEO },
   },
   {
     id: '3geeks-infra',
@@ -344,15 +353,19 @@ const WideProductCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = (
       href={project.link}
       target="_blank"
       rel="noopener noreferrer"
-      className="relative block aspect-[16/10] overflow-hidden border-b border-white/[0.07] bg-ink md:aspect-auto md:border-b-0 md:border-r"
+      className={`relative block overflow-hidden border-b border-white/[0.07] bg-ink md:aspect-auto md:border-b-0 md:border-r ${project.wide?.video ? 'aspect-video' : 'aspect-[16/10]'}`}
       aria-label={project.title[lang]}
     >
-      <img
-        src={project.cover}
-        alt={project.title[lang]}
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover object-left-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-      />
+      {project.wide?.video ? (
+        <LoopVideo sources={project.wide.video} />
+      ) : (
+        <img
+          src={project.cover}
+          alt={project.title[lang]}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover object-left-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+        />
+      )}
       <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-ink/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 backdrop-blur">
         {lang === 'fr' ? 'En ligne · gratuit' : 'Live · free'}
       </span>
