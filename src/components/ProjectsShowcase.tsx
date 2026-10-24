@@ -12,7 +12,6 @@ const STUDIO_LOGO = '/images/3geeks-studio.svg';
 
 // Small logos (lab cards)
 import promptHubImg from '../assets/images/prompt-hub.png';
-import promptOptimImg from '../assets/images/prompt-optim.png';
 
 // Covers: above-the-fold captures of the live sites
 import jelloulCover from '../assets/images/projects/jellouli.jpg';
@@ -322,20 +321,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
     tags: { fr: ['Multi-agent','Serveur MCP','Bêta'], en: ['Multi-agent','MCP server','Beta'] },
     link: 'https://prompt-hub.3geeks.fr/',
     image: promptHubImg
-  },
-  {
-    id: 'prompt-optim',
-    category: 'studio',
-    title: { fr: 'PromptOptim', en: 'PromptOptim' },
-    subtitle: 'prompt-optim.3geeks.fr',
-    badge: { fr: 'Green IT & sobriété numérique', en: 'Green IT & low-impact computing' },
-    description: {
-      fr: 'Optimiseur de prompts IA qui réduit la consommation de tokens, estime l’impact CO2 par requête et encourage une utilisation sobre et souveraine de l’IA.',
-      en: 'AI prompt optimization tool designed to reduce token usage, estimate the CO2 impact of each request and encourage frugal AI use.'
-    },
-    tags: { fr: ['Green IT','Sobriété IA','Outil ouvert'], en: ['Green IT','Frugal AI','Open tool'] },
-    link: 'https://prompt-optim.3geeks.fr/',
-    image: promptOptimImg
   },
   {
     id: 'efrei-skill-hub',
@@ -902,9 +887,9 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
           </Reveal>
         ))}
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {otherProducts.map((project, i) => (
-            <Reveal key={project.id} delay={(i % 4) * 80}>
+            <Reveal key={project.id} delay={(i % 3) * 80}>
               <LabCard project={project} lang={lang} />
             </Reveal>
           ))}

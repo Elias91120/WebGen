@@ -52,10 +52,14 @@ const Meter: React.FC<{ level: AutomationLevel; delay: number; animate: boolean;
 
 const AutomationExplorer: React.FC<{ copy: AiCopy['explorer']; onBook: () => void }> = ({ copy, onBook }) => {
   // /ia?service=2#vos-process opens on that department (links from the main page).
-  const [dept, setDept] = useState(() => {
-    const wanted = Number(new URLSearchParams(window.location.search).get('service'));
-    return Number.isInteger(wanted) && wanted >= 0 && wanted < copy.departments.length ? wanted : 0;
-  });
+  // Read after the first render: the page is prerendered without a query string.
+  const [dept, setDept] = useState(0);
+  useEffect(() => {
+    const param = new URLSearchParams(window.location.search).get('service');
+    if (param === null) return;
+    const wanted = Number(param);
+    if (Number.isInteger(wanted) && wanted >= 0 && wanted < copy.departments.length) setDept(wanted);
+  }, [copy.departments.length]);
   const reduce = useReducedMotion();
   const animate = !reduce;
   const current = copy.departments[dept];

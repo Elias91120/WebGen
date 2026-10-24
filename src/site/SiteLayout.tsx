@@ -14,7 +14,7 @@ import SpaceSwitch from '../components/SpaceSwitch';
 import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
 import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
-import { detectLang, persistLang } from '../lib/lang';
+import { detectLang, initialLang, persistLang } from '../lib/lang';
 
 export type PageId = 'home' | 'offers' | 'work' | 'team' | 'game';
 export type Copy = (typeof translations)['fr'];
@@ -40,7 +40,7 @@ interface SiteLayoutProps {
 }
 
 const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
-  const [lang, setLang] = useState<Lang>(detectLang);
+  const [lang, setLang] = useState<Lang>(initialLang);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [legalModalOpen, setLegalModalOpen] = useState(false);
@@ -48,6 +48,13 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
 
   const t = translations[lang] as Copy;
   const fr = lang === 'fr';
+
+
+  // Once the French prerendered HTML is hydrated, switch to the visitor's language (no-op otherwise).
+  useEffect(() => {
+    const detected = detectLang();
+    setLang((current) => (current === detected ? current : detected));
+  }, []);
 
   // Title and description follow the language (the HTML ships the French ones).
   useEffect(() => {

@@ -90,7 +90,7 @@ export const GamePage: React.FC = () => (
   </SiteLayout>
 );
 
-const PAGES: Record<PageId, React.FC> = { home: HomePage, offers: OffersPage, work: WorkPage, team: TeamPage, game: GamePage };
+export const PAGES: Record<PageId, React.FC> = { home: HomePage, offers: OffersPage, work: WorkPage, team: TeamPage, game: GamePage };
 
 /** Each HTML entry calls this with its page id. */
 export function mount(page: PageId) {
@@ -98,9 +98,13 @@ export function mount(page: PageId) {
   if (!root) throw new Error('Could not find root element to mount to');
   const Page = PAGES[page];
   demarrerMesure();   // (la mesure d'audience, anonyme et sans cookie : src/lib/mesure.ts)
-  ReactDOM.createRoot(root).render(
+  const app = (
     <React.StrictMode>
       <Page />
-    </React.StrictMode>,
+    </React.StrictMode>
   );
+  // The build prerenders each page (scripts/prerender.mjs): React then takes over that HTML
+  // instead of rebuilding it, so the text shows before the JavaScript has loaded.
+  if (root.dataset.prerendered) ReactDOM.hydrateRoot(root, app);
+  else ReactDOM.createRoot(root).render(app);
 }

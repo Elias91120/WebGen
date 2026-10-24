@@ -31,7 +31,8 @@ const READY_EVENTS = new Set(['calendly.event_type_viewed', 'calendly.profile_pa
  */
 const BookingModal: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
   const copy = COPY[lang];
-  const { open, source } = useSyncExternalStore(subscribeBooking, getBookingState);
+  // Third argument: the snapshot used by the build-time prerender and during hydration (closed).
+  const { open, source } = useSyncExternalStore(subscribeBooking, getBookingState, getBookingState);
   const url = useMemo(() => (source ? bookingUrl(source) : ''), [source]);
   const [ready, setReady] = useState(false);
   const [slow, setSlow] = useState(false);
