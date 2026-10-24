@@ -1,0 +1,7 @@
+# 3geeks.fr: every public page can be indexed; the chat API and the admin are not pages.
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+
+Sitemap: https://3geeks.fr/sitemap.xml
