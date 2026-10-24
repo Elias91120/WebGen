@@ -338,6 +338,11 @@ const AiPage: React.FC = () => {
                           </li>
                         ))}
                       </ul>
+                      {item.href && (
+                        <a href={item.href} className="mt-6 inline-flex min-h-10 items-center gap-1.5 self-start text-sm font-semibold text-brand-mint transition-colors hover:text-white">
+                          {t.services.more} <ArrowRight className="h-4 w-4" />
+                        </a>
+                      )}
                     </article>
                   </Reveal>
                 );
@@ -561,7 +566,7 @@ const AiPage: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{t.footer.navigate}</h4>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">{t.footer.navigate}</p>
             <ul className="mt-5 space-y-3">
               {NAV_LINKS.map((link) => (
                 <li key={link.id}>
@@ -574,7 +579,7 @@ const AiPage: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Contact</h4>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Contact</p>
             <ul className="mt-5 space-y-3 text-sm">
               <li>
                 <a href="mailto:contact@3geeks.fr" className="text-slate-300 transition-colors hover:text-white">
@@ -593,7 +598,7 @@ const AiPage: React.FC = () => {
         </div>
 
         <div className="border-t border-white/[0.06]">
-          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-6 pb-24 text-xs text-slate-500 sm:px-8 md:flex-row md:pb-6 md:pr-64">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-6 pb-24 text-xs text-slate-400 sm:px-8 md:flex-row md:pb-6 md:pr-64">
             <span>© {new Date().getFullYear()} 3geeks. {t.footer.rights}</span>
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
               <button type="button" onClick={() => openLegal('legal')} className="transition-colors hover:text-white">{legal.tabs.legal}</button>

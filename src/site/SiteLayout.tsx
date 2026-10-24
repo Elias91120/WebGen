@@ -1,9 +1,11 @@
 /**
- * Shared frame of the studio pages (/, /offres, /realisations, /equipe, /17-octobre): header with the page
- * links, footer, assistant, booking calendar and legal notices. The /ia page has its own frame.
- * Each page passes its id; the layout handles the language, the page title and anchors.
+ * Shared frame of the studio pages (/, /offres, /realisations, /equipe, /17-octobre) and of the content
+ * pages (src/content/pages.ts): header with the page links, footer, assistant, booking calendar and legal
+ * notices. The /ia page has its own frame; content pages on the AI side (`space="ai"`) get the same
+ * links as /ia and no web offers. Each page passes its id; the layout handles the language, the page
+ * title and anchors.
  */
-import { ArrowRight, Globe, Menu, Sparkles, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Globe, Menu, Sparkles, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import AiAgentWidget from '../components/AiAgentWidget';
@@ -12,11 +14,14 @@ import LegalModals from '../components/LegalModals';
 import Logo from '../components/Logo';
 import SpaceSwitch from '../components/SpaceSwitch';
 import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
+import { aiCopy } from '../ia/copy';
 import { Lang, translations } from '../i18n';
 import { openBooking } from '../lib/booking';
 import { detectLang, initialLang, persistLang } from '../lib/lang';
 
 export type PageId = 'home' | 'offers' | 'work' | 'team' | 'game';
+/** Main pages, or a content page (its title comes from `meta`). */
+type LayoutPage = PageId | 'content';
 export type Copy = (typeof translations)['fr'];
 
 export interface PageContext {
@@ -34,12 +39,30 @@ const NAV: Array<{ key: NavKey; href: string; page: PageId }> = [
   { key: 'team', href: '/equipe', page: 'team' },
 ];
 
+// AI side: the sections of /ia, as on /ia itself.
+const AI_NAV: Array<{ key: 'services' | 'proof' | 'method'; href: string }> = [
+  { key: 'services', href: '/ia#services' },
+  { key: 'proof', href: '/ia#realisations' },
+  { key: 'method', href: '/ia#methode' },
+];
+
+interface NavLink {
+  key: string;
+  label: string;
+  href: string;
+  active: boolean;
+}
+
 interface SiteLayoutProps {
-  page: PageId;
+  page: LayoutPage;
+  /** Side of the site: 'ai' shows the /ia links and no web offers. */
+  space?: 'web' | 'ai';
+  /** Title and description of a content page, per language. */
+  meta?: Record<Lang, { title: string; description: string }>;
   children: (ctx: PageContext) => React.ReactNode;
 }
 
-const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
+const SiteLayout: React.FC<SiteLayoutProps> = ({ page, space = 'web', meta: pageMeta, children }) => {
   const [lang, setLang] = useState<Lang>(initialLang);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -59,10 +82,10 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
   // Title and description follow the language (the HTML ships the French ones).
   useEffect(() => {
     persistLang(lang);
-    const meta = page === 'home' ? t.meta : t.site.pages[page];
+    const meta = pageMeta ? pageMeta[lang] : page === 'home' ? t.meta : t.site.pages[page as PageId];
     document.title = meta.title;
     document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
-  }, [lang, page, t]);
+  }, [lang, page, pageMeta, t]);
 
   // Links like /offres#methode: the section only exists once React has rendered.
   useEffect(() => {
@@ -96,6 +119,17 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
   };
   const toggleLang = () => setLang((prev) => (prev === 'en' ? 'fr' : 'en'));
   const nav = t.site.nav;
+  const ai = aiCopy[lang];
+  const isAi = space === 'ai';
+  const links: NavLink[] = isAi
+    ? AI_NAV.map((link) => ({ key: link.key, label: ai.nav[link.key], href: link.href, active: false }))
+    : NAV.map((link) => ({
+        key: link.key,
+        label: nav[link.key],
+        href: link.href,
+        active: link.page === page || (page === 'game' && link.page === 'work'), // (the game lives in the work)
+      }));
+  const cta = isAi ? ai.nav.cta : nav.cta;
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-ink font-sans text-slate-100">
@@ -111,24 +145,21 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
             <a href="/" className="flex min-w-0 shrink-0 items-center" aria-label={`3geeks · ${nav.home}`}>
               <Logo variant="wordmark" compact glow={false} />
             </a>
-            <SpaceSwitch active="web" lang={lang} className="hidden min-[360px]:inline-flex" />
+            <SpaceSwitch active={space} lang={lang} className="hidden min-[360px]:inline-flex" />
           </div>
 
           <div className="hidden items-center gap-7 lg:flex">
-            {NAV.map((link) => {
-              const active = link.page === page || (page === 'game' && link.page === 'work'); // (the game lives in the work)
-              return (
-                <a
-                  key={link.key}
-                  href={link.href}
-                  aria-current={active ? 'page' : undefined}
-                  className={`relative text-sm font-medium transition-colors ${active ? 'text-white' : 'text-slate-300 hover:text-white'}`}
-                >
-                  {nav[link.key]}
-                  {active && <span className="absolute -bottom-2 left-0 right-0 h-0.5 rounded-full bg-brand-gradient" aria-hidden="true" />}
-                </a>
-              );
-            })}
+            {links.map((link) => (
+              <a
+                key={link.key}
+                href={link.href}
+                aria-current={link.active ? 'page' : undefined}
+                className={`relative text-sm font-medium transition-colors ${link.active ? 'text-white' : 'text-slate-300 hover:text-white'}`}
+              >
+                {link.label}
+                {link.active && <span className="absolute -bottom-2 left-0 right-0 h-0.5 rounded-full bg-brand-gradient" aria-hidden="true" />}
+              </a>
+            ))}
           </div>
 
           <div className="hidden items-center gap-3 lg:flex">
@@ -141,7 +172,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
               <Globe className="h-3.5 w-3.5 text-brand-mint" /> {lang.toUpperCase()}
             </button>
             <button type="button" data-booking="nav" onClick={() => book('nav')} className="btn btn-primary !py-3">
-              {nav.cta}
+              {cta}
             </button>
           </div>
 
@@ -168,20 +199,25 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
 
         {isMenuOpen && (
           <div className="h-[calc(100svh-4rem)] overflow-y-auto border-t border-white/[0.07] bg-ink px-5 pb-6 pt-4 md:h-[calc(100svh-5rem)] lg:hidden">
-            <SpaceSwitch active="web" lang={lang} variant="menu" className="mb-3" />
+            <SpaceSwitch active={space} lang={lang} variant="menu" className="mb-3" />
             <div className="flex flex-col">
-              {[{ key: 'home' as const, href: '/', page: 'home' as PageId }, ...NAV].map((link) => (
+              {[
+                isAi
+                  ? { key: 'home', label: ai.footer.aiHome, href: '/ia', active: false }
+                  : { key: 'home', label: nav.home, href: '/', active: page === 'home' },
+                ...links,
+              ].map((link) => (
                 <a
                   key={link.key}
                   href={link.href}
-                  aria-current={link.page === page ? 'page' : undefined}
+                  aria-current={link.active ? 'page' : undefined}
                   className={`flex items-center justify-between border-b border-white/5 py-4 text-left text-base font-medium ${
-                    link.page === page ? 'text-white' : 'text-slate-300'
+                    link.active ? 'text-white' : 'text-slate-300'
                   }`}
                 >
                   <span className="inline-flex items-center gap-2">
-                    {nav[link.key]}
-                    {link.page === page && <span className="h-1.5 w-1.5 rounded-full bg-brand-mint" aria-hidden="true" />}
+                    {link.label}
+                    {link.active && <span className="h-1.5 w-1.5 rounded-full bg-brand-mint" aria-hidden="true" />}
                   </span>
                   <ArrowRight className="h-4 w-4 text-slate-500" />
                 </a>
@@ -195,7 +231,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
               <Globe className="h-4 w-4 text-brand-mint" /> {fr ? 'English version' : 'Version française'}
             </button>
             <button type="button" data-booking="menu" onClick={() => book('menu')} className="btn btn-primary mt-6 w-full">
-              {nav.cta}
+              {cta}
             </button>
           </div>
         )}
@@ -207,36 +243,43 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[minmax(0,2fr)_1fr_1fr]">
           <div>
             <Logo variant="wordmark" compact glow={false} />
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-slate-400">{t.footer.blurb}</p>
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-slate-400">{isAi ? ai.footer.blurb : t.footer.blurb}</p>
+            {isAi && (
+              <a href="/offres" className="mt-4 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-brand-mint transition-colors hover:text-white">
+                {ai.footer.webSite} <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
+            )}
             <p className="mt-5 text-sm font-medium text-brand-lime">{t.footer.tagline}</p>
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{t.site.footer.pages}</h4>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">{isAi ? ai.footer.navigate : t.site.footer.pages}</p>
             <ul className="mt-5 space-y-3 text-sm">
-              {[
+              {(isAi ? [{ label: ai.footer.aiHome, href: '/ia' }, ...links] : [
                 { label: nav.home, href: '/' },
                 { label: nav.offers, href: '/offres' },
                 { label: nav.method, href: '/offres#methode' },
                 { label: nav.work, href: '/realisations' },
                 { label: nav.team, href: '/equipe' },
-              ].map((link) => (
+              ]).map((link) => (
                 <li key={link.href}>
                   <a href={link.href} className="text-slate-300 transition-colors hover:text-white">
                     {link.label}
                   </a>
                 </li>
               ))}
-              <li>
-                <a href="/ia" className="inline-flex items-center gap-1.5 font-medium text-brand-mint transition-colors hover:text-white">
-                  <Sparkles className="h-3.5 w-3.5" /> {nav.ai}
-                </a>
-              </li>
+              {!isAi && (
+                <li>
+                  <a href="/ia" className="inline-flex items-center gap-1.5 font-medium text-brand-mint transition-colors hover:text-white">
+                    <Sparkles className="h-3.5 w-3.5" /> {nav.ai}
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Contact</h4>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Contact</p>
             <ul className="mt-5 space-y-3 text-sm">
               <li>
                 <a href="mailto:contact@3geeks.fr" className="text-slate-300 transition-colors hover:text-white">
@@ -260,7 +303,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, children }) => {
         </div>
 
         <div className="border-t border-white/[0.06]">
-          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-6 pb-24 text-xs text-slate-500 sm:px-8 md:flex-row md:pb-6 md:pr-64">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-6 pb-24 text-xs text-slate-400 sm:px-8 md:flex-row md:pb-6 md:pr-64">
             <span>© {new Date().getFullYear()} 3geeks. {t.footer.rights}</span>
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
               <button type="button" onClick={() => openLegal('legal')} className="transition-colors hover:text-white">{t.legal.tabs.legal}</button>

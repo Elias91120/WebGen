@@ -1,9 +1,26 @@
+import fs from 'fs';
 import path from 'path';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 import { createChatHandler } from './server/chat.mjs';
+import { contentPageHtml } from './src/content/html';
+import { CONTENT_PAGES } from './src/content/pages';
+
+// Content pages (src/content/pages.ts): their HTML entry is generated here, before dev and build,
+// into <path>/index.html (git-ignored), then built and prerendered like the other pages.
+function writeContentPages(): Record<string, string> {
+  const inputs: Record<string, string> = {};
+  for (const page of CONTENT_PAGES) {
+    const file = path.resolve(__dirname, page.path.slice(1), 'index.html');
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    const html = contentPageHtml(page);
+    if (!fs.existsSync(file) || fs.readFileSync(file, 'utf8') !== html) fs.writeFileSync(file, html);
+    inputs[`content:${page.path}`] = file;
+  }
+  return inputs;
+}
 
 // Serves the assistant API in dev, like nginx + server/index.mjs do in production.
 // The key stays server-side: it comes from .env and never reaches the browser bundle.
@@ -43,6 +60,7 @@ export default defineConfig(({ mode }) => {
             equipe: path.resolve(__dirname, 'equipe/index.html'),
             ia: path.resolve(__dirname, 'ia/index.html'),
             game: path.resolve(__dirname, '17-octobre/index.html'),
+            ...writeContentPages(),
           },
           output: {
             // Stable vendor chunks: better long-term caching, app code changes don't bust them.

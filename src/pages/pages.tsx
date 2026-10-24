@@ -22,6 +22,8 @@ import {
   WhatWeDo,
   WhyUs,
 } from '../site/sections';
+import ContentPageView from '../content/ContentPage';
+import { findContentPage } from '../content/pages';
 import GameSections from '../game/GameSections';
 import SiteLayout, { PageId } from '../site/SiteLayout';
 import { demarrerMesure } from '../lib/mesure';
@@ -94,15 +96,22 @@ export const PAGES: Record<PageId, React.FC> = { home: HomePage, offers: OffersP
 
 /** Each HTML entry calls this with its page id. */
 export function mount(page: PageId) {
+  const Page = PAGES[page];
+  start(<Page />);
+}
+
+/** Content pages (src/content/pages.ts) share one entry and pass their address. */
+export function mountContent(path: string) {
+  const page = findContentPage(path);
+  if (!page) throw new Error(`Unknown content page: ${path}`);
+  start(<ContentPageView page={page} />);
+}
+
+function start(element: React.ReactElement) {
   const root = document.getElementById('root');
   if (!root) throw new Error('Could not find root element to mount to');
-  const Page = PAGES[page];
   demarrerMesure();   // (la mesure d'audience, anonyme et sans cookie : src/lib/mesure.ts)
-  const app = (
-    <React.StrictMode>
-      <Page />
-    </React.StrictMode>
-  );
+  const app = <React.StrictMode>{element}</React.StrictMode>;
   // The build prerenders each page (scripts/prerender.mjs): React then takes over that HTML
   // instead of rebuilding it, so the text shows before the JavaScript has loaded.
   if (root.dataset.prerendered) ReactDOM.hydrateRoot(root, app);

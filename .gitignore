@@ -30,3 +30,8 @@ src/assets/images/originals/
 
 # (le lien local de Vercel : tableau/ et le site de secours)
 .vercel
+
+# Content pages: their index.html is generated from src/content/pages.ts (vite.config.ts)
+/ia/*/
+/realisations/*/
+/secteurs/

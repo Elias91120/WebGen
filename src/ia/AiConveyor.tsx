@@ -37,7 +37,7 @@ const RawFace: React.FC<{ item: Diagram['items'][number]; index: number }> = ({ 
       </span>
       <span className="min-w-0">
         <span className="block truncate text-[12px] font-semibold text-slate-200 sm:text-[13px]">{item.raw}</span>
-        <span className="mt-0.5 block truncate font-mono text-[10px] text-slate-500 sm:text-[11px]">{item.rawSub}</span>
+        <span className="mt-0.5 block truncate font-mono text-[10px] text-slate-400 sm:text-[11px]">{item.rawSub}</span>
       </span>
     </div>
   );

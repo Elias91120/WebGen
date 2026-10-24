@@ -61,7 +61,9 @@ export interface AiCopy {
     path: string;
     title: string;
     subtitle: string;
-    items: Array<{ title: string; desc: string; bullets: string[] }>;
+    /** `href`: the service's own page (src/content/pages.ts), when it has one. */
+    items: Array<{ title: string; desc: string; bullets: string[]; href?: string }>;
+    more: string;
   };
   proof: {
     path: string;
@@ -74,7 +76,7 @@ export interface AiCopy {
   method: { path: string; title: string; subtitle: string; steps: Array<{ t: string; d: string }> };
   why: { path: string; title: string; subtitle: string; cards: Array<{ title: string; desc: string }> };
   contact: { path: string; title: string; subtitle: string; book: string; bookDesc: string; email: string; linkedin: string };
-  footer: { blurb: string; webSite: string; rights: string; tagline: string; navigate: string };
+  footer: { blurb: string; webSite: string; rights: string; tagline: string; navigate: string; aiHome: string };
   assistant: { greeting: string; suggestions: string[] };
 }
 
@@ -274,6 +276,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
       path: 'Nos services IA',
       title: 'Six façons concrètes d’utiliser l’IA dans votre entreprise.',
       subtitle: 'Chaque service part de vos outils et de vos données actuels. Pas de plateforme à remplacer, pas d’usine à gaz.',
+      more: 'En savoir plus',
       items: [
         {
           title: 'Intégration IA dans vos logiciels',
@@ -289,6 +292,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           title: 'Agents IA : chat, e-mail, téléphone',
           desc: 'Un agent qui répond à vos clients 24h/24 sur votre site, par e-mail ou au téléphone, qualifie les demandes et transmet le reste à votre équipe.',
           bullets: ['Support client et FAQ 24h/24', 'Qualification et tri des demandes entrantes', 'Réception téléphonique IA, comme CallKitchen'],
+          href: '/ia/agents-ia',
         },
         {
           title: 'Documents & données',
@@ -401,6 +405,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
       rights: 'Tous droits réservés.',
       tagline: 'Made in France',
       navigate: 'Navigation',
+      aiHome: 'L’IA pour les entreprises',
     },
     assistant: {
       greeting: 'Bonjour ! Je suis l’assistant de 3geeks. Posez-moi vos questions sur l’intégration de l’IA dans vos outils, l’automatisation de vos opérations ou votre projet.',
@@ -602,6 +607,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
       path: 'Our AI services',
       title: 'Six concrete ways to use AI in your business.',
       subtitle: 'Every service starts from your current tools and data. No platform to replace, no over-engineering.',
+      more: 'Learn more',
       items: [
         {
           title: 'AI integration into your software',
@@ -617,6 +623,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           title: 'AI agents: chat, email, phone',
           desc: 'An agent that answers your customers 24/7 on your website, by email or on the phone, qualifies requests and hands the rest to your team.',
           bullets: ['Customer support and FAQ 24/7', 'Qualification and triage of incoming requests', 'AI phone reception, like CallKitchen'],
+          href: '/ia/agents-ia',
         },
         {
           title: 'Documents & data',
@@ -729,6 +736,7 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
       rights: 'All rights reserved.',
       tagline: 'Made in France',
       navigate: 'Navigate',
+      aiHome: 'AI for business',
     },
     assistant: {
       greeting: 'Hi! I’m the 3geeks assistant. Ask me about bringing AI into your tools, automating your operations, or your own project.',

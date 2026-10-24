@@ -5,6 +5,8 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 
+import ContentPageView from './content/ContentPage';
+import { CONTENT_PAGES, findContentPage } from './content/pages';
 import AiPage from './ia/AiPage';
 import { PAGES } from './pages/pages';
 import type { PageId } from './site/SiteLayout';
@@ -17,3 +19,17 @@ export function render(page: PageId | 'ia'): string {
     </React.StrictMode>,
   );
 }
+
+/** A content page, by its address (/ia/agents-ia). */
+export function renderContent(path: string): string {
+  const page = findContentPage(path);
+  if (!page) throw new Error(`Unknown content page: ${path}`);
+  return renderToString(
+    <React.StrictMode>
+      <ContentPageView page={page} />
+    </React.StrictMode>,
+  );
+}
+
+/** For the sitemap and the prerender loop. */
+export const contentPages = CONTENT_PAGES.map((page) => ({ path: page.path, updated: page.updated }));
