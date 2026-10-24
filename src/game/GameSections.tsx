@@ -24,6 +24,33 @@ const GAME_YELLOW = '#FCC200'; // the game's title colour (its own art direction
 // The 3Geeks Studio logo (3geeks' own logo from the brand kit, and STUDIO in pixels): drawn by Manif 2/tools/actus/studio.py
 const STUDIO_LOGO = '/images/3geeks-studio.svg';
 
+// The game's accounts (Elias, 24/10/2026): on the join card and under our videos.
+const SOCIALS = [
+  { name: 'TikTok', href: 'https://www.tiktok.com/@17.octobre.le.jeu' },
+  { name: 'Instagram', href: 'https://www.instagram.com/dix.sept.octobre/' },
+] as const;
+
+// lucide has no TikTok glyph: its note mark, drawn in the same stroke style.
+const TikTok: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+    <path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5" />
+    <path d="M14 3c.4 2.6 2.2 4.4 5 4.7" />
+  </svg>
+);
+
+const SocialLinks: React.FC<{ className?: string }> = ({ className = '' }) => (
+  <div className={`flex flex-wrap gap-3 ${className}`}>
+    {SOCIALS.map((s, i) => {
+      const Icon = s.name === 'TikTok' ? TikTok : Instagram;
+      return (
+        <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer" className={`btn ${i === 0 ? 'btn-primary' : 'btn-ghost'}`}>
+          <Icon className="h-4 w-4" /> {s.name}
+        </a>
+      );
+    })}
+  </div>
+);
+
 const ICONS: Record<string, React.ElementType> = { flag: Flag, shield: Shield, dice: Dices, swords: Swords, moon: Moon, smile: Smile, zap: Zap };
 
 interface VersionInfo {
@@ -554,9 +581,7 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
               <p className="mt-2 text-sm leading-relaxed text-slate-300 md:text-base">{c.join}</p>
               <p className="mt-2 text-xs leading-relaxed text-slate-500">{c.joinNote}</p>
             </div>
-            <a href="https://www.instagram.com/dix.sept.octobre/" target="_blank" rel="noopener noreferrer" className="btn btn-primary shrink-0">
-              <Instagram className="h-4 w-4" /> {c.joinCta}
-            </a>
+            <SocialLinks className="shrink-0" />
           </Reveal>
         </div>
       </section>
@@ -587,6 +612,11 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
               </Reveal>
             ))}
           </div>
+          <Reveal className="mt-16 flex flex-col items-center text-center">
+            <h3 className="font-display text-2xl font-semibold text-white">{c.socialTitle}</h3>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-400">{c.socialSub}</p>
+            <SocialLinks className="mt-6 justify-center" />
+          </Reveal>
         </div>
       </section>
 
