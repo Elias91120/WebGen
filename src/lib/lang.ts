@@ -2,6 +2,9 @@ import type { Lang } from '../i18n';
 
 export const LANG_STORAGE_KEY = '3geeks-lang';
 
+/** Search engine and link-preview robots (Googlebot, Bingbot, ChatGPT, social previews...). */
+const CRAWLER = /bot|crawler|spider|slurp|bingpreview|google-inspectiontool|googleother|facebookexternalhit|embedly|quora link preview|chatgpt|gptbot|perplexity|claude/i;
+
 /** Langue mémorisée, sinon celle du navigateur (français par défaut pour la France). */
 export function detectLang(): Lang {
   try {
@@ -11,6 +14,9 @@ export function detectLang(): Lang {
     /* stockage indisponible */
   }
   if (typeof navigator !== 'undefined' && navigator.language) {
+    // Search engines render pages with an English browser: they keep the French of the HTML and of
+    // the canonical address, or Google indexes the English version (seen on 24/10/2026).
+    if (CRAWLER.test(navigator.userAgent)) return 'fr';
     return navigator.language.toLowerCase().startsWith('fr') ? 'fr' : 'en';
   }
   return 'fr';
