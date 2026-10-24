@@ -88,9 +88,9 @@ const FounderCard: React.FC<{ founderKey: FounderKey; profile: FounderProfile; l
             <li key={item.title + item.org} className="flex items-start justify-between gap-4">
               <div className="min-w-0">
                 <p className="text-sm font-medium text-white">{item.title}</p>
-                <p className="text-xs text-slate-500">{item.org}</p>
+                <p className="text-xs text-slate-400">{item.org}</p>
               </div>
-              <span className="shrink-0 pt-0.5 text-xs tabular-nums text-slate-500">{item.period}</span>
+              <span className="shrink-0 pt-0.5 text-xs tabular-nums text-slate-400">{item.period}</span>
             </li>
           ))}
         </ul>
@@ -105,7 +105,7 @@ const FounderCard: React.FC<{ founderKey: FounderKey; profile: FounderProfile; l
           {certs.map((c) => (
             <li key={c.title + c.issuer} className="border-l-2 border-brand-mint/40 pl-3">
               <p className="text-sm font-medium leading-snug text-white">{c.title}</p>
-              <p className="mt-0.5 text-xs text-slate-500">
+              <p className="mt-0.5 text-xs text-slate-400">
                 {c.issuer}
                 {c.date && ` · ${c.expired ? labels.expired : labels.issued} ${c.date}`}
                 {c.expires && ` · ${labels.expires} ${c.expires}`}
@@ -116,7 +116,7 @@ const FounderCard: React.FC<{ founderKey: FounderKey; profile: FounderProfile; l
                   {labels.viewCredential} <ArrowUpRight className="h-3 w-3" />
                 </a>
               ) : c.credentialId && (
-                <p className="mt-0.5 break-all text-[11px] text-slate-500">{labels.credentialId} {c.credentialId}</p>
+                <p className="mt-0.5 break-all text-[11px] text-slate-400">{labels.credentialId} {c.credentialId}</p>
               )}
             </li>
           ))}
@@ -147,6 +147,8 @@ const FounderCard: React.FC<{ founderKey: FounderKey; profile: FounderProfile; l
 export const TeamSection: React.FC<{ team: TeamCopy; showIntro?: boolean }> = ({ team, showIntro = true }) => (
   <section id="equipe" className={`relative py-20 md:py-28 ${showIntro ? 'border-t border-white/5' : ''}`}>
     <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      {/* Without the intro, the h2 stays for screen readers so the founders' h3 follow a heading level. */}
+      {!showIntro && <h2 className="sr-only">{team.title}</h2>}
       {showIntro && (
         <Reveal className="mb-12 max-w-2xl md:mb-16">
           <span className="eyebrow">{team.path}</span>

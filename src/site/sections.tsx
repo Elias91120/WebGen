@@ -347,7 +347,7 @@ export const OffersSection: React.FC<Props> = ({ t, lang, book }) => {
                 <h2 className="mt-6 font-display text-2xl font-semibold text-white">{plan.data.title}</h2>
                 <div className="mt-4">
                   <div className={`font-display text-4xl font-semibold tracking-tight ${plan.featured ? 'text-gradient' : 'text-white'}`}>{plan.data.price}</div>
-                  <div className="mt-1 text-sm text-slate-500">{plan.data.subPrice}</div>
+                  <div className="mt-1 text-sm text-slate-400">{plan.data.subPrice}</div>
                 </div>
                 <div className="my-7 h-px bg-white/[0.08]" />
                 <ul className="mb-8 flex-1 space-y-3.5">

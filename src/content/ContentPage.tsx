@@ -90,7 +90,7 @@ const Section: React.FC<{ section: ContentSection; lang: Lang; index: number }> 
         )}
 
         {section.type === 'steps' && (
-          <ol className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <ol className={`mt-12 grid grid-cols-1 gap-5 ${section.items[lang].length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
             {section.items[lang].map((step, i) => (
               <Reveal key={step.t} delay={i * 80} as="li">
                 <div className="card flex h-full flex-col p-6">
@@ -123,7 +123,11 @@ const Section: React.FC<{ section: ContentSection; lang: Lang; index: number }> 
               return (
                 <Reveal key={item.name} delay={(i % 2) * 80}>
                   {item.link ? (
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="card group flex h-full flex-col p-7 hover:-translate-y-1 hover:bg-surface-2">
+                    <a
+                      href={item.link}
+                      {...(item.link.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+                      className="card group flex h-full flex-col p-7 hover:-translate-y-1 hover:bg-surface-2"
+                    >
                       {inner}
                     </a>
                   ) : (

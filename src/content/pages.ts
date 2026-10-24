@@ -57,6 +57,26 @@ export interface ContentPage {
 
 const AI_PARENT = { href: '/ia', label: { fr: 'IA pour entreprises', en: 'AI for business' } };
 const WORK_PARENT = { href: '/realisations', label: { fr: 'Réalisations', en: 'Our work' } };
+const HOME_PARENT = { href: '/', label: { fr: 'Accueil', en: 'Home' } };
+
+/** The three steps of a web project, as on the home page (« Comment ça marche »). */
+const WEB_METHOD: ContentSection = {
+  type: 'steps',
+  path: { fr: 'Comment ça marche', en: 'How it works' },
+  title: { fr: 'Simple, rapide, sans risque.', en: 'Simple, fast, risk-free.' },
+  items: {
+    fr: [
+      { t: 'Un appel gratuit de 30 min', d: 'Vous nous expliquez votre besoin, on vous envoie un devis clair et gratuit.' },
+      { t: 'On construit, vite', d: 'Petites demandes livrées en 24 à 48 h. Pour un projet plus large, le planning est fixé dès le départ.' },
+      { t: 'Vous payez une fois satisfait', d: 'Rien d’avance. Le code source et le nom de domaine sont à votre nom.' },
+    ],
+    en: [
+      { t: 'A free 30-minute call', d: 'You explain your need, we send you a clear, free quote.' },
+      { t: 'We build, fast', d: 'Small requests delivered in 24 to 48 h. For larger projects, the schedule is set from the start.' },
+      { t: 'You pay once you’re happy', d: 'Nothing upfront. The source code and the domain name are in your name.' },
+    ],
+  },
+};
 
 /** The four steps of every AI project (as on /ia), with the first two told for each service. */
 const aiMethod = (audit: Localized<string>, pilot: Localized<string>): ContentSection => ({
@@ -182,7 +202,7 @@ export const CONTENT_PAGES: ContentPage[] = [
         },
       ),
     ],
-    related: ['/ia/assistant-interne', '/ia/automatisation', '/ia/integration-logiciels'],
+    related: ['/secteurs/restauration', '/ia/assistant-interne', '/ia/automatisation'],
     bookingSource: 'seo-agents-ia',
     updated: '2026-10-24',
   },
@@ -390,7 +410,7 @@ export const CONTENT_PAGES: ContentPage[] = [
         },
       ),
     ],
-    related: ['/ia/automatisation', '/ia/assistant-interne', '/ia/integration-logiciels'],
+    related: ['/ia/automatisation', '/ia/assistant-interne', '/ia/audit-formation'],
     bookingSource: 'seo-documents',
     updated: '2026-10-24',
   },
@@ -593,7 +613,7 @@ export const CONTENT_PAGES: ContentPage[] = [
         },
       ),
     ],
-    related: ['/ia/integration-logiciels', '/ia/documents', '/ia/agents-ia'],
+    related: ['/ia/integration-logiciels', '/ia/documents', '/ia/audit-formation'],
     bookingSource: 'seo-assistant-interne',
     updated: '2026-10-24',
   },
@@ -761,7 +781,7 @@ export const CONTENT_PAGES: ContentPage[] = [
         },
       },
     ],
-    related: ['/realisations/express-divorce-usa', '/realisations/two-app-ios'],
+    related: ['/secteurs/sante', '/realisations/express-divorce-usa', '/realisations/two-app-ios'],
     bookingSource: 'seo-cas-jellouli',
     updated: '2026-10-24',
   },
@@ -845,7 +865,7 @@ export const CONTENT_PAGES: ContentPage[] = [
         },
       },
     ],
-    related: ['/ia/documents', '/realisations/cabinet-dermatologie-tunis'],
+    related: ['/secteurs/juridique', '/ia/documents', '/realisations/cabinet-dermatologie-tunis'],
     bookingSource: 'seo-cas-express-divorce',
     updated: '2026-10-24',
   },
@@ -1074,6 +1094,263 @@ export const CONTENT_PAGES: ContentPage[] = [
     ],
     related: ['/realisations/workspace', '/realisations/two-app-ios'],
     bookingSource: 'seo-cas-sonorstudio',
+    updated: '2026-10-24',
+  },
+  {
+    path: '/secteurs/sante',
+    space: 'web',
+    parent: HOME_PARENT,
+    schema: 'Service',
+    meta: {
+      fr: {
+        title: 'Site internet pour cabinet médical et médecin | 3geeks',
+        description: 'Le site de votre cabinet médical : soins expliqués, prise de rendez-vous en un clic, version bilingue, publications reprises de vos réseaux. Devis gratuit, rien à payer d’avance.',
+      },
+      en: {
+        title: 'Websites for medical practices and doctors | 3geeks',
+        description: 'Your medical practice’s website: treatments explained, one-click booking, a bilingual version, posts pulled from your social pages. Free quote, nothing upfront.',
+      },
+    },
+    eyebrow: { fr: 'Secteur · Santé', en: 'Sector · Healthcare' },
+    h1: {
+      fr: 'Le site de votre cabinet, qui rassure vos patients avant le rendez-vous.',
+      en: 'Your practice’s website, reassuring patients before the appointment.',
+    },
+    intro: {
+      fr: 'Vos patients veulent comprendre vos soins, voir des résultats et prendre rendez-vous sans attendre. On conçoit des sites de cabinets médicaux clairs, pensés d’abord pour le mobile, et qui se tiennent à jour avec ce que vous publiez déjà.',
+      en: 'Your patients want to understand your treatments, see results and book without waiting. We design clear medical practice websites, built mobile-first, that keep themselves up to date with what you already post.',
+    },
+    sections: [
+      {
+        type: 'points',
+        path: { fr: 'Ce qu’on fait pour les cabinets', en: 'What we do for practices' },
+        title: { fr: 'Un site crédible, simple à tenir à jour.', en: 'A credible website, easy to keep up to date.' },
+        items: {
+          fr: [
+            { t: 'Vos soins expliqués', d: 'Chaque spécialité présentée clairement, pour que le patient sache à quoi s’attendre.' },
+            { t: 'Rendez-vous en un clic', d: 'Appel, WhatsApp, e-mail ou itinéraire, toujours à portée de main sur mobile.' },
+            { t: 'Plusieurs langues', d: 'Une version dans la langue de vos patients, par exemple en français et en arabe.' },
+            { t: 'Un site à jour tout seul', d: 'Vos publications Facebook reprises automatiquement sur le site, sans rien saisir deux fois.' },
+          ],
+          en: [
+            { t: 'Your treatments explained', d: 'Each specialty presented clearly, so patients know what to expect.' },
+            { t: 'One-click booking', d: 'Call, WhatsApp, email or directions, always within reach on mobile.' },
+            { t: 'Several languages', d: 'A version in your patients’ language, for example French and Arabic.' },
+            { t: 'A website that updates itself', d: 'Your Facebook posts pulled onto the website automatically, with nothing typed twice.' },
+          ],
+        },
+      },
+      {
+        type: 'proof',
+        path: { fr: 'Déjà en ligne', en: 'Already live' },
+        title: { fr: 'Un cabinet de dermatologie à Tunis.', en: 'A dermatology practice in Tunis.' },
+        items: [
+          {
+            name: 'Cabinet Dr Amel Elloumi Jellouli',
+            title: { fr: 'Un site bilingue, refait en 24 heures', en: 'A bilingual website, rebuilt in 24 hours' },
+            d: {
+              fr: 'Soins détaillés, résultats cliniques repris de la page Facebook du cabinet toutes les 5 minutes, avis Google et rendez-vous en un clic, en français et en arabe.',
+              en: 'Detailed treatments, clinical results pulled from the practice’s Facebook page every 5 minutes, Google reviews and one-click booking, in French and Arabic.',
+            },
+            link: '/realisations/cabinet-dermatologie-tunis',
+          },
+        ],
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Nos règles', en: 'Our rules' },
+        title: { fr: 'Votre site vous appartient.', en: 'Your website belongs to you.' },
+        items: {
+          fr: [
+            'Le site présente le cabinet : les rendez-vous passent par vos canaux habituels (téléphone, WhatsApp, e-mail), pas par un formulaire qui stocke des données de patients.',
+            'Le code source et le nom de domaine sont à votre nom.',
+            'Rien à payer d’avance : vous réglez une fois satisfait.',
+          ],
+          en: [
+            'The website presents the practice: bookings go through your usual channels (phone, WhatsApp, email), not a form that stores patient data.',
+            'The source code and domain name are in your name.',
+            'Nothing upfront: you pay once satisfied.',
+          ],
+        },
+      },
+      WEB_METHOD,
+    ],
+    related: ['/realisations/cabinet-dermatologie-tunis', '/ia/agents-ia', '/secteurs/juridique'],
+    bookingSource: 'seo-secteur-sante',
+    updated: '2026-10-24',
+  },
+  {
+    path: '/secteurs/restauration',
+    space: 'web',
+    parent: HOME_PARENT,
+    schema: 'Service',
+    meta: {
+      fr: {
+        title: 'IA et site pour restaurant : commandes et réservations par téléphone | 3geeks',
+        description: 'Un agent vocal IA qui prend les commandes et les réservations de votre restaurant 24 h/24, prévient l’équipe par SMS et alimente un tableau de bord cuisine.',
+      },
+      en: {
+        title: 'AI and websites for restaurants: phone orders and bookings | 3geeks',
+        description: 'An AI voice agent that takes your restaurant’s orders and bookings 24/7, alerts the team by SMS and feeds a kitchen dashboard.',
+      },
+    },
+    eyebrow: { fr: 'Secteur · Restauration', en: 'Sector · Restaurants' },
+    h1: {
+      fr: 'Votre restaurant décroche à chaque appel, même en plein service.',
+      en: 'Your restaurant answers every call, even mid-service.',
+    },
+    intro: {
+      fr: 'En plein service, le téléphone sonne et personne n’a les mains libres. Un agent vocal IA décroche, prend la commande ou la réservation, répond sur le menu et prévient l’équipe. Et votre site présente la carte et renvoie vers lui.',
+      en: 'Mid-service, the phone rings and nobody has a free hand. An AI voice agent picks up, takes the order or booking, answers menu questions and alerts the team. And your website shows the menu and points to it.',
+    },
+    sections: [
+      {
+        type: 'points',
+        path: { fr: 'Ce qu’on fait pour les restaurants', en: 'What we do for restaurants' },
+        title: { fr: 'Moins d’appels manqués, une cuisine prévenue.', en: 'Fewer missed calls, a kitchen kept informed.' },
+        items: {
+          fr: [
+            { t: 'Réception téléphonique IA', d: 'L’agent décroche 24 h/24, prend les commandes et les réservations et répond aux questions sur le menu.' },
+            { t: 'L’équipe prévenue', d: 'Chaque commande ou réservation arrive par SMS et dans un tableau de bord cuisine.' },
+            { t: 'Un site qui donne faim', d: 'La carte, les horaires, l’accès et le moyen de commander ou de réserver, lisibles sur mobile.' },
+            { t: 'Relié à vos outils', d: 'Les commandes rejoignent les outils que vous utilisez déjà, sans ressaisie.' },
+          ],
+          en: [
+            { t: 'AI phone reception', d: 'The agent picks up 24/7, takes orders and bookings and answers menu questions.' },
+            { t: 'The team kept informed', d: 'Every order or booking arrives by SMS and in a kitchen dashboard.' },
+            { t: 'A website that makes people hungry', d: 'Menu, opening hours, directions and a way to order or book, easy to read on mobile.' },
+            { t: 'Connected to your tools', d: 'Orders flow into the tools you already use, with no re-typing.' },
+          ],
+        },
+      },
+      {
+        type: 'proof',
+        path: { fr: 'Déjà en ligne', en: 'Already live' },
+        title: { fr: 'CallKitchen, la réception IA des restaurants.', en: 'CallKitchen, AI reception for restaurants.' },
+        items: [
+          {
+            name: 'CallKitchen',
+            title: { fr: 'Réception téléphonique IA pour restaurants', en: 'AI phone reception for restaurants' },
+            d: {
+              fr: 'Landing page et agent vocal : commandes et réservations 24 h/24, réponses sur les menus, notifications SMS et tableau de bord cuisine.',
+              en: 'Landing page and voice agent: orders and bookings 24/7, menu answers, SMS notifications and a kitchen dashboard.',
+            },
+            link: 'https://call-kitchen-landing.vercel.app',
+          },
+        ],
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Nos règles', en: 'Our rules' },
+        title: { fr: 'L’agent aide l’équipe, il ne la remplace pas.', en: 'The agent helps the team, it does not replace it.' },
+        items: {
+          fr: [
+            'Ce qui sort de l’ordinaire (allergie, grosse commande, réclamation) est transmis à un humain.',
+            'L’agent répond à partir de votre carte et de vos horaires, et dit quand il ne sait pas.',
+            'Le code, les prompts et les intégrations sont à votre nom.',
+          ],
+          en: [
+            'Anything out of the ordinary (allergies, large orders, complaints) is handed to a human.',
+            'The agent answers from your menu and opening hours, and says when it does not know.',
+            'The code, prompts and integrations are yours.',
+          ],
+        },
+      },
+      WEB_METHOD,
+    ],
+    related: ['/ia/agents-ia', '/ia/automatisation', '/secteurs/sante'],
+    bookingSource: 'seo-secteur-restauration',
+    updated: '2026-10-24',
+  },
+  {
+    path: '/secteurs/juridique',
+    space: 'web',
+    parent: HOME_PARENT,
+    schema: 'Service',
+    meta: {
+      fr: {
+        title: 'Plateforme juridique et génération de documents sur mesure | 3geeks',
+        description: 'Plateformes juridiques, formulaires générés automatiquement et signature de contrats en ligne : on développe les outils des professionnels du droit. Devis gratuit.',
+      },
+      en: {
+        title: 'Legal platforms and custom document generation | 3geeks',
+        description: 'Legal platforms, automatically generated forms and online contract signing: we build the tools of legal professionals. Free quote.',
+      },
+    },
+    eyebrow: { fr: 'Secteur · Juridique', en: 'Sector · Legal' },
+    h1: {
+      fr: 'Des outils juridiques qui génèrent les bons documents, et les font signer.',
+      en: 'Legal tools that generate the right documents, and get them signed.',
+    },
+    intro: {
+      fr: 'Questionnaires guidés, formulaires générés automatiquement, contrats signés en ligne par chaque partie : on développe des plateformes juridiques sur mesure, rassurantes pour les clients et fiables pour ceux qui les utilisent.',
+      en: 'Guided questionnaires, automatically generated forms, contracts signed online by each party: we build custom legal platforms, reassuring for clients and reliable for the people who use them.',
+    },
+    sections: [
+      {
+        type: 'points',
+        path: { fr: 'Ce qu’on fait pour le juridique', en: 'What we do for legal' },
+        title: { fr: 'Du questionnaire au document signé.', en: 'From the questionnaire to the signed document.' },
+        items: {
+          fr: [
+            { t: 'Parcours guidés', d: 'Un questionnaire qui vérifie l’éligibilité et explique chaque étape, sur un sujet souvent sensible.' },
+            { t: 'Documents générés', d: 'Les formulaires et contrats produits à partir des réponses, adaptés à chaque cas.' },
+            { t: 'Signature multi-parties', d: 'Des liens de signature par rôle, le suivi des statuts et un PDF consolidé à chaque signature.' },
+            { t: 'Tableau de bord', d: 'Une vue d’administration pour suivre chaque dossier et ce qui reste à faire.' },
+          ],
+          en: [
+            { t: 'Guided journeys', d: 'A questionnaire that checks eligibility and explains each step, on an often sensitive topic.' },
+            { t: 'Generated documents', d: 'Forms and contracts produced from the answers, adapted to each case.' },
+            { t: 'Multi-party signing', d: 'Per-role signing links, status tracking and a consolidated PDF at every signature.' },
+            { t: 'Admin dashboard', d: 'An admin view to follow each file and what is left to do.' },
+          ],
+        },
+      },
+      {
+        type: 'proof',
+        path: { fr: 'Déjà en production', en: 'Already live' },
+        title: { fr: 'Deux plateformes juridiques en production.', en: 'Two legal platforms in production.' },
+        items: [
+          {
+            name: 'Express Divorce USA',
+            title: { fr: 'Les formulaires de divorce de chaque État américain', en: 'Divorce forms for every US state' },
+            d: {
+              fr: 'Une plateforme SaaS en production aux États-Unis : un questionnaire guidé génère les formulaires propres à chacun des 50 États.',
+              en: 'A SaaS platform live in the United States: a guided questionnaire generates the forms specific to each of the 50 states.',
+            },
+            link: '/realisations/express-divorce-usa',
+          },
+          {
+            name: 'Signature de contrats',
+            title: { fr: 'Une plateforme privée de signature multi-parties', en: 'A private multi-party signing platform' },
+            d: {
+              fr: 'Pour faire signer des accords aux États-Unis de façon conforme : liens par rôle, suivi des statuts et PDF consolidé mis à jour à chaque signature.',
+              en: 'To get agreements signed in the US in a compliant way: per-role links, status tracking and a consolidated PDF updated with every signature.',
+            },
+          },
+        ],
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Nos règles', en: 'Our rules' },
+        title: { fr: 'Ce qui engage passe par un humain.', en: 'Anything binding goes through a human.' },
+        items: {
+          fr: [
+            'Les documents générés sont relus et validés par un humain avant de vous engager.',
+            'La sécurité des données des clients est pensée dès le départ.',
+            'Le code source et le nom de domaine sont à votre nom.',
+          ],
+          en: [
+            'Generated documents are reviewed and approved by a human before they bind you.',
+            'The security of client data is designed in from the start.',
+            'The source code and domain name are in your name.',
+          ],
+        },
+      },
+      WEB_METHOD,
+    ],
+    related: ['/realisations/express-divorce-usa', '/ia/documents', '/secteurs/sante'],
+    bookingSource: 'seo-secteur-juridique',
     updated: '2026-10-24',
   },
 ];

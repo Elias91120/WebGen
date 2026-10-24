@@ -50,10 +50,10 @@ function jsonLd(page: ContentPage): string {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: '3geeks', item: SITE },
-        { '@type': 'ListItem', position: 2, name: page.parent.label.fr, item: `${SITE}${page.parent.href}` },
-        { '@type': 'ListItem', position: 3, name: page.eyebrow.fr, item: url },
-      ],
+        { name: '3geeks', item: SITE },
+        ...(page.parent.href === '/' ? [] : [{ name: page.parent.label.fr, item: `${SITE}${page.parent.href}` }]),
+        { name: page.eyebrow.fr, item: url },
+      ].map((step, i) => ({ '@type': 'ListItem', position: i + 1, ...step })),
     },
   ];
   // "</" would end the script tag early.

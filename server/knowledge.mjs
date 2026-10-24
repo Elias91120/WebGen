@@ -170,6 +170,12 @@ export const CHUNKS = [
     text: 'CallKitchen (restauration, IA vocale) : landing page et réception téléphonique par IA, 24 h sur 24, pour les restaurants : prise de commandes, réservations, réponses sur les menus, notifications SMS et tableau de bord cuisine. En ligne : https://call-kitchen-landing.vercel.app',
   },
   {
+    id: 'secteurs',
+    title: 'Pages par secteur : santé, restauration, juridique',
+    keywords: ['secteur', 'metier', 'sante', 'medecin', 'medical', 'cabinet medical', 'docteur', 'clinique', 'restaurant', 'restauration', 'commande telephone', 'reservation', 'juridique', 'droit', 'avocat', 'legal', 'contrat', 'signature', 'formulaire'],
+    text: '3geeks a une page par secteur où il a déjà livré un projet. Santé (https://3geeks.fr/secteurs/sante) : sites de cabinets médicaux, soins expliqués, rendez-vous en un clic, version bilingue, publications Facebook reprises automatiquement, avec le site du Dr Jellouli à Tunis en exemple ; les rendez-vous passent par les canaux du cabinet, pas par un formulaire qui stocke des données de patients. Restauration (https://3geeks.fr/secteurs/restauration) : agent vocal IA qui prend commandes et réservations 24 h/24, notifications SMS et tableau de bord cuisine, comme CallKitchen. Juridique (https://3geeks.fr/secteurs/juridique) : parcours guidés, formulaires et contrats générés automatiquement, signature multi-parties, comme Express Divorce USA et une plateforme privée de signature de contrats ; les documents générés sont relus par un humain. 3geeks travaille aussi dans d’autres secteurs : on en parle lors d’un appel gratuit de 30 min.',
+  },
+  {
     id: 'lab',
     title: 'Les produits maison de 3geeks',
     keywords: ['lab', 'produits', 'outils', 'workspace', 'mcp', 'tableau de bord', 'gestion de projet', 'pilotage', 'taches', 'sonorstudio', 'sonor', 'musique', 'beat', 'beatmaker', 'flp', 'fl studio', 'studio', 'audio', 'drill', 'prompt hub', 'efrei', 'skill hub', 'open source', 'infra', 'interne'],

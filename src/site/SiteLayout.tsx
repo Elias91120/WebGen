@@ -46,6 +46,13 @@ const AI_NAV: Array<{ key: 'services' | 'proof' | 'method'; href: string }> = [
   { key: 'method', href: '/ia#methode' },
 ];
 
+// Sector pages (src/content/pages.ts), listed in the footer of the site pages.
+const SECTORS = [
+  { href: '/secteurs/sante', label: { fr: 'Santé', en: 'Healthcare' } },
+  { href: '/secteurs/restauration', label: { fr: 'Restauration', en: 'Restaurants' } },
+  { href: '/secteurs/juridique', label: { fr: 'Juridique', en: 'Legal' } },
+];
+
 interface NavLink {
   key: string;
   label: string;
@@ -278,6 +285,18 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, space = 'web', meta: page
                 </li>
               )}
             </ul>
+            {!isAi && (
+              <>
+                <p className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">{fr ? 'Secteurs' : 'Sectors'}</p>
+                <ul className="mt-5 space-y-3 text-sm">
+                  {SECTORS.map((sector) => (
+                    <li key={sector.href}>
+                      <a href={sector.href} className="text-slate-300 transition-colors hover:text-white">{sector.label[lang]}</a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
 
           <div>
