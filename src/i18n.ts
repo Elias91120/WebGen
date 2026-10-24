@@ -24,12 +24,6 @@ export const translations = {
       ctaPrimary: "Book a free call",
       ctaSecondary: "See what we do",
       scroll: "Scroll",
-      trust: [
-        { k: "24–48 h", v: "to deliver a small request" },
-        { k: "€300", v: "Starter website, one-off" },
-        { k: "AWS", v: "certified cloud expertise" },
-        { k: "{projects}", v: "projects delivered" },
-      ],
     },
     commitments: {
       path: "Our commitments",
@@ -439,12 +433,6 @@ export const translations = {
       ctaPrimary: "Réserver un appel gratuit",
       ctaSecondary: "Voir ce qu’on fait",
       scroll: "Défiler",
-      trust: [
-        { k: "24–48 h", v: "pour livrer une petite demande" },
-        { k: "300 €", v: "site Starter, paiement unique" },
-        { k: "AWS", v: "expertise cloud certifiée" },
-        { k: "{projects}", v: "projets livrés" },
-      ],
     },
     commitments: {
       path: "Nos engagements",

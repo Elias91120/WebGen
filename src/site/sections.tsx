@@ -127,19 +127,6 @@ export const Hero: React.FC<Props> = ({ lang, t, book }) => (
         <ProjectsMarquee lang={lang} />
       </div>
     </div>
-
-    <div className="relative z-10 border-t border-white/[0.08] bg-ink/40 backdrop-blur-md">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-5 px-5 py-6 sm:px-8 lg:grid-cols-4">
-        {t.hero.trust.map((item) => (
-          <div key={item.v} className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-3">
-            <span className="shrink-0 whitespace-nowrap font-display text-2xl font-semibold text-white md:text-3xl">
-              {item.k.replace('{projects}', String(PROJECTS_DATA.length))}
-            </span>
-            <span className="text-xs leading-snug text-slate-400 md:text-sm">{item.v}</span>
-          </div>
-        ))}
-      </div>
-    </div>
   </section>
 );
 
