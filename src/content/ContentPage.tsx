@@ -20,7 +20,7 @@ const UI = {
     related: 'À lire aussi',
     contactTitle: 'Parlons de votre cas.',
     contactSub: 'En 30 minutes, on regarde vos outils et vos demandes, et on vous dit ce qui est automatisable. Devis gratuit, rien à payer d’avance.',
-    email: 'Ou écrivez-nous',
+    email: 'Ou écrivez-nous :',
   },
   en: {
     home: 'Home',
@@ -31,7 +31,7 @@ const UI = {
     related: 'Read also',
     contactTitle: 'Let’s talk about your case.',
     contactSub: 'In 30 minutes, we look at your tools and requests, and tell you what can be automated. Free quote, nothing to pay upfront.',
-    email: 'Or write to us',
+    email: 'Or write to us:',
   },
 } as const;
 
@@ -207,9 +207,13 @@ const ContentPageView: React.FC<{ page: ContentPage }> = ({ page }) => (
                 <div className="max-w-2xl">
                   <h2 className="font-display text-2xl font-semibold text-white md:text-4xl">{ui.contactTitle}</h2>
                   <p className="mt-3 text-sm leading-relaxed text-slate-400 md:text-base">{ui.contactSub}</p>
-                  <a href="mailto:contact@3geeks.fr" className="mt-4 inline-flex min-h-10 items-center gap-2 text-sm text-slate-300 transition-colors hover:text-white">
-                    <Mail className="h-4 w-4 text-brand-mint" /> {ui.email} : contact@3geeks.fr
-                  </a>
+                  {/* The address stays alone in its link: Cloudflare's e-mail obfuscation rewrites it in the HTML and
+                      restores it with a script, which only gives back the same markup (no hydration error) that way. */}
+                  <p className="mt-4 inline-flex min-h-10 items-center gap-2 text-sm text-slate-400">
+                    <Mail className="h-4 w-4 text-brand-mint" aria-hidden="true" />
+                    <span>{ui.email}</span>
+                    <a href="mailto:contact@3geeks.fr" className="text-slate-300 transition-colors hover:text-white">contact@3geeks.fr</a>
+                  </p>
                 </div>
                 <button type="button" data-booking={`${page.bookingSource}-bas`} onClick={() => book(`${page.bookingSource}-bas`)} className="btn btn-primary shrink-0">
                   {ui.book} <ArrowRight className="h-4 w-4" />
