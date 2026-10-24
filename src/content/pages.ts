@@ -949,6 +949,10 @@ export const CONTENT_PAGES: ContentPage[] = [
     space: 'web',
     parent: WORK_PARENT,
     schema: 'CaseStudy',
+    hero: {
+      desktop: '/images/realisations/workspace.jpg',
+      alt: { fr: 'Workspace : chaque projet d’un coup d’œil, avec ses tâches et son avancement', en: 'Workspace: every project at a glance, with its tasks and progress' },
+    },
     meta: {
       fr: {
         title: 'Étude de cas : Workspace, un pilotage de projets tenu à jour par l’IA | 3geeks',

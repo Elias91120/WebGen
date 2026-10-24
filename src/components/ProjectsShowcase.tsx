@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, Check, GraduationCap, Lock, Send, X } from 'l
 import BeforeAfter from './BeforeAfter/BeforeAfter';
 import { Mark } from './Logo';
 import Reveal from './Reveal';
+import WorkspaceLoop from './WorkspaceLoop';
 
 // Our video game (featured lab card), from the /17-octobre page
 const GAME_COVER = '/images/17-octobre/manif-lyon-640.webp';
@@ -333,38 +334,6 @@ const EsignMockup: React.FC = () => (
   </div>
 );
 
-// Workspace is private: a sketch of its board (columns of tasks, and the AI's log on the side), never a real capture.
-const WorkspaceMockup: React.FC = () => (
-  <div className="absolute inset-0 flex items-center gap-[3%] bg-ink bg-[radial-gradient(circle_at_15%_20%,rgba(10,239,187,0.16),transparent_55%),radial-gradient(circle_at_90%_90%,rgba(195,251,5,0.12),transparent_50%)] p-[5%]" aria-hidden="true">
-    {[3, 2, 4].map((cards, col) => (
-      <div key={col} className="flex flex-1 flex-col gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-[3%]">
-        <div className="flex items-center gap-1.5">
-          <span className={`h-1.5 w-1.5 rounded-full ${['bg-slate-400', 'bg-brand-lime', 'bg-brand-mint'][col]}`} />
-          <div className="h-1 w-1/2 rounded-full bg-white/35" />
-        </div>
-        {Array.from({ length: cards }, (_, i) => (
-          <div key={i} className="rounded-md border border-white/10 bg-surface-2 p-[8%]">
-            <div className="h-1 w-4/5 rounded-full bg-white/45" />
-            <div className="mt-1.5 h-1 w-1/2 rounded-full bg-white/15" />
-          </div>
-        ))}
-      </div>
-    ))}
-    <div className="flex w-[30%] flex-col gap-2.5 rounded-lg border border-brand-mint/25 bg-brand-mint/[0.05] p-[3%]">
-      <div className="flex items-center gap-1.5">
-        <span className="rounded-sm bg-brand-mint px-1 text-[8px] font-bold leading-tight text-ink">MCP</span>
-        <div className="h-1 w-1/2 rounded-full bg-white/35" />
-      </div>
-      {[90, 70, 85, 60, 75, 80].map((w, i) => (
-        <div key={i} className="flex items-center gap-1.5">
-          <Check className="h-2.5 w-2.5 shrink-0 text-brand-mint" strokeWidth={3} />
-          <div className="h-1 rounded-full bg-white/20" style={{ width: `${w}%` }} />
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
 /** A public in-house product (SonorStudio): wide card with its cover, opening the live product. */
 const WideProductCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ project, lang }) => (
   <article
@@ -419,8 +388,8 @@ const FeaturedProductCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; o
   const featured = project.featured!;
   return (
     <article id={project.id} className="card grid scroll-mt-24 overflow-hidden lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)]">
-      <div className="relative aspect-[16/10] overflow-hidden border-b border-white/[0.07] bg-ink lg:aspect-auto lg:border-b-0 lg:border-r">
-        <WorkspaceMockup />
+      <div className="relative aspect-video overflow-hidden border-b border-white/[0.07] bg-ink lg:aspect-auto lg:border-b-0 lg:border-r">
+        <WorkspaceLoop lang={lang} />
         <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-ink/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 backdrop-blur">
           {fr ? 'Fait et utilisé chez nous' : 'Built and used in-house'}
         </span>
