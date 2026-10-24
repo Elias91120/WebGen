@@ -21,6 +21,7 @@ import twoCover from '../assets/images/projects/two.jpg';
 import aurenzaCover from '../assets/images/projects/aurenza.jpg';
 import greenJardinCover from '../assets/images/projects/green-jardin.jpg';
 import callKitchenCover from '../assets/images/projects/callkitchen.jpg';
+import sonorStudioCover from '../assets/images/projects/sonorstudio.jpg';
 
 // Phone captures for the case studies
 import jelloulMobile from '../assets/images/projects/jellouli-mobile.jpg';
@@ -54,6 +55,8 @@ export interface ProjectItem {
   image?: string;
   icon?: React.ElementType;
   useStudioMark?: boolean;
+  /** Public in-house product with a cover and a link: shown wide, like the game. */
+  wide?: { cta: Localized<string> };
   /** In-house product we sell to companies: shown wide, with figures measured on our own use. */
   featured?: {
     metrics: Localized<{ value: string; label: string }[]>;
@@ -278,6 +281,21 @@ export const PROJECTS_DATA: ProjectItem[] = [
     },
   },
   {
+    id: 'sonorstudio',
+    category: 'studio',
+    title: { fr: 'SonorStudio', en: 'SonorStudio' },
+    subtitle: 'sonorstudio.vercel.app',
+    badge: { fr: 'Musique · studio dans le navigateur · bêta gratuite', en: 'Music · in-browser studio · free beta' },
+    description: {
+      fr: 'Un studio de production musicale qui s’ouvre dans un onglet : channel rack, piano roll, playlist et mixer, avec les raccourcis des beatmakers. On y dépose un projet .flp et son kit, et le beat rejoue tel quel : tempo, patterns, notes de 808 et mixer. Gratuit, sans compte, rien à installer, et les sons restent sur votre ordinateur.',
+      en: 'A music production studio that opens in a browser tab: channel rack, piano roll, playlist and mixer, with the shortcuts beatmakers already use. Drop in a .flp project and its kit, and the beat plays back as is: tempo, patterns, 808 notes and mixer. Free, no account, nothing to install, and your sounds stay on your computer.'
+    },
+    tags: { fr: ['Web Audio','Import .flp','Gratuit'], en: ['Web Audio','.flp import','Free'] },
+    link: 'https://sonorstudio.vercel.app/',
+    cover: sonorStudioCover,
+    wide: { cta: { fr: 'Essayer la bêta', en: 'Try the beta' } },
+  },
+  {
     id: '3geeks-infra',
     category: 'studio',
     title: { fr: '3geeks Infra', en: '3geeks Infra' },
@@ -457,6 +475,44 @@ const WorkspaceMockup: React.FC = () => (
       ))}
     </div>
   </div>
+);
+
+/** A public in-house product (SonorStudio): wide card with its cover, opening the live product. */
+const WideProductCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr' }> = ({ project, lang }) => (
+  <a
+    id={project.id}
+    href={project.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="card group grid scroll-mt-24 overflow-hidden hover:-translate-y-1 hover:bg-surface-2 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
+  >
+    <div className="relative aspect-[16/10] overflow-hidden border-b border-white/[0.07] bg-ink md:aspect-auto md:border-b-0 md:border-r">
+      <img
+        src={project.cover}
+        alt={project.title[lang]}
+        loading="lazy"
+        className="absolute inset-0 h-full w-full object-cover object-left-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+      />
+      <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-ink/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-100 backdrop-blur">
+        {lang === 'fr' ? 'En ligne · gratuit' : 'Live · free'}
+      </span>
+    </div>
+    <div className="flex flex-col p-6 md:p-8">
+      <p className="text-xs font-medium text-brand-mint/90">{project.badge[lang]}</p>
+      <h3 className="mt-1.5 font-display text-2xl font-semibold text-white">{project.title[lang]}</h3>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{project.description[lang]}</p>
+      <div className="mt-5 flex flex-wrap gap-1.5">
+        {project.tags[lang].map((tag) => (
+          <span key={tag} className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
+            {tag}
+          </span>
+        ))}
+      </div>
+      <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-mint transition-colors group-hover:text-white">
+        {project.wide!.cta[lang]} <ArrowUpRight className="h-4 w-4" />
+      </span>
+    </div>
+  </a>
 );
 
 /** An in-house product we sell to companies: wide card, with what it does and the figures from our own use. */
@@ -759,7 +815,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
   );
   const labProjects = PROJECTS_DATA.filter((p) => p.category === 'studio');
   const featuredProducts = labProjects.filter((p) => p.featured);
-  const otherProducts = labProjects.filter((p) => !p.featured);
+  const wideProducts = labProjects.filter((p) => p.wide);
+  const otherProducts = labProjects.filter((p) => !p.featured && !p.wide);
 
   return (
     <section id="projets" className={`relative border-t border-white/5 bg-surface/60 ${showIntro ? 'py-20 md:py-28' : 'pb-20 pt-12 md:pb-28 md:pt-16'}`}>
@@ -777,6 +834,16 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
           </p>
         </Reveal>
         )}
+
+        <Reveal className="mb-6 flex items-center gap-4">
+          <h3 className="font-display text-lg font-semibold text-white md:text-xl">
+            {fr ? 'Projets clients' : 'Client projects'}
+          </h3>
+          <span className="h-px flex-1 bg-white/10" />
+          <span className="hidden text-sm text-slate-500 sm:block">
+            {fr ? 'Conçus et livrés pour nos clients' : 'Designed and delivered for our clients'}
+          </span>
+        </Reveal>
 
         <Reveal className="mb-16 scroll-mt-24 md:mb-20">
           <div id="avant-apres" className="scroll-mt-24" />
@@ -818,13 +885,19 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
           </h3>
           <span className="h-px flex-1 bg-white/10" />
           <span className="hidden text-sm text-slate-500 sm:block">
-            {fr ? 'Utilisés chez nous, déployables chez vous' : 'Used in-house, ready for your company'}
+            {fr ? 'Sortis de chez nous : à essayer, ou à déployer chez vous' : 'Made at 3geeks: try them, or run them in your company'}
           </span>
         </Reveal>
 
         {featuredProducts.map((project) => (
           <Reveal key={project.id} className="mb-5">
             <FeaturedProductCard project={project} lang={lang} onContact={onContact} />
+          </Reveal>
+        ))}
+
+        {wideProducts.map((project) => (
+          <Reveal key={project.id} className="mb-5">
+            <WideProductCard project={project} lang={lang} />
           </Reveal>
         ))}
 
