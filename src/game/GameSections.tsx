@@ -24,7 +24,7 @@ const GAME_YELLOW = '#FCC200'; // the game's title colour (its own art direction
 // The 3Geeks Studio logo (3geeks' own logo from the brand kit, and STUDIO in pixels): drawn by Manif 2/tools/actus/studio.py
 const STUDIO_LOGO = '/images/3geeks-studio.svg';
 
-// The game's accounts (Elias, 24/10/2026): on the join card and under our videos.
+// The game's accounts (Elias, 24/10/2026), on the join card only: once on the page is enough.
 const SOCIALS = [
   { name: 'TikTok', href: 'https://www.tiktok.com/@17.octobre.le.jeu' },
   { name: 'Instagram', href: 'https://www.instagram.com/dix.sept.octobre/' },
@@ -612,11 +612,6 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
               </Reveal>
             ))}
           </div>
-          <Reveal className="mt-16 flex flex-col items-center text-center">
-            <h3 className="font-display text-2xl font-semibold text-white">{c.socialTitle}</h3>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-400">{c.socialSub}</p>
-            <SocialLinks className="mt-6 justify-center" />
-          </Reveal>
         </div>
       </section>
 
