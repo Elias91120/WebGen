@@ -332,24 +332,10 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           tags: ['Mistral AI', 'RAG', 'Relais sur nos serveurs'],
         },
         {
-          name: 'Green Jardin',
-          title: 'Site, caisse et écran synchronisés',
-          desc: 'La boutique en ligne, la caisse avec balance et le menu TV du magasin partagent les mêmes produits et les mêmes prix : une seule source à tenir à jour.',
-          tags: ['Automatisation', 'POS', 'Temps réel'],
-          link: 'https://green-jardin.fr',
-        },
-        {
           name: 'Signature de contrats',
           title: 'Documents générés et signés automatiquement',
           desc: 'Liens de signature par rôle, suivi des statuts et PDF consolidé mis à jour à chaque signature, avec un tableau de bord d’administration.',
           tags: ['PDF dynamique', 'Workflow', 'Dashboard'],
-          isPrivate: true,
-        },
-        {
-          name: 'Boutique sur Telegram',
-          title: 'Commandes et gestion en temps réel',
-          desc: 'Mini-app de commande intégrée à Telegram, accès vérifié côté serveur et espace gérant installable sur iPhone pour suivre les commandes.',
-          tags: ['Mini-app', 'PWA', 'Temps réel'],
           isPrivate: true,
         },
         {
@@ -663,24 +649,10 @@ export const aiCopy: Record<'fr' | 'en', AiCopy> = {
           tags: ['Mistral AI', 'RAG', 'Fallback on our servers'],
         },
         {
-          name: 'Green Jardin',
-          title: 'Website, till and screen in sync',
-          desc: 'The online store, the till with its scale and the in-store TV menu share the same products and prices: a single source to keep up to date.',
-          tags: ['Automation', 'POS', 'Real time'],
-          link: 'https://green-jardin.fr',
-        },
-        {
           name: 'Contract signing',
           title: 'Documents generated and signed automatically',
           desc: 'Per-role signing links, status tracking and a consolidated PDF updated with every signature, with an admin dashboard.',
           tags: ['Dynamic PDF', 'Workflow', 'Dashboard'],
-          isPrivate: true,
-        },
-        {
-          name: 'Telegram shop',
-          title: 'Orders and management in real time',
-          desc: 'Ordering mini-app built into Telegram, server-side verified access and a manager space installable on iPhone to follow orders.',
-          tags: ['Mini-app', 'PWA', 'Real time'],
           isPrivate: true,
         },
         {

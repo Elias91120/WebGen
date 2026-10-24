@@ -23,7 +23,7 @@ export const CHUNKS = [
     id: 'custom',
     title: 'Offre Projet web sur mesure (sur devis)',
     keywords: ['sur mesure', 'devis', 'custom', 'plateforme', 'application web', 'web app', 'saas', 'e-commerce', 'ecommerce', 'boutique en ligne', 'paiement', 'stripe', 'reservation', 'booking', 'comptes', 'espace client', 'connexion', 'base de donnees', 'dashboard', 'tableau de bord', 'admin', 'back-office', 'integration', 'api', 'crm', 'marketplace', 'plusieurs pages', 'prix', 'tarif', 'combien'],
-    text: 'Le Projet web sur mesure est sur devis, selon la complexité. Il reprend tout le Starter, adapté à votre offre, et peut ajouter : un parcours de réservation ou de demande, de l’e-commerce ou des paiements en ligne, des comptes utilisateurs et des données structurées, un dashboard d’administration sur mesure, et des intégrations avec vos outils. Exemples livrés : une plateforme SaaS juridique aux États-Unis (Express Divorce USA), une boutique Shopify reliée à la caisse du magasin (Green Jardin), une plateforme privée de signature de contrats. Le devis est gratuit, après un appel de 30 min.',
+    text: 'Le Projet web sur mesure est sur devis, selon la complexité. Il reprend tout le Starter, adapté à votre offre, et peut ajouter : un parcours de réservation ou de demande, de l’e-commerce ou des paiements en ligne, des comptes utilisateurs et des données structurées, un dashboard d’administration sur mesure, et des intégrations avec vos outils. Exemples livrés : une plateforme SaaS juridique aux États-Unis (Express Divorce USA), une plateforme privée de signature de contrats. Le devis est gratuit, après un appel de 30 min.',
   },
   {
     id: 'redesign',
@@ -125,7 +125,7 @@ export const CHUNKS = [
     id: 'portfolio',
     title: 'Liste des réalisations',
     keywords: ['realisations', 'projets', 'portfolio', 'references', 'exemples', 'clients', 'travaux', 'deja fait', 'projects', 'work', 'examples', 'combien de projets'],
-    text: '3geeks a livré 14 projets : 9 réalisations clients et 5 produits maison. Clients : Cabinet Dr Amel Elloumi Jellouli (site médical bilingue, Tunis), Express Divorce USA (SaaS juridique, États-Unis), une plateforme privée de signature de contrats, Vipagence (marketplace de créateurs), Two (app iOS notée 5,0), Aurenza Capital (gestion de patrimoine), Green Jardin (Shopify, caisse et menu TV), une boutique privée sur Telegram et CallKitchen (IA vocale pour restaurants). Produits maison : Workspace (pilotage de projets tenu à jour par l’IA, déployable en entreprise), SonorStudio (studio de musique dans le navigateur, bêta gratuite : https://sonorstudio.vercel.app/), Prompt Hub, EFREI Skill Hub et 3geeks Infra ; et un jeu vidéo, 17 OCTOBRE (https://3geeks.fr/17-octobre). Tout est visible sur la page Réalisations (https://3geeks.fr/realisations), avec un avant/après du site du Dr Jellouli, et ce n’est que le début.',
+    text: '3geeks a livré 11 projets : 6 réalisations clients et 5 produits maison. Clients : Cabinet Dr Amel Elloumi Jellouli (site médical bilingue, Tunis), Express Divorce USA (SaaS juridique, États-Unis), une plateforme privée de signature de contrats, Two (app iOS notée 5,0), Aurenza Capital (gestion de patrimoine) et CallKitchen (IA vocale pour restaurants). Produits maison : Workspace (pilotage de projets tenu à jour par l’IA, déployable en entreprise), SonorStudio (studio de musique dans le navigateur, bêta gratuite : https://sonorstudio.vercel.app/), Prompt Hub, EFREI Skill Hub et 3geeks Infra ; et un jeu vidéo, 17 OCTOBRE (https://3geeks.fr/17-octobre). Tout est visible sur la page Réalisations (https://3geeks.fr/realisations), avec un avant/après du site du Dr Jellouli, et ce n’est que le début.',
   },
   {
     id: '17-octobre',
@@ -152,12 +152,6 @@ export const CHUNKS = [
     text: 'Plateforme privée de signature de contrats multi-parties (juridique, États-Unis) : faire signer des accords de façon conforme et professionnelle, avec des liens de signature par rôle, le suivi des statuts, un PDF consolidé mis à jour à chaque signature et un dashboard d’administration. Projet confidentiel : pas de lien public ni de nom de client.',
   },
   {
-    id: 'vipagence',
-    title: 'Réalisation : Vipagence (marketplace)',
-    keywords: ['vipagence', 'agence', 'ugc', 'createurs', 'clippers', 'marques', 'influence', 'influenceurs', 'marketplace', 'inscription'],
-    text: 'Vipagence (marketplace) : site vitrine et parcours d’inscription pour une agence qui relie créateurs UGC, clippers et marques. 3geeks a conçu et développé le site, pas le casting. En ligne : https://www.vipagence.net/',
-  },
-  {
     id: 'two',
     title: 'Réalisation : Two (app iOS)',
     keywords: ['two', 'app', 'application', 'ios', 'iphone', 'app store', 'couple', 'swift', 'mobile', 'cinematch', 'calendrier', 'souvenirs'],
@@ -168,18 +162,6 @@ export const CHUNKS = [
     title: 'Réalisation : Aurenza Capital (finance)',
     keywords: ['aurenza', 'capital', 'patrimoine', 'gestion de patrimoine', 'finance', 'courtier', 'conseiller', 'boulogne', 'amf', 'banque de france', 'investissement', 'haut de gamme', 'luxe', 'premium'],
     text: 'Aurenza Capital (finance) : vitrine d’un courtier en gestion de patrimoine à Boulogne-Billancourt, avec une direction artistique sobre et haut de gamme, des chiffres sourcés (AMF, Banque de France) et une prise de contact directe. En ligne : https://mathis-mourot.vercel.app/',
-  },
-  {
-    id: 'green-jardin',
-    title: 'Réalisation : Green Jardin (commerce)',
-    keywords: ['green jardin', 'cbd', 'boutique', 'magasin', 'commerce', 'retail', 'shopify', 'caisse', 'pos', 'balance', 'fidelite', 'menu tv', 'ecran', 'palaiseau', 'e-commerce', 'ecommerce', 'omnicanal', 'ino digital'],
-    text: 'Green Jardin (commerce, Palaiseau) : boutique CBD en ligne et en magasin. Livré : boutique Shopify (réalisée avec Ino Digital), menu TV dynamique en magasin mis à jour en temps réel, caisse POS avec balance et programme de fidélité, vérification d’âge et paiement sécurisé. Résultat : le site, la caisse et l’écran du magasin partagent les mêmes produits et les mêmes prix, une seule source à tenir à jour. En ligne : https://green-jardin.fr',
-  },
-  {
-    id: 'telegram',
-    title: 'Réalisation : boutique privée sur Telegram',
-    keywords: ['telegram', 'mini-app', 'mini app', 'bot', 'boutique privee', 'commande', 'pwa', 'membres', 'moderation', 'communaute'],
-    text: 'Boutique privée sur Telegram (commerce) : mini-app de commande intégrée à Telegram, avec accès vérifié côté serveur, et un espace gérant installable sur iPhone pour suivre les commandes et modérer les membres en temps réel. Projet confidentiel : pas de lien public ni de détail sur le client.',
   },
   {
     id: 'callkitchen',

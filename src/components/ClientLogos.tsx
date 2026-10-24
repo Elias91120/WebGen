@@ -2,10 +2,8 @@ import React from 'react';
 
 import jelloulLogo from '../assets/images/logos/jellouli.png';
 import expressDivorceLogo from '../assets/images/logos/express-divorce.png';
-import vipagenceLogo from '../assets/images/logos/vipagence.jpg';
 import twoLogo from '../assets/images/logos/two.jpg';
 import aurenzaLogo from '../assets/images/logos/aurenza.png';
-import greenJardinLogo from '../assets/images/logos/green-jardin.png';
 import callKitchenLogo from '../assets/images/logos/callkitchen.jpg';
 
 // Public projects only, in the same order as the showcase.
@@ -13,10 +11,8 @@ import callKitchenLogo from '../assets/images/logos/callkitchen.jpg';
 const LOGOS: Array<{ name: string; src: string; wordmark?: boolean; light?: boolean }> = [
   { name: 'Cabinet Dr Amel Elloumi Jellouli', src: jelloulLogo, wordmark: true },
   { name: 'Express Divorce USA', src: expressDivorceLogo },
-  { name: 'Vipagence', src: vipagenceLogo, light: true },
   { name: 'Two', src: twoLogo },
   { name: 'Aurenza Capital', src: aurenzaLogo },
-  { name: 'Green Jardin', src: greenJardinLogo, light: true },
   { name: 'CallKitchen', src: callKitchenLogo, light: true },
 ];
 

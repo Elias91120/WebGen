@@ -16,10 +16,8 @@ import promptHubImg from '../assets/images/prompt-hub.png';
 // Covers: above-the-fold captures of the live sites
 import jelloulCover from '../assets/images/projects/jellouli.jpg';
 import expressDivorceCover from '../assets/images/projects/express-divorce.jpg';
-import vipagenceCover from '../assets/images/projects/vipagence.jpg';
 import twoCover from '../assets/images/projects/two.jpg';
 import aurenzaCover from '../assets/images/projects/aurenza.jpg';
-import greenJardinCover from '../assets/images/projects/green-jardin.jpg';
 import callKitchenCover from '../assets/images/projects/callkitchen.jpg';
 import sonorStudioCover from '../assets/images/projects/sonorstudio.jpg';
 
@@ -27,7 +25,6 @@ import sonorStudioCover from '../assets/images/projects/sonorstudio.jpg';
 import jelloulMobile from '../assets/images/projects/jellouli-mobile.jpg';
 import expressDivorceMobile from '../assets/images/projects/express-divorce-mobile.jpg';
 import twoMobile from '../assets/images/projects/two-mobile.jpg';
-import greenJardinMobile from '../assets/images/projects/green-jardin-mobile.jpg';
 
 interface ProjectsShowcaseProps {
   lang: 'en' | 'fr';
@@ -50,7 +47,7 @@ export interface ProjectItem {
   /** Private projects have no link and never expose a URL or client name. */
   link?: string;
   cover?: string;
-  mockup?: 'esign' | 'telegram';
+  mockup?: 'esign';
   /** Lab cards: logo image, studio mark or icon. */
   image?: string;
   icon?: React.ElementType;
@@ -145,20 +142,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
     mockup: 'esign'
   },
   {
-    id: 'vipagence',
-    category: 'client',
-    title: { fr: 'Vipagence', en: 'Vipagence' },
-    subtitle: 'vipagence.net',
-    badge: { fr: 'Marketplace · Plateforme web', en: 'Marketplace · Web platform' },
-    description: {
-      fr: 'Site vitrine et parcours d’inscription pour une agence qui relie créateurs UGC, clippers et marques. Conçu et développé par 3geeks — le site, pas le casting.',
-      en: 'Marketing site and sign-up flows for an agency connecting UGC creators, clippers and brands. Designed and built by 3geeks — the website, not the roster.'
-    },
-    tags: { fr: ['React','Site produit','Marketplace'], en: ['React','Product site','Marketplace'] },
-    link: 'https://www.vipagence.net/',
-    cover: vipagenceCover
-  },
-  {
     id: 'two-app',
     category: 'client',
     title: { fr: 'Two', en: 'Two' },
@@ -200,48 +183,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
     tags: { fr: ['Direction artistique','Finance','Vitrine'], en: ['Art direction','Finance','Showcase site'] },
     link: 'https://mathis-mourot.vercel.app/',
     cover: aurenzaCover
-  },
-  {
-    id: 'green-jardin',
-    category: 'client',
-    title: { fr: 'Green Jardin', en: 'Green Jardin' },
-    subtitle: 'green-jardin.fr',
-    badge: { fr: 'Retail omnicanal · Shopify', en: 'Omnichannel retail · Shopify' },
-    description: {
-      fr: 'Boutique CBD en ligne et en magasin (Palaiseau) : vitrine Shopify avec Ino Digital, menu TV dynamique en temps réel, caisse POS avec balance et fidélité 14 %.',
-      en: 'CBD shop online and in-store (Palaiseau): Shopify storefront with Ino Digital, real-time TV menu, gram-scale POS and loyalty sync.'
-    },
-    tags: { fr: ['Shopify','Caisse POS','Firebase'], en: ['Shopify','POS','Firebase'] },
-    link: 'https://green-jardin.fr',
-    cover: greenJardinCover,
-    caseStudy: {
-      mobile: greenJardinMobile,
-      context: {
-        fr: 'Green Jardin vend du CBD en boutique à Palaiseau et en ligne. Trois canaux à garder alignés : le site, la caisse du magasin et l’affichage en boutique.',
-        en: 'Green Jardin sells CBD in its Palaiseau shop and online. Three channels to keep aligned: the website, the in-store till and the in-store display.'
-      },
-      delivered: {
-        fr: ['Boutique Shopify, réalisée avec Ino Digital', 'Menu TV dynamique en magasin, mis à jour en temps réel', 'Caisse POS avec balance et programme de fidélité', 'Vérification d’âge et paiement sécurisé', 'Livraison offerte dès 50 € et expédition en 24/48 h'],
-        en: ['Shopify store, built with Ino Digital', 'Dynamic in-store TV menu, updated in real time', 'POS till with scale and loyalty programme', 'Age verification and secure checkout', 'Free shipping from €50, dispatched in 24/48h']
-      },
-      result: {
-        fr: 'Le site, la caisse et l’écran du magasin partagent les mêmes produits et les mêmes prix : une seule source à tenir à jour.',
-        en: 'The website, the till and the in-store screen share the same products and prices: a single source to keep up to date.'
-      }
-    }
-  },
-  {
-    id: 'telegram',
-    category: 'client',
-    title: { fr: 'Boutique privée sur Telegram', en: 'Private shop on Telegram' },
-    subtitle: '',
-    badge: { fr: 'Commerce · Mini-app Telegram', en: 'Commerce · Telegram mini-app' },
-    description: {
-      fr: 'Une mini-app de commande intégrée à Telegram, avec accès vérifié côté serveur, et un espace gérant installable sur iPhone pour suivre les commandes et modérer les membres en temps réel.',
-      en: 'An ordering mini-app built into Telegram with server-side verified access, plus a manager space installable on iPhone to follow orders and moderate members in real time.'
-    },
-    tags: { fr: ['Mini-app Telegram','PWA','Docker'], en: ['Telegram Mini App','PWA','Docker'] },
-    mockup: 'telegram'
   },
   {
     id: 'callkitchen',
@@ -385,52 +326,6 @@ const EsignMockup: React.FC = () => (
   </div>
 );
 
-const TelegramMockup: React.FC = () => (
-  <div className="absolute inset-0 flex items-center justify-center gap-[5%] bg-ink bg-[radial-gradient(circle_at_25%_20%,rgba(56,189,248,0.22),transparent_55%),radial-gradient(circle_at_90%_85%,rgba(195,251,5,0.12),transparent_50%)] px-[6%]" aria-hidden="true">
-    <div className="flex aspect-[9/19] h-[86%] flex-col gap-[4%] rounded-[1.2rem] border-[3px] border-white/15 bg-surface-2 p-[5%] shadow-[0_25px_60px_-20px_rgba(0,0,0,0.9)]">
-      <div className="mx-auto h-1 w-1/3 rounded-full bg-white/20" />
-      <div className="flex items-center gap-1.5">
-        <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-sky-500">
-          <Send className="h-2 w-2 text-white" />
-        </span>
-        <div className="h-1 w-1/2 rounded-full bg-white/40" />
-      </div>
-      <div className="grid flex-1 grid-cols-2 gap-[6%]">
-        {['from-brand-mint/50', 'from-brand-lime/45', 'from-sky-400/45', 'from-brand-mint/30'].map((tint) => (
-          <div key={tint} className="flex flex-col gap-1">
-            <div className={`flex-1 rounded-md bg-gradient-to-br ${tint} to-white/5`} />
-            <div className="h-1 w-4/5 rounded-full bg-white/25" />
-          </div>
-        ))}
-      </div>
-      <div className="flex h-[8%] items-center justify-center rounded-md bg-sky-500">
-        <div className="h-1 w-1/3 rounded-full bg-white/80" />
-      </div>
-    </div>
-    <div className="flex h-[70%] w-[48%] flex-col gap-[7%] rounded-lg border border-white/10 bg-white/[0.04] p-[4%]">
-      <div className="flex items-center justify-between">
-        <div className="h-1.5 w-1/3 rounded-full bg-white/40" />
-        <span className="h-2 w-2 rounded-full bg-brand-lime" />
-      </div>
-      <div className="grid grid-cols-3 gap-[5%]">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="rounded-md border border-white/10 bg-white/[0.04] p-[12%]">
-            <div className="h-2.5 w-2/3 rounded-sm bg-white/50" />
-            <div className="mt-1 h-1 w-full rounded-full bg-white/15" />
-          </div>
-        ))}
-      </div>
-      {['bg-brand-mint', 'bg-brand-lime', 'bg-sky-400', 'bg-brand-mint'].map((dot, i) => (
-        <div key={i} className="flex items-center gap-2">
-          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} />
-          <div className="h-1 flex-1 rounded-full bg-white/20" />
-          <div className="h-1 w-1/5 rounded-full bg-white/30" />
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
 // Workspace is private: a sketch of its board (columns of tasks, and the AI's log on the side), never a real capture.
 const WorkspaceMockup: React.FC = () => (
   <div className="absolute inset-0 flex items-center gap-[3%] bg-ink bg-[radial-gradient(circle_at_15%_20%,rgba(10,239,187,0.16),transparent_55%),radial-gradient(circle_at_90%_90%,rgba(195,251,5,0.12),transparent_50%)] p-[5%]" aria-hidden="true">
@@ -565,10 +460,8 @@ const ClientCard: React.FC<{ project: ProjectItem; lang: 'en' | 'fr'; onOpenCase
       loading="lazy"
       className="absolute inset-0 h-full w-full object-cover object-left-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
     />
-  ) : project.mockup === 'esign' ? (
-    <EsignMockup />
   ) : (
-    <TelegramMockup />
+    <EsignMockup />
   );
   const coverClass = 'relative block aspect-[16/10] w-full overflow-hidden border-b border-white/[0.07] bg-ink text-left';
 
@@ -815,8 +708,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
           </h2>
           <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">
             {fr
-              ? 'Santé, juridique, finance, e-commerce, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.'
-              : 'Healthcare, legal, finance, e-commerce, mobile apps and private platforms: projects designed, built and launched by 3geeks.'}
+              ? 'Santé, juridique, finance, restauration, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.'
+              : 'Healthcare, legal, finance, restaurants, mobile apps and private platforms: projects designed, built and launched by 3geeks.'}
           </p>
         </Reveal>
         )}

@@ -144,10 +144,10 @@ export const translations = {
         },
         work: {
           title: "Our work — 3geeks",
-          description: "Websites, SaaS platforms, iOS apps, e-commerce and AI: projects designed, built and launched by 3geeks, with a before/after and client reviews.",
+          description: "Websites, SaaS platforms, iOS apps and AI: projects designed, built and launched by 3geeks, with a before/after and client reviews.",
           path: "Work",
           h1: "What we've already built.",
-          sub: "Healthcare, legal, finance, e-commerce, mobile apps and private platforms: projects designed, built and launched by 3geeks.",
+          sub: "Healthcare, legal, finance, restaurants, mobile apps and private platforms: projects designed, built and launched by 3geeks.",
         },
         game: {
           title: "17 OCTOBRE — the video game by 3Geeks Studio",
@@ -559,10 +559,10 @@ export const translations = {
         },
         work: {
           title: "Réalisations — 3geeks",
-          description: "Sites, plateformes SaaS, apps iOS, e-commerce et IA : des projets conçus, développés et lancés par 3geeks, avec un avant/après et les avis clients.",
+          description: "Sites, plateformes SaaS, apps iOS et IA : des projets conçus, développés et lancés par 3geeks, avec un avant/après et les avis clients.",
           path: "Réalisations",
           h1: "Ce qu’on a déjà construit.",
-          sub: "Santé, juridique, finance, e-commerce, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.",
+          sub: "Santé, juridique, finance, restauration, applications mobiles et plateformes privées : des projets conçus, développés et lancés par 3geeks.",
         },
         game: {
           title: "17 OCTOBRE — le jeu vidéo de 3Geeks Studio",
