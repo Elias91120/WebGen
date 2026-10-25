@@ -63,7 +63,12 @@ interface VersionInfo {
   video_mp4?: string; // the version's video on the file server ("actus/actus_0.12.0.mp4"), since 0.12.0
   // Both platforms, since the Mac release. "file" and "size" above stay the Windows zip, so a client from before
   // it (the 0.13.0 game's update notice, an old cached page) keeps working untouched.
-  fichiers?: { windows?: { file: string; size: number }; macos?: { file: string; size: number } };
+  fichiers?: {
+    windows?: { file: string; size: number };
+    macos?: { file: string; size: number };
+    // (jalon 166) « La Manif by 3Geeks » sur Android : un APK, la Manif seule, sur une release GitHub à part
+    android?: { file: string; size: number; version?: string; url: string };
+  };
   miroir?: string; // the backup's snapshot only: the zip's mirror, a release of this repo on GitHub
   telechargements?: number; // the backup's snapshot only: the server's count when the snapshot was taken
 }
@@ -76,6 +81,13 @@ interface VersionInfo {
 const AppleMark: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
     <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
+  </svg>
+);
+
+/** La tête du robot d'Android. */
+const AndroidMark: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+    <path d="M17.523 15.341a.999.999 0 1 1 0-1.998.999.999 0 0 1 0 1.998m-11.046 0a.999.999 0 1 1 0-1.998.999.999 0 0 1 0 1.998m11.405-6.02 1.997-3.459a.416.416 0 0 0-.72-.415l-2.022 3.503c-1.547-.706-3.284-1.099-5.137-1.099s-3.59.393-5.137 1.099L4.841 5.447a.416.416 0 0 0-.72.415l1.997 3.459C2.689 11.187.343 14.659 0 18.761h24c-.343-4.102-2.689-7.574-6.118-9.44" />
   </svg>
 );
 
@@ -310,6 +322,8 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
   const count = downloads !== null && <DownloadCount n={downloads} lang={lang} words={c.downloads} title={c.downloadsLive} />;
   // the Mac package of this version, when there is one (versions up to 0.13.0 came out for Windows only)
   const mac = info?.fichiers?.macos ?? null;
+  // (jalon 166) l'APK de la Manif seule, pour Android, quand il y en a un
+  const android = info?.fichiers?.android ?? null;
   // the game the latest version is about: from version.json, or else from its notes when they all name the same game
   // (« LA MANIF : … »); its name then shows once, on the block, instead of at the head of every line
   const news = newsOf(info);
@@ -764,6 +778,14 @@ export const GameSections: React.FC<{ lang: Lang; book: (source: string) => void
                         name={c.platMac} needs={c.systemMac} unit={c.size} size={mac.size}
                         href={`${FILES}/telecharger?os=macos`}
                         cta={c.download} note={c.openMac}
+                      />
+                    )}
+                    {android && (
+                      <PlatformCard
+                        mark={<AndroidMark className="h-6 w-6" />}
+                        name={c.platAndroid} needs={c.systemAndroid} unit={c.size} size={android.size}
+                        href={android.url}
+                        cta={c.download} note={c.openAndroid}
                       />
                     )}
                   </div>
