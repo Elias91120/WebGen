@@ -4,7 +4,7 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.23.0",
+  "version": "0.24.0",
   "fr": {
     "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains, dans l'ordre que tu veux : Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Toulon, Nice, Toulouse, Bordeaux, Grenoble. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
@@ -20,10 +20,10 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Le tour de France",
+        "tag": "Nouveau : la 0.24.0",
         "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille, Marseille et Nice, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
-          "Nouveau : plus de freezes en pleine bagarre sur un petit PC ; Toulouse, Toulon, Bordeaux et Grenoble, les villes que vous avez demandées",
+          "Nouveau : un mode FACILE, au bouton de la bande : des CRS moins costauds, plus de cœurs, la foule te relève deux fois ; et toujours Toulouse, Toulon, Bordeaux et Grenoble, les villes que vous avez demandées",
           "Choisis ta région dès Paris : cinq gares, cinq régions, trois villes au plus ; un NORMAL qui fait vraiment galérer",
           "Rennes, Nantes et Tours, que vous avez demandées : la place de la Mairie, la place Royale et le château des ducs, la place Plumereau",
           "Le tour de France par les vrais trains, de vraies gares où l'on entre : Caen, Brest, Angers ; Amiens, Lille ; Lyon, Saint-Étienne, Clermont-Ferrand ; Rennes, Nantes, Tours ; Marseille, Toulon, Nice ; Toulouse ; l’Élysée, et la banlieue en bonus",
@@ -35,6 +35,7 @@ export const FRONT = {
         "d": "Ce soir, Paris descend dans la rue pour la justice et pour la paix. Une soirée dans le 11e, en réalisme rétro PS2, avec cinq revendications, de la vérité sur le 17 octobre 1961 à « Macaron, écoute la rue ». Le but : être le plus gros fouteur de bordel de Paname, au pouvoir, jamais aux gens. Une fiction satirique : dans la vraie vie, la violence n’est pas un jeu.",
         "points": [
           "Nouveau : le vrai 17 octobre : la rue déborde de monde qui scande et court, les CRS chargent sans arrêt, la police te cherche quand elle t'a perdu ; des déguisés, une fanfare, des pompiers applaudis, des gens aux balcons",
+          "Nouveau : un mode FACILE, sur la page de la Campagne : la police s'énerve moins vite, t'oublie plus vite, et tu te dégages plus facilement",
           "La soirée raconte, du premier pétard à l’Élysée : la bande t’écrit par SMS, la pluie et l’orage, le scooter, la BAC à semer",
           "On entre partout : les halls, les escaliers, les appartements, les caves, les toits de zinc, le métro",
           "Le commissariat et le déguisement : en CRS, glisse-toi dans leur ligne (« T’es de quelle compagnie ? » « La 17e ! »)",
@@ -198,10 +199,10 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "The tour de France",
+        "tag": "New: 0.24.0",
         "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France on the real trains, from Caen to Lille, Marseille and Nice, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
-          "New: no more freezes mid-fight on a small PC; Toulouse, Toulon, Bordeaux and Grenoble, the cities you asked for",
+          "New: an EASY mode, on the crew screen: softer CRS, more hearts, and the crowd picks you up twice; plus Toulouse, Toulon, Bordeaux and Grenoble, the cities you asked for",
           "Pick your region right from Paris: five stations, five regions, three cities at most; a NORMAL mode that really makes you sweat",
           "Rennes, Nantes and Tours, which you asked for: Place de la Mairie, Place Royale and the castle of the Dukes, Place Plumereau",
           "The tour of France on the real trains, through real stations you walk into: Caen, Brest, Angers; Amiens, Lille; Lyon, Saint-Étienne, Clermont-Ferrand; Rennes, Nantes, Tours; Marseille, Toulon, Nice; Toulouse; the Élysée, and the suburbs as a bonus",
@@ -213,6 +214,7 @@ export const FRONT = {
         "d": "Tonight, Paris takes to the streets for justice and for peace. One night in the 11th arrondissement, in retro PS2 realism, with five demands, from the truth about 17 October 1961 to \"Macaron, listen to the street\". The goal: be the biggest troublemaker in Paname, against the powerful, never against people. A satirical fiction: in real life, violence is not a game.",
         "points": [
           "New: the real 17 October: streets overflowing with people chanting and running, riot police charging nonstop, the police hunting you once they've lost sight of you; costumes, a brass band, firefighters cheered, people on their balconies",
+          "New: an EASY mode, on the Campaign screen: the police get angry more slowly, forget you faster, and you break free more easily",
           "The night tells a story, from the first banger to the Élysée: the crew texts you, rain and storms, the scooter, the BAC to shake off",
           "Go inside everywhere: halls, staircases, flats, cellars, the zinc rooftops, the metro",
           "The police station and the disguise: in riot gear, slip into their line (\"Which company are you?\" \"The 17th!\")",
