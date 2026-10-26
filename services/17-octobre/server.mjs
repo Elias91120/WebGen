@@ -41,6 +41,7 @@ import { join } from 'node:path';
 import { timingSafeEqual } from 'node:crypto';
 
 import { boardStats, classement, loadBoard } from './classement.mjs';
+import { chargerLigue } from './ligue.mjs';
 import { chargerMesure, demarrerMesure, mesure } from './mesure.mjs';
 import { relayStats, relayUpgrade, startRelay } from './relay.mjs';
 
@@ -350,6 +351,7 @@ setInterval(() => {
 
 await loadStats();
 await loadBoard(DATA);
+await chargerLigue(DATA);
 await chargerMesure(DATA);
 demarrerMesure();
 server.listen(PORT, () => {

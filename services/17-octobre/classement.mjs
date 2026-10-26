@@ -39,6 +39,7 @@ import { promises as fs } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { ajouterEvent, compterVille, ligue, VILLES } from './ligue.mjs';
 import { cleanName } from './noms.mjs';
 
 const TOKEN_RE = /^[0-9a-f]{32}$/;
@@ -65,7 +66,7 @@ const paths = {};
 let saving = Promise.resolve();
 const posts = new Map(); // visitor -> {n, until}
 
-const modeOf = (v) => (v === 'campagne' || v === 'actes' ? v : 'manif');
+const modeOf = (v) => (v === 'campagne' || v === 'actes' || v === 'villes' ? v : 'manif');
 
 // (0.9.0: the run goes on after the Prefect — RER to the next world — so each extra world reached is worth 3000;
 // jalon 44: the 5th world, the Élysée castle, is terminal — taking it, the real end of the game, is worth 20 000 more)
@@ -145,6 +146,7 @@ function ranked(mode) {
 
 function top(mode) {
   if (mode === 'actes') return topActes();
+  if (mode === 'villes') return ligue();   // (jalon 169 : la Ligue des Villes)
   const list = ranked(mode).slice(0, TOP);
   const joueurs = Object.keys(boards[mode].joueurs).length;
   if (mode === 'campagne') {
@@ -160,7 +162,7 @@ function top(mode) {
   return {
     top: list.map((p, k) => ({
       rang: k + 1, nom: p.nom, perso: p.perso, score: p.score, niveau: p.niveau, temps: p.temps, crs: p.crs,
-      victoire: p.victoire, mondes: p.mondes || 1, elysee: p.elysee === true, date: p.date.slice(0, 10),
+      victoire: p.victoire, mondes: p.mondes || 1, elysee: p.elysee === true, date: p.date.slice(0, 10), ville: p.ville || '',
     })),
     joueurs,
   };
@@ -287,6 +289,7 @@ async function post(req, res, ctx) {
     return ctx.send(res, 400, { ok: false, msg: 'illisible' });
   }
   const mode = modeOf(m && m.mode);
+  if (mode === 'villes') return ctx.send(res, 400, { ok: false, msg: 'mode inconnu' });
   const nom = cleanName(m && m.nom);
   if (!nom) return ctx.send(res, 400, { ok: false, msg: 'Ce pseudo ne passe pas : 2 à 16 lettres ou chiffres, et rien d’insultant.' });
   if (!TOKEN_RE.test(String(m.jeton || ''))) return ctx.send(res, 400, { ok: false, msg: 'jeton invalide' });
@@ -327,6 +330,12 @@ async function post(req, res, ctx) {
     old.cle = cle;
     old.parties = parties;
   }
+  // (jalon 169) la ville du joueur : gardée avec lui (« sans ville » l'enlève), et chaque manif finie compte pour elle
+  const ville = mode === 'manif' && Object.hasOwn(VILLES, String(m.ville || '')) ? String(m.ville) : '';
+  if (mode === 'manif') {
+    board.joueurs[id].ville = ville;
+    if (ville) compterVille(ville, id, score);
+  }
   save(mode);
   const list = ranked(mode);
   const rang = list.findIndex((p) => p === board.joueurs[id]) + 1;
@@ -346,6 +355,16 @@ function remove(req, res, url, ctx) {
 
 /** The leaderboard's routes; false if `path` isn't one of them. ctx: {send, visitor, authorized}. */
 export async function classement(req, res, url, path, ctx) {
+  if (path === '/ligue/event' && req.method === 'POST') {   // (jalon 169 : un event, posé par Elias)
+    if (!ctx.authorized(req)) return ctx.send(res, 401, { error: 'unauthorized' }) || true;
+    let raw = '';
+    for await (const chunk of req) raw += chunk;
+    let e = null;
+    try { e = JSON.parse(raw); } catch { e = null; }
+    const ev = await ajouterEvent(e);
+    ctx.send(res, ev ? 200 : 400, ev ? { ok: true, event: ev } : { ok: false, msg: 'debut, fin (ISO), titre, ville' });
+    return true;
+  }
   if (path !== '/classement') return false;
   if (req.method === 'GET') {
     ctx.send(res, 200, top(modeOf(url.searchParams.get('mode'))), 'application/json; charset=utf-8', { 'Access-Control-Allow-Origin': '*' });
