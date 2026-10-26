@@ -1,7 +1,7 @@
 # 17 OCTOBRE file server (Coolify app "17-octobre-fichiers", base directory /services/17-octobre).
 FROM node:22-alpine
 WORKDIR /app
-COPY server.mjs relay.mjs ws.mjs classement.mjs noms.mjs mesure.mjs ajouts.json ./
+COPY server.mjs relay.mjs ws.mjs classement.mjs noms.mjs mesure.mjs ligue.mjs ajouts.json ./
 ENV PORT=3000 DATA_DIR=/data
 RUN mkdir -p /data && chown node:node /data
 USER node
