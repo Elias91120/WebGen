@@ -540,7 +540,7 @@ footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait)
   function dessinerToujours() {
     const a = (donnees.tableau || {}).toujours;
     if (!a) {
-      $('toujours').innerHTML = '<div class="carte"><div class="vide">Le serveur du jeu n'est pas encore à jour : le total arrive.</div></div>';
+      $('toujours').innerHTML = '<div class="carte"><div class="vide">Le serveur du jeu n’est pas encore à jour : le total arrive.</div></div>';
       return;
     }
     const d = a.depuis ? new Date(a.depuis + 'T12:00:00') : null;
