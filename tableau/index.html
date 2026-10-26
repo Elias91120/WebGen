@@ -194,6 +194,12 @@ footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait)
     </section>
 
     <section>
+      <h2>Depuis le début <small id="toujours-depuis"></small></h2>
+      <p class="sous">Tout compté, sans période : chaque joueur une fois, tout le temps passé dans les trois jeux.</p>
+      <div class="grille" id="toujours"></div>
+    </section>
+
+    <section>
       <h2 id="titre-periode">Cette semaine</h2>
       <p class="sous">Des joueurs distincts : chaque installation du jeu compte une fois, quel que soit le nombre de parties.</p>
       <div class="grille" id="periode"></div>
@@ -423,6 +429,7 @@ footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait)
     const stats = Object.fromEntries(JEUX.map((j) => [j.cle, statsJeu(j.cle, liste)]));
     dessinerVerdict(stats, mot);
     dessinerMaintenant();
+    dessinerToujours();
     dessinerPeriode(liste);
     dessinerFideles();
     dessinerJeux(stats);
@@ -526,6 +533,35 @@ footer { color: var(--doux); font-size: 12px; border-top: 1px solid var(--trait)
       carte('Sur la page du jeu', srv ? nb(srv.watchers || 0) : '–', '', 'onglets ouverts sur le compteur de téléchargements'),
       carte('Version en ligne', esc(d.version ? d.version.version : '?'), '',
         d.version ? `publiée le ${esc(new Date(d.version.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }))}${d.version.titre ? ` : « ${esc(d.version.titre)} »` : ''}` : ''),
+    ].join('');
+  }
+
+  // (26/10, Elias : « combien de temps ont joué les gens au total… le nombre de joueurs en tout… en général »)
+  function dessinerToujours() {
+    const a = (donnees.tableau || {}).toujours;
+    if (!a) {
+      $('toujours').innerHTML = '<div class="carte"><div class="vide">Le serveur du jeu n'est pas encore à jour : le total arrive.</div></div>';
+      return;
+    }
+    const d = a.depuis ? new Date(a.depuis + 'T12:00:00') : null;
+    $('toujours-depuis').textContent = d ? `depuis le ${d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}` : '';
+    const m = a.modes || {};
+    const parJeuJ = JEUX.map((j) => puce(j.couleur, `${esc(j.nom)} ${nb((m[j.cle] || {}).joueurs || 0)}`)).join('');
+    const parJeuT = JEUX.map((j) => puce(j.couleur, `${esc(j.nom)} ${duree((m[j.cle] || {}).temps || 0)}`)).join('');
+    const parJeuP = JEUX.map((j) => puce(j.couleur, `${esc(j.nom)} ${nb((m[j.cle] || {}).parties || 0)}`)).join('');
+    const tele = telechargements();
+    const rec = a.record_connectes || {};
+    const mj = a.meilleur_jour || {};
+    const heures = Math.round((a.temps || 0) / 3600);
+    $('toujours').innerHTML = [
+      carte('Joueurs en tout', nb(a.joueurs), a.joueurs > 1 ? 'joueurs' : 'joueur', 'chaque installation du jeu compte une fois', parJeuJ),
+      carte('Temps de jeu total', `≈ ${nb(heures)}`, 'h', `${duree(a.temps)} · ${a.joueurs ? duree(a.temps / a.joueurs) : '–'} par joueur en moyenne`, parJeuT),
+      carte('Parties', nb(a.parties), '', `${nb(a.lancements)} lancements du jeu · ${a.joueurs ? (a.parties / a.joueurs).toLocaleString('fr-FR', { maximumFractionDigits: 1 }) : '–'} parties par joueur`, parJeuP),
+      carte('Ils reviennent', nb(a.fideles || 0), '', `${pc(a.fideles || 0, a.joueurs)} % ont joué au moins deux jours · ${nb(a.tres_fideles || 0)} au moins trois`),
+      carte('Le meilleur jour', nb(mj.joueurs || 0), 'joueurs', mj.date ? `le ${new Date(mj.date + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}` : ''),
+      carte('Record en même temps', nb(rec.connectes || 0), 'en jeu', rec.date ? `le ${new Date(rec.date).toLocaleString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}` : 'compté à partir du 26 octobre'),
+      carte('Téléchargements', tele.length ? nb(somme(tele, (x) => x.n)) : '–', '', tele.length && a.joueurs ? `${pc(a.joueurs, somme(tele, (x) => x.n))} % ont lancé le jeu (avec les stats anonymes)` : ''),
+      carte('Visiteurs du site', nb(a.visiteurs || 0), '', `${nb(a.vues || 0)} pages vues`),
     ].join('');
   }
 

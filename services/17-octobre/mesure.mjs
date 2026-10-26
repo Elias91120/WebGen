@@ -30,6 +30,10 @@ const MAX_CORPS = 2048;
 
 let DATA = '/data';
 let jours = {}; // date -> day (sets in memory, arrays on disk)
+// (26/10, Elias : « au total… le nombre de joueurs qui ont joué en tout… en général ») the days older than the 60 kept,
+// folded into one, never dropped: the all-time numbers (DATA_DIR/mesure_archive.json)
+let archive = null;
+let record = { connectes: 0, date: '' }; // the most players in game at once, ever
 const actifs = new Map(); // install id -> {j, v, at}
 const debits = new Map(); // ip -> {n, until}
 let sale = false;
@@ -155,17 +159,48 @@ export async function chargerMesure(dir) {
   } catch {
     jours = {};
   }
+  try {
+    const a = JSON.parse(await fs.readFile(join(DATA, 'mesure_archive.json'), 'utf8')) || {};
+    archive = a.archive ? { ...enSets(a.archive), depuis: a.archive.depuis || '' } : null;
+    record = a.record || record;
+  } catch {
+    archive = null;
+  }
+}
+
+/** Folds a day into `a` (the sets united, the counts added); a new fold when `a` is null. */
+function plier(a, date, j) {
+  if (!a) a = { ...jourVide(), depuis: date };
+  if (!a.depuis || (date && date < a.depuis)) a.depuis = date;
+  a.jeux.lancements += j.jeux.lancements;
+  for (const id of j.jeux.ids) a.jeux.ids.add(id);
+  for (const [v, ids] of Object.entries(j.jeux.versions)) for (const id of ids) (a.jeux.versions[v] ||= new Set()).add(id);
+  for (const [n, m] of Object.entries(j.jeux.modes)) {
+    const am = mode(a, n);
+    for (const k of ['parties', 'fins', 'duree', 'victoires', 'battements', 'crs_parties', 'crs_victoires',
+      'manifestants_parties', 'manifestants_victoires']) am[k] = (am[k] || 0) + (m[k] || 0);
+    am.meilleur = Math.max(am.meilleur || 0, m.meilleur || 0);
+    for (const id of m.ids) am.ids.add(id);
+  }
+  a.site.vues += j.site.vues;
+  for (const vid of j.site.visites) a.site.visites.add(vid);
+  return a;
 }
 
 async function sauver() {
   if (!sale) return;
   sale = false;
-  const garder = Object.keys(jours).sort().slice(-GARDER_JOURS);
+  const tous = Object.keys(jours).sort();
+  const garder = tous.slice(-GARDER_JOURS);
+  for (const k of tous.slice(0, -GARDER_JOURS)) archive = plier(archive, k, jours[k]);
   jours = Object.fromEntries(garder.map((k) => [k, jours[k]]));
   const tmp = join(DATA, '.mesure.json.part');
   await fs.mkdir(DATA, { recursive: true });
   await fs.writeFile(tmp, JSON.stringify(enTableau(jours)));
   await fs.rename(tmp, join(DATA, 'mesure.json'));
+  const tmpA = join(DATA, '.mesure_archive.json.part');
+  await fs.writeFile(tmpA, JSON.stringify(enTableau({ archive, record })));
+  await fs.rename(tmpA, join(DATA, 'mesure_archive.json'));
 }
 
 export function demarrerMesure() {
@@ -185,6 +220,10 @@ export function tableau(ms = Date.now()) {
     maintenant.connectes += 1;
     ajoute(maintenant.par_jeu, a.j);
     ajoute(maintenant.versions, a.v);
+  }
+  if (maintenant.connectes > record.connectes) {
+    record = { connectes: maintenant.connectes, date: new Date(ms).toISOString() };
+    sale = true;
   }
   const dates = [];
   for (let k = 29; k >= 0; k -= 1) dates.push(jourDe(ms - k * 86_400_000));
@@ -269,8 +308,40 @@ export function tableau(ms = Date.now()) {
     }
     return { joueurs: e.joueurs.size, par_jeu: taille(e.par_jeu), versions: taille(e.versions), visiteurs: e.visiteurs.size };
   };
+  // (26/10) depuis le début : l'archive et tous les jours gardés, pliés ensemble
+  let total = archive ? plier(null, archive.depuis, archive) : null;
+  for (const date of Object.keys(jours).sort()) total = plier(total, date, jours[date]);
+  total ||= { ...jourVide(), depuis: '' };
+  const modesTotal = {};
+  let tempsTotal = 0;
+  for (const [n, m] of Object.entries(total.jeux.modes)) {
+    // (le temps de jeu : ≈ 5 min par signe, plus la moitié d'un intervalle par partie, comme le tableau)
+    const temps = (m.battements || 0) * 300 + m.parties * 150;
+    tempsTotal += temps;
+    modesTotal[n] = { joueurs: m.ids.size, parties: m.parties, fins: m.fins, victoires: m.victoires, meilleur: m.meilleur,
+      temps, duree_moyenne: m.fins ? Math.round(m.duree / m.fins) : 0 };
+  }
+  let meilleurJour = { date: '', joueurs: 0 };
+  for (const [date, j] of Object.entries(jours)) if (j.jeux.ids.size > meilleurJour.joueurs) meilleurJour = { date, joueurs: j.jeux.ids.size };
+  const fid = fideles(Object.keys(jours).sort());
+  const toujours = {
+    depuis: total.depuis,
+    joueurs: total.jeux.ids.size,
+    temps: tempsTotal,
+    lancements: total.jeux.lancements,
+    parties: Object.values(total.jeux.modes).reduce((s, m) => s + m.parties, 0),
+    modes: modesTotal,
+    versions: taille(total.jeux.versions),
+    visiteurs: total.site.visites.size,
+    vues: total.site.vues,
+    fideles: fid.fideles,
+    tres_fideles: fid.tres_fideles,
+    meilleur_jour: meilleurJour,
+    record_connectes: record,
+  };
   return {
     genere: new Date(ms).toISOString(),
+    toujours,
     maintenant,
     semaine: { ...ensemble(dates.slice(-7)), ...fideles(dates.slice(-7)), nouveaux: dates.slice(-7).reduce((s, d) => s + nouveaux(d), 0) },
     mois: { ...ensemble(dates), ...fideles(dates), nouveaux: dates.reduce((s, d) => s + nouveaux(d), 0) },
