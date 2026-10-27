@@ -4,7 +4,7 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.25.0",
+  "version": "0.26.0",
   "fr": {
     "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains, dans l'ordre que tu veux : Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Toulon, Nice, Toulouse, Bordeaux, Grenoble. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
@@ -20,10 +20,10 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.25.0",
+        "tag": "Nouveau : la 0.26.0",
         "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille, Marseille et Nice, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
-          "Nouveau : la Ligue des Villes : choisis ta ville avec ton pseudo, chacune de tes manifs compte pour elle ; le premier event, « La première manif des villes », dimanche 1er novembre de 20 h à 21 h",
+          "Nouveau : les fantômes, les autres joueurs en transparence avec leur pseudo et leur ville ; et la Ligue des Villes : choisis ta ville avec ton pseudo, chacune de tes manifs compte pour elle ; le premier event, « La première manif des villes », dimanche 1er novembre de 20 h à 21 h",
           "Le mode FACILE, au bouton de la bande : des CRS moins costauds, plus de cœurs, la foule te relève deux fois",
           "Choisis ta région dès Paris : cinq gares, cinq régions, trois villes au plus ; un NORMAL qui fait vraiment galérer",
           "Rennes, Nantes et Tours, que vous avez demandées : la place de la Mairie, la place Royale et le château des ducs, la place Plumereau",
@@ -200,10 +200,10 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "New: 0.25.0",
+        "tag": "New: 0.26.0",
         "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France on the real trains, from Caen to Lille, Marseille and Nice, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
-          "New: the League of Cities: pick your city with your nickname, every run you finish counts for it; the first event, \"The first protest of the cities\", Sunday 1 November, 8 to 9 pm (Paris time)",
+          "New: ghosts, the other players in transparency with their nickname and city; and the League of Cities: pick your city with your nickname, every run you finish counts for it; the first event, \"The first protest of the cities\", Sunday 1 November, 8 to 9 pm (Paris time)",
           "The EASY mode, on the crew screen: softer CRS, more hearts, and the crowd picks you up twice",
           "Pick your region right from Paris: five stations, five regions, three cities at most; a NORMAL mode that really makes you sweat",
           "Rennes, Nantes and Tours, which you asked for: Place de la Mairie, Place Royale and the castle of the Dukes, Place Plumereau",
