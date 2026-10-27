@@ -96,16 +96,16 @@ async function streamChat(
   }
 }
 
-// Links, e-mails and **bold** from the model, rendered without injecting HTML.
-const RICH = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*|(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"»])|([\w.%+-]+@[\w-]+\.[\w.-]*\w)/g;
+// Links, e-mails, **bold** and *italics* from the model, rendered without injecting HTML.
+const RICH = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*|(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"»])|([\w.%+-]+@[\w-]+\.[\w.-]*\w)|\*([^*\s][^*\n]*?)\*/g;
 const linkClass = 'font-medium text-brand-mint underline decoration-brand-mint/40 underline-offset-2 hover:decoration-brand-mint';
 
 function renderRich(raw: string) {
-  const text = raw.replace(/^#{1,6}\s+/gm, '');
+  const text = raw.replace(/^#{1,6}\s+/gm, '').replace(/^(\s*)[*-]\s+/gm, '$1• ');
   const nodes: React.ReactNode[] = [];
   let last = 0;
   for (const match of text.matchAll(RICH)) {
-    const [whole, label, href, bold, url, email] = match;
+    const [whole, label, href, bold, url, email, italic] = match;
     const at = match.index ?? 0;
     if (at > last) nodes.push(text.slice(last, at));
     if (href || url) {
@@ -118,6 +118,8 @@ function renderRich(raw: string) {
       nodes.push(<strong key={at} className="font-semibold text-white">{bold}</strong>);
     } else if (email) {
       nodes.push(<a key={at} href={`mailto:${email}`} className={linkClass}>{email}</a>);
+    } else if (italic) {
+      nodes.push(<em key={at} className="italic text-white/90">{italic}</em>);
     }
     last = at + whole.length;
   }
