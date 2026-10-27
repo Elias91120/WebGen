@@ -41,6 +41,7 @@ import { join } from 'node:path';
 import { timingSafeEqual } from 'node:crypto';
 
 import { boardStats, classement, loadBoard } from './classement.mjs';
+import { chargerFantomes, routesFantomes } from './fantomes.mjs';
 import { chargerLigue } from './ligue.mjs';
 import { chargerMesure, demarrerMesure, mesure } from './mesure.mjs';
 import { relayStats, relayUpgrade, startRelay } from './relay.mjs';
@@ -328,6 +329,7 @@ const server = createServer(async (req, res) => {
       return send(res, 200, { ...stats, relay: relayStats(), watchers: watchers.size, classement: boardStats() });
     }
     if (await classement(req, res, url, path, { send, visitor, authorized })) return;
+    if (await routesFantomes(req, res, url, path, { send, visitor })) return;   // (jalon 170)
     if (await mesure(req, res, url, path, { send, visitor, authorized: reader })) return;
     send(res, 404, { error: 'not found' });
   } catch (e) {
@@ -352,6 +354,7 @@ setInterval(() => {
 await loadStats();
 await loadBoard(DATA);
 await chargerLigue(DATA);
+await chargerFantomes(DATA);
 await chargerMesure(DATA);
 demarrerMesure();
 server.listen(PORT, () => {
