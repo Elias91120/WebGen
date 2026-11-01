@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 
 import AiAgentWidget from '../components/AiAgentWidget';
 import BookingModal from '../components/BookingModal';
+import Geeko, { sizeFrom } from '../components/Geeko';
 import LegalModals from '../components/LegalModals';
 import Logo from '../components/Logo';
 import SpaceSwitch from '../components/SpaceSwitch';
@@ -249,7 +250,9 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, space = 'web', meta: page
       <main>{children({ lang, t, book })}</main>
 
       <footer className="border-t border-white/[0.07] bg-surface">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[minmax(0,2fr)_1fr_1fr]">
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[minmax(0,2fr)_1fr_1fr]">
+          {/* Pas sur le côté IA (lien de prospection) ni sur la page du jeu (sa propre direction artistique). */}
+          {!isAi && page !== 'game' && <Geeko lang={lang} variant="couette" size={sizeFrom(768, 2, 1)} className="geeko-footer" />}
           <div>
             <Logo variant="wordmark" compact glow={false} />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-slate-400">{isAi ? ai.footer.blurb : t.footer.blurb}</p>
@@ -335,7 +338,7 @@ const SiteLayout: React.FC<SiteLayoutProps> = ({ page, space = 'web', meta: page
         </div>
       </footer>
 
-      <AiAgentWidget lang={lang} />
+      <AiAgentWidget lang={lang} sober={isAi} />
       <BookingModal lang={lang} />
       <LegalModals translations={t.legal} isOpen={legalModalOpen} onClose={() => setLegalModalOpen(false)} initialTab={legalTab} />
     </div>

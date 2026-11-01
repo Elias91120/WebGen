@@ -2,6 +2,7 @@ import { ArrowUpRight, X } from 'lucide-react';
 import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 
 import { bookingUrl, closeBooking, getBookingState, prepareBooking, subscribeBooking } from '../lib/booking';
+import Geeko, { sizeFrom } from './Geeko';
 
 const COPY = {
   fr: {
@@ -36,7 +37,23 @@ const BookingModal: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
   const url = useMemo(() => (source ? bookingUrl(source) : ''), [source]);
   const [ready, setReady] = useState(false);
   const [slow, setSlow] = useState(false);
+  const [booked, setBooked] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
+
+  // Rendez-vous pris : Geeko fait la fête (à côté du calendrier, ou à la fermeture quand il prend tout l'écran).
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin === 'https://calendly.com' && (e.data as { event?: string } | null)?.event === 'calendly.event_scheduled') setBooked(true);
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
+
+  useEffect(() => {
+    if (!booked || open) return;
+    const timer = window.setTimeout(() => setBooked(false), 6000);
+    return () => window.clearTimeout(timer);
+  }, [booked, open]);
 
   // Intent: hovering, touching or focusing any booking button starts loading the calendar.
   useEffect(() => {
@@ -83,6 +100,7 @@ const BookingModal: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
   if (!source) return null;
 
   return (
+    <>
     <div
       className={`fixed inset-0 z-[70] bg-ink/85 backdrop-blur-sm transition-opacity duration-200 ${
         open ? 'opacity-100' : 'pointer-events-none invisible opacity-0'
@@ -109,7 +127,13 @@ const BookingModal: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
 
         {!ready && (
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center">
-            <span className="h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-brand-mint" aria-hidden="true" />
+            {/* Geeko boit son café pendant que le calendrier charge ; le rond reste si les animations sont réduites. */}
+            <span className="h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-brand-mint motion-safe:hidden" aria-hidden="true" />
+            {open && (
+              <span className="relative block h-[108px] w-[120px] motion-reduce:hidden sm:h-[144px] sm:w-[160px]">
+                <Geeko lang={lang} variant="cafe" size={sizeFrom(640, 2, 1.5)} eggs={false} />
+              </span>
+            )}
             <div>
               <p className="font-display text-base font-semibold text-white">{copy.loading}</p>
               <p className="mt-1 text-sm text-slate-400">{copy.details}</p>
@@ -136,7 +160,11 @@ const BookingModal: React.FC<{ lang: 'fr' | 'en' }> = ({ lang }) => {
       >
         <X className="h-5 w-5" />
       </button>
+
+      {booked && open && <Geeko lang={lang} variant="confettis" size={sizeFrom(1400, 2, 1)} eggs={false} className="geeko-party" />}
     </div>
+    {booked && !open && <Geeko lang={lang} variant="confettis" size={1} eggs={false} className="geeko-party-closed" />}
+    </>
   );
 };
 

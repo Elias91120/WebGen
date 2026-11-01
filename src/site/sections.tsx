@@ -22,6 +22,7 @@ import {
 import React from 'react';
 
 import BuildTimeline from '../components/BuildTimeline';
+import Geeko, { sizeFrom } from '../components/Geeko';
 import { PROJECTS_DATA } from '../components/ProjectsShowcase';
 import ProjectsMarquee from '../components/ProjectsMarquee';
 import Reveal from '../components/Reveal';
@@ -107,6 +108,18 @@ export const Hero: React.FC<Props> = ({ lang, t, book }) => (
         <RisingWords text={t.hero.titleStart} from={0} />
         <span className="word-rise text-gradient gradient-drift" style={{ ['--w' as string]: t.hero.titleStart.split(' ').length }}>
           {t.hero.titleEnd}
+          {/* Il arrive quand le dernier mot est monté. Sa taille suit celle du titre, pour ne pas mordre sur la ligne du dessus. */}
+          <span className="geeko-anchor">
+            <Geeko
+              lang={lang}
+              variant="coucou"
+              size={(host) => parseFloat(getComputedStyle(host).fontSize) / 56}
+              delay={1300}
+              bubble={lang === 'fr' ? 'Bonjour !' : 'Hello!'}
+              onlyIfFits
+              className="geeko-hero"
+            />
+          </span>
         </span>
       </h1>
 
@@ -402,12 +415,12 @@ export const OffersSection: React.FC<Props> = ({ t, lang, book }) => {
   );
 };
 
-export const MethodSection: React.FC<Props> = ({ t }) => (
+export const MethodSection: React.FC<Props> = ({ t, lang }) => (
   <section id="methode" className="relative scroll-mt-16 overflow-hidden py-20 md:py-28">
     <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
       <Heading path={t.stack.path} title={t.stack.title} sub={t.stack.subtitle} className="mb-10 md:mb-14" />
       <Reveal>
-        <BuildTimeline steps={t.stack.steps} mock={t.stack.mock} />
+        <BuildTimeline steps={t.stack.steps} mock={t.stack.mock} lang={lang} />
       </Reveal>
     </div>
   </section>
@@ -499,7 +512,10 @@ export const WhyUs: React.FC<Props> = ({ t, book }) => {
 /* Every page: contact                                                 */
 /* ------------------------------------------------------------------ */
 
-export const ContactSection: React.FC<Props> = ({ t, book }) => (
+export const ContactSection: React.FC<Props> = ({ lang, t, book }) => {
+  // Geeko saute quand on s'approche du bouton de réservation.
+  const [eager, setEager] = React.useState(false);
+  return (
   <section id="contact" className="relative overflow-hidden border-t border-white/5 py-14 md:py-28">
     <SectionLines variant="c" />
     <div className="relative mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-16">
@@ -509,12 +525,22 @@ export const ContactSection: React.FC<Props> = ({ t, book }) => (
         <p className="mt-5 text-base leading-relaxed text-slate-400 md:text-lg">{t.contact.subtitle}</p>
       </Reveal>
 
-      <Reveal delay={120}>
-        <div className="card-featured p-6 md:p-10">
+      <Reveal delay={120} className="relative">
+        <Geeko
+          lang={lang}
+          variant={eager ? 'yo' : 'pancarte'}
+          size={sizeFrom(768, 2, 1)}
+          className={`geeko-contact ${eager ? 'is-eager' : ''}`}
+        />
+        <div className="card-featured z-10 p-6 md:p-10">
           <button
             type="button"
             data-booking="contact"
             onClick={() => book('contact')}
+            onPointerEnter={() => setEager(true)}
+            onPointerLeave={() => setEager(false)}
+            onFocus={() => setEager(true)}
+            onBlur={() => setEager(false)}
             className="group flex w-full items-center gap-4 rounded-[1.25rem] bg-brand-gradient p-5 text-left text-ink shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)] transition-transform hover:-translate-y-0.5"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ink/10 ring-1 ring-ink/15">
@@ -558,4 +584,5 @@ export const ContactSection: React.FC<Props> = ({ t, book }) => (
       </Reveal>
     </div>
   </section>
-);
+  );
+};

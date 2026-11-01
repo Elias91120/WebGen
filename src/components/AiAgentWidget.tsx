@@ -1,13 +1,16 @@
-import { Bot, CalendarCheck, Mail, RotateCcw, Send, Sparkles, X } from 'lucide-react';
+import { CalendarCheck, Mail, RotateCcw, Send, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { openBooking, prepareBooking } from '../lib/booking';
+import Geeko, { GEEKO_PORTRAIT } from './Geeko';
 
 interface AiAgentWidgetProps {
   lang: 'en' | 'fr';
   /** Page-specific opening message and suggested questions (the AI services page uses its own). */
   greeting?: string;
   suggestions?: string[];
+  /** Côté IA (lien de prospection) : le portrait de Geeko seulement, sans son nom ni ses animations. */
+  sober?: boolean;
 }
 
 interface ChatMessage {
@@ -55,6 +58,22 @@ const COPY = {
     reset: 'New conversation',
     close: 'Close the assistant',
     error: 'I can’t answer right now. Book a free 30-minute call or email us at contact@3geeks.fr: we reply within 24 hours.',
+  },
+};
+
+// Hors côté IA, l'assistant se présente comme Geeko. « Assistant IA » reste écrit : il ne doit passer pour personne d'autre.
+const GEEKO_COPY = {
+  fr: {
+    title: 'Geeko',
+    subtitle: 'L’assistant IA de 3geeks',
+    greeting: 'Bonjour ! Je suis Geeko, l’assistant de 3geeks. Posez-moi vos questions sur nos offres, nos délais, nos réalisations ou votre projet.',
+    typing: 'Geeko rédige sa réponse…',
+  },
+  en: {
+    title: 'Geeko',
+    subtitle: 'The 3geeks AI assistant',
+    greeting: 'Hi! I’m Geeko, the 3geeks assistant. Ask me about our offers, timelines, past projects or your own project.',
+    typing: 'Geeko is writing…',
   },
 };
 
@@ -127,8 +146,9 @@ function renderRich(raw: string) {
   return nodes;
 }
 
-export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, greeting, suggestions }) => {
-  const copy = { ...COPY[lang], greeting: greeting ?? COPY[lang].greeting, suggestions: suggestions ?? COPY[lang].suggestions };
+export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, greeting, suggestions, sober = false }) => {
+  const base = sober ? COPY[lang] : { ...COPY[lang], ...GEEKO_COPY[lang] };
+  const copy = { ...base, greeting: greeting ?? base.greeting, suggestions: suggestions ?? base.suggestions };
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -222,6 +242,8 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, greeting, su
   };
 
   const conversation: ChatMessage[] = [{ role: 'assistant', content: copy.greeting }, ...messages];
+  // Geeko suit l'état réel de la conversation.
+  const geekoVariant = last?.status === 'error' ? 'aie' : last?.status === 'streaming' ? (last.content ? 'explique' : 'menton') : 'coucou';
 
   return (
     <>
@@ -238,7 +260,7 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, greeting, su
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-mint/80 opacity-75" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-mint" />
           </span>
-          <Bot className="h-5 w-5 text-brand-mint transition-transform group-hover:rotate-12 sm:h-4 sm:w-4" />
+          <img src={GEEKO_PORTRAIT} alt="" width={30} height={26} className="h-[22px] w-[26px] max-w-none transition-transform group-hover:rotate-12 sm:h-[26px] sm:w-[30px]" />
           <span className="hidden sm:inline">{copy.launcher}</span>
         </button>
       </div>
@@ -258,8 +280,9 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, greeting, su
             {/* Header */}
             <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
               <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-brand-mint/30 bg-brand-mint/10 text-brand-mint">
-                  <Sparkles className="h-5 w-5" />
+                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/[0.04] ring-1 ring-brand-mint/30">
+                  {!sober && <Geeko lang={lang} variant={geekoVariant} size={44 / 52} eggs={false} className="geeko-face" />}
+                  <img src={GEEKO_PORTRAIT} alt="" width={30} height={26} className={sober ? '' : 'hidden motion-reduce:block'} />
                 </div>
                 <div className="min-w-0">
                   <h3 id="assistant-title" className="flex items-center gap-2 font-display text-sm font-semibold text-white">
@@ -303,9 +326,7 @@ export const AiAgentWidget: React.FC<AiAgentWidgetProps> = ({ lang, greeting, su
                 return (
                   <div key={idx} className={`flex items-start gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
                     {!isUser && (
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-brand-mint/30 bg-brand-mint/10 text-brand-mint">
-                        <Bot className="h-3.5 w-3.5" />
-                      </div>
+                      <img src={GEEKO_PORTRAIT} alt="" width={28} height={24} className="mt-0.5 h-6 w-7 max-w-none shrink-0" />
                     )}
                     <div
                       className={`max-w-[84%] rounded-2xl px-4 py-3 leading-relaxed ${

@@ -8,6 +8,9 @@ import { Check, ChartColumn, CircleCheck, Globe, Inbox, Lock, Sparkles } from 'l
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
 import React, { useEffect, useRef, useState } from 'react';
 
+import type { Lang } from '../i18n';
+import Geeko, { sizeFrom } from './Geeko';
+
 const STEP_MS = 3400;
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -26,7 +29,11 @@ interface Mock {
 interface BuildTimelineProps {
   steps: Array<{ t: string; d: string }>;
   mock: Mock;
+  lang: Lang;
 }
+
+// Geeko suit les cinq étapes : cadrage, maquette, développement, mise en ligne, optimisation.
+const GEEKO_BY_STEP = ['menton', 'explique', 'deux-doigts', 'confettis', 'loupe'];
 
 /** A layout block: dashed outline in the wireframe, filled once built. */
 const Block: React.FC<{ built: boolean; fill: string; className?: string; children?: React.ReactNode }> = ({ built, fill, className = '', children }) => (
@@ -212,7 +219,7 @@ const BrowserMock: React.FC<{ stage: number; mock: Mock }> = ({ stage, mock }) =
   );
 };
 
-const BuildTimeline: React.FC<BuildTimelineProps> = ({ steps, mock }) => {
+const BuildTimeline: React.FC<BuildTimelineProps> = ({ steps, mock, lang }) => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.4 });
   const reduce = useReducedMotion();
@@ -292,7 +299,8 @@ const BuildTimeline: React.FC<BuildTimelineProps> = ({ steps, mock }) => {
         })}
       </ol>
 
-      <div>
+      <div className="relative">
+        <Geeko lang={lang} variant={GEEKO_BY_STEP[stage]} size={sizeFrom(768, 1, 0.75)} className="geeko-methode" />
         <BrowserMock stage={stage} mock={mock} />
 
         {/* Steps (phones and tablets): progress rail + the current step */}

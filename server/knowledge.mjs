@@ -220,7 +220,7 @@ export const CHUNKS = [
   {
     id: 'assistant',
     title: 'À propos de cet assistant',
-    keywords: ['mistral', 'modele', 'llm', 'assistant', 'bot', 'chatbot', 'robot', 'humain', 'qui es-tu', 'tu es qui', 'gpt', 'chatgpt', 'modele'],
-    text: 'Cet assistant est l’IA du site 3geeks : il utilise un modèle de Mistral AI (les messages qu’on lui écrit sont donc transmis à Mistral AI pour générer la réponse), avec un relais sur les serveurs du studio. Il répond aux questions sur 3geeks, ses offres, ses délais, ses réalisations et sa façon de travailler. Il peut se tromper : pour un devis ou une réponse précise sur votre projet, l’équipe vous répond lors de l’appel gratuit de 30 min ou par e-mail à contact@3geeks.fr.',
+    keywords: ['mistral', 'modele', 'llm', 'assistant', 'bot', 'chatbot', 'robot', 'humain', 'qui es-tu', 'tu es qui', 'gpt', 'chatgpt', 'modele', 'geeko', 'gecko', 'mascotte', 'mascot', 'ton nom', 'appelles', 'your name'],
+    text: 'Cet assistant s’appelle Geeko, du nom de la mascotte de 3geeks, un petit gecko en pixel art. C’est une IA, pas une personne : c’est l’IA du site 3geeks. Il utilise un modèle de Mistral AI (les messages qu’on lui écrit sont donc transmis à Mistral AI pour générer la réponse), avec un relais sur les serveurs du studio. Il répond aux questions sur 3geeks, ses offres, ses délais, ses réalisations et sa façon de travailler. Il peut se tromper : pour un devis ou une réponse précise sur votre projet, l’équipe vous répond lors de l’appel gratuit de 30 min ou par e-mail à contact@3geeks.fr.',
   },
 ];

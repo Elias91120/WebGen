@@ -556,7 +556,7 @@ const AiPage: React.FC = () => {
           </div>
         </section>
 
-        <AiAgentWidget lang={lang} greeting={t.assistant.greeting} suggestions={t.assistant.suggestions} />
+        <AiAgentWidget lang={lang} greeting={t.assistant.greeting} suggestions={t.assistant.suggestions} sober />
         <BookingModal lang={lang} />
         <LegalModals translations={legal} isOpen={legalModalOpen} onClose={() => setLegalModalOpen(false)} initialTab={legalTab} />
       </main>

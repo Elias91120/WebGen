@@ -472,6 +472,130 @@ body {
   .logo-marquee-dup { display: none; }
 }
 
+/* Geeko (components/Geeko.tsx) : posé sur les lignes et les bords existants, jamais devant un texte.
+   --gk-u = une unité de son dessin (boîte de 80 × 72 u ; pieds à 66,5 u, corps de 19 à 61 u). */
+.geeko {
+  --gk-u: 1px;
+  display: block;
+  min-width: 1px;
+  min-height: 1px;
+  line-height: 0;
+}
+.geeko .gk-root { animation: geeko-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes geeko-in {
+  from { opacity: 0; transform: translateY(calc(var(--gk-u) * 10)); }
+  to { opacity: 1; transform: none; }
+}
+.geeko[data-frozen] .gk-root,
+.geeko[data-frozen] .gk-root * { animation-play-state: paused !important; }
+
+/* Sa bulle : du contenu généré, pour ne rien ajouter au texte du titre (Google, lecteurs d'écran). */
+.geeko[data-say]::after {
+  content: attr(data-say);
+  position: absolute;
+  left: calc(var(--gk-u) * 66);
+  top: calc(var(--gk-u) * 20);
+  display: none;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: #f2f4f7;
+  color: #08090d;
+  font: 600 13px/1 var(--font-sans);
+  letter-spacing: 0;
+  white-space: nowrap;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+  animation: geeko-say 4.2s ease both;
+}
+@media (min-width: 1024px) {
+  .geeko[data-say]::after { display: block; }
+}
+@keyframes geeko-say {
+  0% { opacity: 0; transform: translateY(4px); }
+  8%, 84% { opacity: 1; transform: none; }
+  100% { opacity: 0; }
+}
+
+/* Au bout du titre : l'ancre nulle se pose sur la ligne de base, juste après le dernier mot. */
+.geeko-anchor {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+.geeko-hero {
+  position: absolute;
+  left: calc(8px - var(--gk-u) * 19);
+  bottom: calc(var(--gk-u) * -5.5);
+}
+
+/* Derrière la carte contact : la carte le coupe à la poitrine. */
+.geeko-contact {
+  position: absolute;
+  z-index: 0;
+  right: 12px;
+  bottom: calc(100% - var(--gk-u) * 25.5 - 1px);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.geeko-contact.is-eager { transform: translateY(calc(var(--gk-u) * -8)); }
+.geeko-contact[data-say]::after { left: auto; right: calc(var(--gk-u) * 66); }
+@media (min-width: 768px) {
+  .geeko-contact {
+    right: 40px;
+    bottom: calc(100% - var(--gk-u) * 22.5 - 1px);
+  }
+  .geeko-contact.is-eager { transform: translateY(calc(var(--gk-u) * -11)); }
+}
+
+/* La sieste, sur la ligne du pied de page. */
+.geeko-footer {
+  position: absolute;
+  right: 2px;
+  bottom: calc(var(--gk-u) * -5.5 - 1px);
+}
+@media (min-width: 768px) {
+  .geeko-footer {
+    right: auto;
+    left: calc(2rem - var(--gk-u) * 19);
+  }
+}
+
+/* Perché sur la fenêtre de navigateur de la méthode. */
+.geeko-methode {
+  position: absolute;
+  z-index: 1;
+  right: calc(90px - var(--gk-u) * 40);
+  bottom: calc(100% - var(--gk-u) * 5.5 - 1px);
+}
+
+/* Dans le rond de l'assistant : le haut du corps. (Le décalage va sur son dessin : hors du rond, l'hôte passerait pour invisible.) */
+.geeko-face {
+  position: absolute;
+  inset: 0;
+}
+.geeko-face .gk-root {
+  position: absolute;
+  left: calc(var(--gk-u) * -14);
+  top: calc(var(--gk-u) * -9);
+}
+
+/* Réservation : la fête à côté du calendrier s'il y a la place, sinon à la fermeture. */
+.geeko-party {
+  position: absolute;
+  display: none;
+  left: calc((100% - min(1000px, 100% - 48px)) / 4 - var(--gk-u) * 40);
+  bottom: calc((100% - min(720px, 100% - 64px)) / 2 - var(--gk-u) * 5.5);
+}
+.geeko-party-closed {
+  position: fixed;
+  z-index: 40;
+  left: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 1200px) {
+  .geeko-party { display: block; }
+  .geeko-party-closed { display: none; }
+}
+
 /* Horizontal rows that scroll by swipe, without a visible scrollbar */
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
