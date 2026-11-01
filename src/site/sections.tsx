@@ -187,7 +187,7 @@ export const WhatWeDo: React.FC<Props> = ({ t }) => {
 
 const HOW_ICONS = [CalendarCheck, Timer, BadgeEuro];
 
-export const HowItWorks: React.FC<Props> = ({ t, book }) => {
+export const HowItWorks: React.FC<Props> = ({ lang, t, book }) => {
   const c = t.site.howItWorks;
   return (
     <section className="relative border-y border-white/5 bg-surface/60 py-14 md:py-28">
@@ -206,6 +206,8 @@ export const HowItWorks: React.FC<Props> = ({ t, book }) => {
             const Icon = HOW_ICONS[i];
             return (
               <Reveal as="li" key={step.t} delay={i * 110} className="relative">
+                {/* La fête sur « vous payez une fois satisfait ». */}
+                {i === 2 && <Geeko lang={lang} variant="confettis" size={1} className="geeko-how-card" />}
                 <div className="flex h-full gap-4 md:block md:rounded-[1.25rem] md:border md:border-white/[0.08] md:bg-surface md:p-7">
                   <div className="flex shrink-0 items-center gap-3">
                     <span className="relative flex h-11 w-11 items-center justify-center rounded-full border border-brand-mint/40 bg-ink font-display text-sm font-semibold text-brand-mint">
@@ -222,7 +224,8 @@ export const HowItWorks: React.FC<Props> = ({ t, book }) => {
             );
           })}
         </ol>
-        <Reveal className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+        <Reveal className="relative mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <Geeko lang={lang} variant="deux-doigts" size={1} className="geeko-how-btn" />
           <button type="button" data-booking="how-it-works" onClick={() => book('how-it-works')} className="btn btn-primary">
             {t.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
           </button>

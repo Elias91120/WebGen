@@ -6,6 +6,9 @@
   <meta name="robots" content="noindex" />
   <title>Page introuvable — 3geeks</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   <style>
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
@@ -14,7 +17,16 @@
       padding: 24px; background: #08090d; color: #e2e8f0;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.55;
     }
-    main { max-width: 560px; width: 100%; }
+    main { max-width: 600px; width: 100%; }
+    /* Le grand 404 : le zéro laisse sa place à Geeko quand il est là (src/geeko/notfound.ts). 1 unité de son dessin = 1/75 du corps. */
+    .big {
+      display: inline-block; margin: 0; font: 600 clamp(104px, 26vw, 150px)/1 Poppins, Inter, system-ui, sans-serif; letter-spacing: -.02em;
+      background: linear-gradient(90deg, #c3fb05, #0aefbb); -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .zero { display: inline-block; position: relative; width: .6em; text-align: center; }
+    .has-geeko .digit { visibility: hidden; }
+    #geeko { position: absolute; left: calc(50% - 40em / 75); bottom: .077em; line-height: 0; }
+    #geeko[data-frozen] .gk-root, #geeko[data-frozen] .gk-root * { animation-play-state: paused !important; }
     .code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 14px; color: #5ef3cf; letter-spacing: .08em; }
     h1 { margin: 12px 0 0; font-family: Poppins, Inter, system-ui, sans-serif; font-size: clamp(28px, 6vw, 40px); line-height: 1.15; color: #fff; }
     p { margin: 16px 0 0; color: #cbd5e1; }
@@ -29,6 +41,7 @@
 </head>
 <body>
   <main>
+    <p class="big">4<span class="zero"><span class="digit">0</span><span id="geeko" aria-hidden="true"></span></span>4</p>
     <p class="code">ERREUR 404</p>
     <h1>Cette page n’existe pas ou a été déplacée.</h1>
     <p>Vérifiez l’adresse, ou repartez de l’une de ces pages.</p>
@@ -41,5 +54,6 @@
     </ul>
     <p class="en" lang="en">Page not found. Go back to the <a href="/" style="display:inline;min-height:0;padding:0;border:0;text-decoration:underline">home page</a>.</p>
   </main>
+  <script type="module" src="/src/geeko/notfound.ts"></script>
 </body>
 </html>

@@ -60,6 +60,7 @@ export default defineConfig(({ mode }) => {
             equipe: path.resolve(__dirname, 'equipe/index.html'),
             ia: path.resolve(__dirname, 'ia/index.html'),
             game: path.resolve(__dirname, '17-octobre/index.html'),
+            notfound: path.resolve(__dirname, '404.html'),
             ...writeContentPages(),
           },
           output: {

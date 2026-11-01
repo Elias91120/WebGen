@@ -87,6 +87,8 @@ const Geeko: React.FC<GeekoProps> = ({ lang, variant, size, className = '', dela
       } catch {
         return; // du décor : sans lui, la page reste entière
       }
+      // Tant que les feuilles de style arrivent, Safari n'applique pas celles qui suivent : une taille lue trop tôt serait fausse.
+      if (document.readyState !== 'complete') await new Promise((done) => window.addEventListener('load', done, { once: true }));
       if (!visible || handle.current) return;
       const wanted = latest.current.size;
       const px = typeof wanted === 'function' ? wanted(host) : wanted;

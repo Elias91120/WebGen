@@ -528,6 +528,26 @@ body {
   bottom: calc(var(--gk-u) * -5.5);
 }
 
+/* Comment ça marche : sur la 3e carte ; sur téléphone, la liste est verticale, il code à côté du bouton (s'il y a la place). */
+.geeko-how-card {
+  position: absolute;
+  display: none;
+  left: calc(82% - var(--gk-u) * 40);
+  bottom: calc(100% - var(--gk-u) * 5.5 - 1px);
+}
+.geeko-how-btn {
+  position: absolute;
+  right: 0;
+  top: calc(2.65rem - var(--gk-u) * 66.5);
+}
+@media (max-width: 359px) {
+  .geeko-how-btn { display: none; }
+}
+@media (min-width: 768px) {
+  .geeko-how-card { display: block; }
+  .geeko-how-btn { display: none; }
+}
+
 /* Derrière la carte contact : la carte le coupe à la poitrine. */
 .geeko-contact {
   position: absolute;
