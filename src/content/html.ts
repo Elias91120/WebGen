@@ -15,9 +15,10 @@ function jsonLd(page: ContentPage): string {
   const fr = page.meta.fr;
   const organization = {
     '@type': 'Organization',
+    '@id': `${SITE}/#organization`,
     name: '3geeks',
     url: SITE,
-    logo: `${SITE}/favicon.png`,
+    logo: `${SITE}/logo-mark.png`,
     contactPoint: { '@type': 'ContactPoint', email: 'contact@3geeks.fr', contactType: 'sales' },
   };
   const main =

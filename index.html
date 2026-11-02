@@ -33,27 +33,44 @@
     <meta name="twitter:description" content="Studio 3geeks : sites et outils digitaux soignés, pensés pour vos clients et vos objectifs. Site Starter dès 300 €." />
     <meta name="twitter:image" content="https://3geeks.fr/og-cover.png" />
 
-    <!-- JSON-LD Organization (helps Google brand recognition) -->
+    <!-- The one 3geeks entity: every other page points to this @id. The founders are detailed on /equipe. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "3geeks",
-        "alternateName": ["3 geeks"],
-        "url": "https://3geeks.fr",
-        "logo": "https://3geeks.fr/favicon.png",
-        "description": "Agence web française qui crée des sites, applications et outils digitaux clairs, rapides et soignés.",
-        "founder": [
-          { "@type": "Person", "name": "Elias Elloumi", "sameAs": "https://www.linkedin.com/in/elias-elloumi/" },
-          { "@type": "Person", "name": "Noam Leclapart-Jublot", "sameAs": "https://www.linkedin.com/in/noam-leclapart-jublot/" }
-        ],
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "email": "contact@3geeks.fr",
-          "contactType": "sales",
-          "areaServed": "FR",
-          "availableLanguage": ["French", "English"]
-        }
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://3geeks.fr/#organization",
+            "name": "3geeks",
+            "alternateName": ["3 geeks", "3Geeks"],
+            "url": "https://3geeks.fr",
+            "logo": { "@type": "ImageObject", "url": "https://3geeks.fr/logo-mark.png", "width": 480, "height": 422 },
+            "image": "https://3geeks.fr/og-cover.png",
+            "email": "contact@3geeks.fr",
+            "description": "Studio français qui crée des sites web, des applications et des outils digitaux, et qui intègre l’IA dans les entreprises : agents IA, automatisation des processus, lecture de documents et assistants internes. Cofondé par Elias Elloumi et Noam Leclapart-Jublot.",
+            "knowsAbout": ["Création de sites web", "Applications web et mobiles", "Design UX/UI", "Intelligence artificielle générative", "Agents IA", "Automatisation des processus", "Lecture automatique de documents", "Cloud AWS"],
+            "founder": [
+              { "@type": "Person", "@id": "https://3geeks.fr/equipe#elias-elloumi", "name": "Elias Elloumi", "url": "https://3geeks.fr/equipe", "sameAs": "https://www.linkedin.com/in/elias-elloumi/" },
+              { "@type": "Person", "@id": "https://3geeks.fr/equipe#noam-leclapart-jublot", "name": "Noam Leclapart-Jublot", "url": "https://3geeks.fr/equipe", "sameAs": "https://www.linkedin.com/in/noam-leclapart-jublot/" }
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "contact@3geeks.fr",
+              "contactType": "sales",
+              "areaServed": "FR",
+              "availableLanguage": ["French", "English"]
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://3geeks.fr/#website",
+            "name": "3geeks",
+            "alternateName": ["3 geeks", "3Geeks"],
+            "url": "https://3geeks.fr",
+            "inLanguage": "fr",
+            "publisher": { "@id": "https://3geeks.fr/#organization" }
+          }
+        ]
       }
     </script>
 

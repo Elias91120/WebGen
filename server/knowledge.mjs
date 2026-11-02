@@ -107,7 +107,7 @@ export const CHUNKS = [
     id: 'elias',
     title: 'Parcours et certifications d’Elias Elloumi',
     keywords: ['elias', 'elloumi', 'parcours', 'experience', 'formation', 'etudes', 'diplome', 'certifications', 'certif', 'clevai', 'nokia', 'ece', 'liora', 'datascientest', 'aws academy', 'prompt engineering', 'linkedin', 'cv'],
-    text: 'Elias Elloumi est développeur Data & IA en alternance chez ClevAI (depuis 2026), après une alternance chez Nokia (2025-2026). Il suit un Master Data & Intelligence Artificielle à l’ECE Paris (2026-2028), après un Bachelor Informatique à l’ECE Paris (2023-2026). Certifications : IA & GenAI Prompt Engineering niveau 1 (Liora, 2026) ; AWS Academy Graduate Machine Learning Foundations (AWS, 2026) ; AWS Academy Graduate Cloud Architecting (AWS, 2026) ; Programming for Data Science niveau 2 (Liora) ; IA & GenAI Prompt Engineering (DataScientest, 2025) ; Python pour les Data Scientists niveau 1 (DataScientest). LinkedIn : https://www.linkedin.com/in/elias-elloumi/',
+    text: 'Elias Elloumi est développeur Data & IA en alternance chez Cleva Solutions (depuis 2026), après une alternance chez Nokia (2025-2026). Il suit un Mastère Data Engineering & IA à l’EFREI Paris (2026-2028), après un Bachelor Informatique à l’ECE Paris (2023-2026). Certifications : IA & GenAI Prompt Engineering niveau 1 (Liora, 2026) ; AWS Academy Graduate Machine Learning Foundations (AWS, 2026) ; AWS Academy Graduate Cloud Architecting (AWS, 2026) ; Programming for Data Science niveau 2 (Liora) ; IA & GenAI Prompt Engineering (DataScientest, 2025) ; Python pour les Data Scientists niveau 1 (DataScientest). LinkedIn : https://www.linkedin.com/in/elias-elloumi/',
   },
   {
     id: 'noam',

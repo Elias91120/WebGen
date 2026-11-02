@@ -32,4 +32,4 @@ export function renderContent(path: string): string {
 }
 
 /** For the sitemap and the prerender loop. */
-export const contentPages = CONTENT_PAGES.map((page) => ({ path: page.path, updated: page.updated }));
+export const contentPages = CONTENT_PAGES.map((page) => ({ path: page.path, updated: page.updated, meta: page.meta }));

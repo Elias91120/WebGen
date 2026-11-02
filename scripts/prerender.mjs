@@ -57,3 +57,40 @@ const sitemap = [
 ].join('\n');
 writeFileSync(join(root, 'dist', 'sitemap.xml'), sitemap);
 console.log(`sitemap.xml (${urls.length} pages)`);
+
+// llms.txt (llmstxt.org): the site summed up for AI assistants, with every content page of src/content/pages.ts.
+const GROUPS = [
+  ['/ia/', 'Services IA'],
+  ['/realisations/', 'Études de cas'],
+  ['/secteurs/', 'Secteurs'],
+];
+const llms = [
+  '# 3geeks',
+  '',
+  '> Studio français qui crée des sites web, des applications et des outils digitaux, et qui intègre l’IA dans les entreprises : agents IA, automatisation des processus, lecture de documents et assistants internes. Cofondé par Elias Elloumi et Noam Leclapart-Jublot.',
+  '',
+  '- Contact : contact@3geeks.fr, ou un appel gratuit à réserver depuis le site.',
+  '- Cofondateurs, à poids égal : Elias Elloumi (https://www.linkedin.com/in/elias-elloumi/) et Noam Leclapart-Jublot (https://www.linkedin.com/in/noam-leclapart-jublot/).',
+  '- Engagements : petites demandes livrées en 24 à 48 h, rien à payer avant d’être satisfait, le client garde son code et son nom de domaine, audit IA gratuit de 30 min.',
+  '',
+  '## Pages principales',
+  '',
+  `- [Accueil](${SITE}/) : sites, applications et outils digitaux, Made in France.`,
+  `- [Offres et tarifs](${SITE}/offres) : les offres web et leurs prix.`,
+  `- [Solution IA pour entreprise](${SITE}/ia) : agents IA, automatisation, lecture de documents et assistant interne, intégrés aux logiciels existants.`,
+  `- [Réalisations](${SITE}/realisations) : projets clients et produits maison.`,
+  `- [Équipe](${SITE}/equipe) : Elias Elloumi et Noam Leclapart-Jublot, parcours et certifications.`,
+  `- [17 OCTOBRE](${SITE}/17-octobre) : le jeu vidéo de 3Geeks Studio.`,
+  ...GROUPS.flatMap(([prefix, title]) => [
+    '',
+    `## ${title}`,
+    '',
+    ...contentPages
+      .filter((p) => p.path.startsWith(prefix))
+      .map((p) => `- [${p.meta.fr.title.replace(/ \| 3geeks$/, '')}](${SITE}${p.path}) : ${p.meta.fr.description}`),
+  ]),
+  '',
+].join('\n');
+if (llms.split('\n- [').length - 1 !== MAIN_PAGES.length + contentPages.length) throw new Error('llms.txt: a content page is outside every group');
+writeFileSync(join(root, 'dist', 'llms.txt'), llms);
+console.log('llms.txt');

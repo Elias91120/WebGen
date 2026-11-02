@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#08090d" />
     <meta name="color-scheme" content="dark" />
-    <title>Équipe — 3geeks</title>
+    <title>Elias Elloumi et Noam Leclapart-Jublot, cofondateurs de 3geeks</title>
     <meta name="description" content="3geeks est cofondée par Elias Elloumi et Noam Leclapart-Jublot : parcours, certifications, expertises et apporteurs d’affaires." />
     <meta name="keywords" content="3geeks, 3 geeks, studio web France, agence web, création site internet, application web, refonte site, Made in France" />
     <meta name="author" content="3geeks" />
@@ -18,7 +18,7 @@
     <meta property="og:site_name" content="3geeks" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:locale:alternate" content="en_US" />
-    <meta property="og:title" content="3geeks — Équipe" />
+    <meta property="og:title" content="Elias Elloumi et Noam Leclapart-Jublot, cofondateurs de 3geeks" />
     <meta property="og:description" content="3geeks est cofondée par Elias Elloumi et Noam Leclapart-Jublot : parcours, certifications, expertises et apporteurs d’affaires." />
     <meta property="og:url" content="https://3geeks.fr/equipe" />
     <!-- Replace /og-cover.png with the final OG image (1200x630) once produced -->
@@ -29,9 +29,72 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="3geeks — Équipe" />
+    <meta name="twitter:title" content="Elias Elloumi et Noam Leclapart-Jublot, cofondateurs de 3geeks" />
     <meta name="twitter:description" content="3geeks est cofondée par Elias Elloumi et Noam Leclapart-Jublot : parcours, certifications, expertises et apporteurs d’affaires." />
     <meta name="twitter:image" content="https://3geeks.fr/og-cover.png" />
+
+    <!-- The two co-founders, with the same weight (keep in sync with founders in src/i18n.ts). -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://3geeks.fr/equipe#elias-elloumi",
+            "name": "Elias Elloumi",
+            "givenName": "Elias",
+            "familyName": "Elloumi",
+            "url": "https://3geeks.fr/equipe",
+            "jobTitle": "Cofondateur de 3geeks · Design & expérience",
+            "description": "Cofondateur de 3geeks, où il façonne l’expérience visuelle des projets (UI/UX, front-end). Développeur Data & IA en alternance chez Cleva Solutions, après une alternance chez Nokia. Mastère Data Engineering & IA à l’EFREI Paris, après un Bachelor Informatique à l’ECE Paris.",
+            "worksFor": { "@id": "https://3geeks.fr/#organization" },
+            "alumniOf": { "@type": "CollegeOrUniversity", "name": "ECE Paris" },
+            "affiliation": { "@type": "CollegeOrUniversity", "name": "EFREI Paris" },
+            "knowsAbout": ["UI/UX & front-end", "React", "Node.js", "Tailwind CSS", "Python", "SQL & NoSQL", "IA générative", "Prompt engineering"],
+            "hasCredential": [
+              { "@type": "EducationalOccupationalCredential", "name": "AWS Academy Graduate - Machine Learning Foundations", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "Amazon Web Services (AWS)" } },
+              { "@type": "EducationalOccupationalCredential", "name": "AWS Academy Graduate - Cloud Architecting", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "Amazon Web Services (AWS)" } },
+              { "@type": "EducationalOccupationalCredential", "name": "IA & GenAI - Prompt Engineering", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "DataScientest" } }
+            ],
+            "sameAs": ["https://www.linkedin.com/in/elias-elloumi/"]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://3geeks.fr/equipe#noam-leclapart-jublot",
+            "name": "Noam Leclapart-Jublot",
+            "givenName": "Noam",
+            "familyName": "Leclapart-Jublot",
+            "url": "https://3geeks.fr/equipe",
+            "jobTitle": "Cofondateur de 3geeks · Systèmes & data",
+            "description": "Cofondateur de 3geeks, où il construit la logique fiable des projets (formulaires, dashboards, automatisations, flux de données). Ingénieur en IA générative en alternance chez Thales, après un stage en infrastructure cloud chez SOWARP. Cycle ingénieur Big Data & Machine Learning à l’EFREI Paris, après un Bachelor Informatique à l’ECE Paris.",
+            "worksFor": { "@id": "https://3geeks.fr/#organization" },
+            "alumniOf": { "@type": "CollegeOrUniversity", "name": "ECE Paris" },
+            "affiliation": { "@type": "CollegeOrUniversity", "name": "EFREI Paris" },
+            "knowsAbout": ["IA générative", "Cloud AWS & infrastructure", "Machine learning", "Python & data", "Automatisations & dashboards"],
+            "hasCredential": [
+              { "@type": "EducationalOccupationalCredential", "name": "AWS Certified Cloud Practitioner", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "Amazon Web Services (AWS)" } },
+              { "@type": "EducationalOccupationalCredential", "name": "AWS Academy Graduate - Machine Learning Foundations", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "Amazon Web Services (AWS)" } },
+              { "@type": "EducationalOccupationalCredential", "name": "AWS Academy Graduate - AWS Academy Cloud Foundations", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "Amazon Web Services (AWS)" } }
+            ],
+            "sameAs": ["https://www.linkedin.com/in/noam-leclapart-jublot/"]
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://3geeks.fr/#organization",
+            "name": "3geeks",
+            "url": "https://3geeks.fr",
+            "founder": [{ "@id": "https://3geeks.fr/equipe#elias-elloumi" }, { "@id": "https://3geeks.fr/equipe#noam-leclapart-jublot" }]
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "3geeks", "item": "https://3geeks.fr" },
+              { "@type": "ListItem", "position": 2, "name": "Équipe", "item": "https://3geeks.fr/equipe" }
+            ]
+          }
+        ]
+      }
+    </script>
 
 
     <!-- Favicon: squircle mark (public/favicon.png) -->

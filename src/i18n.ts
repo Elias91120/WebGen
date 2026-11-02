@@ -151,7 +151,7 @@ export const translations = {
           sub: "A satirical, cartoon real-time strategy game.",
         },
         team: {
-          title: "Team — 3geeks",
+          title: "Elias Elloumi and Noam Leclapart-Jublot, co-founders of 3geeks",
           description: "3geeks is co-founded by Elias Elloumi and Noam Leclapart-Jublot: background, certifications, expertise and business introducers.",
           path: "Team",
           h1: "Co-founded by Elias & Noam.",
@@ -280,9 +280,9 @@ export const translations = {
           desc: "Elias shapes the visual experience: clear pages, smooth interactions and a polished feeling that helps visitors understand the offer.",
           expertise: ["UI/UX & front-end", "React · Vite · Node.js", "Tailwind CSS", "Python · SQL & NoSQL", "Generative AI & prompt engineering"],
           background: [
-            { title: "Data & AI Developer · apprenticeship", org: "ClevAI", period: "2026 – now" },
+            { title: "Data & AI Developer · apprenticeship", org: "Cleva Solutions", period: "2026 – now" },
             { title: "Apprentice", org: "Nokia", period: "2025 – 2026" },
-            { title: "Master's in Data & Artificial Intelligence", org: "ECE Paris", period: "2026 – 2028" },
+            { title: "Master's in Data Engineering & AI", org: "EFREI Paris", period: "2026 – 2028" },
             { title: "Bachelor's in Computer Science", org: "ECE Paris", period: "2023 – 2026" },
           ],
           certifications: [
@@ -560,7 +560,7 @@ export const translations = {
           sub: "Un jeu de stratégie en temps réel, satirique et cartoon.",
         },
         team: {
-          title: "Équipe — 3geeks",
+          title: "Elias Elloumi et Noam Leclapart-Jublot, cofondateurs de 3geeks",
           description: "3geeks est cofondée par Elias Elloumi et Noam Leclapart-Jublot : parcours, certifications, expertises et apporteurs d’affaires.",
           path: "Équipe",
           h1: "3geeks, cofondée par Elias et Noam.",
@@ -689,9 +689,9 @@ export const translations = {
           desc: "Elias façonne l'expérience visuelle : pages claires, interactions fluides et rendu soigné qui aide à comprendre l'offre.",
           expertise: ["UI/UX & front-end", "React · Vite · Node.js", "Tailwind CSS", "Python · SQL & NoSQL", "IA générative & prompt engineering"],
           background: [
-            { title: "Développeur Data & IA · alternance", org: "ClevAI", period: "2026 – auj." },
+            { title: "Développeur Data & IA · alternance", org: "Cleva Solutions", period: "2026 – auj." },
             { title: "Alternant", org: "Nokia", period: "2025 – 2026" },
-            { title: "Master Data & Intelligence Artificielle", org: "ECE Paris", period: "2026 – 2028" },
+            { title: "Mastère Data Engineering & IA", org: "EFREI Paris", period: "2026 – 2028" },
             { title: "Bachelor Informatique", org: "ECE Paris", period: "2023 – 2026" },
           ],
           certifications: [
