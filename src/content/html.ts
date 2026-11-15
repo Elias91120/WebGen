@@ -32,7 +32,7 @@ function jsonLd(page: ContentPage): string {
           url,
           inLanguage: 'fr',
           creator: organization,
-          ...(page.hero ? { image: `${SITE}${page.hero.desktop}` } : {}),
+          ...(page.hero || page.ogImage ? { image: `${SITE}${page.hero?.desktop ?? page.ogImage}` } : {}),
           ...(page.live ? { sameAs: page.live } : {}),
         }
       : {
@@ -64,7 +64,7 @@ function jsonLd(page: ContentPage): string {
 export function contentPageHtml(page: ContentPage): string {
   const url = `${SITE}${page.path}`;
   const { title, description } = page.meta.fr;
-  const image = page.hero ? `${SITE}${page.hero.desktop}` : `${SITE}/og-cover.png`;
+  const image = `${SITE}${page.hero?.desktop ?? page.ogImage ?? '/og-cover.png'}`;
   return `<!DOCTYPE html>
 <!-- Generated from src/content/pages.ts by vite.config.ts: edit the page there, not here. -->
 <html lang="fr">
@@ -106,7 +106,7 @@ ${jsonLd(page)}
   </head>
   <body class="bg-[#08090d] text-slate-50 antialiased">
     <div id="root" data-page="${esc(page.path)}"></div>
-    <script type="module" src="/src/pages/entries/content.tsx"></script>
+    <script type="module" src="/src/pages/entries/${page.entry ?? 'content'}.tsx"></script>
   </body>
 </html>
 `;

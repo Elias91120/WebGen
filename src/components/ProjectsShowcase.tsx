@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Check, GraduationCap, Lock, Send, X } from 'lucide-react';
 import BeforeAfter from './BeforeAfter/BeforeAfter';
+import GeeksCodeCard from './GeeksCodeCard';
 import { Mark } from './Logo';
 import Reveal from './Reveal';
 import LoopVideo, { type LoopVideoSources } from './LoopVideo';
@@ -69,6 +70,8 @@ export interface ProjectItem {
     metrics: Localized<{ value: string; label: string }[]>;
     points: Localized<string[]>;
   };
+  /** Has a card of its own (Geeks Code, drawn as a small editor window), outside the generic cards and grids. */
+  custom?: boolean;
   /** Flagship public projects get a short case study (context, what we shipped, result). */
   /** Its full case-study page (src/content/pages.ts), when it has one. */
   page?: string;
@@ -212,6 +215,20 @@ export const PROJECTS_DATA: ProjectItem[] = [
     tags: { fr: ['Agent vocal IA','Landing SaaS','Restauration'], en: ['AI voice agent','SaaS landing','Restaurants'] },
     link: 'https://call-kitchen-landing.vercel.app',
     cover: callKitchenCover
+  },
+  {
+    id: 'geeks-code',
+    page: '/realisations/geeks-code',
+    category: 'studio',
+    custom: true,
+    title: { fr: 'Geeks Code', en: 'Geeks Code' },
+    subtitle: { fr: 'Projet interne', en: 'Internal project' },
+    badge: { fr: 'Éditeur de code + IA · projet interne', en: 'Code editor + AI · internal project' },
+    description: {
+      fr: 'Notre propre éditeur de code, bâti sur la base open source de VS Code. Chaque projet y suit un plan en jalons, l’IA travaille sous contrat, et Geeko, notre mascotte, montre en direct ce qu’elle fait. Un projet interne, que nous préparons pour les entreprises : à vos couleurs, branché sur vos outils.',
+      en: 'Our own code editor, built on the open-source base of VS Code. Every project follows a milestone plan, AI works under contract, and Geeko, our mascot, shows live what it is doing. An internal project we are preparing for companies: in your colours, plugged into your tools.'
+    },
+    tags: { fr: ['Plan en jalons','Agents IA','Mascotte animée','Base VS Code'], en: ['Milestone plan','AI agents','Animated mascot','VS Code base'] },
   },
   {
     id: 'workspace',
@@ -708,7 +725,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
   const labProjects = PROJECTS_DATA.filter((p) => p.category === 'studio');
   const featuredProducts = labProjects.filter((p) => p.featured);
   const wideProducts = labProjects.filter((p) => p.wide);
-  const otherProducts = labProjects.filter((p) => !p.featured && !p.wide);
+  const otherProducts = labProjects.filter((p) => !p.featured && !p.wide && !p.custom);
+  const geeksCode = labProjects.find((p) => p.id === 'geeks-code');
 
   return (
     <section id="projets" className={`relative border-t border-white/5 bg-surface/60 ${showIntro ? 'py-20 md:py-28' : 'pb-20 pt-12 md:pb-28 md:pt-16'}`}>
@@ -780,6 +798,12 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ lang, onCont
             {fr ? 'Sortis de chez nous : à essayer, ou à déployer chez vous' : 'Made at 3geeks: try them, or run them in your company'}
           </span>
         </Reveal>
+
+        {geeksCode && (
+          <Reveal className="mb-5">
+            <GeeksCodeCard project={geeksCode} lang={lang} />
+          </Reveal>
+        )}
 
         {featuredProducts.map((project) => (
           <Reveal key={project.id} className="mb-5">

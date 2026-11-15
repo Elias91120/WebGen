@@ -22,7 +22,7 @@ import {
   WhatWeDo,
   WhyUs,
 } from '../site/sections';
-import ContentPageView from '../content/ContentPage';
+import ContentPageView, { type ContentBlocks } from '../content/ContentPage';
 import { findContentPage } from '../content/pages';
 import GameSections from '../game/GameSections';
 import SiteLayout, { PageId } from '../site/SiteLayout';
@@ -100,11 +100,11 @@ export function mount(page: PageId) {
   start(<Page />);
 }
 
-/** Content pages (src/content/pages.ts) share one entry and pass their address. */
-export function mountContent(path: string) {
+/** Content pages (src/content/pages.ts) share one entry and pass their address; a page with its own entry brings its blocks. */
+export function mountContent(path: string, blocks?: ContentBlocks) {
   const page = findContentPage(path);
   if (!page) throw new Error(`Unknown content page: ${path}`);
-  start(<ContentPageView page={page} />);
+  start(<ContentPageView page={page} blocks={blocks} />);
 }
 
 function start(element: React.ReactElement) {

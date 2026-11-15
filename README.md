@@ -22,6 +22,20 @@ Site multi-pages (une entrée HTML par page, servie par `nginx.conf` sur `/page`
 - Cadre commun (header, footer, assistant, réservation, mentions légales) : `src/site/SiteLayout.tsx`. Sections : `src/site/sections.tsx`. Pages : `src/pages/pages.tsx`, une entrée par page dans `src/pages/entries/`.
 - Nouvelle page : créer `<page>/index.html` (copie d’une page existante : titre, description, canonical, og), l’entrée dans `src/pages/entries/`, l’ajouter à `vite.config.ts` (`input`), à la regex de `nginx.conf`, au menu de `SiteLayout.tsx` et aux textes `site` de `src/i18n.ts`.
 - Garder l’accueil court : le détail va sur les pages dédiées.
+- Pages de contenu (services IA, études de cas, secteurs) : une entrée dans `src/content/pages.ts` suffit, son HTML, son prérendu, sa route et sa ligne du sitemap en découlent.
+
+## La page Geeks Code (`/realisations/geeks-code`)
+
+L’étude de cas de notre éditeur de code interne, pensée pour les entreprises : ce que fait l’outil, Geeko en vedette, et ce que l’outil donnerait à leurs couleurs. C’est une page de contenu comme les autres (son entrée dans `src/content/pages.ts`), avec en plus des blocs animés :
+
+- `entry: 'geeks-code'` lui donne son propre script (`src/pages/entries/geeks-code.tsx`) : les autres pages de contenu ne chargent pas ses blocs. Les sections de type `custom` et le bloc `hero` sont dessinés par `src/geeks-code/blocks.tsx`, et rendus aussi au prérendu (`BLOCKS` dans `src/prerender.tsx`).
+- `Demo.tsx` + `IdeMock.tsx` : la fenêtre de l’éditeur joue une demande jusqu’au jalon validé (les « temps » sont dans `BEATS`). C’est une **maquette dessinée pour la page**, avec un exemple fictif : la mention sous la fenêtre doit rester.
+- `Gallery.tsx` : les 30 animations et les 7 surprises de Geeko, jouées par le vrai moteur. Leur liste et leurs textes sont dans `copy.ts` : à tenir à jour quand le moteur (`src/geeko/geeko.ts`) est recopié depuis Geeks Code.
+- `Brand.tsx` : « à vos couleurs », la même fenêtre sous un autre nom et une autre couleur. Rien ne quitte le navigateur.
+- `GeekoStage.tsx` : ici Geeko est le sujet de la page, il vit tant qu’il est à l’écran (ailleurs, `components/Geeko.tsx` le fige après 8 s). Avec « réduire les animations », son portrait le remplace, et la galerie propose de le lancer.
+- Règles : Geeks Code est un **projet interne** (pas « en vente », la version pour les entreprises « se prépare ») ; aucun nom d’outil interne ; les chiffres de « Sous le capot » sont datés du 15/11/2026 (jalons, tests, patchs : à recompter dans le dépôt de Geeks Code avant de les changer).
+- Image de partage : `public/images/realisations/geeks-code-og.png` (1200 × 630, `ogImage` dans `pages.ts`).
+- Sur `/realisations`, sa carte est sur mesure : `src/components/GeeksCodeCard.tsx` (une petite fenêtre de l’éditeur, trois conditions qui se cochent).
 
 ## Page IA pour entreprises (`/ia`)
 
@@ -65,6 +79,7 @@ Animations CSS ou `motion/react`, en pause hors écran et figées avec « rédui
 - Méthode du site principal (`src/components/BuildTimeline.tsx`) : un navigateur construit le site au fil des 5 étapes.
 - Réalisations (`src/components/BeforeAfter/`) : curseur avant/après sur le site du Dr Jellouli. L’« avant » est une **reconstitution** codée en HTML (`OldJelloulSite.tsx`), pas l’ancien site réel : le libellé « reconstitution » doit rester visible. Le badge « Refait en 24 h » est dans `COPY` en haut de `BeforeAfter.tsx`.
 - Démo de process et explorateur par service sur `/ia` (`src/ia/ProcessDemo.tsx`, `src/ia/AutomationExplorer.tsx`).
+- Page Geeks Code (`src/geeks-code/`) : la démonstration de l’éditeur, la galerie de Geeko, « à vos couleurs », et Geeko qui arrive à pied dans le haut de page. Ses styles sont à part (`geeks-code.css`, chargé par cette page seulement).
 
 ## Vitrine projets
 
@@ -72,7 +87,7 @@ Source unique : `src/components/ProjectsShowcase.tsx` (vignettes dans `src/asset
 
 **Clients** — Cabinet Dr Amel Elloumi Jellouli, Express Divorce USA, Vipagence ([vipagence.net](https://www.vipagence.net/) : le site seulement), Two, Aurenza Capital, Green Jardin, CallKitchen, et deux plateformes privées (signature de contrats, mini-app Telegram) montrées en maquette, sans lien ni nom de client.
 
-**Lab** — 3geeks Infra (volontairement floue), Prompt Hub, PromptOptim, EFREI Skill Hub.
+**Lab** — Geeks Code (projet interne, carte sur mesure et étude de cas), 3geeks Infra (volontairement floue), Prompt Hub, PromptOptim, EFREI Skill Hub.
 
 ## Prise de contact
 

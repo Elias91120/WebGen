@@ -1,0 +1,583 @@
+/* Page /realisations/geeks-code : Geeko en vedette, la fenêtre de l'éditeur (une maquette), sa galerie et
+   « à vos couleurs ». Les couleurs de la fenêtre passent par --gc-a et --gc-b, pour en changer d'un clic.
+   Tout ce qui tourne seul s'arrête avec « réduire les animations » (bas du fichier). */
+
+/* ---- Geeko en vedette (GeekoStage.tsx) : --gk-u est une unité de son dessin (80 × 72, ou 116 × 88 avec son décor) ---- */
+.gc-geeko {
+  position: relative;
+  display: block;
+  flex: none;
+  width: calc(var(--gk-u, 1.25px) * 80);
+  height: calc(var(--gk-u, 1.25px) * 72);
+  line-height: 0;
+}
+.gc-geeko[data-decor] {
+  width: calc(var(--gk-u, 1.25px) * 116);
+  height: calc(var(--gk-u, 1.25px) * 88);
+}
+.gc-geeko .gk-root {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+/* Son portrait fixe : seulement quand il ne bouge pas (animations réduites). */
+.gc-geeko-still {
+  display: none;
+  position: absolute;
+  left: calc(var(--gk-u, 1.25px) * 19);
+  top: calc(var(--gk-u, 1.25px) * 13);
+  width: calc(var(--gk-u, 1.25px) * 42.04);
+  height: calc(var(--gk-u, 1.25px) * 34);
+  max-width: none;
+}
+.gc-geeko[data-decor] .gc-geeko-still {
+  left: calc(var(--gk-u, 1.25px) * 37);
+  top: calc(var(--gk-u, 1.25px) * 27);
+}
+
+/* ---- Le haut de page : il arrive à pied, se tourne, salue, puis se met au travail (pieds sur la ligne du bas).
+   Sous les boutons, à gauche, tant que le texte prend la largeur ; à droite du texte sur grand écran, à l'écart
+   du bouton de l'assistant (fixé en bas à droite). ---- */
+.gc-hero-geeko {
+  --gk-u: 1.6px;
+  position: absolute;
+  left: 1.25rem;
+  bottom: calc(var(--gk-u) * -5.5 - 1px);
+}
+@media (min-width: 640px) {
+  .gc-hero-geeko { --gk-u: 1.75px; left: 2rem; }
+}
+@media (min-width: 1280px) {
+  .gc-hero-geeko { --gk-u: 3.5px; left: auto; right: 14rem; }
+}
+@media (min-width: 1536px) {
+  .gc-hero-geeko { --gk-u: 4px; }
+}
+.gc-hero-geeko[data-phase='wait'] { visibility: hidden; }
+/* Il marche à la vitesse de ses pas (14 unités par appui, soit 54 par seconde), pour que ses pieds ne glissent pas. */
+.gc-hero-geeko[data-phase='walk'] { animation: gc-walk-in 2.2s linear both; }
+@keyframes gc-walk-in {
+  from { opacity: 0; transform: translateX(calc(var(--gk-u) * -119)); }
+  12% { opacity: 1; }
+  to { transform: none; }
+}
+@media (min-width: 1280px) {
+  /* De la droite vers la gauche : il est retourné (le moteur le dessine tourné vers la droite). */
+  .gc-hero-geeko[data-phase='walk'] { animation: gc-walk-in-right 3.1s linear both; }
+  .gc-hero-geeko[data-phase='walk'] .gc-geeko { transform: scaleX(-1); }
+}
+@keyframes gc-walk-in-right {
+  from { opacity: 0; transform: translateX(calc(var(--gk-u) * 168)); }
+  12% { opacity: 1; }
+  to { transform: none; }
+}
+/* Il se tourne vers nous : la pose de profil s'en va d'un coup, celle de face la remplace. */
+.gc-hero-geeko[data-phase='hello'] .gk-out { display: none; }
+.gc-hero-geeko[data-phase='hello'] .gk-in { animation-duration: 140ms; }
+.gc-hello {
+  position: absolute;
+  left: calc(var(--gk-u) * 63);
+  bottom: calc(var(--gk-u) * 40);
+  padding: 8px 12px;
+  border-radius: 12px 12px 12px 2px;
+  background: #f2f4f7;
+  color: #08090d;
+  font: 600 13px/1 var(--font-sans);
+  white-space: nowrap;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+  animation: gc-hello 4.2s ease both;
+}
+@media (min-width: 640px) {
+  .gc-hello { font-size: 14px; }
+}
+@media (min-width: 1280px) {
+  .gc-hello { left: auto; right: calc(var(--gk-u) * 63); border-radius: 12px 12px 2px 12px; }
+}
+@keyframes gc-hello {
+  0% { opacity: 0; transform: translateY(6px) scale(0.96); }
+  7%, 86% { opacity: 1; transform: none; }
+  100% { opacity: 0; }
+}
+
+/* ---- La fenêtre de l'éditeur (IdeMock.tsx) ---- */
+.gc-ide {
+  --gc-a: #c3fb05;
+  --gc-b: #0aefbb;
+  --gc-on: #06130f;
+  --gc-line: rgba(255, 255, 255, 0.07);
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  background: #0a0c11;
+  box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.75), 0 0 80px -50px var(--gc-b);
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: left;
+  user-select: none;
+}
+.gc-ide p { margin: 0; }
+.gc-grow { flex: 1; }
+
+.gc-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 36px;
+  padding: 0 0.75rem;
+  border-bottom: 1px solid var(--gc-line);
+  background: rgba(8, 9, 13, 0.6);
+}
+.gc-lights { display: flex; flex: none; gap: 5px; }
+.gc-lights i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); }
+.gc-brand { display: inline-flex; min-width: 0; align-items: center; gap: 0.4rem; color: #f1f5f9; font-size: 12px; }
+.gc-brand b { overflow: hidden; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
+.gc-mark {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--gc-a), var(--gc-b));
+  color: var(--gc-on);
+  font: 700 10px/1 var(--font-display);
+}
+.gc-project { color: #64748b; white-space: nowrap; }
+.gc-milestone { display: none; color: var(--gc-a); font-weight: 600; white-space: nowrap; transition: color 0.4s ease; }
+@media (min-width: 480px) {
+  .gc-milestone { display: inline; }
+}
+
+/* Les conditions « fini quand » : le contrat du jalon, toujours sous les yeux. */
+.gc-hud {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--gc-line);
+  background: rgba(255, 255, 255, 0.02);
+}
+.gc-hud-label { color: #64748b; font-weight: 600; white-space: nowrap; }
+.gc-hud ul { display: flex; flex-direction: column; gap: 0.3rem; margin: 0; padding: 0; list-style: none; }
+.gc-hud li, .gc-plan-card li { display: flex; align-items: center; gap: 0.45rem; transition: color 0.4s ease; }
+.gc-hud li[data-on], .gc-plan-card li[data-on] { color: #f1f5f9; }
+@media (min-width: 768px) {
+  .gc-hud { flex-direction: row; align-items: center; gap: 1rem; }
+  .gc-hud ul { flex-flow: row wrap; gap: 0.3rem 1.1rem; }
+}
+.gc-box {
+  display: inline-flex;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 3px;
+  color: transparent;
+}
+.gc-box svg { width: 10px; height: 10px; }
+[data-on] .gc-box {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--gc-a), var(--gc-b));
+  color: var(--gc-on);
+  animation: gc-tick 0.42s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+@keyframes gc-tick {
+  0% { transform: scale(0.5); }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.gc-body { display: grid; grid-template-columns: minmax(0, 1fr); }
+.gc-side { display: none; }
+@media (min-width: 640px) {
+  .gc-body { grid-template-columns: 38px minmax(0, 1fr) minmax(190px, 34%); }
+  .gc-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.95rem;
+    padding: 0.8rem 0;
+    border-right: 1px solid var(--gc-line);
+    color: #475569;
+  }
+}
+.gc-side svg { width: 16px; height: 16px; }
+.gc-main { position: relative; height: 282px; overflow: hidden; }
+@media (min-width: 640px) {
+  .gc-main { height: 362px; }
+}
+.gc-view { position: absolute; inset: 0; }
+.gc-view-title { padding: 0.75rem 0.9rem 0.25rem; color: #e2e8f0; font: 600 12px/1.3 var(--font-display); }
+
+/* L'éditeur */
+.gc-tabs { display: flex; height: 28px; border-bottom: 1px solid var(--gc-line); }
+.gc-tab { display: inline-flex; align-items: center; padding: 0 0.8rem; border-right: 1px solid var(--gc-line); color: #64748b; }
+.gc-tab.is-on { color: #e2e8f0; box-shadow: inset 0 -2px 0 var(--gc-b); }
+.gc-code { padding-top: 0.45rem; color: #cbd5e1; font-family: var(--font-mono); font-size: 10.5px; line-height: 17px; }
+@media (min-width: 640px) {
+  .gc-code { font-size: 11.5px; line-height: 18px; }
+}
+.gc-line { display: flex; white-space: pre; }
+.gc-no { flex: none; width: 2.4rem; padding-right: 0.7rem; color: #334155; text-align: right; }
+.gc-line-extra { display: none; }
+@media (min-width: 640px) {
+  .gc-line-extra { display: flex; }
+}
+.gc-c { color: #56637a; }
+.gc-k { color: var(--gc-b); transition: color 0.4s ease; }
+.gc-t, .gc-s { color: var(--gc-a); transition: color 0.4s ease; }
+.gc-n { color: #fbbf24; }
+.gc-f { color: #f8fafc; }
+/* Ce que l'IA vient d'écrire : entouré, et signé. */
+.gc-ai-block {
+  position: relative;
+  margin: 4px 0.5rem 0 0.25rem;
+  padding: 3px 0;
+  border: 1px solid var(--gc-b);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--gc-b) 7%, transparent);
+  box-shadow: 0 0 22px -8px var(--gc-b);
+  transition: border-color 0.4s ease, background-color 0.4s ease;
+  animation: gc-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.gc-ai-block .gc-no { width: calc(2.4rem - 0.25rem - 1px); }
+.gc-ai-tag {
+  position: absolute;
+  right: 0.5rem;
+  top: -9px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--gc-a);
+  color: var(--gc-on);
+  font: 600 9.5px/1.35 var(--font-sans);
+  white-space: nowrap;
+  transition: background-color 0.4s ease;
+}
+@keyframes gc-pop {
+  from { opacity: 0; transform: translateY(4px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+.is-typing .gc-typed {
+  display: inline-block;
+  clip-path: inset(0 100% 0 0);
+  animation: gc-type 0.5s steps(20, end) forwards;
+  animation-delay: calc(var(--i) * 250ms + 300ms);
+}
+@keyframes gc-type {
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* La salle des agents */
+.gc-desks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; padding: 0.5rem 0.75rem; }
+.gc-desk {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.25rem 0.7rem;
+  border: 1px solid var(--gc-line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  text-align: center;
+}
+.gc-desk-name { color: #e2e8f0; font-weight: 600; }
+.gc-desk-geeko { --gk-u: 0.9px; }
+@media (min-width: 640px) {
+  .gc-desk-geeko { --gk-u: 1.2px; }
+}
+.gc-desk-does { max-width: 100%; overflow: hidden; color: var(--gc-b); font-family: var(--font-mono); font-size: 10px; white-space: nowrap; text-overflow: ellipsis; }
+.gc-toast-row { position: absolute; inset: auto 0 0.8rem; display: flex; justify-content: center; }
+.gc-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.8rem 0.5rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: #12161c;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+}
+.gc-toast-icon {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--gc-a), var(--gc-b));
+  color: var(--gc-on);
+}
+.gc-toast-icon svg { width: 15px; height: 15px; }
+.gc-toast b { display: block; color: #fff; font-size: 12px; font-weight: 600; }
+.gc-toast small { display: block; color: #94a3b8; font-size: 10.5px; }
+
+/* La page des jalons : la dernière coche et la validation se font à la main. */
+.gc-plan { position: relative; height: 100%; }
+.gc-plan-card {
+  margin: 0.35rem 0.9rem 0;
+  padding: 0.85rem 0.95rem 0.95rem;
+  border: 1px solid var(--gc-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+}
+.gc-plan-card h4 { margin: 0; color: #f8fafc; font: 600 13.5px/1.3 var(--font-display); }
+.gc-plan-label { margin-top: 0.6rem !important; color: #64748b; font-weight: 600; }
+.gc-plan-card ul { display: grid; gap: 0.5rem; margin: 0.45rem 0 0; padding: 0; list-style: none; }
+.gc-plan-card li { color: #cbd5e1; font-size: 11.5px; }
+.gc-spot { display: inline-flex; }
+.gc-plan-card .gc-box { width: 16px; height: 16px; }
+.gc-approve {
+  display: inline-flex;
+  margin-top: 0.9rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #64748b;
+  font-size: 11.5px;
+  font-weight: 600;
+  transition: transform 0.15s ease, filter 0.15s ease, background-color 0.3s ease, color 0.3s ease;
+}
+.gc-approve[data-ready] { background: linear-gradient(135deg, var(--gc-a), var(--gc-b)); color: var(--gc-on); }
+.gc-approve[data-pressed] { transform: scale(0.95); filter: brightness(0.9); }
+.gc-pointer-rest { position: absolute; right: 12%; bottom: 10%; width: 1px; height: 1px; }
+.gc-pointer { position: absolute; left: 0; top: 0; z-index: 3; width: 18px; height: 18px; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6)); }
+.gc-pointer svg { display: block; width: 18px; height: 18px; }
+.gc-click {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--gc-a);
+  border-radius: 50%;
+  animation: gc-ring 0.5s ease-out both;
+}
+@keyframes gc-ring {
+  from { opacity: 1; transform: scale(0.4); }
+  to { opacity: 0; transform: scale(2.2); }
+}
+
+/* Jalon validé */
+.gc-done { display: flex; height: 100%; flex-direction: column; align-items: center; justify-content: center; gap: 0.3rem; text-align: center; }
+.gc-done-check {
+  display: flex;
+  width: 54px;
+  height: 54px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--gc-a), var(--gc-b));
+  color: var(--gc-on);
+  box-shadow: 0 0 44px -6px var(--gc-b);
+}
+.gc-done-check svg { width: 30px; height: 30px; }
+.gc-done strong { margin-top: 0.55rem; color: #fff; font: 600 19px/1.2 var(--font-display); }
+.gc-done > span:not(.gc-confetti):not(.gc-done-check) { color: #cbd5e1; font-size: 12px; }
+.gc-done small { margin-top: 0.35rem; color: #64748b; font-size: 11px; }
+.gc-confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.gc-confetti i {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: 6px;
+  height: 6px;
+  background: var(--gc-a);
+  animation: gc-burst 1.5s cubic-bezier(0.16, 0.84, 0.3, 1) both;
+  animation-delay: calc(var(--i) * 16ms);
+}
+.gc-confetti i:nth-child(3n) { background: var(--gc-b); }
+.gc-confetti i:nth-child(4n) { background: #f8fafc; }
+@keyframes gc-burst {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0); }
+  65% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 46px)) rotate(var(--r)) scale(1); }
+}
+
+/* Le panneau de l'assistant : ce qu'il dit, Geeko, la zone de saisie. Sous la fenêtre sur téléphone, à droite ensuite. */
+.gc-ai {
+  display: grid;
+  grid-template: 'head head' auto 'talk geeko' auto 'prompt prompt' auto / minmax(0, 1fr) auto;
+  gap: 0.45rem 0.5rem;
+  padding: 0.6rem 0.7rem 0.7rem;
+  border-top: 1px solid var(--gc-line);
+  background: rgba(255, 255, 255, 0.015);
+}
+@media (min-width: 640px) {
+  .gc-ai { display: flex; min-width: 0; flex-direction: column; border-top: 0; border-left: 1px solid var(--gc-line); }
+}
+.gc-ai-head { grid-area: head; display: flex; align-items: center; gap: 0.4rem; color: #64748b; font-weight: 600; }
+.gc-dot { width: 6px; height: 6px; border-radius: 50%; background: #475569; }
+.gc-dot[data-busy] { background: var(--gc-b); animation: gc-blink 1.1s ease-in-out infinite; }
+.gc-ai-talk {
+  grid-area: talk;
+  display: flex;
+  height: 108px;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  overflow: hidden;
+}
+@media (min-width: 640px) {
+  .gc-ai-talk { height: auto; min-height: 0; flex: 1; }
+}
+.gc-ask {
+  align-self: flex-end;
+  max-width: 100%;
+  margin-bottom: 0.15rem !important;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--gc-line);
+  border-radius: 10px 10px 2px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #f1f5f9;
+}
+.gc-said { display: flex; align-items: flex-start; gap: 0.4rem; color: #cbd5e1; }
+.gc-said i { flex: none; width: 12px; color: var(--gc-a); font-style: normal; text-align: center; transition: color 0.4s ease; }
+.gc-said[data-state='busy'] i { color: var(--gc-b); animation: gc-blink 1.1s ease-in-out infinite; }
+.gc-ai-geeko { --gk-u: 1.25px; grid-area: geeko; align-self: end; }
+@media (min-width: 640px) {
+  .gc-ai-geeko { align-self: center; }
+}
+.gc-ide.is-tinted .gc-geeko { filter: hue-rotate(var(--gc-hue, 0deg)); }
+.gc-prompt {
+  grid-area: prompt;
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.65rem;
+  border: 1px solid var(--gc-line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #64748b;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+.gc-prompt[data-on] { border-color: color-mix(in srgb, var(--gc-b) 55%, transparent); color: #f1f5f9; }
+.gc-prompt > span:first-child { min-width: 0; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gc-caret { display: inline-block; width: 1.5px; height: 1em; margin-left: 1px; background: var(--gc-a); vertical-align: -2px; animation: gc-blink 0.9s steps(1) infinite; }
+.gc-send {
+  display: inline-flex;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: var(--gc-b);
+  color: var(--gc-on);
+  transition: background-color 0.4s ease;
+}
+.gc-send svg { width: 13px; height: 13px; }
+@keyframes gc-blink {
+  50% { opacity: 0.25; }
+}
+
+.gc-status {
+  display: flex;
+  height: 26px;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0 0.75rem;
+  border-top: 1px solid var(--gc-line);
+  background: rgba(8, 9, 13, 0.6);
+  color: #64748b;
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+.gc-status-item { display: inline-flex; align-items: center; gap: 0.3rem; }
+.gc-status-item svg { width: 11px; height: 11px; }
+.gc-status-ok { color: #cbd5e1; }
+.gc-status-chip { color: var(--gc-a); font-weight: 600; transition: color 0.4s ease; }
+
+/* ---- La galerie de Geeko (Gallery.tsx) ---- */
+.gc-stage {
+  --gk-u: 2.4px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.25rem;
+  background: radial-gradient(ellipse 70% 55% at 50% 42%, rgba(10, 239, 187, 0.11), transparent 72%), #0a0c11;
+  container-type: inline-size;
+  transition: background-color 0.4s ease;
+}
+/* Geeko prend toute la largeur de sa scène, jusqu'à quatre fois sa taille de base (sinon, la taille fixe ci-dessus). */
+@supports (width: 1cqw) {
+  .gc-stage { --gk-u: min(4px, calc((100cqw - 2rem) / 116)); }
+}
+.gc-stage[data-ultra] { background: radial-gradient(ellipse 70% 55% at 50% 42%, rgba(181, 123, 255, 0.16), transparent 72%), #0b0a12; }
+/* Une trame de pixels, qui s'efface vers le bas. */
+.gc-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent 88%);
+  mask-image: linear-gradient(to bottom, #000 35%, transparent 88%);
+  pointer-events: none;
+}
+.gc-stage-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.1rem 0; }
+.gc-stage-doing {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(8, 9, 13, 0.7);
+  color: #f1f5f9;
+  font-size: 13px;
+  font-weight: 600;
+}
+.gc-stage-doing svg { color: #c3fb05; }
+.gc-stage-dot { width: 7px; height: 7px; border-radius: 50%; background: #0aefbb; animation: gc-blink 1.1s ease-in-out infinite; }
+.gc-stage[data-ultra] .gc-stage-dot { background: #f0abfc; }
+.gc-stage-count { color: #64748b; font-family: var(--font-mono); font-size: 12px; white-space: nowrap; }
+.gc-stage-floor { position: relative; display: flex; justify-content: center; padding-top: 0.5rem; }
+.gc-stage-caption { position: relative; min-height: 6.4rem; padding: 0.25rem 1.1rem 1.1rem; }
+/* La marche : il traverse la scène de gauche à droite, à la vitesse de ses pas (--gc-walk, mesurée). */
+.gc-stage[data-walk] .gc-stage-pace { animation: gc-walk-across var(--gc-walk, 5s) linear infinite; }
+@keyframes gc-walk-across {
+  from { transform: translateX(calc(-50cqw - var(--gk-u) * 58)); }
+  to { transform: translateX(calc(50cqw + var(--gk-u) * 58)); }
+}
+
+/* ---- « À vos couleurs » (Brand.tsx) ---- */
+.gc-swatch {
+  position: relative;
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  color: #08090d;
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), outline-color 0.18s ease;
+}
+.gc-swatch:hover { transform: scale(1.08); }
+.gc-swatch.is-on { outline-color: #f8fafc; }
+.gc-swatch:focus-visible, .gc-swatch-custom:focus-within { outline-color: #0aefbb; }
+.gc-swatch-custom { background: conic-gradient(#ff6b4a, #f5b83d, #c3fb05, #0aefbb, #4f8bff, #b57bff, #ff6b4a); }
+.gc-swatch-custom input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+/* ---- Animations réduites : plus rien ne tourne seul ; Geeko laisse la place à son portrait ---- */
+@media (prefers-reduced-motion: reduce) {
+  .gc-geeko:not([data-live]) .gc-geeko-still { display: block; }
+  .gc-hero-geeko[data-phase='wait'] { visibility: visible; }
+  .gc-hero-geeko .gc-geeko-still { top: auto; bottom: calc(var(--gk-u) * 5.5); }
+  [data-on] .gc-box, .gc-ai-block, .gc-click, .gc-confetti i, .gc-dot[data-busy], .gc-said[data-state='busy'] i, .gc-caret, .gc-stage-dot { animation: none; }
+  .gc-confetti { display: none; }
+  .is-typing .gc-typed { clip-path: none; animation: none; }
+  .gc-swatch { transition: none; }
+}

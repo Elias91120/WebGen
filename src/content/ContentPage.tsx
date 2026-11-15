@@ -54,6 +54,12 @@ const UI = {
   },
 } as const;
 
+/**
+ * The blocks a page with its own entry (`entry` in pages.ts) draws itself: one per section of type "custom",
+ * by its `id`, and "hero" for a visual standing in the top section.
+ */
+export type ContentBlocks = Record<string, React.FC<{ lang: Lang; book: (source: string) => void }>>;
+
 const SectionHeading: React.FC<{ path: string; title: string; sub?: string }> = ({ path, title, sub }) => (
   <Reveal className="max-w-2xl">
     <span className="eyebrow">{path}</span>
@@ -68,13 +74,29 @@ const CheckDot: React.FC = () => (
   </span>
 );
 
-const Section: React.FC<{ section: ContentSection; lang: Lang; index: number }> = ({ section, lang, index }) => {
+const Section: React.FC<{ section: ContentSection; lang: Lang; index: number; blocks?: ContentBlocks; book: (source: string) => void }> = ({
+  section,
+  lang,
+  index,
+  blocks,
+  book,
+}) => {
   const ui = UI[lang];
   const shaded = index % 2 === 1;
+  const Block = section.type === 'custom' ? blocks?.[section.id] : undefined;
   return (
-    <section className={`relative py-16 md:py-24 ${shaded ? 'border-y border-white/5 bg-surface/60' : ''}`}>
+    <section
+      id={section.type === 'custom' ? section.id : undefined}
+      className={`relative scroll-mt-20 py-16 md:py-24 ${shaded ? 'border-y border-white/5 bg-surface/60' : ''}`}
+    >
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading path={section.path[lang]} title={section.title[lang]} sub={'sub' in section ? section.sub?.[lang] : undefined} />
+
+        {Block && (
+          <div className="mt-12">
+            <Block lang={lang} book={book} />
+          </div>
+        )}
 
         {section.type === 'points' && (
           <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -164,16 +186,18 @@ const Section: React.FC<{ section: ContentSection; lang: Lang; index: number }> 
   );
 };
 
-const ContentPageView: React.FC<{ page: ContentPage }> = ({ page }) => (
+const ContentPageView: React.FC<{ page: ContentPage; blocks?: ContentBlocks }> = ({ page, blocks }) => (
   <SiteLayout page="content" space={page.space} meta={page.meta} current={page.parent.href === '/realisations' ? 'work' : undefined}>
     {({ lang, book }) => {
       const ui = UI[lang];
       const side = UI[lang][page.space];
       const related = page.related.map((path) => CONTENT_PAGES.find((p) => p.path === path)).filter((p): p is ContentPage => Boolean(p));
       const homeHref = page.space === 'ai' ? '/ia' : page.parent.href;
+      const HeroBlock = blocks?.hero;
       return (
         <>
-          <section className="relative overflow-hidden border-b border-white/5 pb-14 pt-28 md:pb-20 md:pt-40">
+          {/* (a hero block stands on the bottom line: under the buttons until the screen is wide enough to stand beside the text) */}
+          <section className={`relative overflow-hidden border-b border-white/5 pt-28 md:pt-40 ${HeroBlock ? 'pb-40 xl:pb-20' : 'pb-14 md:pb-20'}`}>
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_85%_0%,rgba(10,239,187,0.12),transparent_70%)]"
               aria-hidden="true"
@@ -214,6 +238,13 @@ const ContentPageView: React.FC<{ page: ContentPage }> = ({ page }) => (
                 )}
               </div>
             </div>
+            {HeroBlock && (
+              <div className="absolute inset-x-0 bottom-0">
+                <div className="relative mx-auto max-w-7xl">
+                  <HeroBlock lang={lang} book={book} />
+                </div>
+              </div>
+            )}
           </section>
 
           {page.hero && (
@@ -232,7 +263,7 @@ const ContentPageView: React.FC<{ page: ContentPage }> = ({ page }) => (
           )}
 
           {page.sections.map((section, i) => (
-            <Section key={`${section.type}-${i}`} section={section} lang={lang} index={i} />
+            <Section key={`${section.type}-${i}`} section={section} lang={lang} index={i} blocks={blocks} book={book} />
           ))}
 
           {related.length > 0 && (

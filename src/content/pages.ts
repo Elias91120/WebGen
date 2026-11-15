@@ -26,7 +26,9 @@ export type ContentSection =
   /** Short list of limits or commitments, as plain checked lines. */
   | { type: 'checks'; path: Localized<string>; title: Localized<string>; items: Localized<string[]> }
   /** A few paragraphs (context, result of a case study). */
-  | { type: 'text'; path: Localized<string>; title: Localized<string>; paragraphs: Localized<string[]> };
+  | { type: 'text'; path: Localized<string>; title: Localized<string>; paragraphs: Localized<string[]> }
+  /** A block drawn by the page's own components (see `entry`): the heading is here, `id` names the block and is its anchor. */
+  | { type: 'custom'; id: string; path: Localized<string>; title: Localized<string>; sub?: Localized<string> };
 
 export interface ContentPage {
   /** Address without trailing slash, e.g. /ia/agents-ia. */
@@ -41,6 +43,10 @@ export interface ContentPage {
   hero?: { desktop: string; mobile?: string; alt: Localized<string> };
   /** Public address of the project itself, for a case study. */
   live?: string;
+  /** Its own script in src/pages/entries/, for a page with animated blocks the other content pages do not load. */
+  entry?: string;
+  /** Sharing image (a file in public/), when the page has no `hero` screen. */
+  ogImage?: string;
   /** Search-result title (about 60 characters) and description (about 155). */
   meta: Localized<{ title: string; description: string }>;
   eyebrow: Localized<string>;
@@ -1099,6 +1105,150 @@ export const CONTENT_PAGES: ContentPage[] = [
     related: ['/realisations/workspace', '/realisations/two-app-ios'],
     bookingSource: 'seo-cas-sonorstudio',
     updated: '2026-10-24',
+  },
+  {
+    path: '/realisations/geeks-code',
+    space: 'web',
+    parent: WORK_PARENT,
+    schema: 'CaseStudy',
+    entry: 'geeks-code',
+    ogImage: '/images/realisations/geeks-code-og.png',
+    meta: {
+      fr: {
+        title: 'Étude de cas : Geeks Code, notre éditeur de code avec IA | 3geeks',
+        description: 'Projet interne de 3geeks : un éditeur de code où l’IA travaille sur un plan en jalons, sous le regard de Geeko, notre mascotte animée. Bientôt à vos couleurs.',
+      },
+      en: {
+        title: 'Case study: Geeks Code, our AI code editor | 3geeks',
+        description: 'An internal 3geeks project: a code editor where AI works through a milestone plan, shown live by Geeko, our animated mascot. Soon in your colours.',
+      },
+    },
+    eyebrow: { fr: 'Étude de cas · Projet interne', en: 'Case study · Internal project' },
+    h1: {
+      fr: 'Geeks Code : l’atelier où l’IA code, et où l’on vérifie.',
+      en: 'Geeks Code: the workshop where AI codes, and people verify.',
+    },
+    intro: {
+      fr: 'Geeks Code est l’éditeur de code que 3geeks a construit pour sa propre équipe. Chaque projet y suit un plan découpé en jalons, l’IA travaille sous contrat, et Geeko, notre mascotte, montre en direct ce qu’elle est en train de faire. C’est un projet interne : il dit comment nous travaillons, et ce que nous pouvons construire pour votre équipe.',
+      en: 'Geeks Code is the code editor 3geeks built for its own team. Every project follows a plan split into milestones, AI works under contract, and Geeko, our mascot, shows live what it is doing. It is an internal project: it shows how we work, and what we can build for your team.',
+    },
+    sections: [
+      {
+        type: 'custom',
+        id: 'demo',
+        path: { fr: 'La démonstration', en: 'The demo' },
+        title: { fr: 'L’IA code vite. Ici, on voit ce qu’elle fait.', en: 'AI codes fast. Here, you see what it does.' },
+        sub: {
+          fr: 'Une demande, un jalon, trois conditions à cocher : suivez un travail du début à la validation.',
+          en: 'One request, one milestone, three conditions to tick: follow a job from start to approval.',
+        },
+      },
+      {
+        type: 'points',
+        path: { fr: 'Ce que fait Geeks Code', en: 'What Geeks Code does' },
+        title: { fr: 'Un éditeur de code pensé pour travailler avec l’IA.', en: 'A code editor designed for working with AI.' },
+        items: {
+          fr: [
+            { t: 'Un plan en jalons, dans l’éditeur', d: 'Chaque projet a son plan, découpé en jalons. Chaque jalon a ses conditions « fini quand » : tant qu’elles ne sont pas cochées, rien n’est validé.' },
+            { t: 'On voit ce que fait l’IA', d: 'Réfléchir, lire, chercher, écrire, lancer des commandes : Geeko joue chaque activité en direct. On sait où elle en est sans lire un journal technique.' },
+            { t: 'Une équipe d’agents, visible en direct', d: 'Pour les gros chantiers, plusieurs agents IA travaillent en parallèle. La salle des agents montre qui fait quoi, et sur quel fichier.' },
+            { t: 'Une seule connexion, tout est branché', d: 'On se connecte une fois avec le compte de l’entreprise : le code, les tests, la mise en ligne et la documentation sont reliés. Un poste neuf est prêt en une connexion.' },
+          ],
+          en: [
+            { t: 'A milestone plan, inside the editor', d: 'Every project has a plan split into milestones. Each milestone has its “done when” conditions: until they are ticked, nothing is approved.' },
+            { t: 'You can see what AI is doing', d: 'Thinking, reading, searching, writing, running commands: Geeko acts out each activity live. You know where it stands without reading a technical log.' },
+            { t: 'A team of agents, visible live', d: 'For big jobs, several AI agents work in parallel. The agents room shows who is doing what, and on which file.' },
+            { t: 'One sign-in, everything is plugged in', d: 'You sign in once with the company account: code, tests, releases and documentation are connected. A new computer is ready in one sign-in.' },
+          ],
+        },
+      },
+      {
+        type: 'custom',
+        id: 'geeko',
+        path: { fr: 'Geeko, la mascotte', en: 'Geeko, the mascot' },
+        title: { fr: 'Geeko : 30 animations pour dire ce que fait l’IA.', en: 'Geeko: 30 animations to say what AI is doing.' },
+        sub: {
+          fr: 'On passe beaucoup de temps à attendre qu’une IA réponde. Plutôt qu’un sablier, nous avons dessiné un compagnon : il fait ce qu’elle fait. Choisissez une activité, il la joue.',
+          en: 'We spend a lot of time waiting for AI to answer. Instead of an hourglass, we drew a companion: he does what it does. Pick an activity and he acts it out.',
+        },
+      },
+      {
+        type: 'custom',
+        id: 'entreprise',
+        path: { fr: 'Et dans votre entreprise ?', en: 'And in your company?' },
+        title: { fr: 'Bientôt, le vôtre : à vos couleurs.', en: 'Soon, yours: in your colours.' },
+        sub: {
+          fr: 'Le même atelier, sous votre nom, branché sur vos outils et vos modèles d’IA. Tapez le nom de votre entreprise, choisissez une couleur : voilà à quoi il pourrait ressembler.',
+          en: 'The same workshop, under your name, plugged into your tools and your AI models. Type your company name, pick a colour: this is what it could look like.',
+        },
+      },
+      {
+        type: 'points',
+        path: { fr: 'Pour quelles équipes', en: 'Who it is for' },
+        title: { fr: 'Quatre situations où ce cadre aide.', en: 'Four situations where this framework helps.' },
+        items: {
+          fr: [
+            { t: 'Vos développeurs passent à l’IA', d: 'Ils gardent leurs habitudes d’éditeur et gagnent un cadre : l’IA travaille sur un plan, et chaque étape se vérifie.' },
+            { t: 'Vos équipes « vibe codent » déjà', d: 'Décrire ce qu’on veut et laisser l’IA écrire le code, ça va vite. Avec des jalons, des conditions et une relecture, ça devient livrable.' },
+            { t: 'Vos profils non techniques veulent construire', d: 'Le plan se lit sans savoir coder : on voit ce qui est demandé, ce qui est fait et ce qui reste à vérifier.' },
+            { t: 'Votre marque compte, jusque dans vos outils', d: 'Un outil interne qu’on a envie d’ouvrir : votre identité, une interface soignée, un personnage qui donne le ton.' },
+          ],
+          en: [
+            { t: 'Your developers are moving to AI', d: 'They keep their editor habits and gain a framework: AI works from a plan, and every step can be checked.' },
+            { t: 'Your teams already “vibe code”', d: 'Describing what you want and letting AI write the code is fast. With milestones, conditions and a review, it becomes shippable.' },
+            { t: 'Your non-technical people want to build', d: 'The plan reads without knowing how to code: you see what was asked, what is done and what is left to check.' },
+            { t: 'Your brand matters, even in your tools', d: 'An internal tool people want to open: your identity, a polished interface, a character that sets the tone.' },
+          ],
+        },
+      },
+      {
+        type: 'steps',
+        path: { fr: 'La transition, pas à pas', en: 'The transition, step by step' },
+        title: { fr: 'Passer à l’IA sans tout changer d’un coup.', en: 'Moving to AI without changing everything at once.' },
+        sub: {
+          fr: 'On avance par paliers. À chaque palier, le même garde-fou : un plan, des conditions, une validation humaine.',
+          en: 'You move up one level at a time. At each level, the same safeguard: a plan, conditions, a human approval.',
+        },
+        items: {
+          fr: [
+            { t: 'L’IA assiste', d: 'Vos développeurs gardent la main. L’IA explique le code, propose, relit.' },
+            { t: 'L’IA exécute, sous contrat', d: 'Elle réalise un jalon entier. Chaque condition est vérifiée avant de passer au suivant.' },
+            { t: 'Une équipe d’agents', d: 'Pour les gros chantiers, plusieurs agents se répartissent le travail. Un humain garde la validation finale.' },
+          ],
+          en: [
+            { t: 'AI assists', d: 'Your developers stay in control. AI explains the code, suggests, reviews.' },
+            { t: 'AI executes, under contract', d: 'It delivers a whole milestone. Each condition is checked before moving on.' },
+            { t: 'A team of agents', d: 'For big jobs, several agents split the work. A human keeps the final approval.' },
+          ],
+        },
+      },
+      {
+        type: 'checks',
+        path: { fr: 'Sous le capot', en: 'Under the hood' },
+        title: { fr: 'Moins de trois semaines de travail, jalon par jalon.', en: 'Under three weeks of work, milestone by milestone.' },
+        items: {
+          fr: [
+            'Commencé le 28 octobre 2026. Au 15 novembre : 24 jalons terminés sur 31, suivis dans le plan du projet.',
+            'Bâti sur Code-OSS, la base open source de VS Code (licence MIT) : les habitudes et les raccourcis de l’éditeur restent.',
+            '26 modifications du cœur de l’éditeur et 5 extensions maison : connexion, thème, mise en route, tableau de bord.',
+            'Un installeur Windows et des mises à jour proposées dans l’application ; la version Mac est en cours.',
+            '148 tests automatiques sur les extensions et les services, comptés le 15 novembre 2026.',
+            'Geeko : un moteur d’animation maison, sans dépendance, le même dans l’éditeur et sur ce site.',
+          ],
+          en: [
+            'Started on 28 October 2026. By 15 November: 24 milestones out of 31 completed, tracked in the project plan.',
+            'Built on Code-OSS, the open-source base of VS Code (MIT licence): the editor’s habits and shortcuts stay.',
+            '26 changes to the editor’s core and 5 in-house extensions: sign-in, theme, onboarding, dashboard.',
+            'A Windows installer and updates offered inside the application; the Mac version is in progress.',
+            '148 automated tests on the extensions and services, counted on 15 November 2026.',
+            'Geeko: an in-house animation engine with no dependency, the same one in the editor and on this site.',
+          ],
+        },
+      },
+    ],
+    related: ['/realisations/workspace', '/ia/agents-ia', '/ia/audit-formation'],
+    bookingSource: 'seo-cas-geeks-code',
+    updated: '2026-11-15',
   },
   {
     path: '/secteurs/sante',
