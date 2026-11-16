@@ -4,9 +4,9 @@
  * from tools/actus/front.json (jalon 89): edit the sheet, not this file.
  */
 export const FRONT = {
-  "version": "0.26.1",
+  "version": "0.27.0",
   "fr": {
-    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, de République à tout un tour de France par les vrais trains, dans l'ordre que tu veux : Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Toulon, Nice, Toulouse, Bordeaux, Grenoble. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
+    "lead": "Les Actes : un jeu de stratégie en temps réel, satirique et cartoon, où tu mènes les cortèges de Gilets Jaunes dans Paris (ou le camp CRS). La Manif : un roguelite en 3D, seul contre des hordes de CRS, au départ de République ou de ta ville, sur tout un tour de France par les vrais trains, dans l'ordre que tu veux : Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Toulon, Nice, Toulouse, Bordeaux, Grenoble. Et la Campagne : ce soir, Paris descend dans la rue pour la justice et pour la paix, à la première personne.",
     "modes": {
       "actes": {
         "tag": "Le jeu d’origine",
@@ -20,12 +20,15 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "Nouveau : la 0.26.1",
-        "d": "Inspiré de Megabonk : seul contre des hordes de CRS, de République à la Bastille, puis le tour de France par les vrais trains, de Caen à Lille, Marseille et Nice, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
+        "tag": "Nouveau : la 0.27.0",
+        "d": "Inspiré de Megabonk : seul contre des hordes de CRS. Pars de République ou de ta ville, puis fais le tour de France par les vrais trains, de Caen à Lille, Marseille et Nice, et retour à Paris pour l’Élysée ; la banlieue en bonus. Tes armes tirent toutes seules ; toi, tu sautes, tu glisses, tu montes en puissance.",
         "points": [
-          "Nouveau : les fantômes, les autres joueurs en transparence avec leur pseudo et leur ville ; et la Ligue des Villes : choisis ta ville avec ton pseudo, chacune de tes manifs compte pour elle",
+          "Nouveau : pars de ta ville. Au menu, « DÉPART » ouvre la carte de France : Brest, Lyon, Marseille, Lille, Toulouse… 18 départs, dès ta première partie",
+          "Nouveau : place de la République, la statue refaite porte son gilet jaune géant : « ON EST LÀ ! »",
+          "Nouveau : le début d'une manif refait (une annonce qui se lit, tes 5 armes et tes 6 badges au HUD), et des menus qui se jouent à la souris, au clavier et à la manette",
+          "Les fantômes, les autres joueurs en transparence avec leur pseudo et leur ville ; et la Ligue des Villes : choisis ta ville avec ton pseudo, chacune de tes manifs compte pour elle",
           "Le mode FACILE, au bouton de la bande : des CRS moins costauds, plus de cœurs, la foule te relève deux fois",
-          "Choisis ta région dès Paris : cinq gares, cinq régions, trois villes au plus ; un NORMAL qui fait vraiment galérer",
+          "À Paris, le Préfet tombé, toutes les gares s'ouvrent : tu choisis ta direction à chaque ville ; un NORMAL qui fait vraiment galérer",
           "Rennes, Nantes et Tours, que vous avez demandées : la place de la Mairie, la place Royale et le château des ducs, la place Plumereau",
           "Le tour de France par les vrais trains, de vraies gares où l'on entre : Caen, Brest, Angers ; Amiens, Lille ; Lyon, Saint-Étienne, Clermont-Ferrand ; Rennes, Nantes, Tours ; Marseille, Toulon, Nice ; Toulouse ; l’Élysée, et la banlieue en bonus",
           "La bande à six, avec Droven et ses pancartes ; des missions dans chaque monde, le mode DIFFICILE, le classement mondial"
@@ -186,7 +189,7 @@ export const FRONT = {
     ]
   },
   "en": {
-    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, from République to a whole tour of France by real trains, in any order you like: Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Toulon, Nice, Toulouse, Bordeaux, Grenoble. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
+    "lead": "Les Actes: a satirical, cartoon real-time strategy game where you lead the Yellow Vest marches through Paris (or the riot police). The Manif: a 3D roguelite, alone against hordes of riot police, starting from République or from your own city, on a whole tour of France by real trains, in any order you like: Caen, Brest, Angers, Lille, Lyon, Saint-Étienne, Clermont-Ferrand, Amiens, Rennes, Nantes, Tours, Marseille, Toulon, Nice, Toulouse, Bordeaux, Grenoble. And the Campagne: tonight, Paris takes to the streets for justice and for peace, in first person.",
     "modes": {
       "actes": {
         "tag": "The original",
@@ -200,12 +203,15 @@ export const FRONT = {
         ]
       },
       "manif": {
-        "tag": "New: 0.26.1",
-        "d": "Inspired by Megabonk: alone against hordes of riot police, from République to the Bastille, then a tour of France on the real trains, from Caen to Lille, Marseille and Nice, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
+        "tag": "New: 0.27.0",
+        "d": "Inspired by Megabonk: alone against hordes of riot police. Start from République or from your own city, then tour France on the real trains, from Caen to Lille, Marseille and Nice, and back to Paris for the Élysée; the suburbs as a bonus. Your weapons fire on their own; you jump, slide and power up.",
         "points": [
-          "New: ghosts, the other players in transparency with their nickname and city; and the League of Cities: pick your city with your nickname, every run you finish counts for it",
+          "New: start from your own city. From the menu, \"DÉPART\" opens the map of France: Brest, Lyon, Marseille, Lille, Toulouse… 18 starting points, from your very first run",
+          "New: on Place de la République, the rebuilt statue wears its giant yellow vest: \"ON EST LÀ !\" (\"we are here\")",
+          "New: a reworked start of each run (a briefing you can actually read, your 5 weapons and 6 badges on the HUD), and menus that play with mouse, keyboard and gamepad",
+          "Ghosts, the other players in transparency with their nickname and city; and the League of Cities: pick your city with your nickname, every run you finish counts for it",
           "The EASY mode, on the crew screen: softer CRS, more hearts, and the crowd picks you up twice",
-          "Pick your region right from Paris: five stations, five regions, three cities at most; a NORMAL mode that really makes you sweat",
+          "In Paris, once the Prefect is down, every station opens: you choose where to go from each city; a NORMAL mode that really makes you sweat",
           "Rennes, Nantes and Tours, which you asked for: Place de la Mairie, Place Royale and the castle of the Dukes, Place Plumereau",
           "The tour of France on the real trains, through real stations you walk into: Caen, Brest, Angers; Amiens, Lille; Lyon, Saint-Étienne, Clermont-Ferrand; Rennes, Nantes, Tours; Marseille, Toulon, Nice; Toulouse; the Élysée, and the suburbs as a bonus",
           "The six-strong crew, with Droven and his placards; missions in every world, HARD mode, the world leaderboard"
