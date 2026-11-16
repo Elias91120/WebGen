@@ -2,38 +2,7 @@
    « à vos couleurs ». Les couleurs de la fenêtre passent par --gc-a et --gc-b, pour en changer d'un clic.
    Tout ce qui tourne seul s'arrête avec « réduire les animations » (bas du fichier). */
 
-/* ---- Geeko en vedette (GeekoStage.tsx) : --gk-u est une unité de son dessin (80 × 72, ou 116 × 88 avec son décor) ---- */
-.gc-geeko {
-  position: relative;
-  display: block;
-  flex: none;
-  width: calc(var(--gk-u, 1.25px) * 80);
-  height: calc(var(--gk-u, 1.25px) * 72);
-  line-height: 0;
-}
-.gc-geeko[data-decor] {
-  width: calc(var(--gk-u, 1.25px) * 116);
-  height: calc(var(--gk-u, 1.25px) * 88);
-}
-.gc-geeko .gk-root {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-/* Son portrait fixe : seulement quand il ne bouge pas (animations réduites). */
-.gc-geeko-still {
-  display: none;
-  position: absolute;
-  left: calc(var(--gk-u, 1.25px) * 19);
-  top: calc(var(--gk-u, 1.25px) * 13);
-  width: calc(var(--gk-u, 1.25px) * 42.04);
-  height: calc(var(--gk-u, 1.25px) * 34);
-  max-width: none;
-}
-.gc-geeko[data-decor] .gc-geeko-still {
-  left: calc(var(--gk-u, 1.25px) * 37);
-  top: calc(var(--gk-u, 1.25px) * 27);
-}
+/* (Geeko lui-même, sa bulle et ses phases d'arrivée : geeko-stage.css, chargé avec GeekoStage.tsx.) */
 
 /* ---- Le haut de page : il arrive à pied, se tourne, salue, puis se met au travail (pieds sur la ligne du bas).
    Sous les boutons, à gauche, tant que le texte prend la largeur ; à droite du texte sur grand écran, à l'écart
@@ -53,7 +22,6 @@
 @media (min-width: 1536px) {
   .gc-hero-geeko { --gk-u: 4px; }
 }
-.gc-hero-geeko[data-phase='wait'] { visibility: hidden; }
 /* Il marche à la vitesse de ses pas (14 unités par appui, soit 54 par seconde), pour que ses pieds ne glissent pas. */
 .gc-hero-geeko[data-phase='walk'] { animation: gc-walk-in 2.2s linear both; }
 @keyframes gc-walk-in {
@@ -71,32 +39,9 @@
   12% { opacity: 1; }
   to { transform: none; }
 }
-/* Il se tourne vers nous : la pose de profil s'en va d'un coup, celle de face la remplace. */
-.gc-hero-geeko[data-phase='hello'] .gk-out { display: none; }
-.gc-hero-geeko[data-phase='hello'] .gk-in { animation-duration: 140ms; }
-.gc-hello {
-  position: absolute;
-  left: calc(var(--gk-u) * 63);
-  bottom: calc(var(--gk-u) * 40);
-  padding: 8px 12px;
-  border-radius: 12px 12px 12px 2px;
-  background: #f2f4f7;
-  color: #08090d;
-  font: 600 13px/1 var(--font-sans);
-  white-space: nowrap;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
-  animation: gc-hello 4.2s ease both;
-}
-@media (min-width: 640px) {
-  .gc-hello { font-size: 14px; }
-}
 @media (min-width: 1280px) {
-  .gc-hello { left: auto; right: calc(var(--gk-u) * 63); border-radius: 12px 12px 2px 12px; }
-}
-@keyframes gc-hello {
-  0% { opacity: 0; transform: translateY(6px) scale(0.96); }
-  7%, 86% { opacity: 1; transform: none; }
-  100% { opacity: 0; }
+  /* Sa bulle passe à sa gauche. */
+  .gc-hero-geeko .gc-hello { left: auto; right: calc(var(--gk-u) * 63); border-radius: 12px 12px 2px 12px; }
 }
 
 /* ---- La fenêtre de l'éditeur (IdeMock.tsx) ---- */
@@ -571,11 +516,8 @@
 .gc-swatch-custom { background: conic-gradient(#ff6b4a, #f5b83d, #c3fb05, #0aefbb, #4f8bff, #b57bff, #ff6b4a); }
 .gc-swatch-custom input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-/* ---- Animations réduites : plus rien ne tourne seul ; Geeko laisse la place à son portrait ---- */
+/* ---- Animations réduites : plus rien ne tourne seul (Geeko laisse la place à son portrait : geeko-stage.css) ---- */
 @media (prefers-reduced-motion: reduce) {
-  .gc-geeko:not([data-live]) .gc-geeko-still { display: block; }
-  .gc-hero-geeko[data-phase='wait'] { visibility: visible; }
-  .gc-hero-geeko .gc-geeko-still { top: auto; bottom: calc(var(--gk-u) * 5.5); }
   [data-on] .gc-box, .gc-ai-block, .gc-click, .gc-confetti i, .gc-dot[data-busy], .gc-said[data-state='busy'] i, .gc-caret, .gc-stage-dot { animation: none; }
   .gc-confetti { display: none; }
   .is-typing .gc-typed { clip-path: none; animation: none; }

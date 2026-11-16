@@ -19,15 +19,19 @@ import {
   Timer,
   Users,
 } from 'lucide-react';
+import { useInView } from 'motion/react';
 import React from 'react';
 
 import BuildTimeline from '../components/BuildTimeline';
 import Geeko, { sizeFrom } from '../components/Geeko';
+import { Mark } from '../components/Logo';
 import { PROJECTS_DATA } from '../components/ProjectsShowcase';
 import ProjectsMarquee from '../components/ProjectsMarquee';
 import Reveal from '../components/Reveal';
 import SectionLines from '../components/SectionLines';
 import { FOUNDERS, LinkedInIcon } from '../components/TeamSection';
+import WorkspaceLoop from '../components/WorkspaceLoop';
+import WalkInGeeko from '../geeks-code/WalkInGeeko';
 import type { PageContext } from './SiteLayout';
 
 type Props = PageContext;
@@ -281,6 +285,116 @@ export const FeaturedWork: React.FC<Props> = ({ lang, t }) => {
               </a>
             </Reveal>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// The two tools we run the studio with, then our side projects (the game has no entry in PROJECTS_DATA).
+const PILLARS = ['geeks-code', 'workspace'] as const;
+const SIDE_PROJECTS = ['sonorstudio', 'prompt-hub', 'efrei-skill-hub', '17-octobre'] as const;
+
+/** Under the client work: our own tools. Each card opens the project's case study, or the project itself. */
+export const InHouse: React.FC<Props> = ({ lang, t }) => {
+  const c = t.site.inHouse;
+  // Geeko n'entre dans la fenêtre de Geeks Code qu'une fois celle-ci bien à l'écran : sa marche se voit.
+  const windowRef = React.useRef<HTMLDivElement>(null);
+  const seen = useInView(windowRef, { once: true, amount: 0.6 });
+  return (
+    <section className="relative border-t border-white/5 bg-surface/60 py-14 md:py-28">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="mb-8 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between">
+          <Heading path={c.path} title={c.title} sub={c.sub} />
+          <Reveal>
+            <a href="/realisations#geeks-code" className="inline-flex min-h-10 items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-brand-mint transition-colors hover:text-white">
+              {c.more} <ArrowRight className="h-4 w-4" />
+            </a>
+          </Reveal>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2">
+          {PILLARS.map((id, i) => {
+            const p = PROJECTS_DATA.find((project) => project.id === id)!;
+            return (
+              <Reveal key={id} delay={i * 90}>
+                <a href={p.page} className="card group block h-full overflow-hidden hover:bg-surface-2">
+                  {id === 'geeks-code' ? (
+                    // Une petite fenêtre de l'éditeur : Geeko y entre à pied par le bord gauche, salue, puis code.
+                    <div
+                      ref={windowRef}
+                      className="geeko-window relative aspect-video overflow-hidden border-b border-white/[0.07] bg-[#0a0c11] bg-[radial-gradient(ellipse_80%_70%_at_80%_100%,rgba(10,239,187,0.13),transparent_70%)]"
+                      aria-hidden="true"
+                    >
+                      <div className="flex h-9 items-center gap-3 border-b border-white/[0.07] bg-ink/60 px-4 text-xs">
+                        <span className="flex gap-1.5">
+                          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                        </span>
+                        <Mark className="h-4" />
+                        <span className="font-semibold text-slate-100">{p.title[lang]}</span>
+                      </div>
+                      <div className="absolute left-[6%] top-[30%] w-[38%] space-y-2.5">
+                        {[72, 100, 84, 46].map((width, line) => (
+                          <span key={width} className={`block h-1.5 rounded-full ${line === 0 ? 'bg-brand-mint/40' : 'bg-white/10'}`} style={{ width: `${width}%` }} />
+                        ))}
+                      </div>
+                      <span className="absolute inset-x-0 bottom-[10%] h-px bg-gradient-to-r from-brand-lime/50 via-brand-mint/40 to-transparent" />
+                      {seen && <WalkInGeeko lang={lang} hello={c.hello} className="geeko-inhouse" />}
+                    </div>
+                  ) : (
+                    <div className="relative aspect-video overflow-hidden border-b border-white/[0.07] bg-ink">
+                      {/* (sa vidéo remplit le cadre : pas de fondu en haut et en bas, prévu pour une colonne plus haute) */}
+                      <WorkspaceLoop lang={lang} className="[&>div]:[mask-image:none]" />
+                    </div>
+                  )}
+                  <div className="p-5 md:p-7">
+                    <p className="text-xs font-medium text-brand-mint/90">{p.badge[lang]}</p>
+                    <h3 className="mt-2 flex items-center justify-between gap-3 font-display text-2xl font-semibold text-white">
+                      {p.title[lang]}
+                      <ArrowUpRight className="h-5 w-5 shrink-0 text-slate-500 transition-colors group-hover:text-brand-mint" />
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-400 md:text-base">{c.pillars[id]}</p>
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {p.tags[lang].map((tag) => (
+                        <span key={tag} className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        <Reveal className="mb-5 mt-10 flex items-center gap-4 md:mt-14">
+          <h3 className="font-display text-lg font-semibold text-white md:text-xl">{c.sideTitle}</h3>
+          <span className="h-px flex-1 bg-white/10" />
+        </Reveal>
+        <div className="grid grid-cols-2 gap-4 md:gap-5 lg:grid-cols-4">
+          {SIDE_PROJECTS.map((id, i) => {
+            const p = PROJECTS_DATA.find((project) => project.id === id);
+            const href = p ? p.page ?? p.link : '/17-octobre';
+            return (
+              <Reveal key={id} delay={i * 70}>
+                <a
+                  href={href}
+                  {...(href?.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  className="card group block h-full p-4 hover:bg-surface-2 sm:p-5"
+                >
+                  <p className="text-xs font-medium text-brand-mint/90">{c.side[id].tag}</p>
+                  <h4 className="mt-2 flex items-center justify-between gap-2 font-display text-base font-semibold text-white">
+                    {p ? p.title[lang] : '17 OCTOBRE'}
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-500 transition-colors group-hover:text-brand-mint" />
+                  </h4>
+                  <p className="mt-1.5 text-sm leading-relaxed text-slate-400">{c.side[id].text}</p>
+                </a>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>

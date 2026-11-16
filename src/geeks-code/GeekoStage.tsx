@@ -9,6 +9,7 @@ import React, { useEffect, useReducer, useRef } from 'react';
 import { GEEKO_PORTRAIT } from '../components/Geeko';
 import type { GeekoEgg, GeekoHandle, GeekoInfo, GeekoIntensity, GeekoPalette } from '../geeko/geeko';
 import type { Lang } from '../i18n';
+import './geeko-stage.css';
 
 // Le moteur est écrit pour l'équipe (il tutoie) : seule la pancarte garde un texte, comme ailleurs sur le site.
 const SIGN: Record<Lang, string> = { fr: 'VOTRE OK ?', en: 'YOUR OK?' };

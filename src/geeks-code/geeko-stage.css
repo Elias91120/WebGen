@@ -1,0 +1,67 @@
+/* Geeko en vedette (GeekoStage.tsx) et son arrivée à pied (WalkInGeeko.tsx) : ce qui ne dépend pas de la page.
+   --gk-u est une unité de son dessin (80 × 72, ou 116 × 88 avec son décor) ; chaque page lui donne sa valeur. */
+.gc-geeko {
+  position: relative;
+  display: block;
+  flex: none;
+  width: calc(var(--gk-u, 1.25px) * 80);
+  height: calc(var(--gk-u, 1.25px) * 72);
+  line-height: 0;
+}
+.gc-geeko[data-decor] {
+  width: calc(var(--gk-u, 1.25px) * 116);
+  height: calc(var(--gk-u, 1.25px) * 88);
+}
+.gc-geeko .gk-root {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+/* Son portrait fixe : seulement quand il ne bouge pas (animations réduites). */
+.gc-geeko-still {
+  display: none;
+  position: absolute;
+  left: calc(var(--gk-u, 1.25px) * 19);
+  top: calc(var(--gk-u, 1.25px) * 13);
+  width: calc(var(--gk-u, 1.25px) * 42.04);
+  height: calc(var(--gk-u, 1.25px) * 34);
+  max-width: none;
+}
+.gc-geeko[data-decor] .gc-geeko-still {
+  left: calc(var(--gk-u, 1.25px) * 37);
+  top: calc(var(--gk-u, 1.25px) * 27);
+}
+
+/* ---- Il arrive à pied (WalkInGeeko.tsx) : la place, la taille et la marche sont au CSS de chaque page. ---- */
+.gc-walker[data-phase='wait'] { visibility: hidden; }
+/* Il se tourne vers nous : la pose de profil s'en va d'un coup, celle de face la remplace. */
+.gc-walker[data-phase='hello'] .gk-out { display: none; }
+.gc-walker[data-phase='hello'] .gk-in { animation-duration: 140ms; }
+.gc-hello {
+  position: absolute;
+  left: calc(var(--gk-u) * 63);
+  bottom: calc(var(--gk-u) * 40);
+  padding: 8px 12px;
+  border-radius: 12px 12px 12px 2px;
+  background: #f2f4f7;
+  color: #08090d;
+  font: 600 13px/1 var(--font-sans);
+  white-space: nowrap;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+  animation: gc-hello 4.2s ease both;
+}
+@media (min-width: 640px) {
+  .gc-hello { font-size: 14px; }
+}
+@keyframes gc-hello {
+  0% { opacity: 0; transform: translateY(6px) scale(0.96); }
+  7%, 86% { opacity: 1; transform: none; }
+  100% { opacity: 0; }
+}
+
+/* ---- Animations réduites : son portrait le remplace, les pieds sur sa ligne ---- */
+@media (prefers-reduced-motion: reduce) {
+  .gc-geeko:not([data-live]) .gc-geeko-still { display: block; }
+  .gc-walker[data-phase='wait'] { visibility: visible; }
+  .gc-walker .gc-geeko-still { top: auto; bottom: calc(var(--gk-u) * 5.5); }
+}

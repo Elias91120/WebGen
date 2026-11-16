@@ -549,6 +549,26 @@ body {
   .geeko-how-btn { display: none; }
 }
 
+/* Nos outils maison : dans la fenêtre de la carte Geeks Code, il entre à pied par le bord gauche, qui le coupe
+   (geeks-code/WalkInGeeko.tsx). Sa taille suit la largeur de la fenêtre (180 u) ; il marche 156 u, à 54 u par seconde. */
+.geeko-window { container-type: inline-size; }
+.geeko-inhouse {
+  --gk-u: 1.6px;
+  position: absolute;
+  left: calc(var(--gk-u) * 95);
+  bottom: calc(10% - var(--gk-u) * 5.5);
+}
+@supports (width: 1cqw) {
+  .geeko-inhouse { --gk-u: calc(100cqw / 180); }
+}
+.geeko-inhouse[data-phase='walk'] { animation: gc-walk-in-window 2.89s linear both; }
+@keyframes gc-walk-in-window {
+  from { transform: translateX(calc(var(--gk-u) * -156)); }
+  to { transform: none; }
+}
+/* Sa bulle à sa gauche : à droite, elle sortirait de la fenêtre. */
+.geeko-inhouse .gc-hello { left: auto; right: calc(var(--gk-u) * 63); border-radius: 12px 12px 2px 12px; }
+
 /* Derrière la carte contact : la carte le coupe à la poitrine. */
 .geeko-contact {
   position: absolute;

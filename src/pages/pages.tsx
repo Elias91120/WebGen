@@ -15,6 +15,7 @@ import {
   FeaturedWork,
   Hero,
   HowItWorks,
+  InHouse,
   MethodSection,
   OffersSection,
   PageIntro,
@@ -37,6 +38,7 @@ export const HomePage: React.FC = () => (
         <WhatWeDo {...ctx} />
         <HowItWorks {...ctx} />
         <FeaturedWork {...ctx} />
+        <InHouse {...ctx} />
         <ContactSection {...ctx} />
       </>
     )}
