@@ -113,7 +113,7 @@ export const Hero: React.FC<Props> = ({ lang, t, book }) => (
             <Geeko
               lang={lang}
               variant="coucou"
-              size={(host) => parseFloat(getComputedStyle(host).fontSize) / 56}
+              size={(host) => parseFloat(getComputedStyle(host).fontSize) / 66}
               delay={1300}
               bubble={lang === 'fr' ? 'Bonjour !' : 'Hello!'}
               onlyIfFits

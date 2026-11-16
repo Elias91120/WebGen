@@ -525,7 +525,8 @@ body {
 .geeko-hero {
   position: absolute;
   left: calc(8px - var(--gk-u) * 19);
-  bottom: calc(var(--gk-u) * -5.5);
+  /* Les pieds un peu sous la ligne de base, pour que la tête reste loin de la ligne du dessus. */
+  bottom: calc(var(--gk-u) * -5.5 - 0.12em);
 }
 
 /* Comment ça marche : sur la 3e carte ; sur téléphone, la liste est verticale, il code à côté du bouton (s'il y a la place). */
