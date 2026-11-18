@@ -26,14 +26,13 @@ Site multi-pages (une entrée HTML par page, servie par `nginx.conf` sur `/page`
 
 ## La page Geeks Code (`/realisations/geeks-code`)
 
-L’étude de cas de notre éditeur de code interne, pensée pour les entreprises : ce que fait l’outil, Geeko en vedette, et ce que l’outil donnerait à leurs couleurs. C’est une page de contenu comme les autres (son entrée dans `src/content/pages.ts`), avec en plus des blocs animés :
+L’étude de cas de notre éditeur de code interne, orientée technique : ce qu’il apporte à un vibe codeur (le plan en jalons, la chaîne d’agents qui relit, teste et vérifie, la coche humaine) et le socle qui tient derrière. La mascotte et l’apparence de l’outil n’y sont pas mises en avant (demande d’Elias, 18/11/2026). C’est une page de contenu comme les autres (son entrée dans `src/content/pages.ts`), avec en plus des blocs animés :
 
 - `entry: 'geeks-code'` lui donne son propre script (`src/pages/entries/geeks-code.tsx`) : les autres pages de contenu ne chargent pas ses blocs. Les sections de type `custom` et le bloc `hero` sont dessinés par `src/geeks-code/blocks.tsx`, et rendus aussi au prérendu (`BLOCKS` dans `src/prerender.tsx`).
 - `Demo.tsx` + `IdeMock.tsx` : la fenêtre de l’éditeur joue une demande jusqu’au jalon validé (les « temps » sont dans `BEATS`). C’est une **maquette dessinée pour la page**, avec un exemple fictif : la mention sous la fenêtre doit rester.
-- `Gallery.tsx` : les 30 animations et les 7 surprises de Geeko, jouées par le vrai moteur. Leur liste et leurs textes sont dans `copy.ts` : à tenir à jour quand le moteur (`src/geeko/geeko.ts`) est recopié depuis Geeks Code.
-- `Brand.tsx` : « à vos couleurs », la même fenêtre sous un autre nom et une autre couleur. Rien ne quitte le navigateur.
-- `GeekoStage.tsx` : ici Geeko est le sujet de la page, il vit tant qu’il est à l’écran (ailleurs, `components/Geeko.tsx` le fige après 8 s). Avec « réduire les animations », son portrait le remplace, et la galerie propose de le lancer.
-- Règles : Geeks Code est un **projet interne** (pas « en vente », la version pour les entreprises « se prépare ») ; aucun nom d’outil interne ; les chiffres de « Sous le capot » sont datés du 15/11/2026 (jalons, tests, patchs : à recompter dans le dépôt de Geeks Code avant de les changer).
+- `Chain.tsx` : « Derrière la coche », la même demande de poste en poste (étudier, écrire, relire, corriger, vérifier, un agent différent à chaque fois), le nombre d’agents du vrai projet à chaque poste, la coche posée par un pointeur humain ; dessous, les trois chiffres du projet et le film (`public/videos/geeks-code-derriere-la-coche.mp4`, son affiche `public/images/realisations/derriere-la-coche.jpg`, rendus depuis `promo/` dans le dépôt de Geeks Code). Les chiffres sont dans `CHAIN_COUNTS` (`copy.ts`).
+- `GeekoStage.tsx` : Geeko dans la démo et la chaîne, joué par le vrai moteur ; il vit tant qu’il est à l’écran (ailleurs, `components/Geeko.tsx` le fige après 8 s). Avec « réduire les animations », son portrait le remplace.
+- Règles : Geeks Code est un **projet interne** (pas « en vente », la version pour les entreprises « se prépare ») ; aucun nom d’outil interne ; les chiffres de « Sous le capot » et de la chaîne sont datés du 17-18/11/2026 (jalons, agents, tests, patchs, audits : à recompter dans le dépôt de Geeks Code, `promo/src/derriere/*.json` et `PLAN.md`, avant de les changer).
 - Image de partage : `public/images/realisations/geeks-code-og.png` (1200 × 630, `ogImage` dans `pages.ts`).
 - Sur `/realisations`, sa carte est sur mesure : `src/components/GeeksCodeCard.tsx` (une petite fenêtre de l’éditeur, trois conditions qui se cochent).
 
@@ -79,7 +78,7 @@ Animations CSS ou `motion/react`, en pause hors écran et figées avec « rédui
 - Méthode du site principal (`src/components/BuildTimeline.tsx`) : un navigateur construit le site au fil des 5 étapes.
 - Réalisations (`src/components/BeforeAfter/`) : curseur avant/après sur le site du Dr Jellouli. L’« avant » est une **reconstitution** codée en HTML (`OldJelloulSite.tsx`), pas l’ancien site réel : le libellé « reconstitution » doit rester visible. Le badge « Refait en 24 h » est dans `COPY` en haut de `BeforeAfter.tsx`.
 - Démo de process et explorateur par service sur `/ia` (`src/ia/ProcessDemo.tsx`, `src/ia/AutomationExplorer.tsx`).
-- Page Geeks Code (`src/geeks-code/`) : la démonstration de l’éditeur, la galerie de Geeko, « à vos couleurs », et Geeko qui arrive à pied dans le haut de page. Ses styles sont à part (`geeks-code.css`, chargé par cette page seulement).
+- Page Geeks Code (`src/geeks-code/`) : la démonstration de l’éditeur, la chaîne derrière la coche et son film, et Geeko qui arrive à pied dans le haut de page. Ses styles sont à part (`geeks-code.css`, chargé par cette page seulement).
 
 ## Vitrine projets
 

@@ -6,10 +6,9 @@
 import React from 'react';
 
 import type { ContentBlocks } from '../content/ContentPage';
-import Brand from './Brand';
+import Chain from './Chain';
 import { HERO } from './copy';
 import Demo from './Demo';
-import Gallery from './Gallery';
 import WalkInGeeko from './WalkInGeeko';
 import './geeks-code.css';
 
@@ -17,6 +16,6 @@ export const GEEKS_CODE_BLOCKS: ContentBlocks = {
   // Le haut de page : Geeko arrive à pied, salue, puis se met au travail.
   hero: ({ lang }) => <WalkInGeeko lang={lang} hello={HERO[lang].hello} className="gc-hero-geeko" />,
   demo: ({ lang }) => <Demo lang={lang} />,
-  geeko: ({ lang }) => <Gallery lang={lang} />,
-  entreprise: ({ lang, book }) => <Brand lang={lang} book={book} />,
+  // Derrière la coche : la chaîne d'une demande, les chiffres du vrai projet, le film.
+  chaine: ({ lang }) => <Chain lang={lang} />,
 };
